@@ -1,0 +1,199 @@
+/* ==========================================================================
+   SPELLBOOK.CSS - Stili per il Modulo Lista Incantesimi
+   ========================================================================== */
+
+.spell-list-container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #1a1a1a;
+    height: 100%;
+}
+
+/* --- Colonna dei Filtri --- */
+.spell-search-cell {
+    flex: 0 0 20%;
+    border-right: 2px solid #444;
+    cursor: default;
+    padding: 1rem;
+    overflow-y: hidden;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.spell-search-cell > h2 {
+    text-align: center;
+    font-size: 1.1rem;
+    color: #f0ad4e;
+    margin: 0 0 0.5rem 0;
+    border-bottom: 1px solid #555;
+    padding-bottom: 0.5rem;
+}
+
+.spell-search-cell > .list-search {
+    width: 100%;
+    padding: 0.5rem;
+    background-color: #333;
+    border: 1px solid #555;
+    color: #ffffff;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-family: 'Lora', serif;
+    font-size: 0.9rem;
+}
+
+/* --- Stile Unificato per le Schede dei Filtri --- */
+.compact-filters {
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 5px;
+    padding: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.filter-group-title {
+    text-align: center;
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    color: #f0ad4e;
+    margin: 0 0 0.5rem 0;
+    border-bottom: 1px solid #555;
+    padding-bottom: 0.3rem;
+}
+
+.filter-buttons-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.filter-btn {
+    border: 1px solid #555;
+    background-color: #333;
+    color: #cccccc;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Lora', serif;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    text-align: left;
+    flex: 1;
+}
+
+.filter-btn:hover {
+    background-color: #4a4a4a;
+    border-color: #777;
+}
+
+.filter-btn.active {
+    background-color: #f0ad4e;
+    border-color: #f0ad4e;
+    color: #1a1a1a;
+    font-weight: bold;
+    box-shadow: 0 0 8px rgba(240, 173, 78, 0.4);
+    border-width: 2px;
+}
+
+.school-icon {
+    font-size: 1rem;
+}
+
+/* --- Layout Specifico Filtri --- */
+#class-filters .filter-buttons-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#school-filters .filter-buttons-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.4rem;
+}
+
+#school-filters .filter-btn {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+#level-filters .filter-buttons-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.4rem;
+}
+
+/* --- Pulsante di Reset --- */
+.spell-search-cell .reset-filters-btn {
+    background-color: #8b0000;
+    border: 1px solid #a52a2a;
+    color: #ffffff;
+    padding: 0.6rem 1rem;
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 5px;
+    text-transform: uppercase;
+    text-align: center;
+    margin-top: auto;
+}
+
+.spell-search-cell .reset-filters-btn:hover {
+    background-color: #a52a2a;
+    border-color: #cd5c5c;
+}
+
+/* --- Colonne Lista e Dettagli --- */
+.spell-list-cell {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    cursor: default;
+    padding: 1rem;
+    overflow-y: auto;
+    border-radius: 8px;
+    background-color: #2a2a2a;
+}
+
+.spell-details-cell {
+    flex: 1.5;
+    background: linear-gradient(to right, #f5e8b0, #e8d9a0, #f5e8b0);
+    box-shadow: inset 0 0 40px rgba(139, 69, 19, 0.3);
+    border: 1px solid #d4af37;
+    color: #3d2817;
+    font-family: 'Lora', serif;
+    line-height: 1.7;
+    position: relative;
+    padding: 2.5rem;
+}
+
+.spell-details-cell h3 {
+    font-size: 2.5rem;
+    color: #5a3a1a;
+    margin-top: 0;
+    border-bottom: none;
+}
+
+.spell-details-cell p {
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 1rem;
+}
+
+.spell-list-counter {
+    text-align: center;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: #aaaaaa;
+    font-family: 'Lora', serif;
+}

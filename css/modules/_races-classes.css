@@ -1,0 +1,520 @@
+/* ==========================================================================
+   RACES-CLASSES.CSS - Stili per le Pagine di Razze e Classi (stile PHB)
+   ========================================================================== */
+
+/* --- Layout Generale PHB --- */
+.race-page-layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.race-sidebar {
+    background: #0a0a0a;
+    border-right: 1px solid #58180d;
+    display: flex;
+    flex-direction: column;
+}
+
+.search-wrapper {
+    padding: 15px;
+    background: #111;
+    border-bottom: 1px solid #333;
+}
+
+.phb-search {
+    width: 100%;
+    padding: 10px;
+    background: #000;
+    border: 1px solid #a0783a;
+    color: #f0ad4e;
+    font-size: 0.9rem;
+}
+
+.race-selection-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.race-selection-list li {
+    padding: 12px 20px;
+    border-bottom: 1px solid #1a1a1a;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.race-selection-list li:hover { background: #1a1a1a; }
+.race-selection-list li.active { background: #58180d; color: white; }
+
+.race-li-name { display: block; font-family: 'Cinzel', serif; font-weight: bold; }
+.race-li-meta { font-size: 0.75rem; opacity: 0.6; font-style: italic; }
+
+/* --- Stile Pergamena --- */
+.phb-style {
+    background-color: #eee5ce;
+    background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+    color: #222;
+    padding: 40px 60px;
+    overflow-y: auto;
+    font-family: 'Lora', serif;
+}
+
+.phb-title {
+    font-family: 'Cinzel', serif;
+    font-size: 2.8rem;
+    color: #58180d;
+    margin: 0;
+}
+
+.phb-ability-bar {
+    border-top: 1px solid #58180d;
+    border-bottom: 1px solid #58180d;
+    padding: 5px 0;
+    margin: 15px 0 20px 0;
+    font-variant: small-caps;
+    font-weight: 900;
+    font-size: 0.9rem;
+    color: #000;
+}
+
+/* --- Layout Interno Pergamena --- */
+.phb-content-horizontal-wrapper {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+.phb-main-text-column {
+    flex: 1;
+}
+
+.phb-main-text-column p, 
+.phb-trait-row {
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin-bottom: 8px;
+    text-align: justify;
+}
+
+.phb-section-break {
+    font-family: 'Cinzel', serif;
+    color: #58180d;
+    border-bottom: 1px solid #58180d;
+    margin: 20px 0 12px 0;
+    font-size: 1.4rem;
+}
+
+.label-caps {
+    font-variant: small-caps;
+    font-weight: 900;
+    color: #000;
+    font-size: 0.9rem;
+}
+
+.trait-label-caps {
+    font-variant: small-caps;
+    font-weight: 900;
+    color: #58180d;
+    font-size: 0.9rem;
+}
+
+/* --- Schede Sottorazza --- */
+.phb-subrace-aside {
+    width: 280px;
+    flex-shrink: 0;
+}
+
+.subrace-card {
+    background: rgba(255, 255, 255, 0.45);
+    border: 1px solid #58180d;
+    padding: 12px;
+    box-shadow: 4px 4px 0px rgba(88, 24, 13, 0.1);
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.subrace-card-title {
+    font-family: 'Cinzel', serif;
+    color: #58180d;
+    font-size: 1rem;
+    margin: 0 0 6px 0;
+    border-bottom: 1px solid rgba(88, 24, 13, 0.2);
+}
+
+.subrace-card-desc {
+    font-size: 0.8rem !important;
+    margin-bottom: 8px;
+    line-height: 1.3;
+    font-style: italic;
+    color: #444;
+}
+
+.subrace-card-bonus {
+    font-size: 0.8rem;
+    background: rgba(88, 24, 13, 0.05);
+    padding: 4px 8px;
+    border-left: 3px solid #58180d;
+    margin-bottom: 8px;
+}
+
+.phb-trait-row.small {
+    font-size: 0.8rem;
+    margin-bottom: 5px;
+    line-height: 1.3;
+}
+
+/* --- Stato Vuoto --- */
+.phb-empty-state {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Cinzel', serif;
+    color: #a0783a;
+    opacity: 0.3;
+    font-size: 1.3rem;
+}
+
+/* --- Scrollbar PHB --- */
+.phb-style::-webkit-scrollbar { width: 5px; }
+.phb-style::-webkit-scrollbar-thumb { background: #a0783a; }
+
+/* --- Layout Classi a 3 Colonne --- */
+.class-list-container-three-col {
+    display: grid;
+    grid-template-columns: 280px 2.5fr 0.8fr;
+    gap: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #1a1a1a;
+    height: 100%;
+    overflow: hidden;
+}
+
+.class-list-column {
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.class-details-column-three-col {
+    background: linear-gradient(to right, #f5e8b0, #e8d9a0, #f5e8b0);
+    box-shadow: inset 0 0 40px rgba(139, 69, 19, 0.3), 5px 5px 15px rgba(0,0,0,0.5);
+    border: 1px solid #d4af37;
+    color: #3d2817;
+    font-family: 'Lora', serif;
+    line-height: 1.8;
+    position: relative;
+    padding: 3.5rem;
+    border-radius: 4px;
+    overflow-y: auto;
+}
+
+.class-details-column-three-col::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 6px;
+    background-color: #5a3a1a;
+}
+
+.class-details-column-three-col h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 3rem;
+    color: #5a3a1a;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #5a3a1a;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    text-transform: uppercase;
+}
+
+.class-details-column-three-col h3 {
+    font-family: 'Lora', serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #5a3a1a;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid rgba(90, 50, 10, 0.2);
+    padding-bottom: 0.3rem;
+}
+
+.class-details-column-three-col ul {
+    list-style-type: disc;
+    padding-left: 25px;
+    margin-bottom: 1.5rem;
+}
+
+.class-details-column-three-col li {
+    margin-bottom: 0.7rem;
+}
+
+.class-details-column-three-col hr {
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, transparent, rgba(90, 50, 10, 0.4), transparent);
+    margin: 2.5rem 0;
+}
+
+.class-details-column-three-col table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+    font-size: 0.95rem;
+    font-family: 'Lora', serif;
+}
+
+.class-details-column-three-col th {
+    background-color: #5a3a1a;
+    color: #f5e8b0;
+    padding: 10px;
+    text-align: left;
+    text-transform: uppercase;
+}
+
+.class-details-column-three-col tr:nth-child(even) {
+    background-color: rgba(139, 69, 19, 0.08);
+}
+
+.class-details-column-three-col td {
+    padding: 8px 10px;
+    border-bottom: 1px solid rgba(90, 50, 10, 0.1);
+}
+
+.subclass-list-column-three-col {
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.subclass-card {
+    background-color: #333;
+    border: 1px solid #555;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.subclass-card:hover {
+    background-color: #3d3d3d;
+    border-color: #d4af37;
+    transform: translateX(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.subclass-card h4 {
+    margin: 0 0 5px 0;
+    color: #f0ad4e;
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+}
+
+.subclass-card p {
+    margin: 0;
+    color: #bbb;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+.subclass-card-empty {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    padding: 40px 10px;
+}
+
+.subclass-loading-indicator {
+    display: none;
+    width: 40px;
+    height: 40px;
+    margin: 2rem auto;
+    border: 4px solid rgba(240, 173, 78, 0.3);
+    border-top: 4px solid #f0ad4e;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.subclass-loading-indicator.active {
+    display: block;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* --- Nuove sezioni Classi --- */
+.hp-info {
+    background: rgba(90, 58, 26, 0.08);
+    padding: 12px 15px;
+    border-radius: 4px;
+    border-left: 3px solid #5a3a1a;
+    margin-top: 1rem;
+}
+
+.hp-info p {
+    margin: 5px 0;
+    font-size: 0.95rem;
+}
+
+.spellcasting-info {
+    background: linear-gradient(135deg, rgba(75, 0, 130, 0.1), rgba(139, 69, 19, 0.1));
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid rgba(75, 0, 130, 0.3);
+    margin-top: 1rem;
+}
+
+.spellcasting-info p {
+    margin: 6px 0;
+    font-size: 0.95rem;
+}
+
+.spell-slots-table {
+    font-size: 0.85rem !important;
+}
+
+.spell-slots-table th,
+.spell-slots-table td {
+    text-align: center !important;
+    padding: 6px 8px !important;
+    min-width: 35px;
+}
+
+.spell-slots-table th:first-child,
+.spell-slots-table td:first-child {
+    text-align: left !important;
+}
+
+.subclasses-container {
+    display: grid;
+    gap: 15px;
+    margin-top: 1rem;
+}
+
+.subclass-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #d4af37, #f0c850);
+    color: #1a1a1a;
+    font-size: 0.7rem;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.subclass-levels {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.level-dot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: rgba(90, 58, 26, 0.15);
+    border: 1px solid #5a3a1a;
+    border-radius: 50%;
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #5a3a1a;
+}
+
+.subclass-privilegi {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(90, 58, 26, 0.2);
+}
+
+.subclass-priv-level {
+    margin-bottom: 12px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+}
+
+.subclass-priv-level .level-badge {
+    display: inline-block;
+    background: #5a3a1a;
+    color: #f5e8b0;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 0.75rem;
+    margin-bottom: 6px;
+}
+
+.subclass-priv-item strong {
+    color: #5a3a1a;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.subclass-priv-item p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* Equipaggiamento list */
+.equipment-list {
+    list-style: none !important;
+    padding-left: 0 !important;
+    margin: 0 !important;
+}
+
+.equipment-list li {
+    position: relative;
+    padding-left: 18px;
+    margin-bottom: 6px !important;
+}
+
+.equipment-list li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: #5a3a1a;
+    font-weight: bold;
+}
+
+/* Tabella Progressione responsive */
+.table-wrapper {
+    overflow-x: auto;
+    margin: 1rem 0;
+}
+
+.progression-table {
+    min-width: 600px;
+}
+
+.progression-table .priv-cell {
+    max-width: 200px;
+}
+
+.priv-tag {
+    display: inline-block;
+    background: rgba(90, 58, 26, 0.15);
+    padding: 2px 6px;
+    margin: 2px;
+    border-radius: 3px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
