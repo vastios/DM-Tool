@@ -204,6 +204,9 @@ export const EMPTY_PG = {
     spellcasting: null,
     equipment: [],
     magicItems: [],
+    inventory: [],
+    _acceptedSuggestions: [],
+    _selectedChoices: {},
     
     treasure: {
         cp: 0, sp: 0, ep: 0, gp: 0, pp: 0,
@@ -213,6 +216,7 @@ export const EMPTY_PG = {
     weight: 0,
     notes: '',
     backstory: '',
+    dmSecrets: '',  // Segreti del DM (visibili solo al DM)
     wikiLinks: [],
     conditions: [],
     isInCombat: false,
@@ -254,6 +258,189 @@ export function calculateSpellSaveDc(proficiencyBonus, spellcastingAbility) {
 
 export function calculateSpellAttackBonus(proficiencyBonus, spellcastingAbility) {
     return proficiencyBonus + calculateModifier(spellcastingAbility);
+}
+
+/**
+ * Calcola la Classe Armatura (CA) del personaggio
+ * @param {Object} pg - Dati del personaggio
+ * @param {Array} itemsDatabase - Database degli oggetti (opzionale, per lookup armature)
+ * @returns {Object} - { ac: number, armorName: string, shieldBonus: number, hasShield: boolean }
+ */
+export function calculateArmorClass(pg, itemsDatabase = null) {
+    const dexterity = pg.abilities?.dexterity || 10;
+    const dexMod = calculateModifier(dexterity);
+    const inventory = pg.inventory || [];
+    
+    // Trova armatura e scudo nell'inventario
+    let armor = null;
+    let shield = null;
+    
+    // Prima cerca nel database se fornito, altrimenti usa i dati dell'inventario
+    for (const item of inventory) {
+        const isArmor = item.equipment_category?.index === 'armor';
+        
+        if (isArmor && item.armor_category === 'Scudo') {
+            shield = item;
+        } else if (isArmor && item.armor_category !== 'Scudo') {
+            // Prendi l'armatura con CA base più alta (quella "equipaggiata")
+            if (!armor || (item.armor_class?.base || 0) > (armor.armor_class?.base || 0)) {
+                armor = item;
+            }
+        }
+    }
+    
+    // Calcola CA
+    let ac = 10 + dexMod; // Base senza armatura
+    let armorName = 'Nessuna armatura';
+    let shieldBonus = 0;
+    
+    if (armor) {
+        const armorClass = armor.armor_class || { base: 10, dex_bonus: true };
+        const base = armorClass.base || 10;
+        const dexBonus = armorClass.dex_bonus !== false;
+        const maxBonus = armorClass.max_bonus || null;
+        
+        if (armor.armor_category === 'Pesante') {
+            // Armatura pesante: non aggiunge DES
+            ac = base;
+        } else if (armor.armor_category === 'Media') {
+            // Armatura media: DES limitato a max_bonus (solitamente +2)
+            const effectiveDexMod = maxBonus !== null ? Math.min(dexMod, maxBonus) : dexMod;
+            ac = base + effectiveDexMod;
+        } else {
+            // Armatura leggera o senza categoria: DES completo
+            ac = base + dexMod;
+        }
+        
+        armorName = armor.name;
+    }
+    
+    // Aggiungi scudo
+    if (shield) {
+        shieldBonus = shield.armor_class?.base || 2;
+        ac += shieldBonus;
+    }
+    
+    return {
+        ac: ac,
+        armorName: armorName,
+        shieldBonus: shieldBonus,
+        hasShield: !!shield,
+        hasArmor: !!armor
+    };
+}
+
+/**
+ * Calcola gli slot incantesimi per livello in base alla classe e al livello
+ * @param {string} classIndex - Indice della classe
+ * @param {number} level - Livello del personaggio
+ * @returns {Object} - { 1: { max: 4, current: 4 }, 2: { max: 3, current: 3 }, ... }
+ */
+export function calculateSpellSlots(classIndex, level) {
+    // Tabella slot incantesimi per full casters
+    const fullCasterSlots = {
+        1: { 1: 2 },
+        2: { 1: 3 },
+        3: { 1: 4, 2: 2 },
+        4: { 1: 4, 2: 3 },
+        5: { 1: 4, 2: 3, 3: 2 },
+        6: { 1: 4, 2: 3, 3: 3 },
+        7: { 1: 4, 2: 3, 3: 3, 4: 1 },
+        8: { 1: 4, 2: 3, 3: 3, 4: 2 },
+        9: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 1 },
+        10: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 2 },
+        11: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 2, 6: 1 },
+        12: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 2, 6: 1 },
+        13: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 2, 6: 1, 7: 1 },
+        14: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 2, 6: 1, 7: 1 },
+        15: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 2, 6: 1, 7: 1, 8: 1 },
+        16: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 2, 6: 1, 7: 1, 8: 1 },
+        17: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 2, 6: 1, 7: 1, 8: 1, 9: 1 },
+        18: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 3, 6: 1, 7: 1, 8: 1, 9: 1 },
+        19: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 3, 6: 2, 7: 1, 8: 1, 9: 1 },
+        20: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 3, 6: 2, 7: 2, 8: 1, 9: 1 }
+    };
+    
+    // Tabella slot per half-casters (Paladino, Ranger)
+    const halfCasterSlots = {
+        1: {},
+        2: { 1: 2 },
+        3: { 1: 3 },
+        4: { 1: 3 },
+        5: { 1: 4, 2: 2 },
+        6: { 1: 4, 2: 2 },
+        7: { 1: 4, 2: 3 },
+        8: { 1: 4, 2: 3 },
+        9: { 1: 4, 2: 3, 3: 2 },
+        10: { 1: 4, 2: 3, 3: 2 },
+        11: { 1: 4, 2: 3, 3: 2 },
+        12: { 1: 4, 2: 3, 3: 2 },
+        13: { 1: 4, 2: 3, 3: 3 },
+        14: { 1: 4, 2: 3, 3: 3 },
+        15: { 1: 4, 2: 3, 3: 3 },
+        16: { 1: 4, 2: 3, 3: 3 },
+        17: { 1: 4, 2: 3, 3: 3, 4: 1 },
+        18: { 1: 4, 2: 3, 3: 3, 4: 1 },
+        19: { 1: 4, 2: 3, 3: 3, 4: 2 },
+        20: { 1: 4, 2: 3, 3: 3, 4: 2 }
+    };
+    
+    // Tabella slot per Warlock (Pact Magic)
+    const warlockSlots = {
+        1: { 1: 1 },
+        2: { 1: 2 },
+        3: { 2: 2 },
+        4: { 2: 2 },
+        5: { 3: 2 },
+        6: { 3: 2 },
+        7: { 4: 2 },
+        8: { 4: 2 },
+        9: { 5: 2 },
+        10: { 5: 2 },
+        11: { 5: 3 },
+        12: { 5: 3 },
+        13: { 5: 3 },
+        14: { 5: 3 },
+        15: { 5: 3 },
+        16: { 5: 3 },
+        17: { 5: 4 },
+        18: { 5: 4 },
+        19: { 5: 4 },
+        20: { 5: 4 }
+    };
+    
+    // Determina tipo di caster
+    const fullCasters = ['bard', 'cleric', 'druid', 'sorcerer', 'wizard', 'bardo', 'chierico', 'druido', 'stregone', 'mago'];
+    const halfCasters = ['paladin', 'ranger', 'paladino', 'ranger'];
+    const warlockClasses = ['warlock', 'warlock'];
+    
+    const normalizedClass = classIndex?.toLowerCase() || '';
+    
+    let tableToUse;
+    if (warlockClasses.includes(normalizedClass)) {
+        tableToUse = warlockSlots;
+    } else if (halfCasters.includes(normalizedClass)) {
+        tableToUse = halfCasterSlots;
+    } else if (fullCasters.includes(normalizedClass)) {
+        tableToUse = fullCasterSlots;
+    } else {
+        // Non caster o classe non riconosciuta
+        return {};
+    }
+    
+    // Ottieni slot per il livello
+    const slotsForLevel = tableToUse[Math.min(level, 20)] || {};
+    
+    // Converte in formato { level: { max: X, current: X } }
+    const result = {};
+    for (const [slotLevel, maxSlots] of Object.entries(slotsForLevel)) {
+        result[slotLevel] = {
+            max: maxSlots,
+            current: maxSlots
+        };
+    }
+    
+    return result;
 }
 
 console.log('📋 [PgConstants] Modulo costanti caricato.');

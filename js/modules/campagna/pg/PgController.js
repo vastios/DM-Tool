@@ -18,6 +18,8 @@ import {
     calculateModifier, 
     calculateProficiencyBonus, 
     calculateMaxHp,
+    calculateArmorClass,
+    calculateSpellSlots,
     ABILITY_KEY_TO_PROPERTY,
     PROPERTY_TO_ABILITY_KEY,
     SKILL_ABILITY_MAP,
@@ -73,7 +75,7 @@ export class PgController {
          * Dati del PG in creazione/modifica.
          * @type {Object}
          */
-        this.wizardData = { ...EMPTY_PG };
+        this.wizardData = this.createEmptyPg();
         
         /**
          * Flag modalità editazione.
@@ -82,6 +84,35 @@ export class PgController {
         this.isEditMode = false;
         
         console.log('🎮 [PgController] Inizializzato.');
+    }
+    
+    /**
+     * Crea un oggetto PG vuoto con deep copy degli array/oggetti nidificati
+     */
+    createEmptyPg() {
+        return {
+            ...EMPTY_PG,
+            abilities: { ...EMPTY_PG.abilities },
+            hp: { ...EMPTY_PG.hp },
+            hitDice: { ...EMPTY_PG.hitDice },
+            proficiencies: {
+                armor: [...(EMPTY_PG.proficiencies?.armor || [])],
+                weapons: [...(EMPTY_PG.proficiencies?.weapons || [])],
+                tools: [...(EMPTY_PG.proficiencies?.tools || [])],
+                languages: [...(EMPTY_PG.proficiencies?.languages || [])]
+            },
+            racialTraits: [...(EMPTY_PG.racialTraits || [])],
+            classFeatures: [...(EMPTY_PG.classFeatures || [])],
+            feats: [...(EMPTY_PG.feats || [])],
+            equipment: [...(EMPTY_PG.equipment || [])],
+            magicItems: [...(EMPTY_PG.magicItems || [])],
+            inventory: [],
+            _acceptedSuggestions: [],
+            _selectedChoices: {},
+            treasure: { ...EMPTY_PG.treasure },
+            conditions: [...(EMPTY_PG.conditions || [])],
+            wikiLinks: [...(EMPTY_PG.wikiLinks || [])]
+        };
     }
     
     /**
@@ -156,10 +187,21 @@ export class PgController {
                 this.databases.spells = {};
             }
             
-            // Incantesimi per classe
+            // Incantesimi per classe + helper functions
             try {
                 const classSpellsModule = await import('../../../../database/classSpells.js');
                 this.databases.classSpellList = classSpellsModule.classSpellList || {};
+                this.databases.spellLevelsByClass = classSpellsModule.spellLevelsByClass || {};
+                // Salva le funzioni helper
+                this.spellHelpers = {
+                    getMaxCantripsKnown: classSpellsModule.getMaxCantripsKnown,
+                    getMaxSpellsKnown: classSpellsModule.getMaxSpellsKnown,
+                    isKnownCaster: classSpellsModule.isKnownCaster,
+                    isPreparedCaster: classSpellsModule.isPreparedCaster,
+                    getCasterType: classSpellsModule.getCasterType,
+                    getCasterTypeDescription: classSpellsModule.getCasterTypeDescription,
+                    spellLevelsByClass: classSpellsModule.spellLevelsByClass
+                };
                 console.log(`🎮 [PgController] Caricate liste incantesimi per ${Object.keys(this.databases.classSpellList).length} classi.`);
             } catch (e) {
                 console.warn('🎮 [PgController] Database incantesimi per classe non trovato:', e.message);
@@ -169,6 +211,16 @@ export class PgController {
             // Backgrounds (usando il database importato)
             this.databases.backgrounds = backgroundDatabase || [];
             console.log(`🎮 [PgController] Caricati ${this.databases.backgrounds.length} backgrounds.`);
+            
+            // Items database
+            try {
+                const itemModule = await import('../../../../database/items.js');
+                this.databases.items = itemModule.itemDatabase || [];
+                console.log(`🎮 [PgController] Caricati ${this.databases.items.length} oggetti.`);
+            } catch (e) {
+                console.warn('🎮 [PgController] Database oggetti non trovato:', e.message);
+                this.databases.items = [];
+            }
             
         } catch (error) {
             console.error('🎮 [PgController] Errore caricamento database:', error);
@@ -255,6 +307,81 @@ export class PgController {
         
         // Input (text, number, textarea)
         this.container.oninput = (e) => this.handleInput(e);
+        
+        // Hover sui trait-tag per mostrare tooltip nella sidebar
+        this.container.addEventListener('mouseover', (e) => this.handleTraitHover(e));
+        this.container.addEventListener('mouseout', (e) => this.handleTraitLeave(e));
+    }
+    
+    /**
+     * Gestisce l'hover sui trait-tag
+     */
+    handleTraitHover(e) {
+        const traitTag = e.target.closest('.trait-tag');
+        if (!traitTag) return;
+        
+        const name = traitTag.textContent.trim();
+        const description = traitTag.dataset.tooltip || 'Nessuna descrizione disponibile';
+        const type = traitTag.classList.contains('racial') ? 'racial' :
+                     traitTag.classList.contains('class') ? 'class' :
+                     traitTag.classList.contains('subclass') ? 'subclass' :
+                     traitTag.classList.contains('background') ? 'background' : 'trait';
+        
+        this.showTooltipOverlay(name, description, type);
+    }
+    
+    /**
+     * Gestisce quando il mouse esce dai trait-tag
+     */
+    handleTraitLeave(e) {
+        const traitTag = e.target.closest('.trait-tag');
+        if (!traitTag) return;
+        
+        // Nascondi con un piccolo delay
+        setTimeout(() => {
+            const hoveredTag = this.container.querySelector('.trait-tag:hover');
+            if (!hoveredTag) {
+                this.hideTooltipOverlay();
+            }
+        }, 100);
+    }
+    
+    /**
+     * Mostra il tooltip overlay nella sidebar
+     */
+    showTooltipOverlay(name, description, type) {
+        const overlay = document.getElementById('trait-tooltip-overlay');
+        const nameEl = document.getElementById('tooltip-name');
+        const typeEl = document.getElementById('tooltip-type');
+        const bodyEl = document.getElementById('tooltip-body');
+        
+        if (!overlay || !nameEl || !typeEl || !bodyEl) return;
+        
+        // Determina il tipo
+        const typeLabels = {
+            racial: 'Razziale',
+            class: 'Classe',
+            subclass: 'Sottoclasse',
+            background: 'Background',
+            trait: 'Tratto'
+        };
+        
+        nameEl.textContent = name;
+        typeEl.textContent = typeLabels[type] || type;
+        typeEl.className = 'tooltip-type ' + type;
+        bodyEl.textContent = description;
+        
+        overlay.classList.add('visible');
+    }
+    
+    /**
+     * Nasconde il tooltip overlay
+     */
+    hideTooltipOverlay() {
+        const overlay = document.getElementById('trait-tooltip-overlay');
+        if (overlay) {
+            overlay.classList.remove('visible');
+        }
     }
     
     /**
@@ -268,6 +395,39 @@ export class PgController {
         // Click su card PG (selezione)
         if (card && !button) {
             this.selectPg(card.dataset.pgId);
+            return;
+        }
+        
+        // Click su flip-card per girare la scheda
+        const flipCard = target.closest('.flip-card');
+        if (flipCard && !button) {
+            // Non flippare se si sta cliccando su un input o modal
+            if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT') {
+                return;
+            }
+            // Non flippare se siamo nel modal AC
+            if (target.closest('.ac-modal')) {
+                return;
+            }
+            flipCard.classList.toggle('flipped');
+            return;
+        }
+        
+        // Modifica CA
+        if (button && button.id === 'btn-edit-ac') {
+            this.showAcModal(button);
+            return;
+        }
+        
+        // Salva CA dal modal
+        if (button && button.classList.contains('btn-save-ac')) {
+            this.saveAcFromModal(button);
+            return;
+        }
+        
+        // Annulla modifica CA
+        if (button && button.classList.contains('btn-cancel-ac')) {
+            this.hideAcModal();
             return;
         }
         
@@ -327,6 +487,97 @@ export class PgController {
             this.removeCondition(button.dataset.cond);
             return;
         }
+        
+        // === INVENTORY ACTIONS ===
+        // Aggiungi oggetto dal database
+        if (button.classList.contains('btn-add-item')) {
+            const itemIndex = button.dataset.itemIndex;
+            if (itemIndex) this.addItemToInventory(itemIndex);
+            return;
+        }
+        
+        // Rimuovi oggetto dall'inventario
+        if (button.classList.contains('btn-remove-item')) {
+            const idx = parseInt(button.dataset.index);
+            if (!isNaN(idx)) this.removeItemFromInventory(idx);
+            return;
+        }
+        
+        // Aggiungi oggetto personalizzato
+        if (button.id === 'btn-add-custom-item') {
+            this.addCustomItem();
+            return;
+        }
+        
+        // Aggiungi equipaggiamento suggerito (conferma scelta)
+        if (button.classList.contains('btn-add-suggested')) {
+            const key = button.dataset.suggestionKey;
+            const text = button.dataset.suggestionText;
+            const source = button.dataset.source;
+            const itemsJson = button.dataset.suggestionItems;
+            if (key && text) this.acceptSuggestion(key, text, source, itemsJson);
+            return;
+        }
+        
+        // Seleziona opzione (a) o (b)
+        if (button.classList.contains('btn-select-choice')) {
+            const choiceKey = button.dataset.choiceKey;
+            const option = button.dataset.choiceOption;
+            if (choiceKey && option) this.selectEquipmentChoice(choiceKey, option);
+            return;
+        }
+        
+        // Reset scelta
+        if (button.classList.contains('btn-reset-choice')) {
+            const choiceKey = button.dataset.choiceKey;
+            if (choiceKey) this.resetEquipmentChoice(choiceKey);
+            return;
+        }
+        
+        // Apri modal selezione dinamica
+        if (button.classList.contains('btn-open-dynamic-selector')) {
+            const suggestionKey = button.dataset.suggestionKey;
+            const suggestionText = button.dataset.suggestionText;
+            const filterJson = button.dataset.filter;
+            const quantity = parseInt(button.dataset.quantity) || 1;
+            const category = button.dataset.category;
+            const source = button.dataset.source;
+            if (suggestionKey && filterJson) {
+                this.openDynamicSelector(suggestionKey, suggestionText, filterJson, quantity, category, source);
+            }
+            return;
+        }
+        
+        // Toggle selezione oggetto dinamico
+        if (button.classList.contains('btn-toggle-dynamic-item')) {
+            const itemIndex = button.dataset.itemIndex;
+            const itemName = button.dataset.itemName;
+            const itemWeight = parseFloat(button.dataset.itemWeight) || 0;
+            const itemCost = button.dataset.itemCost;
+            if (itemIndex) this.toggleDynamicItemSelection(button, itemIndex, itemName, itemWeight, itemCost);
+            return;
+        }
+        
+        // Conferma selezione dinamica
+        if (button.id === 'btn-confirm-dynamic-selection') {
+            const suggestionKey = button.dataset.suggestionKey;
+            const source = button.dataset.source;
+            this.confirmDynamicSelection(suggestionKey, source);
+            return;
+        }
+        
+        // Annulla selezione dinamica
+        if (button.id === 'btn-cancel-dynamic-selector') {
+            this.closeDynamicSelector();
+            return;
+        }
+        
+        // Filtro categoria oggetti
+        if (button.classList.contains('filter-btn')) {
+            const category = button.dataset.category;
+            if (category) this.filterItemsByCategory(category);
+            return;
+        }
     }
     
     /**
@@ -362,6 +613,13 @@ export class PgController {
         if (target.id === 'hp-current') {
             this.updateCurrentHp(parseInt(target.value) || 0);
         }
+        
+        // Step 5 - Inventario: quantità oggetto
+        if (target.classList.contains('qty-input') && target.dataset.index !== undefined) {
+            const idx = parseInt(target.dataset.index);
+            const qty = parseInt(target.value) || 1;
+            this.updateItemQuantity(idx, qty);
+        }
     }
     
     /**
@@ -384,6 +642,7 @@ export class PgController {
         if (target.id === 'pg-player') this.wizardData.playerName = target.value;
         if (target.id === 'pg-backstory') this.wizardData.backstory = target.value;
         if (target.id === 'pg-notes') this.wizardData.notes = target.value;
+        if (target.id === 'pg-dm-secrets') this.wizardData.dmSecrets = target.value;
         if (target.id === 'pg-extra-languages') this.wizardData.extraLanguages = target.value;
         
         // HP massimi modificabili
@@ -400,6 +659,16 @@ export class PgController {
         // Autocomplete per i tag @ nei textarea
         if (target.classList.contains('tag-autocomplete')) {
             this.handleAutocompleteInput(target);
+        }
+        
+        // Step 5 - Inventario: ricerca oggetti
+        if (target.id === 'item-search-input') {
+            this.searchItems(target.value);
+        }
+        
+        // Step 5 - Inventario: monete
+        if (target.id === 'coins-gold' || target.id === 'coins-silver' || target.id === 'coins-copper') {
+            this.updateCoins();
         }
     }
     
@@ -505,6 +774,8 @@ export class PgController {
             this.wizardData.backstory = newValue;
         } else if (textarea.id === 'pg-notes') {
             this.wizardData.notes = newValue;
+        } else if (textarea.id === 'pg-dm-secrets') {
+            this.wizardData.dmSecrets = newValue;
         }
         
         // Nascondi il dropdown
@@ -576,7 +847,7 @@ export class PgController {
         
         this.mode = 'wizard';
         this.currentStep = 1;
-        this.wizardData = { ...EMPTY_PG };
+        this.wizardData = this.createEmptyPg();
         this.isEditMode = false;
         this.databases.selectedRace = null;
         this.databases.selectedClass = null;
@@ -596,7 +867,8 @@ export class PgController {
             return;
         }
         
-        this.wizardData = { ...pg };
+        // Deep clone del PG per evitare di modificare l'originale
+        this.wizardData = this.clonePg(pg);
         this.isEditMode = true;
         this.selectedPgId = pgId; // Mantieni selezionato
         this.mode = 'wizard';
@@ -612,6 +884,35 @@ export class PgController {
         }
         
         this.render();
+    }
+    
+    /**
+     * Clona un PG con deep copy degli array/oggetti nidificati
+     */
+    clonePg(pg) {
+        return {
+            ...pg,
+            abilities: { ...pg.abilities },
+            hp: { ...pg.hp },
+            hitDice: { ...pg.hitDice },
+            proficiencies: {
+                armor: [...(pg.proficiencies?.armor || [])],
+                weapons: [...(pg.proficiencies?.weapons || [])],
+                tools: [...(pg.proficiencies?.tools || [])],
+                languages: [...(pg.proficiencies?.languages || [])]
+            },
+            racialTraits: [...(pg.racialTraits || [])],
+            classFeatures: [...(pg.classFeatures || [])],
+            feats: [...(pg.feats || [])],
+            equipment: [...(pg.equipment || [])],
+            magicItems: [...(pg.magicItems || [])],
+            inventory: [...(pg.inventory || [])],
+            _acceptedSuggestions: [...(pg._acceptedSuggestions || [])],
+            _selectedChoices: { ...(pg._selectedChoices || {}) },
+            treasure: { ...pg.treasure },
+            conditions: [...(pg.conditions || [])],
+            wikiLinks: [...(pg.wikiLinks || [])]
+        };
     }
     
     /**
@@ -636,14 +937,14 @@ export class PgController {
             return;
         }
         
-        if (this.currentStep === 6) {
+        if (this.currentStep === 7) {
             this.savePg();
             return;
         }
         
         this.currentStep++;
         
-        if (this.currentStep === 6) {
+        if (this.currentStep === 7) {
             this.calculateFinalStats();
         }
         
@@ -657,7 +958,7 @@ export class PgController {
         if (confirm('Annullare? Le modifiche andranno perse.')) {
             this.mode = 'view';
             this.currentStep = 1;
-            this.wizardData = { ...EMPTY_PG };
+            this.wizardData = this.createEmptyPg();
             this.render();
         }
     }
@@ -925,6 +1226,66 @@ export class PgController {
         });
     }
     
+    /**
+     * Ottiene il nome italiano della classe
+     */
+    getClassNameIt() {
+        const classIndex = this.wizardData.class?.index || 
+                          this.databases.selectedClass?.index;
+        const classMap = {
+            'bard': 'Bardo', 'cleric': 'Chierico', 'druid': 'Druido',
+            'paladin': 'Paladino', 'ranger': 'Ranger', 'sorcerer': 'Stregone',
+            'warlock': 'Warlock', 'wizard': 'Mago'
+        };
+        return classMap[classIndex] || null;
+    }
+    
+    /**
+     * Ottiene il numero massimo di trucchetti per la classe
+     */
+    getMaxCantrips() {
+        const classNameIt = this.getClassNameIt();
+        const pgLevel = this.wizardData.level || 1;
+        if (!classNameIt || !this.spellHelpers?.getMaxCantripsKnown) return null;
+        return this.spellHelpers.getMaxCantripsKnown(classNameIt, pgLevel);
+    }
+    
+    /**
+     * Ottiene il numero massimo di incantesimi conosciuti/grimorio
+     */
+    getMaxSpells() {
+        const classNameIt = this.getClassNameIt();
+        const pgLevel = this.wizardData.level || 1;
+        if (!classNameIt) return null;
+        
+        // Mago: 6 + 2 per livello
+        if (classNameIt === 'Mago') {
+            return 6 + (pgLevel - 1) * 2;
+        }
+        
+        // Known casters
+        if (this.spellHelpers?.getMaxSpellsKnown) {
+            return this.spellHelpers.getMaxSpellsKnown(classNameIt, pgLevel);
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Verifica se la classe deve selezionare incantesimi (non solo trucchetti)
+     */
+    shouldSelectSpells() {
+        const classNameIt = this.getClassNameIt();
+        if (!classNameIt) return false;
+        
+        // Known casters e Mago selezionano incantesimi
+        if (classNameIt === 'Mago') return true;
+        if (this.spellHelpers?.isKnownCaster) {
+            return this.spellHelpers.isKnownCaster(classNameIt);
+        }
+        return false;
+    }
+    
     toggleSpell(spellKey, isChecked) {
         if (!this.wizardData.spellcasting) {
             this.wizardData.spellcasting = {
@@ -933,59 +1294,283 @@ export class PgController {
             };
         }
         
+        // Trova il checkbox per ottenere il livello dell'incantesimo
+        const checkbox = this.container.querySelector(`input[data-spell="${spellKey}"]`);
+        const spellLevel = checkbox ? parseInt(checkbox.dataset.level) || 0 : 0;
+        
+        // Helper per normalizzare il nome dello spell (supporta sia string che object)
+        const getSpellName = (s) => typeof s === 'string' ? s : s.name;
+        
         if (isChecked) {
-            if (!this.wizardData.spellcasting.spellsKnown.includes(spellKey)) {
-                this.wizardData.spellcasting.spellsKnown.push(spellKey);
+            // Controlla se esiste già (sia come stringa che come oggetto)
+            const exists = this.wizardData.spellcasting.spellsKnown.some(s => getSpellName(s) === spellKey);
+            if (!exists) {
+                // Salva come oggetto con nome E livello
+                this.wizardData.spellcasting.spellsKnown.push({ 
+                    name: spellKey, 
+                    level: spellLevel 
+                });
             }
         } else {
             this.wizardData.spellcasting.spellsKnown = 
-                this.wizardData.spellcasting.spellsKnown.filter(s => s !== spellKey);
+                this.wizardData.spellcasting.spellsKnown.filter(s => getSpellName(s) !== spellKey);
         }
         
-        // Aggiorna tutte le label degli incantesimi
-        this.updateAllSpellLabels();
+        // Aggiorna contatori e labels
+        this.updateSpellCounters();
     }
     
     /**
-     * Aggiorna tutte le etichette degli incantesimi
+     * Aggiorna tutti i contatori e le label degli incantesimi
      */
-    updateAllSpellLabels() {
-        const allCheckboxes = this.container.querySelectorAll('input[data-spell]');
+    updateSpellCounters() {
         const knownSpells = this.wizardData.spellcasting?.spellsKnown || [];
+        const allCheckboxes = this.container.querySelectorAll('input[data-spell]');
+        
+        // Helper per ottenere il nome dello spell (supporta sia string che object)
+        const getSpellName = (s) => typeof s === 'string' ? s : s.name;
+        // Helper per ottenere il livello dello spell (supporta sia string che object)
+        const getSpellLevel = (s, checkbox) => {
+            if (typeof s === 'object' && s.level !== undefined) return s.level;
+            return checkbox ? parseInt(checkbox.dataset.level) || 0 : 0;
+        };
         
         // Conta per livello
         const countByLevel = {};
         knownSpells.forEach(spell => {
-            const cb = this.container.querySelector(`input[data-spell="${spell}"]`);
+            const spellName = getSpellName(spell);
+            const cb = this.container.querySelector(`input[data-spell="${spellName}"]`);
             if (cb) {
-                const level = cb.dataset.level;
+                const level = getSpellLevel(spell, cb);
                 countByLevel[level] = (countByLevel[level] || 0) + 1;
             }
         });
         
-        // Aggiorna tutte le label
+        // Calcola totali
+        const totalCantrips = countByLevel[0] || 0;
+        let totalSpells = 0;
+        for (let level = 1; level <= 9; level++) {
+            totalSpells += countByLevel[level] || 0;
+        }
+        
+        // Ottieni limiti
+        const maxCantrips = this.getMaxCantrips();
+        const maxSpells = this.getMaxSpells();
+        const selectSpells = this.shouldSelectSpells();
+        
+        // === AGGIORNA CONTATORE TRUCCHETTI ===
+        const cantripsBox = this.container.querySelector('#cantrips-counter');
+        if (cantripsBox && maxCantrips !== null) {
+            const isOver = totalCantrips > maxCantrips;
+            const isAtLimit = totalCantrips === maxCantrips;
+            
+            cantripsBox.className = `spell-counter-box ${isOver ? 'over-limit' : isAtLimit ? 'at-limit' : ''}`;
+            
+            const currentEl = cantripsBox.querySelector('.counter-current');
+            if (currentEl) currentEl.textContent = totalCantrips;
+            
+            // Aggiorna hint
+            let hintEl = cantripsBox.querySelector('.counter-hint');
+            let warningEl = cantripsBox.querySelector('.counter-warning');
+            let okEl = cantripsBox.querySelector('.counter-ok');
+            
+            // Rimuovi elementi esistenti
+            if (hintEl) hintEl.remove();
+            if (warningEl) warningEl.remove();
+            if (okEl) okEl.remove();
+            
+            // Crea nuovo elemento
+            const valuesDiv = cantripsBox.querySelector('.counter-values');
+            if (valuesDiv) {
+                const newEl = document.createElement('div');
+                if (isOver) {
+                    newEl.className = 'counter-warning';
+                    newEl.textContent = `⚠️ Superato di ${totalCantrips - maxCantrips}!`;
+                } else if (isAtLimit) {
+                    newEl.className = 'counter-ok';
+                    newEl.textContent = '✓ Limite raggiunto';
+                } else {
+                    newEl.className = 'counter-hint';
+                    newEl.textContent = `Puoi sceglierne altri ${maxCantrips - totalCantrips}`;
+                }
+                valuesDiv.after(newEl);
+            }
+        }
+        
+        // === AGGIORNA CONTATORE INCANTESIMI ===
+        const spellsBox = this.container.querySelector('#spells-counter');
+        if (spellsBox && maxSpells !== null && selectSpells) {
+            const isOver = totalSpells > maxSpells;
+            const isAtLimit = totalSpells === maxSpells;
+            
+            spellsBox.className = `spell-counter-box ${isOver ? 'over-limit' : isAtLimit ? 'at-limit' : ''}`;
+            
+            const currentEl = spellsBox.querySelector('.counter-current');
+            if (currentEl) currentEl.textContent = totalSpells;
+            
+            // Aggiorna hint
+            let hintEl = spellsBox.querySelector('.counter-hint');
+            let warningEl = spellsBox.querySelector('.counter-warning');
+            let okEl = spellsBox.querySelector('.counter-ok');
+            
+            if (hintEl) hintEl.remove();
+            if (warningEl) warningEl.remove();
+            if (okEl) okEl.remove();
+            
+            const valuesDiv = spellsBox.querySelector('.counter-values');
+            if (valuesDiv) {
+                const newEl = document.createElement('div');
+                if (isOver) {
+                    newEl.className = 'counter-warning';
+                    newEl.textContent = `⚠️ Superato di ${totalSpells - maxSpells}!`;
+                } else if (isAtLimit) {
+                    newEl.className = 'counter-ok';
+                    newEl.textContent = '✓ Limite raggiunto';
+                } else {
+                    newEl.className = 'counter-hint';
+                    newEl.textContent = `Puoi sceglierne altri ${maxSpells - totalSpells}`;
+                }
+                valuesDiv.after(newEl);
+            }
+        }
+        
+        // === AGGIORNA RIEPILOGO ===
+        const summary = this.container.querySelector('#spells-summary');
+        if (summary) {
+            const totalEl = summary.querySelector('.total-count');
+            const cantripsTotalEl = summary.querySelector('.cantrips-total');
+            const spellsTotalEl = summary.querySelector('.spells-total');
+            
+            if (totalEl) totalEl.textContent = knownSpells.length;
+            if (cantripsTotalEl) cantripsTotalEl.textContent = totalCantrips;
+            if (spellsTotalEl) spellsTotalEl.textContent = totalSpells;
+        }
+        
+        // === AGGIORNA SEZIONI PER LIVELLO ===
+        for (let level = 0; level <= 9; level++) {
+            const section = this.container.querySelector(`.spells-level-section[data-level="${level}"]`);
+            if (!section) continue;
+            
+            const count = countByLevel[level] || 0;
+            const levelCountEl = section.querySelector('.level-count');
+            if (levelCountEl) levelCountEl.textContent = count;
+            
+            // Aggiorna classe sezione per trucchetti
+            if (level === 0 && maxCantrips !== null) {
+                const counterEl = section.querySelector('.level-counter');
+                if (counterEl) {
+                    counterEl.className = `level-counter ${count > maxCantrips ? 'over-limit' : count === maxCantrips ? 'at-limit' : ''}`;
+                }
+                
+                // Warning per livello
+                let warningEl = section.querySelector('.level-warning');
+                if (count > maxCantrips) {
+                    if (!warningEl) {
+                        warningEl = document.createElement('div');
+                        warningEl.className = 'level-warning';
+                        const header = section.querySelector('.spells-level-header');
+                        if (header) header.after(warningEl);
+                    }
+                    warningEl.textContent = `⚠️ Superato il limite di ${maxCantrips} trucchetti!`;
+                } else if (warningEl) {
+                    warningEl.remove();
+                }
+            }
+        }
+        
+        // === AGGIORNA LABELS CHECKBOX ===
+        let wasOverLimit = this._previousSpellOverLimit || false;
+        let isNowOverLimit = false;
+        
+        // Controlla se siamo over limit
+        const isCantripsOver = maxCantrips !== null && totalCantrips > maxCantrips;
+        const isSpellsOver = maxSpells !== null && selectSpells && totalSpells > maxSpells;
+        isNowOverLimit = isCantripsOver || isSpellsOver;
+        
         allCheckboxes.forEach(checkbox => {
             const spell = checkbox.dataset.spell;
-            const spellLabel = checkbox.closest('label.spell-cb');
-            if (!spellLabel) return;
+            const label = checkbox.closest('label.spell-cb');
+            if (!label) return;
             
-            const isSelected = knownSpells.includes(spell);
+            // Supporta sia string che object nel check
+            const isSelected = knownSpells.some(s => (typeof s === 'string' ? s : s.name) === spell);
             checkbox.checked = isSelected;
             
+            // Rimuovi classi
+            label.classList.remove('selected', 'over-limit');
+            
             if (isSelected) {
-                spellLabel.classList.add('selected');
-            } else {
-                spellLabel.classList.remove('selected');
+                label.classList.add('selected');
+                
+                // Verifica se over-limit - TUTTI gli incantesimi selezionati diventano rossi
+                const level = parseInt(checkbox.dataset.level) || 0;
+                if (level === 0 && isCantripsOver) {
+                    label.classList.add('over-limit');
+                } else if (level > 0 && isSpellsOver) {
+                    // ANCHE gli incantesimi di livello superiore diventano rossi!
+                    label.classList.add('over-limit');
+                }
             }
         });
         
-        // Aggiorna i contatori per ogni livello
+        // === AGGIUNGI CLASSE OVER-LIMIT ALLE SEZIONI ===
         for (let level = 0; level <= 9; level++) {
-            const counter = this.container.querySelector(`.spells-level-section:nth-child(${level + 1}) .spells-counter strong`);
-            if (counter) {
-                counter.textContent = countByLevel[level] || 0;
+            const section = this.container.querySelector(`.spells-level-section[data-level="${level}"]`);
+            if (!section) continue;
+            
+            if (level === 0 && isCantripsOver) {
+                section.classList.add('over-limit');
+            } else if (level > 0 && isSpellsOver) {
+                section.classList.add('over-limit');
+            } else {
+                section.classList.remove('over-limit');
             }
         }
+        
+        // === MOSTRA POPUP WARNING ===
+        if (isNowOverLimit && !wasOverLimit) {
+            this.showSpellLimitPopup(isCantripsOver, isSpellsOver, totalCantrips, maxCantrips, totalSpells, maxSpells);
+        }
+        
+        // Salva stato per prossimo confronto
+        this._previousSpellOverLimit = isNowOverLimit;
+    }
+    
+    /**
+     * Mostra un popup temporaneo per warning limite incantesimi
+     */
+    showSpellLimitPopup(isCantripsOver, isSpellsOver, totalCantrips, maxCantrips, totalSpells, maxSpells) {
+        // Rimuovi popup esistente
+        const existing = document.querySelector('.spell-limit-popup');
+        if (existing) existing.remove();
+        
+        let message = '';
+        if (isCantripsOver && isSpellsOver) {
+            message = `⚠️ ATTENZIONE!\nTrucchetti: ${totalCantrips}/${maxCantrips} (+${totalCantrips - maxCantrips})\nIncantesimi: ${totalSpells}/${maxSpells} (+${totalSpells - maxSpells})`;
+        } else if (isCantripsOver) {
+            message = `⚠️ ATTENZIONE!\nTrucchetti superati: ${totalCantrips}/${maxCantrips} (+${totalCantrips - maxCantrips})`;
+        } else if (isSpellsOver) {
+            message = `⚠️ ATTENZIONE!\nIncantesimi superati: ${totalSpells}/${maxSpells} (+${totalSpells - maxSpells})`;
+        }
+        
+        const popup = document.createElement('div');
+        popup.className = 'spell-limit-popup';
+        popup.innerHTML = message.replace(/\n/g, '<br>');
+        document.body.appendChild(popup);
+        
+        // Rimuovi dopo 3 secondi
+        setTimeout(() => {
+            if (popup.parentNode) {
+                popup.remove();
+            }
+        }, 3000);
+    }
+    
+    /**
+     * Aggiorna tutte le etichette degli incantesimi (legacy, redirect)
+     */
+    updateAllSpellLabels() {
+        this.updateSpellCounters();
     }
     
     rollAbilities() {
@@ -1026,6 +1611,586 @@ export class PgController {
     }
     
     // ========================================================================
+    // GESTIONE CA (CLASSE ARMATURA)
+    // ========================================================================
+    
+    /**
+     * Mostra il modal per modificare la CA
+     */
+    showAcModal(button) {
+        // Rimuovi modal esistente
+        this.hideAcModal();
+        
+        const pg = this.dataManager.getById(this.selectedPgId);
+        const currentAc = pg?.armorClass || 10;
+        
+        // Crea modal inline
+        const modal = document.createElement('div');
+        modal.className = 'ac-modal';
+        modal.id = 'ac-modal';
+        modal.innerHTML = `
+            <input type="number" id="ac-input" value="${currentAc}" min="1" max="30">
+            <button class="btn-save-ac" title="Salva">✓</button>
+            <button class="btn-cancel-ac" title="Annulla">✕</button>
+        `;
+        
+        // Posiziona vicino al pulsante
+        const acDisplay = button.closest('.ac-display') || button.parentElement;
+        acDisplay.style.position = 'relative';
+        acDisplay.appendChild(modal);
+        
+        // Focus sull'input
+        modal.querySelector('#ac-input').focus();
+        modal.querySelector('#ac-input').select();
+    }
+    
+    /**
+     * Nasconde il modal CA
+     */
+    hideAcModal() {
+        const existing = document.getElementById('ac-modal');
+        if (existing) existing.remove();
+    }
+    
+    /**
+     * Salva la CA dal modal
+     */
+    saveAcFromModal(button) {
+        const modal = button.closest('.ac-modal');
+        const input = modal?.querySelector('#ac-input');
+        if (!input) return;
+        
+        const newAc = parseInt(input.value) || 10;
+        
+        // Aggiorna il PG
+        const pg = this.dataManager.getById(this.selectedPgId);
+        if (pg) {
+            pg.armorClass = newAc;
+            pg.armorClassOverride = true; // Flag per indicare override manuale
+            this.dataManager.update(pg);
+            
+            // Aggiorna display
+            const acDisplay = document.getElementById('ca-value');
+            if (acDisplay) acDisplay.textContent = newAc;
+            
+            showToast(`CA aggiornata a ${newAc}`, 'success');
+        }
+        
+        this.hideAcModal();
+    }
+    
+    // ========================================================================
+    // GESTIONE INVENTARIO
+    // ========================================================================
+    
+    /**
+     * Aggiunge un oggetto dal database all'inventario
+     */
+    addItemToInventory(itemIndex) {
+        const item = this.databases.items.find(i => i.index === itemIndex);
+        if (!item) {
+            showToast('Oggetto non trovato.', 'error');
+            return;
+        }
+        
+        if (!this.wizardData.inventory) this.wizardData.inventory = [];
+        
+        // Controlla se l'oggetto è già nell'inventario
+        const existingIdx = this.wizardData.inventory.findIndex(i => i.index === itemIndex);
+        if (existingIdx >= 0) {
+            // Incrementa quantità
+            this.wizardData.inventory[existingIdx].quantity = 
+                (this.wizardData.inventory[existingIdx].quantity || 1) + 1;
+        } else {
+            // Aggiungi nuovo oggetto
+            this.wizardData.inventory.push({
+                ...item,
+                quantity: 1
+                });
+            }
+        
+        this.updateInventoryDisplay();
+        showToast(`${item.name} aggiunto!`, 'success');
+    }
+    
+    /**
+     * Rimuove un oggetto dall'inventario
+     */
+    removeItemFromInventory(index) {
+        if (!this.wizardData.inventory) return;
+        
+        const item = this.wizardData.inventory[index];
+        if (!item) return;
+        
+        this.wizardData.inventory.splice(index, 1);
+        this.updateInventoryDisplay();
+        showToast(`${item.name} rimosso.`, 'info');
+    }
+    
+    /**
+     * Aggiorna la quantità di un oggetto
+     */
+    updateItemQuantity(index, quantity) {
+        if (!this.wizardData.inventory) return;
+        
+        if (this.wizardData.inventory[index]) {
+            this.wizardData.inventory[index].quantity = Math.max(1, quantity);
+            this.updateInventoryDisplay();
+        }
+    }
+    
+    /**
+     * Aggiunge un oggetto personalizzato
+     */
+    addCustomItem() {
+        const nameInput = this.container.querySelector('#custom-item-name');
+        const qtyInput = this.container.querySelector('#custom-item-qty');
+        const weightInput = this.container.querySelector('#custom-item-weight');
+        const costInput = this.container.querySelector('#custom-item-cost');
+        
+        const name = nameInput?.value?.trim();
+        if (!name) {
+            showToast('Inserisci un nome per l\'oggetto.', 'warning');
+            return;
+        }
+        
+        const qty = parseInt(qtyInput?.value) || 1;
+        const weight = parseFloat(weightInput?.value) || 0;
+        const costStr = costInput?.value || '0';
+        
+        // Parse costo (es. "10 mo" -> {quantity: 10, unit: 'mo'})
+        const costMatch = costStr.match(/^(\d+)\s*(mo|ma|mr|mp)?$/i);
+        const cost = costMatch ? {
+            quantity: parseInt(costMatch[1]),
+            unit: (costMatch[2] || 'mo').toLowerCase()
+        } : { quantity: 0, unit: 'mo' };
+        
+        if (!this.wizardData.inventory) this.wizardData.inventory = [];
+        
+        this.wizardData.inventory.push({
+            index: `custom-${Date.now()}`,
+            name: name,
+            quantity: qty,
+            weight: weight,
+            cost: cost,
+            custom: true,
+            equipment_category: { name: 'Custom', index: 'custom' }
+        });
+        
+        // Pulisci i campi
+        if (nameInput) nameInput.value = '';
+        if (qtyInput) qtyInput.value = '1';
+        if (weightInput) weightInput.value = '0';
+        if (costInput) costInput.value = '';
+        
+        this.updateInventoryDisplay();
+        showToast(`${name} aggiunto!`, 'success');
+    }
+    
+    /**
+     * Aggiunge equipaggiamento suggerito (come testo)
+     */
+    addSuggestedEquipment(text) {
+        if (!this.wizardData.inventory) this.wizardData.inventory = [];
+        
+        this.wizardData.inventory.push({
+            index: `suggested-${Date.now()}`,
+            name: text,
+            quantity: 1,
+            weight: 0,
+            cost: { quantity: 0, unit: 'mo' },
+            custom: true,
+            suggested: true,
+            equipment_category: { name: 'Suggerito', index: 'suggested' }
+        });
+        
+        this.updateInventoryDisplay();
+        showToast('Equipaggiamento aggiunto!', 'success');
+    }
+    
+    /**
+     * Seleziona un'opzione di scelta (a) o (b)
+     */
+    selectEquipmentChoice(choiceKey, option) {
+        if (!this.wizardData._selectedChoices) {
+            this.wizardData._selectedChoices = {};
+        }
+        this.wizardData._selectedChoices[choiceKey] = option;
+        this.render();
+    }
+    
+    /**
+     * Reset di una scelta
+     */
+    resetEquipmentChoice(choiceKey) {
+        if (this.wizardData._selectedChoices) {
+            delete this.wizardData._selectedChoices[choiceKey];
+        }
+        this.render();
+    }
+    
+    /**
+     * Accetta un suggerimento e lo espande nel contenuto
+     * @param {string} key - Chiave del suggerimento
+     * @param {string} text - Testo del suggerimento (fallback)
+     * @param {string} source - Fonte (class/background)
+     * @param {string} itemsJson - JSON con gli oggetti parsati (opzionale)
+     */
+    acceptSuggestion(key, text, source, itemsJson = null) {
+        if (!this.wizardData.inventory) this.wizardData.inventory = [];
+        if (!this.wizardData._acceptedSuggestions) this.wizardData._acceptedSuggestions = [];
+        
+        // Marca come accettato
+        if (!this.wizardData._acceptedSuggestions.includes(key)) {
+            this.wizardData._acceptedSuggestions.push(key);
+        }
+        
+        // Se abbiamo il JSON con gli oggetti, usalo direttamente
+        let items;
+        if (itemsJson) {
+            try {
+                items = JSON.parse(decodeURIComponent(itemsJson));
+            } catch (e) {
+                console.warn('Errore parsing items JSON:', e);
+                items = this.parseEquipmentText(text);
+            }
+        } else {
+            // Parsing del testo per trovare oggetti e dotazioni
+            items = this.parseEquipmentText(text);
+        }
+        
+        // Aggiungi tutti gli oggetti trovati
+        items.forEach(itemData => {
+            // Cerca nel database per oggetti conosciuti
+            const dbItem = this.findItemInDatabase(itemData.name);
+            
+            if (dbItem) {
+                // Se è una dotazione, espandila
+                if (dbItem.contents && dbItem.contents.length > 0) {
+                    this.expandPackContents(dbItem, itemData.quantity);
+                } else {
+                    // Oggetto normale
+                    this.addItemToInventoryDirect(dbItem, itemData.quantity, true);
+                }
+            } else {
+                // Oggetto non trovato nel database, aggiungi come testo
+                this.wizardData.inventory.push({
+                    index: `text-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
+                    name: itemData.name,
+                    quantity: itemData.quantity,
+                    weight: 0,
+                    cost: { quantity: 0, unit: 'mo' },
+                    custom: true,
+                    fromSuggestion: true,
+                    equipment_category: { name: 'Testo', index: 'text' }
+                });
+            }
+        });
+        
+        this.render();
+        showToast('Equipaggiamento aggiunto!', 'success');
+    }
+    
+    /**
+     * Parsing del testo dell'equipaggiamento per estrarre oggetti
+     */
+    parseEquipmentText(text) {
+        const items = [];
+        
+        // Pattern per oggetti con quantità: "20 frecce", "5 bastoncini", "10 chiodi"
+        const quantityPattern = /^(\d+)\s+(.+)$/;
+        
+        // Separa per virgole e "e"
+        const parts = text.split(/,\s*(?:e\s+)?|\s+e\s+/);
+        
+        parts.forEach(part => {
+            part = part.trim();
+            if (!part) return;
+            
+            const qtyMatch = part.match(quantityPattern);
+            if (qtyMatch) {
+                items.push({
+                    name: qtyMatch[2].trim(),
+                    quantity: parseInt(qtyMatch[1])
+                });
+            } else {
+                items.push({
+                    name: part,
+                    quantity: 1
+                });
+            }
+        });
+        
+        return items;
+    }
+    
+    /**
+     * Cerca un oggetto nel database per nome (case insensitive, match parziale)
+     */
+    findItemInDatabase(name) {
+        const nameLower = name.toLowerCase().trim();
+        
+        // Alias per le dotazioni (zaini) - mappa nomi comuni ai nomi del database
+        const packAliases = {
+            'zaino da diplomatico': 'dotazione da diplomatico',
+            'zaino da intrattenitore': 'dotazione da intrattenitore',
+            'zaino da esploratore': 'dotazione da esploratore',
+            'zaino del chierico': 'dotazione del chierico',
+            'zaino del druido': 'dotazione del druido',
+            'zaino del ladro': 'dotazione del ladro',
+            'zaino del mago': 'dotazione del mago',
+            'zaino del monaco': 'dotazione del monaco',
+            'zaino del paladino': 'dotazione del paladino',
+            'zaino del ranger': 'dotazione del ranger',
+            'zaino dello stregone': 'dotazione dello stregone',
+            'zaino del guerriero': 'dotazione del guerriero',
+            'zaino del barbaro': 'dotazione del barbaro',
+            'zaino del bardo': 'dotazione del bardo'
+        };
+        
+        // Controlla se è un alias di dotazione
+        const aliasedName = packAliases[nameLower];
+        const searchName = aliasedName || nameLower;
+        
+        // Prima prova match esatto
+        let found = this.databases.items?.find(item => 
+            item.name?.toLowerCase() === searchName
+        );
+        
+        if (found) return found;
+        
+        // Poi prova match parziale (il nome dell'utente è contenuto nel nome del db)
+        found = this.databases.items?.find(item => 
+            item.name?.toLowerCase().includes(searchName) ||
+            searchName.includes(item.name?.toLowerCase())
+        );
+        
+        // Gestisci casi speciali
+        if (!found) {
+            // Arco lungo -> arco-lungo
+            const normalized = searchName.replace(/\s+/g, '-');
+            found = this.databases.items?.find(item => 
+                item.index === normalized || item.index?.includes(normalized)
+            );
+        }
+        
+        // Se ancora non trovato e contiene parole chiave di dotazioni, cerca per tipo
+        if (!found && (searchName.includes('zaino') || searchName.includes('dotazione'))) {
+            // Estrai la parola chiave (es. "diplomatico" da "zaino da diplomatico")
+            const keywords = searchName.replace(/zaino|dotazione|da|del|dello/gi, '').trim();
+            if (keywords) {
+                found = this.databases.items?.find(item => {
+                    if (item.gear_category?.index !== 'equipment-packs') return false;
+                    return item.name?.toLowerCase().includes(keywords);
+                });
+            }
+        }
+        
+        return found;
+    }
+    
+    /**
+     * Espande il contenuto di una dotazione nell'inventario
+     */
+    expandPackContents(pack, multiplier = 1) {
+        if (!pack.contents || pack.contents.length === 0) return;
+        
+        pack.contents.forEach(content => {
+            const itemData = content.item;
+            const qty = (content.quantity || 1) * multiplier;
+            
+            // Cerca l'oggetto nel database
+            const dbItem = this.findItemInDatabase(itemData.name);
+            
+            if (dbItem) {
+                this.addItemToInventoryDirect(dbItem, qty, true);
+            } else {
+                // Aggiungi con i dati minimi
+                this.wizardData.inventory.push({
+                    index: itemData.index || `pack-item-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
+                    name: itemData.name,
+                    quantity: qty,
+                    weight: 0,
+                    cost: { quantity: 0, unit: 'mo' },
+                    custom: false,
+                    fromPack: pack.name,
+                    equipment_category: { name: 'Da Dotazione', index: 'pack-content' }
+                });
+            }
+        });
+    }
+    
+    /**
+     * Aggiunge direttamente un oggetto all'inventario
+     */
+    addItemToInventoryDirect(item, quantity = 1, mergeExisting = true) {
+        if (!this.wizardData.inventory) this.wizardData.inventory = [];
+        
+        // Se mergeExisting, cerca se esiste già
+        if (mergeExisting) {
+            const existingIdx = this.wizardData.inventory.findIndex(i => 
+                i.index === item.index || i.name?.toLowerCase() === item.name?.toLowerCase()
+            );
+            
+            if (existingIdx >= 0) {
+                this.wizardData.inventory[existingIdx].quantity = 
+                    (this.wizardData.inventory[existingIdx].quantity || 1) + quantity;
+                return;
+            }
+        }
+        
+        // Aggiungi come nuovo oggetto
+        this.wizardData.inventory.push({
+            ...item,
+            quantity: quantity,
+            custom: false
+            // fromPack viene ereditato da item se presente, altrimenti non imposto
+        });
+    }
+    
+    /**
+     * Filtra gli oggetti per categoria
+     */
+    filterItemsByCategory(category) {
+        this.wizardData._itemCategory = category;
+        this.wizardData._itemSearch = '';
+        this.render();
+    }
+    
+    /**
+     * Cerca oggetti nel database
+     */
+    searchItems(term) {
+        this.wizardData._itemSearch = term;
+        // Non re-renderizzare, aggiorna solo i risultati
+        this.updateItemResults(term, this.wizardData._itemCategory || 'all');
+    }
+    
+    /**
+     * Aggiorna i risultati della ricerca oggetti
+     */
+    updateItemResults(searchTerm, category) {
+        const resultsContainer = this.container.querySelector('.item-results');
+        if (!resultsContainer) return;
+        
+        let items = [...this.databases.items];
+        
+        if (category !== 'all') {
+            items = items.filter(i => i.equipment_category?.index === category);
+        }
+        
+        if (searchTerm) {
+            const term = searchTerm.toLowerCase();
+            items = items.filter(i => i.name?.toLowerCase().includes(term));
+        }
+        
+        items = items.slice(0, 50);
+        
+        const getItemIcon = (item) => {
+            const cat = item.equipment_category?.index;
+            if (cat === 'weapon') return '⚔️';
+            if (cat === 'armor') return '🛡️';
+            if (cat === 'tools') return '🔧';
+            if (cat === 'mounts-and-vehicles') return '🐴';
+            return '🎒';
+        };
+        
+        const formatCost = (cost) => {
+            if (!cost) return '-';
+            return `${cost.quantity || 0} ${cost.unit || 'mo'}`;
+        };
+        
+        resultsContainer.innerHTML = items.length === 0 
+            ? '<p class="no-results">Nessun oggetto trovato</p>'
+            : items.map(item => `
+                <div class="item-result-row" data-item-index="${item.index}">
+                    <span class="item-icon">${getItemIcon(item)}</span>
+                    <span class="item-name">${item.name}</span>
+                    <span class="item-weight">${item.weight || 0} kg</span>
+                    <span class="item-cost">${formatCost(item.cost)}</span>
+                    <button type="button" class="btn btn-sm btn-add-item" 
+                            data-item-index="${item.index}" title="Aggiungi">+</button>
+                </div>
+            `).join('');
+    }
+    
+    /**
+     * Aggiorna le monete
+     */
+    updateCoins() {
+        const gold = parseInt(this.container.querySelector('#coins-gold')?.value) || 0;
+        const silver = parseInt(this.container.querySelector('#coins-silver')?.value) || 0;
+        const copper = parseInt(this.container.querySelector('#coins-copper')?.value) || 0;
+        
+        this.wizardData.coins = { gold, silver, copper };
+    }
+    
+    /**
+     * Aggiorna il display dell'inventario senza re-render
+     */
+    updateInventoryDisplay() {
+        const inventory = this.wizardData.inventory || [];
+        
+        // Aggiorna riepilogo
+        const summaryBox = this.container.querySelector('.inventory-summary-box');
+        if (summaryBox) {
+            const itemCount = inventory.length;
+            const totalWeight = inventory.reduce((t, i) => t + ((i.weight || 0) * (i.quantity || 1)), 0);
+            const totalCost = inventory.reduce((t, i) => {
+                const cost = (i.cost?.quantity || 0) * ({ mo: 100, ma: 10, mr: 1 }[i.cost?.unit] || 1);
+                return t + (cost * (i.quantity || 1));
+            }, 0);
+            
+            const stats = summaryBox.querySelectorAll('.stat-value');
+            if (stats.length >= 3) {
+                stats[0].textContent = itemCount;
+                stats[1].textContent = `${totalWeight.toFixed(1)} kg`;
+                stats[2].textContent = totalCost >= 100 
+                    ? `${Math.floor(totalCost / 100)} mo` 
+                    : `${totalCost} mr`;
+            }
+        }
+        
+        // Aggiorna tabella
+        const tbody = this.container.querySelector('.inventory-table tbody');
+        if (tbody) {
+            const getItemIcon = (item) => {
+                const cat = item.equipment_category?.index;
+                if (cat === 'weapon') return '⚔️';
+                if (cat === 'armor') return '🛡️';
+                if (cat === 'tools') return '🔧';
+                if (cat === 'mounts-and-vehicles') return '🐴';
+                return '🎒';
+            };
+            
+            const formatCost = (cost) => {
+                if (!cost) return '-';
+                return `${cost.quantity || 0} ${cost.unit || 'mo'}`;
+            };
+            
+            tbody.innerHTML = inventory.map((item, idx) => `
+                <tr class="inventory-row ${item.custom ? 'custom-item' : ''}" data-index="${idx}">
+                    <td class="item-name">
+                        <span class="item-icon">${getItemIcon(item)}</span>
+                        ${item.name}
+                        ${item.custom ? '<span class="custom-badge">custom</span>' : ''}
+                    </td>
+                    <td class="item-qty">
+                        <input type="number" class="qty-input" data-index="${idx}" 
+                               value="${item.quantity || 1}" min="1" max="999">
+                    </td>
+                    <td class="item-weight">${(item.weight || 0) * (item.quantity || 1)} kg</td>
+                    <td class="item-cost">${formatCost(item.cost)}</td>
+                    <td class="item-actions">
+                        <button type="button" class="btn-icon-sm btn-remove-item" 
+                                data-index="${idx}" title="Rimuovi">🗑️</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+    }
+    
+    // ========================================================================
     // CALCOLO STATISTICHE FINALI
     // ========================================================================
     
@@ -1034,7 +2199,15 @@ export class PgController {
         this.recalculateHp();
         
         this.wizardData.initiative = calculateModifier(this.wizardData.abilities.dexterity);
-        this.wizardData.armorClass = 10 + calculateModifier(this.wizardData.abilities.dexterity);
+        
+        // Calcola CA basata su armatura equipaggiata e DES
+        const acResult = calculateArmorClass(this.wizardData, this.databases.items);
+        this.wizardData.armorClass = acResult.ac;
+        this.wizardData.armorInfo = {
+            name: acResult.armorName,
+            hasShield: acResult.hasShield,
+            shieldBonus: acResult.shieldBonus
+        };
         
         // Aggiungi lingue extra
         if (this.wizardData.extraLanguages) {
@@ -1061,13 +2234,17 @@ export class PgController {
             const spellAbility = this.getSpellcastingAbility(this.databases.selectedClass.index);
             const abilityScore = this.wizardData.abilities[spellAbility];
             
+            // Calcola slot incantesimi per livello
+            const spellSlots = calculateSpellSlots(this.databases.selectedClass.index, this.wizardData.level);
+            
             this.wizardData.spellcasting = {
                 ability: spellAbility,
                 spellSaveDC: 8 + this.wizardData.proficiencyBonus + calculateModifier(abilityScore),
                 spellAttackBonus: this.wizardData.proficiencyBonus + calculateModifier(abilityScore),
-                slots: {}, slotsMax: {},
+                slots: spellSlots,
                 spellsKnown: this.wizardData.spellcasting?.spellsKnown || [],
-                spellsPrepared: this.wizardData.spellcasting?.spellsPrepared || []
+                spellsPrepared: this.wizardData.spellcasting?.spellsPrepared || [],
+                isWarlock: this.databases.selectedClass.index === 'warlock'
             };
         }
     }
@@ -1082,11 +2259,358 @@ export class PgController {
     }
     
     // ========================================================================
+    // DYNAMIC SELECTOR - Selezione oggetti dal database
+    // ========================================================================
+    
+    /**
+     * Stato temporaneo per il selettore dinamico
+     */
+    _dynamicSelection = {
+        selectedItems: [],
+        maxQuantity: 1,
+        suggestionKey: null,
+        source: null
+    };
+    
+    /**
+     * Apre il modal per selezionare oggetti dal database
+     */
+    openDynamicSelector(suggestionKey, suggestionText, filterJson, quantity, category, source) {
+        let filter;
+        try {
+            filter = JSON.parse(decodeURIComponent(filterJson));
+        } catch (e) {
+            console.error('Errore parsing filter:', e);
+            return;
+        }
+        
+        // Reset stato
+        this._dynamicSelection = {
+            selectedItems: [],
+            maxQuantity: quantity,
+            suggestionKey: suggestionKey,
+            source: source
+        };
+        
+        // Filtra oggetti dal database
+        const filteredItems = this.filterItemsFromDatabase(filter);
+        
+        // Renderizza modal
+        const modalHtml = this.renderDynamicSelectorModal({
+            suggestionKey,
+            suggestionText,
+            filter,
+            quantity,
+            category,
+            items: filteredItems,
+            source
+        });
+        
+        // Aggiungi modal al DOM
+        const modalContainer = document.createElement('div');
+        modalContainer.innerHTML = modalHtml;
+        document.body.appendChild(modalContainer.firstElementChild);
+        
+        // Bind eventi specifici del modal
+        this.bindDynamicSelectorEvents();
+    }
+    
+    /**
+     * Filtra oggetti dal database in base al filtro
+     */
+    filterItemsFromDatabase(filter) {
+        if (!this.databases.items) return [];
+        
+        return this.databases.items.filter(item => {
+            // Filtro per tipo
+            if (filter.type) {
+                const catIndex = item.equipment_category?.index || '';
+                const isType = catIndex.includes(filter.type) || 
+                              (filter.type === 'weapon' && catIndex === 'weapon') ||
+                              (filter.type === 'armor' && catIndex === 'armor') ||
+                              (filter.type === 'tool' && catIndex === 'tools') ||
+                              (filter.type === 'pack' && item.gear_category?.index === 'equipment-packs');
+                if (!isType) return false;
+            }
+            
+            // Filtro per weapon_category
+            if (filter.weapon_category) {
+                const wc = (item.weapon_category || '').toLowerCase();
+                if (!wc.includes(filter.weapon_category.toLowerCase())) return false;
+            }
+            
+            // Filtro per weapon_range
+            if (filter.weapon_range) {
+                const wr = (item.weapon_range || '').toLowerCase();
+                if (!wr.includes(filter.weapon_range.toLowerCase())) return false;
+            }
+            
+            // Filtro per armor_category
+            if (filter.armor_category) {
+                const ac = (item.armor_category || '').toLowerCase();
+                if (!ac.includes(filter.armor_category.toLowerCase())) return false;
+            }
+            
+            // Filtro per tool_category
+            if (filter.tool_category) {
+                const tc = (item.tool_category || '').toLowerCase();
+                if (!tc.includes(filter.tool_category.toLowerCase())) return false;
+            }
+            
+            return true;
+        });
+    }
+    
+    /**
+     * Renderizza il modal del selettore dinamico
+     */
+    renderDynamicSelectorModal(options) {
+        const { suggestionKey, suggestionText, quantity, category, items, source } = options;
+        
+        const getItemIcon = (item) => {
+            const cat = item.equipment_category?.index;
+            if (cat === 'weapon') return '⚔️';
+            if (cat === 'armor') return '🛡️';
+            if (cat === 'tools') return '🔧';
+            return '🎒';
+        };
+        
+        const formatCost = (cost) => {
+            if (!cost) return '-';
+            return `${cost.quantity || 0} ${cost.unit || 'mo'}`;
+        };
+        
+        return `
+            <div class="dynamic-selector-overlay" id="dynamic-selector-overlay">
+                <div class="dynamic-selector-modal">
+                    <div class="dynamic-selector-header">
+                        <h3>🎯 Seleziona ${quantity > 1 ? quantity + ' oggetti' : 'un oggetto'}</h3>
+                        <p class="dynamic-selector-subtitle">${suggestionText}</p>
+                        <span class="dynamic-selector-category">${category}</span>
+                    </div>
+                    
+                    <div class="dynamic-selector-search">
+                        <input type="text" id="dynamic-search-input" placeholder="Cerca...">
+                    </div>
+                    
+                    <div class="dynamic-selector-info">
+                        <span>Selezionati: <strong id="dynamic-selected-count">0</strong> / ${quantity}</span>
+                    </div>
+                    
+                    <div class="dynamic-selector-list" id="dynamic-items-list">
+                        ${items.length === 0 
+                            ? '<p class="no-items-found">Nessun oggetto trovato per questa categoria</p>'
+                            : items.map((item, idx) => `
+                                <div class="dynamic-item" data-item-index="${item.index}">
+                                    <div class="dynamic-item-info">
+                                        <span class="dynamic-item-icon">${getItemIcon(item)}</span>
+                                        <span class="dynamic-item-name">${item.name}</span>
+                                    </div>
+                                    <div class="dynamic-item-details">
+                                        <span class="dynamic-item-weight">${item.weight || 0} kg</span>
+                                        <span class="dynamic-item-cost">${formatCost(item.cost)}</span>
+                                    </div>
+                                    <button type="button" class="btn btn-sm btn-toggle-dynamic-item" 
+                                            data-item-index="${item.index}"
+                                            data-item-name="${item.name}"
+                                            data-item-weight="${item.weight || 0}"
+                                            title="Seleziona">☐</button>
+                                </div>
+                            `).join('')
+                        }
+                    </div>
+                    
+                    <div class="dynamic-selector-actions">
+                        <button type="button" class="btn btn-secondary" id="btn-cancel-dynamic-selector">Annulla</button>
+                        <button type="button" class="btn btn-primary" id="btn-confirm-dynamic-selection"
+                                data-suggestion-key="${suggestionKey}"
+                                data-quantity="${quantity}"
+                                data-source="${source}"
+                                disabled>
+                            Conferma selezione
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    /**
+     * Bind eventi specifici del modal dinamico
+     */
+    bindDynamicSelectorEvents() {
+        const overlay = document.getElementById('dynamic-selector-overlay');
+        if (!overlay) return;
+        
+        // Search input
+        const searchInput = document.getElementById('dynamic-search-input');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                this.filterDynamicItems(e.target.value);
+            });
+        }
+        
+        // Toggle item buttons
+        overlay.querySelectorAll('.btn-toggle-dynamic-item').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const button = e.target.closest('.btn-toggle-dynamic-item');
+                const itemIndex = button.dataset.itemIndex;
+                const itemName = button.dataset.itemName;
+                const itemWeight = parseFloat(button.dataset.itemWeight) || 0;
+                this.toggleDynamicItemSelection(button, itemIndex, itemName, itemWeight);
+            });
+        });
+        
+        // Pulsante Conferma
+        const confirmBtn = document.getElementById('btn-confirm-dynamic-selection');
+        if (confirmBtn) {
+            confirmBtn.addEventListener('click', (e) => {
+                const button = e.target;
+                const suggestionKey = button.dataset.suggestionKey;
+                const source = button.dataset.source;
+                this.confirmDynamicSelection(suggestionKey, source);
+            });
+        }
+        
+        // Pulsante Annulla
+        const cancelBtn = document.getElementById('btn-cancel-dynamic-selector');
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', () => {
+                this.closeDynamicSelector();
+            });
+        }
+        
+        // Chiudi cliccando fuori dal modal
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                this.closeDynamicSelector();
+            }
+        });
+    }
+    
+    /**
+     * Filtra gli oggetti nel modal dinamico
+     */
+    filterDynamicItems(searchTerm) {
+        const list = document.getElementById('dynamic-items-list');
+        if (!list) return;
+        
+        const items = list.querySelectorAll('.dynamic-item');
+        const term = searchTerm.toLowerCase();
+        
+        items.forEach(item => {
+            const name = item.querySelector('.dynamic-item-name')?.textContent.toLowerCase() || '';
+            item.style.display = name.includes(term) ? '' : 'none';
+        });
+    }
+    
+    /**
+     * Toggle selezione di un oggetto nel modal
+     */
+    toggleDynamicItemSelection(button, itemIndex, itemName, itemWeight) {
+        const { selectedItems, maxQuantity } = this._dynamicSelection;
+        const existingIdx = selectedItems.findIndex(i => i.index === itemIndex);
+        
+        if (existingIdx >= 0) {
+            // Deseleziona
+            selectedItems.splice(existingIdx, 1);
+            button.textContent = '☐';
+            button.closest('.dynamic-item').classList.remove('selected');
+        } else {
+            // Verifica limite
+            if (selectedItems.length >= maxQuantity) {
+                showToast(`Puoi selezionare al massimo ${maxQuantity} oggetti`, 'warning');
+                return;
+            }
+            // Seleziona
+            selectedItems.push({ index: itemIndex, name: itemName, weight: itemWeight, quantity: 1 });
+            button.textContent = '☑';
+            button.closest('.dynamic-item').classList.add('selected');
+        }
+        
+        // Aggiorna contatore
+        const countEl = document.getElementById('dynamic-selected-count');
+        if (countEl) {
+            countEl.textContent = selectedItems.length;
+        }
+        
+        // Abilita/disabilita pulsante conferma
+        const confirmBtn = document.getElementById('btn-confirm-dynamic-selection');
+        if (confirmBtn) {
+            confirmBtn.disabled = selectedItems.length === 0;
+        }
+    }
+    
+    /**
+     * Conferma la selezione dinamica
+     */
+    confirmDynamicSelection(suggestionKey, source) {
+        const { selectedItems } = this._dynamicSelection;
+        
+        if (selectedItems.length === 0) {
+            showToast('Seleziona almeno un oggetto', 'warning');
+            return;
+        }
+        
+        // Aggiungi gli oggetti all'inventario
+        selectedItems.forEach(item => {
+            // Cerca nel database per ottenere dati completi
+            const dbItem = this.findItemInDatabase(item.name);
+            if (dbItem) {
+                this.addItemToInventoryDirect(dbItem, 1, true);
+            } else {
+                // Aggiungi come oggetto base
+                if (!this.wizardData.inventory) this.wizardData.inventory = [];
+                this.wizardData.inventory.push({
+                    index: item.index || `dynamic-${Date.now()}`,
+                    name: item.name,
+                    quantity: 1,
+                    weight: item.weight || 0,
+                    cost: { quantity: 0, unit: 'mo' },
+                    custom: true,
+                    fromDynamicSelection: true,
+                    equipment_category: { name: 'Selezione', index: 'dynamic' }
+                });
+            }
+        });
+        
+        // Marca il suggerimento come accettato
+        if (!this.wizardData._acceptedSuggestions) this.wizardData._acceptedSuggestions = [];
+        if (!this.wizardData._acceptedSuggestions.includes(suggestionKey)) {
+            this.wizardData._acceptedSuggestions.push(suggestionKey);
+        }
+        
+        // Chiudi modal
+        this.closeDynamicSelector();
+        
+        // Re-render
+        this.render();
+        showToast(`${selectedItems.length} oggetto/i aggiunto/i all'inventario!`, 'success');
+    }
+    
+    /**
+     * Chiude il modal dinamico
+     */
+    closeDynamicSelector() {
+        const overlay = document.getElementById('dynamic-selector-overlay');
+        if (overlay) {
+            overlay.remove();
+        }
+        this._dynamicSelection = {
+            selectedItems: [],
+            maxQuantity: 1,
+            suggestionKey: null,
+            source: null
+        };
+    }
+    
+    // ========================================================================
     // SALVATAGGIO E CRUD
     // ========================================================================
     
     savePg() {
         console.log('🎮 [PgController] Salvataggio PG');
+        console.log('🎮 [PgController] wizardData.inventory:', this.wizardData.inventory);
         
         const validation = this.dataManager.validate(this.wizardData);
         if (!validation.isValid) {
@@ -1095,6 +2619,13 @@ export class PgController {
         }
         
         this.calculateFinalStats();
+        
+        // Assicurati che l'inventario sia un array
+        if (!this.wizardData.inventory) {
+            this.wizardData.inventory = [];
+        }
+        
+        console.log('🎮 [PgController] Salvataggio con inventario:', this.wizardData.inventory.length, 'oggetti');
         
         if (this.isEditMode && this.selectedPgId) {
             this.dataManager.update(this.selectedPgId, this.wizardData);
@@ -1107,7 +2638,7 @@ export class PgController {
         
         this.mode = 'view';
         this.currentStep = 1;
-        this.wizardData = { ...EMPTY_PG };
+        this.wizardData = this.createEmptyPg();
         this.isEditMode = false;
         
         this.render();
@@ -1241,7 +2772,7 @@ export class PgController {
         this.selectedPgId = null;
         this.mode = 'view';
         this.currentStep = 1;
-        this.wizardData = { ...EMPTY_PG };
+        this.wizardData = this.createEmptyPg();
     }
 }
 

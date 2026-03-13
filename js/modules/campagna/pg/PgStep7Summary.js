@@ -1,0 +1,115 @@
+/**
+ * PgStep7Summary.js
+ * ─────────────────────────────────────────────────────────────
+ * Renderizza lo Step 7 del wizard: Riepilogo finale.
+ * 
+ * @author DM Tool
+ * @version 1.0.0
+ */
+
+import { 
+    ABILITY_KEY_TO_PROPERTY,
+    calculateModifier 
+} from './PgConstants.js';
+import { linkifyConditions } from '/utils/htmlHelpers.js';
+
+/**
+ * Escape HTML per prevenire XSS
+ * @param {string} text - Testo da escapare
+ * @returns {string} Testo escapato
+ */
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+/**
+ * Formatta le monete per il display
+ */
+function formatCoins(coins) {
+    if (!coins) return '-';
+    const parts = [];
+    if (coins.gold) parts.push(`${coins.gold} mo`);
+    if (coins.silver) parts.push(`${coins.silver} ma`);
+    if (coins.copper) parts.push(`${coins.copper} mr`);
+    return parts.length > 0 ? parts.join(', ') : '-';
+}
+
+/**
+ * Calcola il peso totale dell'inventario
+ */
+function calculateTotalWeight(inventory) {
+    if (!inventory || !Array.isArray(inventory)) return 0;
+    return inventory.reduce((total, item) => {
+        return total + ((item.weight || 0) * (item.quantity || 1));
+    }, 0);
+}
+
+/**
+ * Renderizza lo Step 7: Riepilogo finale
+ * @param {Object} pgData - Dati del personaggio
+ * @param {Object} databases - Database con razza, classe, etc.
+ * @param {string} traitsHtml - HTML dei tratti e privilegi (già renderizzati)
+ * @returns {string} HTML dello step
+ */
+export function renderStep7Summary(pgData, databases, traitsHtml = '') {
+    const { selectedRace, selectedClass } = databases;
+    const bonuses = selectedRace?.ability_bonuses || [];
+    const inventory = pgData.inventory || [];
+    const totalWeight = calculateTotalWeight(inventory);
+    
+    return `
+        <div class="wizard-form">
+            <div class="summary-header">
+                <h2>${pgData.name || 'Nome PG'}</h2>
+                <p>${pgData.raceName || selectedRace?.classe || selectedRace?.name || ''} ${pgData.className || selectedClass?.classe || selectedClass?.name || ''} Lv.${pgData.level || 1}</p>
+            </div>
+            
+            <div class="summary-grid">
+                <div class="sum-section">
+                    <h4>Caratteristiche</h4>
+                    <div class="sum-abilities">
+                        ${['str', 'dex', 'con', 'int', 'wis', 'cha'].map(key => {
+                            const prop = ABILITY_KEY_TO_PROPERTY[key];
+                            const base = pgData.abilities?.[prop] || 10;
+                            const bonus = bonuses.find(b => b.ability_score?.index === key)?.bonus || 0;
+                            const total = base + bonus;
+                            const mod = calculateModifier(total);
+                            return `<div class="sum-ab"><strong>${key.toUpperCase()}</strong>: ${total} (${mod >= 0 ? '+' : ''}${mod})</div>`;
+                        }).join('')}
+                    </div>
+                </div>
+                
+                <div class="sum-section">
+                    <h4>Combattimento</h4>
+                    <p><strong>HP:</strong> ${pgData.hp?.max || 0}</p>
+                    <p><strong>CA:</strong> ${pgData.armorClass || 10}</p>
+                    <p><strong>Velocità:</strong> ${pgData.speed || 9}m</p>
+                    <p><strong>Competenza:</strong> +${pgData.proficiencyBonus || 2}</p>
+                </div>
+                
+                <div class="sum-section">
+                    <h4>Competenze</h4>
+                    <p><strong>TS:</strong> ${(pgData.savingThrows || []).join(', ') || '-'}</p>
+                    <p><strong>Abilità:</strong> ${(pgData.skills || []).join(', ') || '-'}</p>
+                </div>
+                
+                <div class="sum-section">
+                    <h4>Inventario</h4>
+                    <p><strong>Oggetti:</strong> ${inventory.length}</p>
+                    <p><strong>Peso:</strong> ${totalWeight.toFixed(1)} kg</p>
+                    <p><strong>Monete:</strong> ${formatCoins(pgData.coins)}</p>
+                </div>
+            </div>
+            
+            <!-- Tratti e Privilegi nel Riepilogo -->
+            ${traitsHtml}
+            
+            ${pgData.backstory ? `<div class="sum-section full"><h4>Background</h4><p>${linkifyConditions(escapeHtml(pgData.backstory))}</p></div>` : ''}
+        </div>
+    `;
+}
+
+console.log('📋 [PgStep7Summary] Modulo caricato.');

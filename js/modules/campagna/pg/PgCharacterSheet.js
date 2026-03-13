@@ -1,10 +1,15 @@
 /**
  * PgCharacterSheet.js
  * ─────────────────────────────────────────────────────────────
- * Renderizza la scheda personaggio completa e le sezioni correlate.
+ * Renderizza la scheda personaggio con layout a 2 card flippabili.
+ * 
+ * Layout:
+ * - Header fisso: Nome sx, info dx
+ * - Card 1: Identità + Caratteristiche + Abilità | Note/Backstory/Segreti
+ * - Card 2: Combattimento + TS + Magia | Tratti + Inventario
  * 
  * @author DM Tool
- * @version 1.0.0
+ * @version 2.1.0 - Layout ottimizzato
  */
 
 import { 
@@ -21,11 +26,6 @@ import { getRaceTraitsWithDescriptions } from '/database/traitDescriptions.js';
 // HELPER FUNCTIONS
 // ========================================================================
 
-/**
- * Escape HTML per prevenire XSS
- * @param {string} text - Testo da escapare
- * @returns {string} Testo escapato
- */
 export function escapeHtml(text) {
     if (!text) return '';
     const div = document.createElement('div');
@@ -37,32 +37,22 @@ export function escapeHtml(text) {
 // TRATTI E PRIVILEGI
 // ========================================================================
 
-/**
- * Crea un tag con tooltip per tratti/privilegi
- * @param {string} name - Nome del tratto
- * @param {string} description - Descrizione
- * @param {string} type - Tipo (racial, class, subclass, background)
- * @returns {string} HTML del tag
- */
 export function renderTraitTag(name, description, type = 'trait') {
     const escapedDesc = escapeHtml(description || '');
-    const truncatedDesc = escapedDesc.length > 300 
-        ? escapedDesc.substring(0, 300) + '...' 
+    const truncatedDesc = escapedDesc.length > 500 
+        ? escapedDesc.substring(0, 500) + '...' 
         : escapedDesc;
     
+    // Aggiunge padding-top per il titolo del tooltip
+    const descWithPadding = truncatedDesc ? `• ${name}\n\n${truncatedDesc}` : 'Nessuna descrizione disponibile';
+    
     return `
-        <span class="trait-tag ${type}" data-tooltip="${truncatedDesc}">
+        <span class="trait-tag ${type}" data-tooltip="${descWithPadding}" data-title="${name}">
             ${name}
         </span>
     `;
 }
 
-/**
- * Ottiene i privilegi di classe in base al livello
- * @param {Object} selectedClass - Classe selezionata
- * @param {number} level - Livello del PG
- * @returns {Array} Lista privilegi
- */
 export function getClassPrivileges(selectedClass, level) {
     if (!selectedClass || !selectedClass.tabella_progressione) return [];
     
@@ -73,12 +63,24 @@ export function getClassPrivileges(selectedClass, level) {
         const rowData = table[i];
         if (rowData && rowData.privilegi) {
             rowData.privilegi.forEach(priv => {
-                // Evita duplicati
                 if (!privileges.find(p => p.nome === priv)) {
+                    // Le descrizioni possono essere stringhe o oggetti con descrizione_completa/riassunto
+                    const descData = selectedClass.descrizione_privilegi?.[priv];
+                    let description = '';
+                    if (descData) {
+                        if (typeof descData === 'string') {
+                            description = descData;
+                        } else if (descData.descrizione_completa) {
+                            description = descData.descrizione_completa;
+                        } else if (descData.riassunto) {
+                            description = descData.riassunto;
+                        }
+                    }
+                    
                     privileges.push({
                         nome: priv,
                         livello: rowData.livello,
-                        descrizione: selectedClass.descrizione_privilegi?.[priv] || ''
+                        descrizione: description
                     });
                 }
             });
@@ -88,12 +90,6 @@ export function getClassPrivileges(selectedClass, level) {
     return privileges;
 }
 
-/**
- * Ottiene i privilegi della sottoclasse in base al livello
- * @param {Object} selectedClass - Classe selezionata
- * @param {number} level - Livello del PG
- * @returns {Array} Lista privilegi sottoclasse
- */
 export function getSubclassPrivileges(selectedClass, level) {
     if (!selectedClass || !selectedClass.sottoclasse) return [];
     
@@ -105,7 +101,6 @@ export function getSubclassPrivileges(selectedClass, level) {
     Object.entries(subclassPrivs).forEach(([livello, data]) => {
         const livNum = parseInt(livello);
         if (livNum <= level) {
-            // Se è un array (più privilegi allo stesso livello)
             if (Array.isArray(data)) {
                 data.forEach(d => {
                     privileges.push({
@@ -127,31 +122,500 @@ export function getSubclassPrivileges(selectedClass, level) {
     return privileges;
 }
 
-/**
- * Ottiene i tratti raziali con descrizioni dal database traitDescriptions.js
- * @param {Object} selectedRace - Razza selezionata
- * @returns {Array} Lista tratti raziali
- */
 export function getRacialTraits(selectedRace) {
     if (!selectedRace) return [];
-    
-    // Usa la funzione del database per ottenere tratti con descrizioni
     return getRaceTraitsWithDescriptions(selectedRace);
 }
 
 /**
- * Renderizza la sezione tratti e privilegi (usata nel wizard)
- * @param {Object} pgData - Dati del personaggio
- * @param {Object} databases - Database con razza, classe, background
- * @returns {string} HTML della sezione
+ * Ottiene i privilegi del background
  */
+export function getBackgroundPrivileges(selectedBackground) {
+    if (!selectedBackground) return [];
+    
+    const privileges = [];
+    
+    // Il background ha un privilegio principale
+    if (selectedBackground.privilegio) {
+        privileges.push({
+            nome: selectedBackground.privilegio.nome || 'Privilegio',
+            descrizione: selectedBackground.privilegio.descrizione || ''
+        });
+    }
+    
+    return privileges;
+}
+
+// ========================================================================
+// SEZIONI CARD
+// ========================================================================
+
+/**
+ * Renderizza l'header: Nome a sinistra, info a destra
+ */
+function renderSheetHeader(pg) {
+    return `
+        <div class="sheet-header-split">
+            <div class="header-left">
+                <h2 class="char-name">${pg.name || 'Senza Nome'}</h2>
+            </div>
+            <div class="header-right">
+                <p class="char-class-info">${pg.raceName || pg.race || ''} ${pg.className || pg.class || ''} Liv.${pg.level || 1}</p>
+                <p class="char-player">Giocato da: ${pg.playerName || 'Nessun giocatore'}</p>
+            </div>
+        </div>
+    `;
+}
+
+/**
+ * Renderizza il fronte della Card 1: Identità + Caratteristiche + Abilità
+ */
+function renderCard1Front(pg, databases) {
+    const abilities = pg.abilities || {
+        strength: 10, dexterity: 10, constitution: 10,
+        intelligence: 10, wisdom: 10, charisma: 10
+    };
+    
+    const ABILITY_IT = {
+        str: 'FOR', dex: 'DES', con: 'COS',
+        int: 'INT', wis: 'SAG', cha: 'CAR'
+    };
+    
+    // Abilità
+    const skills = pg.skills || [];
+    const profBonus = pg.proficiencyBonus || 2;
+    const ABILITY_IT_ABBR = {
+        strength: 'FOR', dexterity: 'DES', constitution: 'COS',
+        intelligence: 'INT', wisdom: 'SAG', charisma: 'CAR'
+    };
+    
+    const renderSkill = (skill) => {
+        const ability = SKILL_ABILITY_MAP[skill];
+        const prop = ABILITY_KEY_TO_PROPERTY[ability];
+        const score = abilities[prop] || 10;
+        let mod = calculateModifier(score);
+        const hasProf = skills.includes(skill);
+        if (hasProf) mod += profBonus;
+        const abbr = ABILITY_IT_ABBR[ability] || '';
+        
+        return `
+            <div class="skill-item ${hasProf ? 'prof' : ''}">
+                <span class="sk-icon">${hasProf ? '●' : '○'}</span>
+                <span class="sk-name">${skill}</span>
+                <span class="sk-abbr">${abbr}</span>
+                <span class="sk-val">${mod >= 0 ? '+' : ''}${mod}</span>
+            </div>
+        `;
+    };
+    
+    // Dividi abilità in 2 colonne
+    const half = Math.ceil(ALL_SKILLS.length / 2);
+    const leftSkills = ALL_SKILLS.slice(0, half);
+    const rightSkills = ALL_SKILLS.slice(half);
+    
+    return `
+        <div class="card-face card-front">
+            <div class="card-section identity-section compact">
+                <h3>🎭 Identità</h3>
+                <div class="identity-grid-compact">
+                    <div class="id-item">
+                        <span class="id-label">Background</span>
+                        <span class="id-value">${pg.backgroundName || pg.background || '-'}</span>
+                    </div>
+                    <div class="id-item">
+                        <span class="id-label">Allineamento</span>
+                        <span class="id-value">${pg.alignment || '-'}</span>
+                    </div>
+                    <div class="id-item">
+                        <span class="id-label">Competenza</span>
+                        <span class="id-value">+${pg.proficiencyBonus || 2}</span>
+                    </div>
+                    <div class="id-item">
+                        <span class="id-label">Velocità</span>
+                        <span class="id-value">${pg.speed || 9}m</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-section abilities-section compact">
+                <h3>📊 Caratteristiche</h3>
+                <div class="abilities-grid-sheet">
+                    ${['str', 'dex', 'con', 'int', 'wis', 'cha'].map(key => {
+                        const prop = ABILITY_KEY_TO_PROPERTY[key];
+                        const score = abilities[prop] || 10;
+                        const mod = calculateModifier(score);
+                        const hasSave = (pg.savingThrows || []).includes(key.toUpperCase());
+                        
+                        return `
+                            <div class="ability-block ${hasSave ? 'has-save' : ''}">
+                                <span class="ab-name">${ABILITY_IT[key]}</span>
+                                <span class="ab-score">${score}</span>
+                                <span class="ab-mod">${mod >= 0 ? '+' : ''}${mod}</span>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+            
+            <div class="card-section skills-section flex-grow">
+                <h3>🎯 Abilità</h3>
+                <div class="skills-list-2col">
+                    <div class="skills-col">
+                        ${leftSkills.map(renderSkill).join('')}
+                    </div>
+                    <div class="skills-col">
+                        ${rightSkills.map(renderSkill).join('')}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flip-hint">↻ Click per girare</div>
+        </div>
+    `;
+}
+
+/**
+ * Renderizza il retro della Card 1: Combattimento + TS + Magia
+ */
+function renderCard1Back(pg, databases) {
+    const hp = pg.hp || { current: 0, max: 0, temp: 0 };
+    const abilities = pg.abilities || {
+        strength: 10, dexterity: 10, constitution: 10,
+        intelligence: 10, wisdom: 10, charisma: 10
+    };
+    const pgClass = databases.classes?.find(c => c.index === pg.class);
+    
+    // Calcola iniziativa
+    const dexMod = calculateModifier(abilities.dexterity);
+    const initiative = pg.initiative !== null ? pg.initiative : dexMod;
+    
+    // Tiri Salvezza
+    const saves = pg.savingThrows || [];
+    const profBonus = pg.proficiencyBonus || 2;
+    
+    const ABILITY_IT = {
+        str: 'FOR', dex: 'DES', con: 'COS',
+        int: 'INT', wis: 'SAG', cha: 'CAR'
+    };
+    
+    // Incantesimi per livello
+    const spellcasting = pg.spellcasting || {};
+    const spellsByLevel = organizeSpellsByLevel(spellcasting.spellsKnown || []);
+    
+    return `
+        <div class="card-face card-back">
+            <div class="card-section combat-section compact">
+                <h3>⚔️ Combattimento</h3>
+                <div class="combat-grid-sheet">
+                    <div class="combat-stat">
+                        <label>PF</label>
+                        <div class="hp-display">
+                            <input type="number" id="hp-current" value="${hp.current}" min="0" max="${hp.max}">
+                            <span class="hp-max">/ ${hp.max}</span>
+                            ${hp.temp > 0 ? `<span class="hp-temp">(+${hp.temp})</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="combat-stat ca-stat">
+                        <label>CA</label>
+                        <div class="ca-display">
+                            <span class="big-val" id="ca-value">${pg.armorClass || 10}</span>
+                            <button class="btn-edit-ca" id="btn-edit-ac" title="Modifica CA">✏️</button>
+                        </div>
+                    </div>
+                    <div class="combat-stat">
+                        <label>Iniziativa</label>
+                        <span class="big-val">${initiative >= 0 ? '+' : ''}${initiative}</span>
+                    </div>
+                    <div class="combat-stat">
+                        <label>Dado Vita</label>
+                        <span class="big-val">${pg.hitDice?.current ?? pg.level}/${pg.hitDice?.total ?? pg.level}d${pgClass?.hit_die || 8}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-section saves-section compact">
+                <h3>🛡️ Tiri Salvezza</h3>
+                <div class="saves-grid">
+                    ${['str', 'dex', 'con', 'int', 'wis', 'cha'].map(key => {
+                        const prop = ABILITY_KEY_TO_PROPERTY[key];
+                        const score = abilities[prop] || 10;
+                        let mod = calculateModifier(score);
+                        const hasSave = saves.includes(key.toUpperCase());
+                        if (hasSave) mod += profBonus;
+                        return `
+                            <div class="save-item ${hasSave ? 'prof' : ''}">
+                                <span class="save-name">${ABILITY_IT[key]}</span>
+                                <span class="save-val">${mod >= 0 ? '+' : ''}${mod}</span>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+            
+            ${spellcasting.spellsKnown?.length > 0 ? `
+                <div class="card-section spells-section flex-grow">
+                    <h3>🔮 Magia</h3>
+                    <p class="spell-info">
+                        CD: <strong>${spellcasting.spellSaveDC || 0}</strong> | 
+                        Attacco: <strong>+${spellcasting.spellAttackBonus || 0}</strong>
+                    </p>
+                    ${renderSpellsByLevel(spellsByLevel)}
+                </div>
+            ` : `
+                <div class="card-section spells-section flex-grow empty-section">
+                    <h3>🔮 Magia</h3>
+                    <p class="empty-note">Nessun incantesimo</p>
+                </div>
+            `}
+            
+            <div class="flip-hint">↻ Click per girare</div>
+        </div>
+    `;
+}
+
+/**
+ * Renderizza il fronte della Card 2: Note + Backstory + Segreti DM
+ */
+function renderCard2Front(pg) {
+    return `
+        <div class="card-face card-front">
+            <div class="card-section notes-section flex-third">
+                <h3>📝 Note</h3>
+                <div class="note-content">
+                    ${pg.notes 
+                        ? `<p>${linkifyCampaignReferences(linkifyConditions(escapeHtml(pg.notes)))}</p>`
+                        : '<p class="empty-note">Nessuna nota</p>'
+                    }
+                </div>
+            </div>
+            
+            <div class="card-section backstory-section flex-third">
+                <h3>📖 Storia</h3>
+                <div class="note-content">
+                    ${pg.backstory 
+                        ? `<p>${linkifyCampaignReferences(linkifyConditions(escapeHtml(pg.backstory)))}</p>`
+                        : '<p class="empty-note">Nessuna backstory</p>'
+                    }
+                </div>
+            </div>
+            
+            <div class="card-section secrets-section flex-third">
+                <h3>🔒 Segreti DM</h3>
+                <div class="note-content dm-secrets">
+                    ${pg.dmSecrets 
+                        ? `<p>${linkifyCampaignReferences(linkifyConditions(escapeHtml(pg.dmSecrets)))}</p>`
+                        : '<p class="empty-note">Nessun segreto</p>'
+                    }
+                </div>
+            </div>
+            
+            <div class="flip-hint">↻ Click per girare</div>
+        </div>
+    `;
+}
+
+/**
+ * Organizza gli incantesimi per livello
+ */
+function organizeSpellsByLevel(spells) {
+    const byLevel = {
+        0: [], // Trucchetti
+        1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: []
+    };
+    
+    if (!spells || spells.length === 0) return byLevel;
+    
+    // Se sono stringhe semplici, mettile tutte al livello 1
+    if (typeof spells[0] === 'string') {
+        spells.forEach(spell => {
+            byLevel[1].push({ name: spell, level: 1 });
+        });
+    } else if (typeof spells[0] === 'object') {
+        spells.forEach(spell => {
+            const level = spell.level || 1;
+            if (byLevel[level] !== undefined) {
+                byLevel[level].push(spell);
+            }
+        });
+    }
+    
+    return byLevel;
+}
+
+/**
+ * Renderizza gli incantesimi organizzati per livello
+ */
+function renderSpellsByLevel(spellsByLevel) {
+    const levelNames = {
+        0: 'Trucchetti',
+        1: '1° Livello',
+        2: '2° Livello',
+        3: '3° Livello',
+        4: '4° Livello',
+        5: '5° Livello',
+        6: '6° Livello',
+        7: '7° Livello',
+        8: '8° Livello',
+        9: '9° Livello'
+    };
+    
+    let html = '<div class="spells-by-level">';
+    
+    for (let level = 0; level <= 9; level++) {
+        const spells = spellsByLevel[level];
+        if (spells && spells.length > 0) {
+            html += `
+                <div class="spell-level-group">
+                    <span class="spell-level-label">${levelNames[level]}</span>
+                    <div class="spell-level-list">
+                        ${spells.map(s => `<span class="spell-tag">${typeof s === 'string' ? s : s.name}</span>`).join('')}
+                    </div>
+                </div>
+            `;
+        }
+    }
+    
+    html += '</div>';
+    return html;
+}
+
+/**
+ * Renderizza il retro della Card 2: Tratti + Inventario
+ */
+function renderCard2Back(pg, databases) {
+    const pgClass = databases.classes?.find(c => c.index === pg.class);
+    const pgRace = databases.races?.find(r => r.index === pg.race);
+    const pgBackground = databases.backgrounds?.find(b => b.index === pg.background);
+    
+    // Tratti
+    const racialTraits = getRacialTraits(pgRace);
+    const classPrivs = pgClass ? getClassPrivileges(pgClass, pg.level || 1) : [];
+    const subclassPrivs = pgClass ? getSubclassPrivileges(pgClass, pg.level || 1) : [];
+    const backgroundPrivs = getBackgroundPrivileges(pgBackground);
+    
+    // Inventario
+    const inventory = pg.inventory || [];
+    const totalWeight = inventory.reduce((total, item) => {
+        const weight = item.weight || 0;
+        const qty = item.quantity || 1;
+        return total + (weight * qty);
+    }, 0);
+    
+    return `
+        <div class="card-face card-back">
+            <div class="card-section traits-section flex-half">
+                <h3>🌟 Tratti & Privilegi</h3>
+                ${racialTraits.length > 0 ? `
+                    <div class="traits-group">
+                        <span class="traits-label">Raziali:</span>
+                        <div class="traits-tags">
+                            ${racialTraits.map(t => renderTraitTag(t.nome, t.descrizione, 'racial')).join('')}
+                        </div>
+                    </div>
+                ` : ''}
+                ${classPrivs.length > 0 ? `
+                    <div class="traits-group">
+                        <span class="traits-label">Classe:</span>
+                        <div class="traits-tags">
+                            ${classPrivs.slice(0, 6).map(p => renderTraitTag(p.nome, p.descrizione, 'class')).join('')}
+                            ${classPrivs.length > 6 ? `<span class="more-hint">+${classPrivs.length - 6}</span>` : ''}
+                        </div>
+                    </div>
+                ` : ''}
+                ${subclassPrivs.length > 0 ? `
+                    <div class="traits-group">
+                        <span class="traits-label">Sottoclasse:</span>
+                        <div class="traits-tags">
+                            ${subclassPrivs.map(p => renderTraitTag(p.nome, p.descrizione, 'subclass')).join('')}
+                        </div>
+                    </div>
+                ` : ''}
+                ${backgroundPrivs.length > 0 ? `
+                    <div class="traits-group">
+                        <span class="traits-label">Background:</span>
+                        <div class="traits-tags">
+                            ${backgroundPrivs.map(p => renderTraitTag(p.nome, p.descrizione, 'background')).join('')}
+                        </div>
+                    </div>
+                ` : ''}
+            </div>
+            
+            <div class="card-section inventory-section flex-half">
+                <h3>🎒 Inventario</h3>
+                <div class="inventory-summary">
+                    <span>📦 ${inventory.length} oggetti</span>
+                    <span>⚖️ ${totalWeight.toFixed(1)} kg</span>
+                </div>
+                <div class="inventory-compact">
+                    ${inventory.length > 0 
+                        ? inventory.slice(0, 12).map(item => {
+                            const qty = item.quantity || 1;
+                            const displayText = qty > 1 ? `${qty}× ${item.name}` : item.name;
+                            return `<span class="inv-item">${escapeHtml(displayText)}</span>`;
+                        }).join('')
+                        : '<span class="empty-inv">Inventario vuoto</span>'
+                    }
+                    ${inventory.length > 12 ? `<span class="more-hint">+${inventory.length - 12}</span>` : ''}
+                </div>
+            </div>
+            
+            <div class="flip-hint">↻ Click per girare</div>
+        </div>
+    `;
+}
+
+// ========================================================================
+// SCHEDA PRINCIPALE
+// ========================================================================
+
+export function renderCharacterSheet(pg, databases) {
+    console.log('🎨 [PgCharacterSheet] Render scheda:', pg.name);
+    
+    return `
+        <div class="pg-sheet-v2">
+            ${renderSheetHeader(pg)}
+            
+            <div class="cards-container">
+                <div class="flip-card" data-card="1">
+                    <div class="flip-card-inner">
+                        ${renderCard1Front(pg, databases)}
+                        ${renderCard1Back(pg, databases)}
+                    </div>
+                </div>
+                
+                <div class="flip-card" data-card="2">
+                    <div class="flip-card-inner">
+                        ${renderCard2Front(pg)}
+                        ${renderCard2Back(pg, databases)}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal per modificare CA -->
+        <div class="ca-modal hidden" id="ca-modal">
+            <div class="ca-modal-content">
+                <h4>Modifica Classe Armatura</h4>
+                <input type="number" id="ca-input" value="${pg.armorClass || 10}" min="1" max="30">
+                <div class="ca-modal-actions">
+                    <button class="btn btn-secondary btn-sm" id="btn-ca-cancel">Annulla</button>
+                    <button class="btn btn-primary btn-sm" id="btn-ca-save">Salva</button>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// ========================================================================
+// FUNZIONI COMPATIBILITÀ
+// ========================================================================
+
 export function renderTraitsAndPrivileges(pgData, databases) {
     const { selectedRace, selectedClass, selectedBackground } = databases;
     const level = pgData.level || 1;
     
     let html = '<div class="traits-privileges-panel">';
     
-    // Tratti Raziali
     if (selectedRace) {
         const racialTraits = getRacialTraits(selectedRace);
         html += `
@@ -167,7 +631,6 @@ export function renderTraitsAndPrivileges(pgData, databases) {
         `;
     }
     
-    // Privilegi di Classe
     if (selectedClass) {
         const classPrivs = getClassPrivileges(selectedClass, level);
         html += `
@@ -181,50 +644,12 @@ export function renderTraitsAndPrivileges(pgData, databases) {
                 </div>
             </div>
         `;
-        
-        // Privilegi Sottoclasse
-        if (pgData.subclass || selectedClass.sottoclasse) {
-            const subclassPrivs = getSubclassPrivileges(selectedClass, level);
-            if (subclassPrivs.length > 0) {
-                html += `
-                    <div class="tp-section">
-                        <h4>🔮 ${pgData.subclass || selectedClass.sottoclasse?.nome || 'Sottoclasse'}</h4>
-                        <div class="tp-tags">
-                            ${subclassPrivs.map(p => renderTraitTag(p.nome, p.descrizione, 'subclass')).join('')}
-                        </div>
-                    </div>
-                `;
-            }
-        }
-    }
-    
-    // Privilegi del Background
-    if (selectedBackground && selectedBackground.privilegio) {
-        const priv = selectedBackground.privilegio;
-        html += `
-            <div class="tp-section">
-                <h4>📖 Privilegio del Background</h4>
-                <div class="tp-tags">
-                    ${renderTraitTag(priv.nome, priv.descrizione, 'background')}
-                </div>
-            </div>
-        `;
     }
     
     html += '</div>';
     return html;
 }
 
-// ========================================================================
-// SCHEDA PG DETTAGLIO
-// ========================================================================
-
-/**
- * Renderizza la lista abilità
- * @param {Object} pg - Dati del personaggio
- * @param {Object} abilities - Caratteristiche
- * @returns {string} HTML della lista abilità
- */
 export function renderSkillList(pg, abilities) {
     const profBonus = pg.proficiencyBonus || 2;
     const skills = pg.skills || [];
@@ -249,7 +674,7 @@ export function renderSkillList(pg, abilities) {
         
         return `
             <div class="skill-item ${hasProf ? 'prof' : ''}">
-                <span class="sk-icon">${hasProf ? '⚔' : '·'}</span>
+                <span class="sk-icon">${hasProf ? '●' : '○'}</span>
                 <span class="sk-name">${skill}</span>
                 <span class="sk-abbr">${abbr}</span>
                 <span class="sk-val">${mod >= 0 ? '+' : ''}${mod}</span>
@@ -269,11 +694,6 @@ export function renderSkillList(pg, abilities) {
     `;
 }
 
-/**
- * Renderizza il blocco incantesimi
- * @param {Object} pg - Dati del personaggio
- * @returns {string} HTML del blocco incantesimi
- */
 export function renderSpellBlock(pg) {
     return `
         <div class="sheet-section">
@@ -289,295 +709,33 @@ export function renderSpellBlock(pg) {
     `;
 }
 
-/**
- * Processa l'equipaggiamento applicando le scelte salvate
- * @param {Array} equipmentList - Lista equipaggiamento
- * @param {Object} choices - Scelte effettuate
- * @returns {Array} Lista processata
- */
-export function processEquipmentWithChoices(equipmentList, choices) {
-    if (!Array.isArray(equipmentList)) return [];
-    
-    return equipmentList.map((item, index) => {
-        const choiceKey = `class-${index}`;
-        const choice = choices[choiceKey];
-        
-        // Verifica se è una scelta (a)/(b)
-        const choiceMatch = item.match(/^\(a\)\s*(.+?)\s*o\s*\(b\)\s*(.+)$/i);
-        if (choiceMatch && choice) {
-            if (choice === 'a') return choiceMatch[1].trim();
-            if (choice === 'b') return choiceMatch[2].trim();
-        }
-        
-        // Verifica scelte multiple
-        const multiMatch = item.match(/\(([a-z])\)\s*([^()]+?)(?=\s*(?:\([a-z]\)|$))/gi);
-        if (multiMatch && multiMatch.length > 1 && choice) {
-            for (const opt of multiMatch) {
-                const m = opt.match(/\(([a-z])\)\s*(.+)/i);
-                if (m && m[1].toLowerCase() === choice.toLowerCase()) {
-                    return m[2].trim();
-                }
-            }
-        }
-        
-        return item;
-    }).filter(Boolean);
-}
-
-/**
- * Renderizza la sezione Inventario nella scheda PG
- * @param {Object} pg - Dati del personaggio
- * @param {Object} pgClass - Classe del personaggio
- * @returns {string} HTML della sezione inventario
- */
 export function renderInventorySection(pg, pgClass) {
-    // Equipaggiamento dalla classe (con scelte applicate)
-    const classEquipment = pgClass?.equipaggiamento || [];
-    const equipmentChoices = pg.equipmentChoices || {};
+    const inventory = pg.inventory || [];
     
-    // Processa l'equipaggiamento con le scelte
-    const processedEquipment = processEquipmentWithChoices(classEquipment, equipmentChoices);
-    
-    // Equipaggiamento extra
-    const extraEquipment = pg.extraEquipment || '';
-    
-    // Oro
-    const treasure = pg.treasure || {};
-    
-    if (processedEquipment.length === 0 && !extraEquipment) {
-        return '';
+    if (inventory.length === 0) {
+        return `
+            <div class="sheet-section section-inventory">
+                <h3>🎒 Inventario</h3>
+                <p class="empty-inventory">Nessun oggetto</p>
+            </div>
+        `;
     }
+    
+    const totalWeight = inventory.reduce((total, item) => {
+        const weight = item.weight || 0;
+        const qty = item.quantity || 1;
+        return total + (weight * qty);
+    }, 0);
     
     return `
         <div class="sheet-section section-inventory">
             <h3>🎒 Inventario</h3>
-            
-            ${processedEquipment.length > 0 ? `
-                <div class="equipment-list">
-                    ${processedEquipment.map(item => `
-                        <span class="equip-tag">${escapeHtml(item)}</span>
-                    `).join('')}
-                </div>
-            ` : ''}
-            
-            ${extraEquipment ? `
-                <div class="extra-equipment">
-                    <p>${linkifyCampaignReferences(escapeHtml(extraEquipment))}</p>
-                </div>
-            ` : ''}
-            
-            ${treasure.gp || treasure.sp || treasure.ep || treasure.cp || treasure.pp ? `
-                <div class="treasure-row">
-                    ${treasure.pp ? `<span class="treasure-tag pp">${treasure.pp} pp</span>` : ''}
-                    ${treasure.gp ? `<span class="treasure-tag gp">${treasure.gp} mo</span>` : ''}
-                    ${treasure.ep ? `<span class="treasure-tag ep">${treasure.ep} me</span>` : ''}
-                    ${treasure.sp ? `<span class="treasure-tag sp">${treasure.sp} ma</span>` : ''}
-                    ${treasure.cp ? `<span class="treasure-tag cp">${treasure.cp} mr</span>` : ''}
-                </div>
-            ` : ''}
-        </div>
-    `;
-}
-
-/**
- * Renderizza la scheda PG completa
- * @param {Object} pg - Dati del personaggio
- * @param {Object} databases - Database con classi, razze, etc.
- * @returns {string} HTML della scheda
- */
-export function renderCharacterSheet(pg, databases) {
-    console.log('🎨 [PgCharacterSheet] Render scheda:', pg.name);
-    
-    const hp = pg.hp || { current: 0, max: 0, temp: 0 };
-    const abilities = pg.abilities || {
-        strength: 10, dexterity: 10, constitution: 10,
-        intelligence: 10, wisdom: 10, charisma: 10
-    };
-    
-    const ABILITY_IT = {
-        str: 'FOR', dex: 'DES', con: 'COS',
-        int: 'INT', wis: 'SAG', cha: 'CAR'
-    };
-    
-    const CLASS_IMAGE_MAP = {
-        'barbarian': 'barbaro', 'bard': 'bardo', 'cleric': 'chierico',
-        'druid': 'druido', 'fighter': 'guerriero', 'monk': 'monaco',
-        'paladin': 'paladino', 'ranger': 'ranger', 'rogue': 'ladro',
-        'sorcerer': 'stregone', 'warlock': 'warlock', 'wizard': 'mago'
-    };
-    
-    const classIndex = (pg.class || '').toLowerCase();
-    const classImageName = CLASS_IMAGE_MAP[classIndex] || classIndex;
-    const classImagePath = `/assets/classes/${classImageName}.png`;
-    
-    // Ottieni tratti e privilegi per la scheda - cerca dal PG corrente, NON dalle variabili del wizard
-    const pgClass = databases.classes?.find(c => c.index === pg.class);
-    const pgRace = databases.races?.find(r => r.index === pg.race);
-    const classPrivs = pgClass ? getClassPrivileges(pgClass, pg.level || 1) : [];
-    const subclassPrivs = pgClass ? getSubclassPrivileges(pgClass, pg.level || 1) : [];
-    const racialTraits = getRacialTraits(pgRace);
-    
-    return `
-        <div class="pg-sheet">
-            <!-- HEADER -->
-            <div class="sheet-header">
-                <div class="header-left">
-                    <h2 class="char-name">${pg.name || 'Senza Nome'}</h2>
-                    <p class="char-class-info">${pg.raceName || pg.race || ''} ${pg.className || pg.class || ''} Lv.${pg.level || 1}</p>
-                    <p class="char-player">giocato da: ${pg.playerName || 'Nessun giocatore'}</p>
-                </div>
-                <img class="class-icon" src="${classImagePath}" alt="${pg.className || 'Classe'}" onerror="this.style.display='none'">
-            </div>
-            
-            <div class="sheet-body">
-                <!-- RIGA 1: Identità + Combattimento -->
-                <div class="sheet-row-top">
-                    <div class="sheet-section section-identity">
-                        <h3>Identità</h3>
-                        <div class="identity-cols">
-                            <div class="id-col">
-                                <span class="id-label">Background</span>
-                                <span class="id-value">${pg.backgroundName || pg.background || '-'}</span>
-                            </div>
-                            <div class="id-col">
-                                <span class="id-label">Allineamento</span>
-                                <span class="id-value">${pg.alignment || '-'}</span>
-                            </div>
-                            <div class="id-col">
-                                <span class="id-label">Livello</span>
-                                <span class="id-value">${pg.level || 1}</span>
-                            </div>
-                            <div class="id-col">
-                                <span class="id-label">Competenza</span>
-                                <span class="id-value">+${pg.proficiencyBonus || 2}</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="sheet-section section-combat">
-                        <h3>Combattimento</h3>
-                        <div class="combat-grid">
-                            <div class="combat-stat">
-                                <label>HP</label>
-                                <div class="hp-input-group">
-                                    <input type="number" id="hp-current" value="${hp.current}" min="0" max="${hp.max}">
-                                    <span>/ ${hp.max}</span>
-                                    ${hp.temp > 0 ? `<span class="temp">(+${hp.temp})</span>` : ''}
-                                </div>
-                            </div>
-                            <div class="combat-stat">
-                                <label>CA</label>
-                                <span class="big-val">${pg.armorClass || 10}</span>
-                            </div>
-                            <div class="combat-stat">
-                                <label>Iniziativa</label>
-                                <span class="big-val">${pg.initiative >= 0 ? '+' : ''}${pg.initiative || 0}</span>
-                            </div>
-                            <div class="combat-stat">
-                                <label>Velocità</label>
-                                <span class="big-val">${pg.speed || 9}m</span>
-                            </div>
-                            <div class="combat-stat">
-                                <label>Dado Vita</label>
-                                <span class="big-val">${pg.hitDice?.current ?? pg.level}/${pg.hitDice?.total ?? pg.level}d${pgClass?.hit_die || pg.hitDice?.size?.replace('d', '') || 8}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- RIGA 2: Caratteristiche + Abilità -->
-                <div class="sheet-row-middle">
-                    <div class="sheet-section section-abilities">
-                        <h3>Caratteristiche</h3>
-                        <div class="abilities-col">
-                            ${['str', 'dex', 'con', 'int', 'wis', 'cha'].map(key => {
-                                const prop = ABILITY_KEY_TO_PROPERTY[key];
-                                const score = abilities[prop] || 10;
-                                const mod = calculateModifier(score);
-                                const hasSave = (pg.savingThrows || []).includes(key.toUpperCase());
-                                
-                                return `
-                                    <div class="ability-block ${hasSave ? 'has-save' : ''}">
-                                        <span class="ab-name">${ABILITY_IT[key]}</span>
-                                        <span class="ab-score">${score}</span>
-                                        <span class="ab-mod">${mod >= 0 ? '+' : ''}${mod}</span>
-                                    </div>
-                                `;
-                            }).join('')}
-                        </div>
-                    </div>
-                    
-                    <div class="sheet-section section-skills">
-                        <h3>Abilità</h3>
-                        ${renderSkillList(pg, abilities)}
-                    </div>
-                </div>
-                
-                <!-- RIGA: Tratti e Privilegi -->
-                <div class="sheet-row-traits">
-                    ${racialTraits.length > 0 ? `
-                        <div class="sheet-section section-traits">
-                            <h3>🌍 Tratti Raziali</h3>
-                            <div class="traits-list">
-                                ${racialTraits.map(t => renderTraitTag(t.nome, t.descrizione, 'racial')).join('')}
-                            </div>
-                        </div>
-                    ` : ''}
-                    
-                    ${classPrivs.length > 0 ? `
-                        <div class="sheet-section section-privileges">
-                            <h3>⚔️ Privilegi di Classe</h3>
-                            <div class="privileges-list">
-                                ${classPrivs.map(p => renderTraitTag(p.nome, p.descrizione, 'class')).join('')}
-                            </div>
-                        </div>
-                    ` : ''}
-                    
-                    ${subclassPrivs.length > 0 ? `
-                        <div class="sheet-section section-subclass">
-                            <h3>🔮 ${pgClass?.sottoclasse?.nome || 'Sottoclasse'}</h3>
-                            <div class="subclass-privs-list">
-                                ${subclassPrivs.map(p => renderTraitTag(p.nome, p.descrizione, 'subclass')).join('')}
-                            </div>
-                        </div>
-                    ` : ''}
-                </div>
-                
-                <!-- RIGA: Inventario -->
-                <div class="sheet-row-inventory">
-                    ${renderInventorySection(pg, pgClass)}
-                </div>
-                
-                <!-- RIGA 3: Background e Note -->
-                <div class="sheet-row-bottom">
-                    ${pg.backstory ? `
-                        <div class="sheet-section section-backstory">
-                            <h3>Background</h3>
-                            <div class="note-content">
-                                <p>${linkifyCampaignReferences(linkifyConditions(escapeHtml(pg.backstory)))}</p>
-                            </div>
-                        </div>
-                    ` : ''}
-                    
-                    ${pg.notes ? `
-                        <div class="sheet-section section-notes">
-                            <h3>Note</h3>
-                            <div class="note-content">
-                                <p>${linkifyCampaignReferences(linkifyConditions(escapeHtml(pg.notes)))}</p>
-                            </div>
-                        </div>
-                    ` : ''}
-                </div>
-                
-                <!-- RIGA 4: Incantesimi (in fondo) -->
-                ${pg.spellcasting ? `
-                    <div class="sheet-row-spells">
-                        ${renderSpellBlock(pg)}
-                    </div>
-                ` : ''}
+            <div class="inventory-summary">
+                <span class="inv-stat">📦 ${inventory.length} oggetti</span>
+                <span class="inv-stat">⚖️ ${totalWeight.toFixed(1)} kg</span>
             </div>
         </div>
     `;
 }
 
-console.log('📋 [PgCharacterSheet] Modulo caricato.');
+console.log('📋 [PgCharacterSheet] Modulo caricato v2.1');

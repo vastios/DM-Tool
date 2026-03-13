@@ -134,7 +134,7 @@ function renderRaceClassInfo(pgData, databases, traitsHtml = '') {
         
         html += `
             <div class="info-section">
-                <h4>🌍 ${selectedRace.classe || selectedRace.name}</h4>
+                <h4>🌍 ${selectedRace.name || selectedRace.nome || 'Razza'}</h4>
                 <p>Velocità: ${speed}m | Taglia: ${size}</p>
                 <p>Bonus: ${bonuses.map(b => `${b.ability_score?.name || b.caratteristica} +${b.bonus}`).join(', ') || 'Nessuno'}</p>
             </div>

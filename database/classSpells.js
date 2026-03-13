@@ -353,6 +353,32 @@ export function getMaxSpellsKnown(className, pgLevel) {
 }
 
 /**
+ * Ottiene il numero massimo di trucchetti conosciuti per classe e livello
+ */
+export function getMaxCantripsKnown(className, pgLevel) {
+    const cantripsByLevel = {
+        'Bardo': { 1: 2, 4: 3, 10: 4 },
+        'Chierico': { 1: 3 },
+        'Druido': { 1: 2 },
+        'Mago': { 1: 3, 10: 4 },
+        'Paladino': null,  // Non hanno trucchetti
+        'Ranger': null,    // Non hanno trucchetti
+        'Stregone': { 1: 4 },
+        'Warlock': { 1: 2, 4: 3, 10: 4 }
+    };
+    
+    const classData = cantripsByLevel[className];
+    if (classData === null || classData === undefined) return null;
+    
+    // Trova il livello più alto <= pgLevel
+    const levels = Object.keys(classData).map(Number).sort((a, b) => b - a);
+    for (const lvl of levels) {
+        if (pgLevel >= lvl) return classData[lvl];
+    }
+    return classData[1] || null;
+}
+
+/**
  * Restituisce una descrizione del tipo di incantatore
  */
 export function getCasterTypeDescription(className) {

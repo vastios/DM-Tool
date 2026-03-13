@@ -23,8 +23,9 @@ import {
 import { linkifyConditions } from '/utils/htmlHelpers.js';
 import { linkifyCampaignReferences, getAutocompleteSuggestions } from '/utils/campaignLinker.js';
 import { getRaceTraitsWithDescriptions } from '/database/traitDescriptions.js';
-import { renderStep5Notes } from './PgStep5Notes.js';
-import { renderStep6Summary } from './PgStep6Summary.js';
+import { renderStep5Inventory } from './PgStep5Inventory.js';
+import { renderStep6Notes } from './PgStep6Notes.js';
+import { renderStep7Summary } from './PgStep7Summary.js';
 import { renderStep2Abilities } from './PgStep2Abilities.js';
 import { renderStep1Identity } from './PgStep1Identity.js';
 import { renderStep3Proficiencies } from './PgStep3Proficiencies.js';
@@ -71,6 +72,16 @@ export class PgViewManager {
                             ? this.renderEmptySidebar() 
                             : pcs.map(pg => this.renderSidebarCard(pg, pg.id === selectedPgId)).join('')
                         }
+                    </div>
+                    <!-- Tooltip Panel - Copre la lista PG -->
+                    <div class="trait-tooltip-overlay" id="trait-tooltip-overlay">
+                        <div class="trait-tooltip-header">
+                            <span class="tooltip-name" id="tooltip-name">-</span>
+                            <span class="tooltip-type" id="tooltip-type">-</span>
+                        </div>
+                        <div class="trait-tooltip-body" id="tooltip-body">
+                            Passa il mouse su un tratto o privilegio...
+                        </div>
                     </div>
                 </aside>
                 
@@ -158,7 +169,7 @@ export class PgViewManager {
                         Annulla
                     </button>
                     <button class="btn btn-primary" id="btn-next">
-                        ${step === 6 ? '💾 Salva' : 'Avanti →'}
+                        ${step === 7 ? '💾 Salva' : 'Avanti →'}
                     </button>
                 </div>
             </div>
@@ -171,8 +182,9 @@ export class PgViewManager {
             { num: 2, label: 'Statistiche' },
             { num: 3, label: 'Competenze' },
             { num: 4, label: 'Incantesimi' },
-            { num: 5, label: 'Note' },
-            { num: 6, label: 'Riepilogo' }
+            { num: 5, label: 'Inventario' },
+            { num: 6, label: 'Note' },
+            { num: 7, label: 'Riepilogo' }
         ];
         
         return `
@@ -193,8 +205,9 @@ export class PgViewManager {
             2: 'Step 2: Punteggi Caratteristica',
             3: 'Step 3: Competenze e Abilità',
             4: 'Step 4: Incantesimi',
-            5: 'Step 5: Note e Background',
-            6: 'Riepilogo del Personaggio'
+            5: 'Step 5: Inventario ed Equipaggiamento',
+            6: 'Step 6: Note e Background',
+            7: 'Riepilogo del Personaggio'
         };
         return titles[step] || 'Step sconosciuto';
     }
@@ -214,8 +227,9 @@ export class PgViewManager {
             case 2: return renderStep2Abilities(pgData, databases);
             case 3: return renderStep3Proficiencies(pgData, databases);
             case 4: return renderStep4Spells(pgData, databases);
-            case 5: return renderStep5Notes(pgData);
-            case 6: return renderStep6Summary(pgData, databases, renderTraitsAndPrivileges(pgData, databases));
+            case 5: return renderStep5Inventory(pgData, databases);
+            case 6: return renderStep6Notes(pgData);
+            case 7: return renderStep7Summary(pgData, databases, renderTraitsAndPrivileges(pgData, databases));
             default: return '<p>Step non valido</p>';
         }
     }
