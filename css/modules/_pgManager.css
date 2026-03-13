@@ -5710,3 +5710,195 @@ label.spell-cb input {
     background: rgba(107, 68, 35, 0.2);
     border: 1px solid var(--parchment-border);
 }
+
+/* ============================================================================
+   LAYOUT IDENTITÀ + COMBATTIMENTO AFFIANCATI (Card 1 Front)
+   ============================================================================ */
+
+/* Riga con due box affiancati */
+.identity-combat-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+/* Metà sinistra: Identità */
+.identity-half {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.25);
+    border: 1px solid var(--parchment-border);
+    border-radius: 4px;
+    padding: 0.5rem;
+}
+
+.identity-half h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    border-bottom: 1px solid var(--parchment-border);
+    padding-bottom: 0.25rem;
+    margin: 0 0 0.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.identity-grid-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.2rem;
+}
+
+.identity-grid-split .id-item {
+    display: flex;
+    flex-direction: column;
+    padding: 0.15rem 0.3rem;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}
+
+.identity-grid-split .id-label {
+    font-size: 0.7rem;
+    color: var(--parchment-accent);
+    text-transform: uppercase;
+}
+
+.identity-grid-split .id-value {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+/* Metà destra: Combattimento */
+.combat-half {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.25);
+    border: 1px solid var(--parchment-border);
+    border-radius: 4px;
+    padding: 0.5rem;
+}
+
+.combat-half h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    border-bottom: 1px solid var(--parchment-border);
+    padding-bottom: 0.25rem;
+    margin: 0 0 0.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.combat-grid-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.3rem;
+}
+
+.combat-stat-mini {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.2rem;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    text-align: center;
+}
+
+.combat-stat-mini label {
+    font-size: 0.7rem;
+    color: var(--parchment-accent);
+    text-transform: uppercase;
+    margin-bottom: 0.1rem;
+}
+
+.combat-stat-mini .big-val {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+/* HP display nel mini combat */
+.hp-display {
+    display: flex;
+    align-items: center;
+    gap: 0.15rem;
+}
+
+.hp-display input {
+    width: 35px;
+    text-align: center;
+    padding: 0.15rem;
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid var(--parchment-border);
+    border-radius: 3px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.hp-display .hp-max {
+    font-size: 0.85rem;
+    color: var(--parchment-accent);
+}
+
+.hp-display .hp-temp {
+    font-size: 0.75rem;
+    color: #1565c0;
+}
+
+/* ============================================================================
+   TIRI SALVEZZA RETRO CARD 1 (solo TS + Magia)
+   ============================================================================ */
+
+.saves-grid-back {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.3rem;
+}
+
+.saves-grid-back .save-item {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3rem 0.5rem;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 4px;
+    font-family: 'Cinzel', serif;
+}
+
+.saves-grid-back .save-item.prof {
+    background: rgba(139, 105, 20, 0.2);
+    border-left: 2px solid var(--parchment-gold);
+}
+
+.saves-grid-back .save-icon {
+    font-size: 0.75rem;
+    color: var(--parchment-gold);
+}
+
+.saves-grid-back .save-item.prof .save-icon {
+    color: var(--crimson-red);
+}
+
+.saves-grid-back .save-name {
+    flex: 1;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--parchment-accent);
+}
+
+.saves-grid-back .save-val {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--parchment-text);
+}
+
+/* Flex helpers per il retro */
+.flex-half {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}

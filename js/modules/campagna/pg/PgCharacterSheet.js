@@ -168,7 +168,7 @@ function renderSheetHeader(pg) {
 }
 
 /**
- * Renderizza il fronte della Card 1: Identità + Caratteristiche + Abilità
+ * Renderizza il fronte della Card 1: Identità (sx) + Combattimento (dx) | Caratteristiche + Abilità
  */
 function renderCard1Front(pg, databases) {
     const abilities = pg.abilities || {
@@ -213,26 +213,61 @@ function renderCard1Front(pg, databases) {
     const leftSkills = ALL_SKILLS.slice(0, half);
     const rightSkills = ALL_SKILLS.slice(half);
     
+    // Dati combattimento
+    const hp = pg.hp || { current: 0, max: 0, temp: 0 };
+    const pgClass = databases.classes?.find(c => c.index === pg.class);
+    const dexMod = calculateModifier(abilities.dexterity);
+    const initiative = pg.initiative !== null ? pg.initiative : dexMod;
+    
     return `
         <div class="card-face card-front">
-            <div class="card-section identity-section compact">
-                <h3>🎭 Identità</h3>
-                <div class="identity-grid-compact">
-                    <div class="id-item">
-                        <span class="id-label">Background</span>
-                        <span class="id-value">${pg.backgroundName || pg.background || '-'}</span>
+            <!-- Riga 1: Identità (sx) + Combattimento (dx) -->
+            <div class="card-section identity-combat-row">
+                <div class="identity-half">
+                    <h3>🎭 Identità</h3>
+                    <div class="identity-grid-split">
+                        <div class="id-item">
+                            <span class="id-label">Background</span>
+                            <span class="id-value">${pg.backgroundName || pg.background || '-'}</span>
+                        </div>
+                        <div class="id-item">
+                            <span class="id-label">Allineamento</span>
+                            <span class="id-value">${pg.alignment || '-'}</span>
+                        </div>
+                        <div class="id-item">
+                            <span class="id-label">Competenza</span>
+                            <span class="id-value">+${pg.proficiencyBonus || 2}</span>
+                        </div>
+                        <div class="id-item">
+                            <span class="id-label">Velocità</span>
+                            <span class="id-value">${pg.speed || 9}m</span>
+                        </div>
                     </div>
-                    <div class="id-item">
-                        <span class="id-label">Allineamento</span>
-                        <span class="id-value">${pg.alignment || '-'}</span>
-                    </div>
-                    <div class="id-item">
-                        <span class="id-label">Competenza</span>
-                        <span class="id-value">+${pg.proficiencyBonus || 2}</span>
-                    </div>
-                    <div class="id-item">
-                        <span class="id-label">Velocità</span>
-                        <span class="id-value">${pg.speed || 9}m</span>
+                </div>
+                
+                <div class="combat-half">
+                    <h3>⚔️ Combattimento</h3>
+                    <div class="combat-grid-split">
+                        <div class="combat-stat-mini">
+                            <label>PF</label>
+                            <div class="hp-display">
+                                <input type="number" id="hp-current" value="${hp.current}" min="0" max="${hp.max}">
+                                <span class="hp-max">/ ${hp.max}</span>
+                                ${hp.temp > 0 ? `<span class="hp-temp">(+${hp.temp})</span>` : ''}
+                            </div>
+                        </div>
+                        <div class="combat-stat-mini">
+                            <label>CA</label>
+                            <span class="big-val">${pg.armorClass || 10}</span>
+                        </div>
+                        <div class="combat-stat-mini">
+                            <label>Iniziativa</label>
+                            <span class="big-val">${initiative >= 0 ? '+' : ''}${initiative}</span>
+                        </div>
+                        <div class="combat-stat-mini">
+                            <label>Dado Vita</label>
+                            <span class="big-val">${pg.hitDice?.current ?? pg.level}/${pg.hitDice?.total ?? pg.level}d${pgClass?.hit_die || 8}</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -275,19 +310,13 @@ function renderCard1Front(pg, databases) {
 }
 
 /**
- * Renderizza il retro della Card 1: Combattimento + TS + Magia
+ * Renderizza il retro della Card 1: Tiri Salvezza + Magia
  */
 function renderCard1Back(pg, databases) {
-    const hp = pg.hp || { current: 0, max: 0, temp: 0 };
     const abilities = pg.abilities || {
         strength: 10, dexterity: 10, constitution: 10,
         intelligence: 10, wisdom: 10, charisma: 10
     };
-    const pgClass = databases.classes?.find(c => c.index === pg.class);
-    
-    // Calcola iniziativa
-    const dexMod = calculateModifier(abilities.dexterity);
-    const initiative = pg.initiative !== null ? pg.initiative : dexMod;
     
     // Tiri Salvezza
     const saves = pg.savingThrows || [];
@@ -304,38 +333,9 @@ function renderCard1Back(pg, databases) {
     
     return `
         <div class="card-face card-back">
-            <div class="card-section combat-section compact">
-                <h3>⚔️ Combattimento</h3>
-                <div class="combat-grid-sheet">
-                    <div class="combat-stat">
-                        <label>PF</label>
-                        <div class="hp-display">
-                            <input type="number" id="hp-current" value="${hp.current}" min="0" max="${hp.max}">
-                            <span class="hp-max">/ ${hp.max}</span>
-                            ${hp.temp > 0 ? `<span class="hp-temp">(+${hp.temp})</span>` : ''}
-                        </div>
-                    </div>
-                    <div class="combat-stat ca-stat">
-                        <label>CA</label>
-                        <div class="ca-display">
-                            <span class="big-val" id="ca-value">${pg.armorClass || 10}</span>
-                            <button class="btn-edit-ca" id="btn-edit-ac" title="Modifica CA">✏️</button>
-                        </div>
-                    </div>
-                    <div class="combat-stat">
-                        <label>Iniziativa</label>
-                        <span class="big-val">${initiative >= 0 ? '+' : ''}${initiative}</span>
-                    </div>
-                    <div class="combat-stat">
-                        <label>Dado Vita</label>
-                        <span class="big-val">${pg.hitDice?.current ?? pg.level}/${pg.hitDice?.total ?? pg.level}d${pgClass?.hit_die || 8}</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card-section saves-section compact">
+            <div class="card-section saves-section flex-half">
                 <h3>🛡️ Tiri Salvezza</h3>
-                <div class="saves-grid">
+                <div class="saves-grid-back">
                     ${['str', 'dex', 'con', 'int', 'wis', 'cha'].map(key => {
                         const prop = ABILITY_KEY_TO_PROPERTY[key];
                         const score = abilities[prop] || 10;
@@ -344,6 +344,7 @@ function renderCard1Back(pg, databases) {
                         if (hasSave) mod += profBonus;
                         return `
                             <div class="save-item ${hasSave ? 'prof' : ''}">
+                                <span class="save-icon">${hasSave ? '●' : '○'}</span>
                                 <span class="save-name">${ABILITY_IT[key]}</span>
                                 <span class="save-val">${mod >= 0 ? '+' : ''}${mod}</span>
                             </div>
@@ -353,7 +354,7 @@ function renderCard1Back(pg, databases) {
             </div>
             
             ${spellcasting.spellsKnown?.length > 0 ? `
-                <div class="card-section spells-section flex-grow">
+                <div class="card-section spells-section flex-half">
                     <h3>🔮 Magia</h3>
                     <p class="spell-info">
                         CD: <strong>${spellcasting.spellSaveDC || 0}</strong> | 
@@ -362,7 +363,7 @@ function renderCard1Back(pg, databases) {
                     ${renderSpellsByLevel(spellsByLevel)}
                 </div>
             ` : `
-                <div class="card-section spells-section flex-grow empty-section">
+                <div class="card-section spells-section flex-half empty-section">
                     <h3>🔮 Magia</h3>
                     <p class="empty-note">Nessun incantesimo</p>
                 </div>
