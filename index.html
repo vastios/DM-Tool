@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dungeon Master Tool</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Importiamo i font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Barra di navigazione principale -->
+   <header>
+    <nav class="main-nav">
+        <!-- Icona Home e Tab Campagna sono ora nella stessa sezione -->
+        <div class="nav-section">
+            <button class="nav-tab home-icon active" data-tab="home" title="Home">
+                <!-- SVG per l'icona della casa -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                </svg>
+            </button>
+            <button class="nav-tab" data-tab="campaign">📖 Campagna</button>
+        </div>
+        
+        <!-- NUOVA SEZIONE: PERSONAGGI -->
+        <div class="nav-section">
+            <button class="nav-tab" data-tab="characters">👥 Personaggi</button>
+        </div>
+
+        <!-- NUOVA SEZIONE: IL MONDO -->
+        <div class="nav-section">
+            <button class="nav-tab" data-tab="world">🌍 Il Mondo</button>
+        </div>
+
+        <!-- SEZIONE: STRUMENTI -->
+        <div class="nav-section">
+            <button class="nav-tab" data-tab="tools">🛠️ Strumenti</button>
+        </div>
+        
+        <div class="nav-section">
+            <button class="nav-tab" data-tab="play">⚔️ Combatti</button>
+        </div>
+        
+        <!-- SEZIONE: COMPENDIO -->
+        <div class="nav-section">
+            <button class="nav-tab" data-tab="compendium">📚 Compendio</button>
+        </div>
+    </nav>
+</header>
+
+    <!-- Contenitore per la Homepage (nascosto di default) -->
+    <div id="home-container" class="hidden">
+        <img src="assets/logo.png" alt="Logo di Dungeons & Dragons" class="home-logo">
+        <h1 class="home-title">Dungeon Master Tool</h1>
+        
+        <!-- NUOVA POSIZIONE: Selettore di Campagna nella Homepage -->
+        <div class="campaign-selector-container">
+            <label for="campaign-selector">Campagna:</label>
+            <select id="campaign-selector">
+                <option value="">Seleziona o crea una campagna...</option>
+            </select>
+            <div class="campaign-actions">
+                <button id="new-campaign-btn" class="action-btn" title="Crea Nuova Campagna">Nuova Campagna</button>
+                <button id="delete-campaign-btn" class="action-btn danger" title="Elimina Campagna Corrente" disabled>Elimina</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Area per il contenuto principale (visibile di default) -->
+    <main id="main-content">
+        <!-- Le sotto-tab verranno generate qui da JavaScript -->
+        <nav class="sub-nav"></nav>
+        <!-- Il contenuto specifico verrà mostrato qui -->
+        <div class="content-area"></div>
+    </main>
+
+    <!-- Carica i dati e l'unico file JavaScript -->
+    <script type="module" src="stateManager.js"></script>
+    <script type="module" src="database/monsterDatabase.js"></script>
+    <script type="module" src="database/spells.js"></script>
+    <script type="module" src="database/items.js"></script>
+    <script type="module" src="database/classSpells.js"></script>
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

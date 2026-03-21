@@ -1,0 +1,23 @@
+/* ==========================================================================
+   BASE.CSS - Stili Fondamentali, Reset e Utilità
+   ========================================================================== */
+
+/* --- Reset e Stili Globali --- */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Cinzel', 'Georgia', serif;
+}
+
+body {
+    background-color: #000000;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- Utilità --- */
+.hidden {
+    display: none !important;
+}

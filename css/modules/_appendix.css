@@ -1,0 +1,53 @@
+/* ==========================================================================
+   APPENDIX.CSS - Stili per l'Appendice delle Condizioni
+   ========================================================================== */
+
+.appendix-container {
+    padding: 20px;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.appendix-container h2 {
+    font-family: 'Cinzel', serif;
+    color: #f0ad4e;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.conditions-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 20px;
+}
+
+.condition-card {
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.condition-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.condition-card h3 {
+    font-family: 'Cinzel', serif;
+    color: #87CEFA;
+    margin-top: 0;
+    border-bottom: 1px solid #555;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.condition-card p {
+    font-family: 'Lora', serif;
+    color: #f0e6d2;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin: 0;
+    white-space: pre-wrap;
+}

@@ -1,0 +1,131 @@
+/* ==========================================================================
+   LAYOUT.CSS - Struttura e Layout Principale
+   ========================================================================== */
+
+/* --- Layout Principale a Schermo Intero --- */
+main#main-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    width: 100%;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.content-area {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+/* --- Navigazione Principale (Header) --- */
+header {
+    background-color: #1a1a1a;
+    border-bottom: 2px solid #444;
+    padding: 0;
+    flex-shrink: 0;
+}
+
+.main-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+}
+
+.nav-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav-tab {
+    background-color: transparent;
+    border: none;
+    color: #b0b0b0;
+    padding: 20px 40px;
+    font-family: 'Cinzel', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: color 0.3s ease, background-color 0.3s ease;
+    border-bottom: 3px solid transparent;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-tab.home-icon {
+    padding: 20px 25px;
+    font-size: 1.5rem;
+}
+
+.nav-tab:hover {
+    color: #ffffff;
+    background-color: #333333;
+}
+
+.nav-tab.active {
+    color: #ffffff;
+    border-bottom: 3px solid #f0ad4e;
+}
+
+/* --- Stili per i Tab Principali Disabilitati --- */
+.nav-tab.disabled {
+    color: #555;
+    cursor: not-allowed;
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.nav-tab.disabled:hover {
+    color: #555;
+    background-color: transparent;
+    border-bottom-color: transparent;
+    transform: none;
+    box-shadow: none;
+}
+
+/* --- Sotto-Tab --- */
+.sub-nav {
+    display: flex;
+    justify-content: center;
+    background-color: #2a2a2a;
+    padding: 10px 0;
+    border-bottom: 1px solid #444;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.sub-tab {
+    background-color: transparent;
+    border: none;
+    color: #cccccc;
+    padding: 10px 25px;
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    font-weight: 400;
+    cursor: pointer;
+    transition: color 0.3s ease, background-color 0.3s ease;
+    border-radius: 5px 5px 0 0;
+}
+
+.sub-tab:hover {
+    color: #ffffff;
+    background-color: #3a3a3a;
+}
+
+.sub-tab.active {
+    color: #ffffff;
+    background-color: #444444;
+    font-weight: 700;
+}
