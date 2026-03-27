@@ -1235,19 +1235,21 @@ const CombatTracker = {
         const actionAvailable = !tracker.actionUsed;
         const parts = [];
         
-        // Azione standard
-        parts.push(actionAvailable ? '✅ Azione' : '❌ Azione');
+        // Azione standard - con classe separata per lo stile
+        const actionClass = actionAvailable ? 'action-available' : 'action-consumed';
+        parts.push(`<span class="${actionClass}">${actionAvailable ? '✅' : '❌'} Azione</span>`);
         
-        // Reazione
-        parts.push(!tracker.reactionUsed ? '🔄 Reazione' : '⏳ Reazione');
+        // Reazione - con classe separata per lo stile
+        const reactionClass = !tracker.reactionUsed ? 'reaction-available' : 'reaction-consumed';
+        parts.push(`<span class="${reactionClass}">${!tracker.reactionUsed ? '🔄' : '⏳'} Reazione</span>`);
         
         // Azioni leggendarie (solo se ne ha)
         if (tracker.legendaryActionsMax > 0) {
             const legRemaining = tracker.legendaryActionsMax - tracker.legendaryActionsUsed;
-            parts.push(`👑 ${legRemaining}/${tracker.legendaryActionsMax}`);
+            parts.push(`<span class="legendary-counter">👑 ${legRemaining}/${tracker.legendaryActionsMax}</span>`);
         }
         
-        return `<span class="actions-counter ${actionAvailable ? '' : 'action-used'}">${parts.join(' | ')}</span>`;
+        return `<span class="actions-counter">${parts.join(' <span class="separator">|</span> ')}</span>`;
     },
     
     /**
