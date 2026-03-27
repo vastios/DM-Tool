@@ -151,6 +151,26 @@
     display: inline-flex !important;
 }
 
+/* Pulsanti Inizia e Svuota: visibili solo a combattimento FERMO */
+#start-combat-btn,
+#clear-combat-btn {
+    display: inline-flex !important;
+}
+
+.combat-active #start-combat-btn,
+.combat-active #clear-combat-btn {
+    display: none !important;
+}
+
+/* Pulsante Termina: visibile solo a combattimento AVVIATO */
+#end-combat-btn {
+    display: none !important;
+}
+
+.combat-active #end-combat-btn {
+    display: inline-flex !important;
+}
+
 .header-center {
     display: flex;
     align-items: center;

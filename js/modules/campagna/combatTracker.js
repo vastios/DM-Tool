@@ -2249,12 +2249,15 @@ const CombatTracker = {
         const targetLabel = target ? ` → ${target.customName || target.name}` : 
             (targetId === 'free' ? ' → Bersaglio Libero' : '');
         
-        // Mostra risultato
-        const resultsBox = this.container.querySelector('.results-box-mini') || this.container.querySelector('.results-box');
-        if (resultsBox) {
-            const card = this.container.querySelector(`.combatant-card[data-id="${attacker.id}"]`);
-            const cardResultsBox = card?.querySelector('.results-box-mini') || resultsBox;
-            
+        // Mostra risultato - cerca il results-box nel tab attivo o globalmente
+        const card = this.container.querySelector(`.combatant-card[data-id="${attacker.id}"]`);
+        let cardResultsBox = card?.querySelector('.tab-content.active .results-box-tab') || 
+                            card?.querySelector('.results-box-tab') ||
+                            card?.querySelector('.results-box-mini') || 
+                            this.container.querySelector('.results-box-mini') ||
+                            this.container.querySelector('.results-box');
+        
+        if (cardResultsBox) {
             const multiattackLabel = multiattackMode ? 
                 `<small style="color: #ffd700;">⚔️ Multiattacco (${multiattackMode.attacksUsed}/${multiattackMode.totalAttacks})</small><br>` : '';
             const targetLabelHtml = target ? ` → <strong>${target.customName || target.name}</strong>` : 
