@@ -1,0 +1,570 @@
+/* ==========================================================================
+   WIKI.CSS - Stili per il Modulo Wiki
+   ========================================================================== */
+
+/* === FONT MEDIEVALE === */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@700&display=swap');
+
+/* === VARIABILI TEMA PERGAMENA === */
+:root {
+    --parchment-bg: #f4e4bc;
+    --parchment-bg-dark: #e8d4a8;
+    --parchment-border: #8b7355;
+    --parchment-text: #3d2914;
+    --parchment-shadow: rgba(61, 41, 20, 0.3);
+    --parchment-accent: #6b4423;
+    --parchment-gold: #8b6914;
+    --crimson-red: #DC143C;
+}
+
+.wiki-section-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    background-color: #3a3a3a;
+    padding: 10px 0;
+    border-bottom: 1px solid #444;
+    margin-bottom: 1rem;
+    gap: 5px;
+}
+
+.wiki-section-tab {
+    background: none;
+    border: none;
+    color: #cccccc;
+    padding: 8px 15px;
+    font-family: 'Lora', serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 5px 5px 0 0;
+}
+
+.wiki-section-tab:hover {
+    color: #ffffff;
+    background-color: #3a3a3a;
+}
+
+.wiki-section-tab.active {
+    color: #ffffff;
+    background-color: #d81d1d;
+    font-weight: 700;
+}
+
+.wiki-label {
+    color: #742307;
+    font-variant: small-caps;
+    font-weight: bold;
+}
+
+/* Sovrascrive lo sfondo del pannello dettagli SOLO per la Wiki */
+.wiki-detail-panel {
+    background-color: #f6f5ee;
+    color: #000000;
+}
+
+/* Corregge lo sfondo del visualizzatore SOLO per la Wiki */
+.wiki-detail-panel .note-viewer {
+    background-color: #f0efd1e9;
+    color: #000000;
+}
+
+.wiki-detail-panel .note-viewer-header h2 {
+    color: #401101;
+}
+
+.wiki-detail-panel .note-viewer .npc-narrative-content {
+    color: #000000;
+    font-style: italic;
+}
+
+.wiki-item:hover { background: #333; }
+.wiki-item:active { background: #444; }
+.filter-btn.active { box-shadow: 0 0 8px rgba(0,123,255,0.5); }
+
+/* ============================================================================
+   SCHEDA PNG STILE PERGAMENA (simile a PG Manager) - VERSIONE COMPATTA
+   ============================================================================ */
+
+.npc-sheet {
+    background: linear-gradient(180deg, var(--parchment-bg) 0%, var(--parchment-bg-dark) 100%);
+    border: 2px solid var(--parchment-border);
+    border-radius: 4px;
+    box-shadow: 0 0 15px var(--parchment-shadow), inset 0 0 40px rgba(139, 115, 85, 0.1);
+    padding: 0.75rem;
+    position: relative;
+    font-family: 'Cinzel', 'Georgia', serif;
+    color: var(--parchment-text);
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 0.9rem;
+}
+
+.npc-sheet::before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    border: 1px solid var(--parchment-border);
+    border-radius: 2px;
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+/* Header scheda */
+.npc-sheet-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    border-bottom: 2px solid var(--parchment-accent);
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.6rem;
+    min-height: 60px;
+}
+
+.npc-header-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+}
+
+.npc-char-name {
+    font-family: 'Cinzel Decorative', 'Cinzel', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--crimson-red);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    margin: 0;
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+}
+
+/* Riga 2: Razza, Classe, Livello - stile PG Manager */
+.npc-char-class-info {
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0.15rem 0 0;
+    line-height: 1.2;
+}
+
+/* Legacy - mantenuto per compatibilità */
+.npc-char-subtitle {
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--parchment-text);
+    margin: 0.15rem 0 0;
+}
+
+.npc-header-icon {
+    font-size: 2rem;
+    opacity: 0.7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Body della scheda */
+.npc-sheet-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* Sezioni */
+.npc-sheet-section {
+    background: rgba(255, 255, 255, 0.3);
+    border: 1px solid var(--parchment-border);
+    border-radius: 3px;
+    padding: 0.4rem 0.6rem;
+}
+
+.npc-sheet-section h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    border-bottom: 1px solid var(--parchment-border);
+    padding-bottom: 0.2rem;
+    margin: 0 0 0.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+/* Riga superiore: Identità + Combattimento */
+.npc-sheet-row-top {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    align-items: stretch;
+}
+
+/* Riga centrale: Caratteristiche + Competenze (stile PG Manager) */
+.npc-sheet-row-middle {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Riga inferiore: Personalità */
+.npc-sheet-row-bottom {
+    margin-bottom: 0.5rem;
+}
+
+/* Identità */
+.npc-identity-cols {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.3rem;
+}
+
+.npc-id-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0.15rem;
+}
+
+.npc-id-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    color: var(--parchment-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.1rem;
+}
+
+.npc-id-value {
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    color: var(--parchment-text);
+    font-weight: 500;
+}
+
+/* Combattimento */
+.npc-combat-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.25rem;
+}
+
+.npc-combat-stat {
+    background: rgba(255, 255, 255, 0.3);
+    border: 1px solid var(--parchment-border);
+    border-radius: 3px;
+    padding: 0.25rem 0.15rem;
+    text-align: center;
+}
+
+.npc-combat-stat label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    color: var(--parchment-accent);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 0.05rem;
+}
+
+.npc-big-val {
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--parchment-text);
+}
+
+/* Caratteristiche - Layout verticale stile PG Manager */
+.npc-abilities-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.npc-ability-block {
+    background: rgba(255, 255, 255, 0.3);
+    border: 1px solid var(--parchment-border);
+    border-radius: 3px;
+    padding: 0.25rem 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.npc-ab-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--parchment-text);
+    min-width: 28px;
+}
+
+.npc-ab-score {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--parchment-accent);
+    min-width: 24px;
+    text-align: center;
+}
+
+.npc-ab-mod {
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--crimson-red);
+    min-width: 28px;
+    text-align: center;
+    padding: 0.1rem 0.3rem;
+    border: 1px solid var(--parchment-border);
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.4);
+}
+
+/* Descrizione */
+.npc-description-content {
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--parchment-text);
+}
+
+/* Personalità */
+.npc-personality-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.4rem;
+}
+
+.npc-personality-item {
+    padding: 0.3rem;
+    background: rgba(139, 115, 85, 0.1);
+    border-radius: 3px;
+}
+
+.npc-personality-item label {
+    display: block;
+    font-size: 0.6rem;
+    color: var(--parchment-accent);
+    text-transform: uppercase;
+    margin-bottom: 0.1rem;
+}
+
+.npc-personality-value {
+    font-size: 0.75rem;
+    color: var(--parchment-text);
+    line-height: 1.3;
+}
+
+/* Info aggiuntive */
+.npc-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0.3rem;
+}
+
+.npc-info-item {
+    padding: 0.3rem;
+    background: rgba(139, 115, 85, 0.1);
+    border-radius: 3px;
+}
+
+.npc-info-item label {
+    display: block;
+    font-size: 0.6rem;
+    color: var(--parchment-accent);
+    text-transform: uppercase;
+    margin-bottom: 0.08rem;
+}
+
+.npc-info-item span {
+    font-size: 0.75rem;
+    color: var(--parchment-text);
+}
+
+/* Tratti e Informazioni - stile PG Manager */
+.npc-traits-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+}
+
+.npc-traits-list .npc-info-item {
+    display: inline-flex;
+    flex-direction: column;
+    padding: 0.25rem 0.4rem;
+    background: rgba(139, 105, 20, 0.15);
+    border-left: 2px solid var(--parchment-gold);
+}
+
+.npc-traits-list .npc-info-item label {
+    font-size: 0.55rem;
+    margin-bottom: 0.05rem;
+}
+
+.npc-traits-list .npc-info-item span {
+    font-size: 0.7rem;
+}
+
+/* Combat info */
+.npc-combat-info-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.npc-combat-info {
+    padding: 0.3rem;
+    background: rgba(139, 115, 85, 0.1);
+    border-radius: 3px;
+}
+
+.npc-combat-info label {
+    display: block;
+    font-size: 0.6rem;
+    color: var(--parchment-accent);
+    text-transform: uppercase;
+    margin-bottom: 0.08rem;
+}
+
+.npc-combat-info span {
+    font-size: 0.75rem;
+    color: var(--parchment-text);
+}
+
+/* Sezione Competenze stile PG Manager */
+.npc-section-skills {
+    display: flex;
+    flex-direction: column;
+}
+
+.npc-section-skills .npc-combat-info-grid {
+    flex: 1;
+}
+
+/* Note segrete */
+.npc-section-secrets {
+    background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%);
+    border: 1px dashed #742307;
+    padding: 0.4rem 0.6rem;
+}
+
+.npc-section-secrets h3 {
+    color: #d4af37;
+    border-bottom-color: #742307;
+    font-size: 0.75rem;
+}
+
+.npc-secrets-content {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    color: #eee;
+    font-style: italic;
+    line-height: 1.4;
+}
+
+/* Campaign links nella scheda PNG */
+.npc-sheet .campaign-link {
+    color: #ffffff !important;
+    font-weight: bold;
+}
+
+/* Inventario */
+.npc-inventory-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+
+.npc-inventory-list li {
+    background: rgba(139, 105, 20, 0.15);
+    border-left: 2px solid var(--parchment-gold);
+    padding: 0.2rem 0.4rem;
+    font-size: 0.75rem;
+    border-radius: 2px;
+}
+
+/* Oggetti Speciali */
+.npc-special-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.npc-special-item {
+    background: rgba(139, 115, 85, 0.15);
+    border-left: 2px solid var(--parchment-accent);
+    padding: 0.3rem;
+    border-radius: 2px;
+}
+
+.npc-special-item strong {
+    font-size: 0.8rem;
+    color: var(--parchment-text);
+    display: block;
+    margin-bottom: 0.1rem;
+}
+
+.npc-special-item p {
+    margin: 0;
+    font-size: 0.75rem;
+    color: var(--parchment-accent);
+    line-height: 1.3;
+}
+
+/* Incantesimi */
+.npc-spells-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+
+.npc-spell-tag {
+    background: linear-gradient(135deg, rgba(75, 0, 130, 0.2) 0%, rgba(138, 43, 226, 0.15) 100%);
+    border: 1px solid rgba(138, 43, 226, 0.4);
+    padding: 0.2rem 0.5rem;
+    font-size: 0.7rem;
+    border-radius: 10px;
+    color: var(--parchment-text);
+    font-family: 'Cinzel', serif;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .npc-sheet-row-top {
+        grid-template-columns: 1fr;
+    }
+    
+    .npc-sheet-row-middle {
+        grid-template-columns: 1fr;
+    }
+    
+    .npc-combat-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .npc-identity-cols {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .npc-char-name {
+        font-size: 1.2rem;
+    }
+    
+    .npc-char-class-info {
+        font-size: 0.8rem;
+    }
+    
+    .npc-sheet {
+        padding: 0.5rem;
+    }
+}

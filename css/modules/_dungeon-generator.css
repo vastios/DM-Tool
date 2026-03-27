@@ -1,0 +1,86 @@
+/* ==========================================================================
+   DUNGEON-GENERATOR.CSS - Stili per il Modulo Generatore Dungeon
+   ========================================================================== */
+
+.dg-container {
+    display: flex;
+    gap: 20px;
+    height: 90vh;
+    background: #1a1a1a;
+    color: white;
+}
+
+.dg-controls {
+    flex: 1;
+    max-width: 300px;
+    padding: 15px;
+    border-right: 1px solid #333;
+}
+
+.dg-display {
+    flex: 2;
+    position: relative;
+    padding: 20px;
+    background: #000;
+}
+
+.dg-legend {
+    background: #222;
+    padding: 10px;
+    display: flex;
+    justify-content: space-around;
+    border-bottom: 1px solid #444;
+}
+
+.leg-item { font-size: 0.9em; color: #ccc; }
+
+.map-wrapper {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 40px;
+}
+
+.ascii-canvas {
+    display: block;
+    white-space: pre;
+    font-family: 'Courier New', monospace;
+    font-size: 1.4rem;
+    color: #00ff00;
+    line-height: 1.2;
+    cursor: default;
+}
+
+.compass {
+    position: absolute;
+    font-weight: bold;
+    color: #555;
+    font-size: 1.2rem;
+}
+.north { top: 10px; left: 50%; transform: translateX(-50%); }
+.south { bottom: 10px; left: 50%; transform: translateX(-50%); }
+.west  { left: 10px; top: 50%; transform: translateY(-50%); }
+.east  { right: 10px; top: 50%; transform: translateY(-50%); }
+
+.door {
+    color: #00d4ff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-block;
+}
+
+.door:hover {
+    color: #fff;
+    background: rgba(0, 212, 255, 0.3);
+    transform: scale(1.2);
+}
+
+.dg-card { background: #2a2a2a; padding: 15px; border-radius: 8px; }
+.btn-primary, .btn-secondary, .btn-util {
+    width: 100%; margin-bottom: 8px; padding: 10px; border: none; cursor: pointer; border-radius: 4px;
+}
+.btn-primary { background: #007bff; color: white; }
+.btn-secondary { background: #444; color: white; }
