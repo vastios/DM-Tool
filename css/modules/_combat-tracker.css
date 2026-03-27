@@ -2083,3 +2083,384 @@
     transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(156, 39, 176, 0.4);
 }
+/* ==========================================================================
+   COMBAT LOG SYSTEM
+   ========================================================================== */
+
+/* Log Button */
+.log-btn {
+    padding: 5px 10px;
+    background: linear-gradient(135deg, #607d8b 0%, #455a64 100%);
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: all 0.15s;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.log-btn:hover {
+    background: linear-gradient(135deg, #78909c 0%, #546e7a 100%);
+    transform: translateY(-1px);
+}
+
+/* Combat Log Popup Container */
+.combat-log-popup-container {
+    background: var(--card-bg, #252525);
+    border-radius: 12px;
+    width: 90%;
+    max-width: 700px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    position: relative;
+}
+
+.combat-log-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-height: 80vh;
+}
+
+.log-header {
+    padding: 15px;
+    border-bottom: 1px solid var(--border-color, #444);
+    flex-shrink: 0;
+}
+
+.log-header h3 {
+    margin: 0 0 12px 0;
+    color: var(--accent-color, #d4af37);
+}
+
+.log-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.log-action-btn {
+    padding: 6px 12px;
+    background: var(--bg-tertiary, #333);
+    border: 1px solid var(--border-color, #444);
+    border-radius: 4px;
+    color: var(--text-primary, #fff);
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: all 0.15s;
+}
+
+.log-action-btn:hover {
+    background: var(--accent-color, #d4af37);
+    color: #000;
+}
+
+.log-action-btn.danger {
+    background: rgba(244, 67, 54, 0.2);
+    border-color: #f44336;
+    color: #f44336;
+}
+
+.log-action-btn.danger:hover {
+    background: #f44336;
+    color: white;
+}
+
+/* Log Entries */
+.log-entries {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.log-empty {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-muted, #666);
+}
+
+.log-empty .hint {
+    font-size: 0.85rem;
+    margin-top: 8px;
+}
+
+.log-entry {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background: var(--bg-tertiary, #2a2a2a);
+    border-radius: 6px;
+    font-size: 0.8rem;
+    border-left: 3px solid transparent;
+}
+
+.log-entry:hover {
+    background: var(--hover-bg, #3a3a3a);
+}
+
+.log-time {
+    color: var(--text-muted, #888);
+    font-size: 0.7rem;
+    min-width: 60px;
+}
+
+.log-round-badge {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 0.65rem;
+    color: var(--text-muted, #aaa);
+}
+
+.log-icon {
+    font-size: 1rem;
+    min-width: 20px;
+    text-align: center;
+}
+
+.log-content {
+    flex: 1;
+    color: var(--text-primary, #eee);
+}
+
+/* Log Entry Types */
+.log-entry.log-combat-start,
+.log-entry.log-combat-end {
+    background: linear-gradient(90deg, rgba(212, 175, 55, 0.2) 0%, transparent 100%);
+    border-left-color: #d4af37;
+    font-weight: 500;
+}
+
+.log-entry.log-round {
+    background: rgba(33, 150, 243, 0.1);
+    border-left-color: #2196f3;
+}
+
+.log-entry.log-turn {
+    background: rgba(156, 39, 176, 0.1);
+    border-left-color: #9c27b0;
+}
+
+.log-entry.log-hit {
+    border-left-color: #4caf50;
+}
+
+.log-entry.log-miss {
+    border-left-color: #9e9e9e;
+    opacity: 0.8;
+}
+
+.log-entry.log-critical {
+    background: linear-gradient(90deg, rgba(255, 215, 0, 0.2) 0%, transparent 100%);
+    border-left-color: #ffd700;
+}
+
+.log-entry.log-spell {
+    border-left-color: #9c27b0;
+}
+
+.log-entry.log-damage {
+    border-left-color: #f44336;
+}
+
+.log-entry.log-heal {
+    border-left-color: #4caf50;
+}
+
+.log-entry.log-condition {
+    border-left-color: #ff9800;
+}
+
+.log-entry.log-death {
+    background: linear-gradient(90deg, rgba(244, 67, 54, 0.3) 0%, transparent 100%);
+    border-left-color: #f44336;
+    color: #e57373;
+}
+
+.log-entry.log-revive {
+    border-left-color: #4caf50;
+}
+
+/* Combat Summary */
+.combat-summary {
+    padding: 10px;
+}
+
+.combat-summary h3 {
+    margin: 0 0 15px 0;
+    text-align: center;
+    color: var(--accent-color, #d4af37);
+}
+
+.summary-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.summary-stat {
+    text-align: center;
+    padding: 12px;
+    background: var(--bg-tertiary, #2a2a2a);
+    border-radius: 8px;
+}
+
+.summary-stat .stat-value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--accent-color, #d4af37);
+}
+
+.summary-stat .stat-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-muted, #888);
+    margin-top: 4px;
+}
+
+.top-damagers {
+    margin-bottom: 20px;
+}
+
+.top-damagers h4 {
+    margin: 0 0 10px 0;
+    color: var(--text-primary, #eee);
+    font-size: 0.9rem;
+}
+
+.damager-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: var(--bg-tertiary, #2a2a2a);
+    border-radius: 6px;
+    margin-bottom: 6px;
+}
+
+.damager-rank {
+    font-weight: bold;
+    color: var(--accent-color, #d4af37);
+    min-width: 25px;
+}
+
+.damager-name {
+    flex: 1;
+    color: var(--text-primary, #eee);
+}
+
+.damager-damage {
+    color: #e57373;
+    font-weight: 500;
+}
+
+.summary-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+/* ==========================================================================
+   INDICATORE "NON HA AGITO"
+   ========================================================================== */
+
+/* Combattente che non ha agito questo turno */
+.combatant-order-item.not-acted {
+    background: rgba(255, 193, 7, 0.1);
+    border-left: 3px solid #ffc107 !important;
+}
+
+.combatant-order-item.not-acted::after {
+    content: '⚠️';
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.8rem;
+}
+
+.combatant-order-item.has-acted {
+    opacity: 0.7;
+}
+
+/* ==========================================================================
+   RESISTENZE/IMMUNITÀ
+   ========================================================================== */
+
+.resistance-indicator {
+    font-size: 0.65rem;
+    padding: 1px 4px;
+    border-radius: 3px;
+    margin-left: 4px;
+}
+
+.resistance-indicator.immune {
+    background: rgba(156, 39, 176, 0.3);
+    color: #ce93d8;
+}
+
+.resistance-indicator.resistant {
+    background: rgba(33, 150, 243, 0.3);
+    color: #64b5f6;
+}
+
+.resistance-indicator.vulnerable {
+    background: rgba(244, 67, 54, 0.3);
+    color: #e57373;
+}
+
+/* Damage result with resistance */
+.damage-result-half {
+    color: #64b5f6;
+}
+
+.damage-result-immune {
+    color: #ce93d8;
+}
+
+.damage-result-vulnerable {
+    color: #e57373;
+}
+
+/* ==========================================================================
+   STATO STUNNED
+   ========================================================================== */
+
+.combatant-order-item.stunned {
+    opacity: 0.6;
+    animation: stunnedPulse 2s ease-in-out infinite;
+}
+
+@keyframes stunnedPulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 0.4; }
+}
+
+.stunned-indicator {
+    background: rgba(255, 152, 0, 0.3);
+    border: 1px solid #ff9800;
+    padding: 6px 12px;
+    border-radius: 6px;
+    color: #ffb74d;
+    font-size: 0.85rem;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.stunned-indicator .stunned-icon {
+    font-size: 1.2rem;
+    margin-right: 6px;
+}

@@ -332,6 +332,22 @@ const CombatTracker = {
     initiativeOrder: [],
     activeTab: 'attacks', // Tab attivo: 'attacks' o 'spells'
     tabPreferences: {}, // Preferenze tab per combattente { combatantId: 'attacks'|'spells' }
+    
+    // Combat Log System
+    combatLog: [],
+    combatStats: {
+        startTime: null,
+        endTime: null,
+        roundsPlayed: 0,
+        damageDealt: {}, // { combatantId: { total, byType: {} } }
+        attacksHit: {},  // { combatantId: count }
+        attacksMiss: {}, // { combatantId: count }
+        criticalHits: {}, // { combatantId: count }
+        spellsCasted: {}, // { combatantId: count }
+        damageTaken: {}, // { combatantId: total }
+        conditionsApplied: {} // { combatantId: { conditionName: count } }
+    },
+    actedThisTurn: new Set(), // Combattenti che hanno usato la loro azione questo turno
 
     render(containerElement) {
         this.container = containerElement;
@@ -357,6 +373,7 @@ const CombatTracker = {
             <button id="clear-combat-btn" class="reset-btn">Svuota</button>
         </div>
         <div class="header-right">
+            <button id="combat-log-btn" class="log-btn" title="Log Combattimento">📜 Log</button>
             <button class="source-btn" data-source="pcs" title="Aggiungi Personaggi Giocanti">
                 👤 PG
             </button>
@@ -408,6 +425,25 @@ const CombatTracker = {
             <div id="spells-popup-content" class="popup-content"></div>
         </div>
     </div>
+    
+    <!-- Combat Log Popup Overlay -->
+    <div id="combat-log-overlay" class="popup-overlay hidden">
+        <div class="combat-log-popup-container">
+            <button class="popup-close" title="Chiudi">×</button>
+            <div class="combat-log-content">
+                <div class="log-header">
+                    <h3>📜 Log Combattimento</h3>
+                    <div class="log-actions">
+                        <button id="export-log-txt-btn" class="log-action-btn">📄 Esporta TXT</button>
+                        <button id="export-log-md-btn" class="log-action-btn">📝 Esporta MD</button>
+                        <button id="export-log-json-btn" class="log-action-btn">💾 Esporta JSON</button>
+                        <button id="clear-log-btn" class="log-action-btn danger">🗑️ Cancella Log</button>
+                    </div>
+                </div>
+                <div id="combat-log-entries" class="log-entries"></div>
+            </div>
+        </div>
+    </div>
 </div>
         `;
 
@@ -429,12 +465,15 @@ const CombatTracker = {
         container.querySelector('#start-combat-btn')?.addEventListener('click', () => {
             startCombat();
             selectedCombatantId = null; // Reset per seguire il turno corrente
+            this.startCombatLog(); // Avvia il log del combattimento
+            this.actedThisTurn.clear(); // Reset azioni questo turno
             showToast('Combattimento iniziato!', 'success');
         });
 
         container.querySelector('#next-turn-btn')?.addEventListener('click', () => {
             // Reset selezione PRIMA di nextTurn per seguire automaticamente il turno corrente
             selectedCombatantId = null;
+            this.actedThisTurn.clear(); // Reset azioni per il prossimo turno
             nextTurn();
         });
 
@@ -442,7 +481,7 @@ const CombatTracker = {
             if (confirm('Terminare il combattimento?\n\nI combattenti rimarranno nella lista con le condizioni azzerate. Potrai ricominciare ritirando l\'iniziativa.')) {
                 endCombat();
                 selectedCombatantId = null;
-                showToast('Combattimento terminato! Pronti per un nuovo scontro.', 'success');
+                this.endCombatLog(); // Finalizza log e mostra riepilogo
             }
         });
 
@@ -450,6 +489,7 @@ const CombatTracker = {
             if (confirm('Svuotare il combattimento?')) {
                 clearCombat();
                 selectedCombatantId = null;
+                this.clearLog(); // Cancella anche il log
                 showToast('Tracker svuotato.', 'info');
             }
         });
@@ -550,6 +590,26 @@ const CombatTracker = {
         
         const spellsContent = container.querySelector('#spells-popup-content');
         spellsContent?.addEventListener('click', (e) => this.handleSpellsPopupClick(e));
+        
+        // Combat Log events
+        const logBtn = container.querySelector('#combat-log-btn');
+        logBtn?.addEventListener('click', () => this.openCombatLog());
+        
+        const logOverlay = container.querySelector('#combat-log-overlay');
+        logOverlay?.addEventListener('click', (e) => {
+            if (e.target.id === 'combat-log-overlay') {
+                this.closeCombatLog();
+            }
+        });
+        
+        const logCloseBtn = logOverlay?.querySelector('.popup-close');
+        logCloseBtn?.addEventListener('click', () => this.closeCombatLog());
+        
+        // Log export buttons
+        container.querySelector('#export-log-txt-btn')?.addEventListener('click', () => this.exportLog('txt'));
+        container.querySelector('#export-log-md-btn')?.addEventListener('click', () => this.exportLog('md'));
+        container.querySelector('#export-log-json-btn')?.addEventListener('click', () => this.exportLog('json'));
+        container.querySelector('#clear-log-btn')?.addEventListener('click', () => this.clearLog());
         
         // Order list hover for condition tooltips
         const orderList = container.querySelector('#combatants-order-list');
@@ -1786,8 +1846,11 @@ const CombatTracker = {
         }
 
         if (e.target.classList.contains('remove-combatant-btn')) {
-            removeMonsterFromCombat(combatantId);
-            selectedCombatantId = null;
+            // Conferma rimozione
+            if (confirm(`Rimuovere ${combatant?.customName || combatant?.name} dal combattimento?`)) {
+                removeMonsterFromCombat(combatantId);
+                selectedCombatantId = null;
+            }
         } else if (e.target.classList.contains('hp-minus')) {
             // -5 HP
             const oldHp = combatant.currentHp || 0;
@@ -2299,6 +2362,34 @@ const CombatTracker = {
             
             cardResultsBox.innerHTML = resultHtml + cardResultsBox.innerHTML;
         }
+        
+        // Log event
+        if (isCritical) {
+            this.logEvent('critical_hit', {
+                attackerId: attacker.id,
+                targetId: target?.id,
+                attackName: attackData.name,
+                damage: damageTotal
+            });
+        } else if (isHit) {
+            this.logEvent('attack_hit', {
+                attackerId: attacker.id,
+                targetId: target?.id,
+                attackName: attackData.name,
+                damage: damageTotal,
+                toHit: toHit
+            });
+        } else {
+            this.logEvent('attack_miss', {
+                attackerId: attacker.id,
+                targetId: target?.id,
+                attackName: attackData.name,
+                toHit: toHit
+            });
+        }
+        
+        // Registra che questo combattente ha agito
+        this.actedThisTurn.add(attacker.id);
         
         // Log in console
         console.log(`⚔️ [CombatTracker] ${attacker.customName} attacca con ${attackData.name}: ${hitStatus}${damageLabel}`);
@@ -2821,16 +2912,26 @@ const CombatTracker = {
             const hpColor = hpPercent > 50 ? '#4caf50' : hpPercent > 25 ? '#ff9800' : '#f44336';
             const isDead = c.currentHp <= 0;
             
+            // Indicatore "non ha agito" - solo se combattimento in corso
+            const hasActed = this.actedThisTurn.has(c.id) || (c.actionTracker?.actionUsed);
+            const hasStunned = c.conditions?.some(cond => {
+                const condName = typeof cond === 'string' ? cond : cond.name;
+                return condName.toLowerCase() === 'stunned' || condName.toLowerCase() === 'stordito';
+            });
+            const showNotActed = currentRound > 0 && !isActive && !hasActed && !isDead && !hasStunned;
+            const showHasActed = currentRound > 0 && hasActed && !isActive && !isDead;
+            
             // Render condition tags
             const conditionTags = this.renderConditionTags(c);
             
             return `
-                <div class="combatant-order-item ${isActive ? 'active-turn' : ''} ${isSelected ? 'selected' : ''} ${isTargeted ? 'targeted' : ''} ${isDead ? 'dead' : ''}" data-id="${c.id}">
+                <div class="combatant-order-item ${isActive ? 'active-turn' : ''} ${isSelected ? 'selected' : ''} ${isTargeted ? 'targeted' : ''} ${isDead ? 'dead' : ''} ${showNotActed ? 'not-acted' : ''} ${showHasActed ? 'has-acted' : ''} ${hasStunned ? 'stunned' : ''}" data-id="${c.id}">
                     <div class="order-item-header">
                         <span class="order-item-name">
                             ${c.customName || c.name}
                             ${getSourceBadge(c)}
                             ${isDead ? '💀' : ''}
+                            ${showNotActed ? '⚠️' : ''}
                         </span>
                         <button class="set-target-btn" data-id="${c.id}" title="Imposta come bersaglio">🎯</button>
                     </div>
@@ -2852,6 +2953,464 @@ const CombatTracker = {
                     activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 }
             }, 10);
+        }
+    },
+    
+    // --- COMBAT LOG SYSTEM ---
+    
+    /**
+     * Registra un evento nel log del combattimento.
+     */
+    logEvent(eventType, data = {}) {
+        const timestamp = new Date().toISOString();
+        const round = this.currentRound || 0;
+        const turn = this.currentTurnId;
+        
+        const entry = {
+            id: Date.now(),
+            timestamp,
+            round,
+            turn,
+            eventType,
+            ...data
+        };
+        
+        this.combatLog.push(entry);
+        
+        // Aggiorna statistiche
+        this.updateStats(eventType, data);
+        
+        return entry;
+    },
+    
+    /**
+     * Aggiorna le statistiche del combattimento.
+     */
+    updateStats(eventType, data) {
+        const combatantId = data.attackerId || data.casterId || data.combatantId;
+        const targetId = data.targetId;
+        const damage = data.damage || 0;
+        const damageType = data.damageType || 'physical';
+        
+        switch (eventType) {
+            case 'attack_hit':
+                this.combatStats.attacksHit[combatantId] = (this.combatStats.attacksHit[combatantId] || 0) + 1;
+                if (damage > 0) {
+                    if (!this.combatStats.damageDealt[combatantId]) {
+                        this.combatStats.damageDealt[combatantId] = { total: 0, byType: {} };
+                    }
+                    this.combatStats.damageDealt[combatantId].total += damage;
+                    this.combatStats.damageDealt[combatantId].byType[damageType] = 
+                        (this.combatStats.damageDealt[combatantId].byType[damageType] || 0) + damage;
+                    this.combatStats.damageTaken[targetId] = (this.combatStats.damageTaken[targetId] || 0) + damage;
+                }
+                break;
+            case 'attack_miss':
+                this.combatStats.attacksMiss[combatantId] = (this.combatStats.attacksMiss[combatantId] || 0) + 1;
+                break;
+            case 'critical_hit':
+                this.combatStats.criticalHits[combatantId] = (this.combatStats.criticalHits[combatantId] || 0) + 1;
+                break;
+            case 'spell_cast':
+                this.combatStats.spellsCasted[combatantId] = (this.combatStats.spellsCasted[combatantId] || 0) + 1;
+                break;
+            case 'condition_applied':
+                if (!this.combatStats.conditionsApplied[combatantId]) {
+                    this.combatStats.conditionsApplied[combatantId] = {};
+                }
+                this.combatStats.conditionsApplied[combatantId][data.conditionName] = 
+                    (this.combatStats.conditionsApplied[combatantId][data.conditionName] || 0) + 1;
+                break;
+        }
+    },
+    
+    /**
+     * Apre il popup del combat log.
+     */
+    openCombatLog() {
+        const overlay = this.container.querySelector('#combat-log-overlay');
+        const entries = this.container.querySelector('#combat-log-entries');
+        if (!overlay || !entries) return;
+        
+        entries.innerHTML = this.renderLogEntries();
+        overlay.classList.remove('hidden');
+    },
+    
+    /**
+     * Chiude il popup del combat log.
+     */
+    closeCombatLog() {
+        const overlay = this.container.querySelector('#combat-log-overlay');
+        if (overlay) {
+            overlay.classList.add('hidden');
+        }
+    },
+    
+    /**
+     * Renderizza le entries del log.
+     */
+    renderLogEntries() {
+        if (this.combatLog.length === 0) {
+            return '<div class="log-empty"><p> Nessun evento registrato.</p><p class="hint">Gli eventi verranno registrati durante il combattimento.</p></div>';
+        }
+        
+        const combatants = getCombatState();
+        const getCombatantName = (id) => {
+            const c = combatants.find(c => c.id === id);
+            return c?.customName || c?.name || 'Sconosciuto';
+        };
+        
+        return this.combatLog.map(entry => {
+            const time = new Date(entry.timestamp).toLocaleTimeString('it-IT');
+            let icon = '📝';
+            let content = '';
+            let cssClass = '';
+            
+            switch (entry.eventType) {
+                case 'combat_start':
+                    icon = '⚔️';
+                    content = 'Combattimento iniziato!';
+                    cssClass = 'log-combat-start';
+                    break;
+                case 'combat_end':
+                    icon = '🏁';
+                    content = 'Combattimento terminato!';
+                    cssClass = 'log-combat-end';
+                    break;
+                case 'round_start':
+                    icon = '🔄';
+                    content = `Round ${entry.round}`;
+                    cssClass = 'log-round';
+                    break;
+                case 'turn_start':
+                    icon = '🎯';
+                    content = `Turno di ${getCombatantName(entry.combatantId)}`;
+                    cssClass = 'log-turn';
+                    break;
+                case 'attack_hit':
+                    icon = '⚔️';
+                    content = `${getCombatantName(entry.attackerId)} colpisce ${getCombatantName(entry.targetId)} con ${entry.attackName}`;
+                    if (entry.damage > 0) content += ` (${entry.damage} danni)`;
+                    cssClass = 'log-hit';
+                    break;
+                case 'attack_miss':
+                    icon = '❌';
+                    content = `${getCombatantName(entry.attackerId)} manca ${getCombatantName(entry.targetId)} con ${entry.attackName}`;
+                    cssClass = 'log-miss';
+                    break;
+                case 'critical_hit':
+                    icon = '💥';
+                    content = `CRITICO! ${getCombatantName(entry.attackerId)} colpisce ${getCombatantName(entry.targetId)} (${entry.damage} danni)`;
+                    cssClass = 'log-critical';
+                    break;
+                case 'spell_cast':
+                    icon = '🔮';
+                    content = `${getCombatantName(entry.casterId)} lancia ${entry.spellName}`;
+                    cssClass = 'log-spell';
+                    break;
+                case 'damage':
+                    icon = '💔';
+                    content = `${getCombatantName(entry.targetId)} subisce ${entry.damage} danni`;
+                    cssClass = 'log-damage';
+                    break;
+                case 'heal':
+                    icon = '💚';
+                    content = `${getCombatantName(entry.targetId)} recupera ${entry.healAmount} PF`;
+                    cssClass = 'log-heal';
+                    break;
+                case 'condition_applied':
+                    icon = '⚠️';
+                    content = `${getCombatantName(entry.targetId)} → ${entry.conditionName}`;
+                    if (entry.duration > 0) content += ` (${entry.duration} turni)`;
+                    cssClass = 'log-condition';
+                    break;
+                case 'condition_removed':
+                    icon = '✅';
+                    content = `${getCombatantName(entry.targetId)} non è più ${entry.conditionName}`;
+                    cssClass = 'log-condition-removed';
+                    break;
+                case 'death':
+                    icon = '💀';
+                    content = `${getCombatantName(entry.combatantId)} è morto!`;
+                    cssClass = 'log-death';
+                    break;
+                case 'revive':
+                    icon = '✨';
+                    content = `${getCombatantName(entry.combatantId)} è tornato in vita!`;
+                    cssClass = 'log-revive';
+                    break;
+                default:
+                    content = entry.message || entry.eventType;
+            }
+            
+            return `
+                <div class="log-entry ${cssClass}">
+                    <span class="log-time">${time}</span>
+                    <span class="log-round-badge">R${entry.round || 0}</span>
+                    <span class="log-icon">${icon}</span>
+                    <span class="log-content">${content}</span>
+                </div>
+            `;
+        }).join('');
+    },
+    
+    /**
+     * Esporta il log in vari formati.
+     */
+    exportLog(format = 'txt') {
+        const combatants = getCombatState();
+        const getCombatantName = (id) => {
+            const c = combatants.find(c => c.id === id);
+            return c?.customName || c?.name || 'Sconosciuto';
+        };
+        
+        let content = '';
+        const date = new Date().toLocaleDateString('it-IT');
+        const time = new Date().toLocaleTimeString('it-IT');
+        
+        if (format === 'json') {
+            content = JSON.stringify({
+                exportDate: new Date().toISOString(),
+                stats: this.combatStats,
+                log: this.combatLog
+            }, null, 2);
+            this.downloadFile(content, `combat-log-${date}.json`, 'application/json');
+            return;
+        }
+        
+        // Header
+        if (format === 'md') {
+            content = `# Combat Log\n\n`;
+            content += `**Data:** ${date} ${time}\n`;
+            content += `**Round totali:** ${this.currentRound}\n\n`;
+            content += `---\n\n`;
+            content += `## Log Eventi\n\n`;
+        } else {
+            content = `COMBAT LOG\n`;
+            content += `Data: ${date} ${time}\n`;
+            content += `Round totali: ${this.currentRound}\n`;
+            content += `${'='.repeat(50)}\n\n`;
+        }
+        
+        // Entries
+        this.combatLog.forEach(entry => {
+            const time = new Date(entry.timestamp).toLocaleTimeString('it-IT');
+            let line = '';
+            
+            switch (entry.eventType) {
+                case 'attack_hit':
+                    line = `[${time}] R${entry.round} - ${getCombatantName(entry.attackerId)} colpisce ${getCombatantName(entry.targetId)} con ${entry.attackName} (${entry.damage} danni)`;
+                    break;
+                case 'attack_miss':
+                    line = `[${time}] R${entry.round} - ${getCombatantName(entry.attackerId)} manca ${getCombatantName(entry.targetId)}`;
+                    break;
+                case 'critical_hit':
+                    line = `[${time}] R${entry.round} - CRITICO! ${getCombatantName(entry.attackerId)} → ${getCombatantName(entry.targetId)} (${entry.damage} danni)`;
+                    break;
+                case 'spell_cast':
+                    line = `[${time}] R${entry.round} - ${getCombatantName(entry.casterId)} lancia ${entry.spellName}`;
+                    break;
+                case 'condition_applied':
+                    line = `[${time}] R${entry.round} - ${getCombatantName(entry.targetId)} → ${entry.conditionName}`;
+                    break;
+                case 'death':
+                    line = `[${time}] R${entry.round} - ${getCombatantName(entry.combatantId)} muore`;
+                    break;
+                default:
+                    line = `[${time}] R${entry.round} - ${entry.eventType}`;
+            }
+            
+            if (format === 'md') {
+                content += `- ${line}\n`;
+            } else {
+                content += `${line}\n`;
+            }
+        });
+        
+        // Statistiche
+        if (format === 'md') {
+            content += `\n---\n\n## Statistiche\n\n`;
+            Object.entries(this.combatStats.damageDealt).forEach(([id, data]) => {
+                if (data.total > 0) {
+                    content += `- **${getCombatantName(parseFloat(id))}**: ${data.total} danni totali\n`;
+                }
+            });
+        }
+        
+        const extension = format === 'md' ? 'md' : 'txt';
+        const mimeType = format === 'md' ? 'text/markdown' : 'text/plain';
+        this.downloadFile(content, `combat-log-${date}.${extension}`, mimeType);
+    },
+    
+    /**
+     * Scarica un file.
+     */
+    downloadFile(content, filename, mimeType) {
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast(`Log esportato: ${filename}`, 'success');
+    },
+    
+    /**
+     * Cancella il log.
+     */
+    clearLog() {
+        if (!confirm('Sei sicuro di voler cancellare il log del combattimento?')) return;
+        
+        this.combatLog = [];
+        this.combatStats = {
+            startTime: null,
+            endTime: null,
+            roundsPlayed: 0,
+            damageDealt: {},
+            attacksHit: {},
+            attacksMiss: {},
+            criticalHits: {},
+            spellsCasted: {},
+            damageTaken: {},
+            conditionsApplied: {}
+        };
+        this.actedThisTurn.clear();
+        
+        showToast('Log cancellato', 'info');
+        
+        // Aggiorna UI se il popup è aperto
+        const entries = this.container.querySelector('#combat-log-entries');
+        if (entries) {
+            entries.innerHTML = this.renderLogEntries();
+        }
+    },
+    
+    /**
+     * Reset del log all'inizio del combattimento.
+     */
+    startCombatLog() {
+        this.combatLog = [];
+        this.combatStats = {
+            startTime: new Date().toISOString(),
+            endTime: null,
+            roundsPlayed: 0,
+            damageDealt: {},
+            attacksHit: {},
+            attacksMiss: {},
+            criticalHits: {},
+            spellsCasted: {},
+            damageTaken: {},
+            conditionsApplied: {}
+        };
+        this.actedThisTurn.clear();
+        
+        this.logEvent('combat_start');
+    },
+    
+    /**
+     * Finalizza il log alla fine del combattimento.
+     */
+    endCombatLog() {
+        this.combatStats.endTime = new Date().toISOString();
+        this.combatStats.roundsPlayed = this.currentRound;
+        
+        this.logEvent('combat_end');
+        
+        // Mostra statistiche riepilogative
+        this.showCombatSummary();
+    },
+    
+    /**
+     * Mostra un riepilogo delle statistiche di fine combattimento.
+     */
+    showCombatSummary() {
+        const combatants = getCombatState();
+        const getCombatantName = (id) => {
+            const c = combatants.find(c => c.id === parseFloat(id));
+            return c?.customName || c?.name || 'Sconosciuto';
+        };
+        
+        // Calcola statistiche
+        const topDamagers = Object.entries(this.combatStats.damageDealt)
+            .sort((a, b) => b[1].total - a[1].total)
+            .slice(0, 5);
+        
+        const totalDamage = Object.values(this.combatStats.damageDealt)
+            .reduce((sum, d) => sum + d.total, 0);
+        
+        const totalHits = Object.values(this.combatStats.attacksHit).reduce((a, b) => a + b, 0);
+        const totalMisses = Object.values(this.combatStats.attacksMiss).reduce((a, b) => a + b, 0);
+        const totalCrits = Object.values(this.combatStats.criticalHits).reduce((a, b) => a + b, 0);
+        const totalSpells = Object.values(this.combatStats.spellsCasted).reduce((a, b) => a + b, 0);
+        
+        // Crea contenuto popup
+        let summaryHtml = `
+            <div class="combat-summary">
+                <h3>📊 Riepilogo Combattimento</h3>
+                <div class="summary-stats">
+                    <div class="summary-stat">
+                        <span class="stat-value">${this.combatStats.roundsPlayed}</span>
+                        <span class="stat-label">Round</span>
+                    </div>
+                    <div class="summary-stat">
+                        <span class="stat-value">${totalDamage}</span>
+                        <span class="stat-label">Danni Totali</span>
+                    </div>
+                    <div class="summary-stat">
+                        <span class="stat-value">${totalHits}</span>
+                        <span class="stat-label">Colpi</span>
+                    </div>
+                    <div class="summary-stat">
+                        <span class="stat-value">${totalMisses}</span>
+                        <span class="stat-label">Mancati</span>
+                    </div>
+                    <div class="summary-stat">
+                        <span class="stat-value">${totalCrits}</span>
+                        <span class="stat-label">Critici</span>
+                    </div>
+                    <div class="summary-stat">
+                        <span class="stat-value">${totalSpells}</span>
+                        <span class="stat-label">Incantesimi</span>
+                    </div>
+                </div>
+                ${topDamagers.length > 0 ? `
+                    <div class="top-damagers">
+                        <h4>Top Damager</h4>
+                        ${topDamagers.map(([id, data], i) => `
+                            <div class="damager-row">
+                                <span class="damager-rank">#${i + 1}</span>
+                                <span class="damager-name">${getCombatantName(id)}</span>
+                                <span class="damager-damage">${data.total} danni</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : ''}
+                <div class="summary-actions">
+                    <button id="view-full-log-btn" class="log-action-btn">📜 Vedi Log Completo</button>
+                    <button id="export-summary-btn" class="log-action-btn">📄 Esporta Riepilogo</button>
+                </div>
+            </div>
+        `;
+        
+        // Mostra popup riepilogo
+        const overlay = this.container.querySelector('#combat-log-overlay');
+        const entries = this.container.querySelector('#combat-log-entries');
+        if (overlay && entries) {
+            entries.innerHTML = summaryHtml;
+            overlay.classList.remove('hidden');
+            
+            // Aggiungi handler per il pulsante "Vedi Log Completo"
+            entries.querySelector('#view-full-log-btn')?.addEventListener('click', () => {
+                entries.innerHTML = this.renderLogEntries();
+            });
+            
+            // Aggiungi handler per esportare
+            entries.querySelector('#export-summary-btn')?.addEventListener('click', () => {
+                this.exportLog('md');
+            });
         }
     }
 };
