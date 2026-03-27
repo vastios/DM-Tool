@@ -530,14 +530,7 @@ const CombatTracker = {
                 this.handleNewInitiative();
                 return;
             }
-            
-            // Handle set target button
-            if (e.target.classList.contains('set-target-btn')) {
-                const combatantId = parseFloat(e.target.dataset.id);
-                this.setTarget(combatantId);
-                return;
-            }
-            
+
             const item = e.target.closest('.combatant-order-item');
             if (item && !e.target.classList.contains('order-init-input')) {
                 const combatantId = parseFloat(item.dataset.id);
@@ -3013,7 +3006,6 @@ const CombatTracker = {
                             ${isDead ? '💀' : ''}
                             ${showNotActed ? '⚠️' : ''}
                         </span>
-                        <button class="set-target-btn" data-id="${c.id}" title="Imposta come bersaglio">🎯</button>
                     </div>
                     <div class="order-item-stats">
                         <span style="color: ${hpColor}">PF: ${c.currentHp}/${c.maxHp}</span>
