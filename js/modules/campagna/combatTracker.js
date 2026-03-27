@@ -1928,7 +1928,8 @@ const CombatTracker = {
             // Applica danno dal risultato dell'attacco al bersaglio
             const targetId = parseFloat(e.target.dataset.target);
             const damage = parseInt(e.target.dataset.damage, 10);
-            this.applyDamageToTarget(targetId, damage);
+            const damageType = e.target.dataset.damageType || 'physical';
+            this.applyDamageToTarget(targetId, damage, damageType);
         } else if (e.target.classList.contains('spell-btn-mini')) {
             // Click su un incantesimo per lanciarlo
             const spellData = JSON.parse(e.target.dataset.spell.replace(/&quot;/g, '"'));
@@ -1996,7 +1997,7 @@ const CombatTracker = {
         }
     },
     
-    applyDamageToTarget(targetId, damage) {
+    applyDamageToTarget(targetId, damage, damageType = 'physical') {
         const combatants = getCombatState();
         const target = combatants.find(c => c.id === targetId);
         if (!target) {
@@ -2004,24 +2005,97 @@ const CombatTracker = {
             return;
         }
         
+        // Calcola danno modificato per resistenze/immunità
+        const { modifiedDamage, modifier } = this.calculateDamageWithResistances(target, damage, damageType);
+        
         const oldHp = target.currentHp || 0;
-        const newHp = Math.max(0, oldHp - damage);
+        const newHp = Math.max(0, oldHp - modifiedDamage);
         updateMonsterProperty(targetId, 'currentHp', newHp);
-        showToast(`${damage} danni applicati a ${target.customName || target.name}!`, 'success');
+        
+        // Log event
+        this.logEvent('damage', {
+            targetId: targetId,
+            damage: modifiedDamage,
+            originalDamage: damage,
+            damageType: damageType,
+            modifier: modifier
+        });
+        
+        // Messaggio con indicatore resistenza se applicabile
+        let message = `${modifiedDamage} danni applicati a ${target.customName || target.name}!`;
+        if (modifier === 'immune') {
+            message = `${target.customName || target.name} è immune a questo tipo di danno!`;
+        } else if (modifier === 'resistant') {
+            message = `${modifiedDamage} danni (${damage / 2} resistenza) a ${target.customName || target.name}!`;
+        } else if (modifier === 'vulnerable') {
+            message = `${modifiedDamage} danni (${damage} ×2 vulnerabilità) a ${target.customName || target.name}!`;
+        }
+        showToast(message, modifier === 'immune' ? 'warning' : 'success');
         
         // Check concentration if target has active concentration
-        if (target.concentration?.spellName && damage > 0) {
-            const result = this.handleConcentrationCheck(targetId, damage);
+        if (target.concentration?.spellName && modifiedDamage > 0) {
+            const result = this.handleConcentrationCheck(targetId, modifiedDamage);
             this.showConcentrationResult(target, result);
         }
         
         // Death tooltip - mostra quando un combattente muore (HP raggiunge 0)
         if (oldHp > 0 && newHp === 0) {
             this.showDeathTooltip(target);
+            this.logEvent('death', { combatantId: targetId });
+        }
+    },
+    
+    /**
+     * Calcola il danno modificato per resistenze, immunità e vulnerabilità.
+     * @returns {Object} { modifiedDamage, modifier }
+     */
+    calculateDamageWithResistances(target, damage, damageType = 'physical') {
+        // Normalizza il tipo di danno
+        const normalizedType = damageType?.toLowerCase() || 'physical';
+        
+        // Estrae array di resistenze/immunità/vulnerabilità
+        const resistances = target.damage_resistances || target.resistances || [];
+        const immunities = target.damage_immunities || target.immunities || [];
+        const vulnerabilities = target.damage_vulnerabilities || target.vulnerabilities || [];
+        
+        // Controlla immunità
+        const isImmune = immunities.some(imm => {
+            if (typeof imm === 'string') {
+                return imm.toLowerCase().includes(normalizedType);
+            }
+            return false;
+        });
+        
+        if (isImmune) {
+            return { modifiedDamage: 0, modifier: 'immune' };
         }
         
-        // Il bersaglio rimane selezionato per attacchi successivi
-        // (non resettiamo this.targetCombatant)
+        // Controlla vulnerabilità
+        const isVulnerable = vulnerabilities.some(vul => {
+            if (typeof vul === 'string') {
+                return vul.toLowerCase().includes(normalizedType);
+            }
+            return false;
+        });
+        
+        if (isVulnerable) {
+            return { modifiedDamage: damage * 2, modifier: 'vulnerable' };
+        }
+        
+        // Controlla resistenza
+        const isResistant = resistances.some(res => {
+            if (typeof res === 'string') {
+                return res.toLowerCase().includes(normalizedType);
+            }
+            return false;
+        });
+        
+        if (isResistant) {
+            return { modifiedDamage: Math.floor(damage / 2), modifier: 'resistant' };
+        }
+        
+        // Danno normale
+        return { modifiedDamage: damage, modifier: 'normal' };
     },
     
     /**
@@ -2295,8 +2369,9 @@ const CombatTracker = {
         // Calcola danni (solo se colpisce o per visualizzazione)
         let damage = '';
         let damageTotal = 0;
+        let primaryDamageType = 'physical'; // Per resistenze
         if (attackData.damage && (isHit || !target)) {
-            attackData.damage.forEach(d => {
+            attackData.damage.forEach((d, idx) => {
                 let dice = d.damage_dice || '1d6';
                 if (isCritical) {
                     dice = this.doubleDice(dice);
@@ -2306,6 +2381,10 @@ const CombatTracker = {
                 damageTotal += dmgValue;
                 damage += `${dmgValue} ${d.damage_type?.name || 'danni'}`;
                 if (attackData.damage.indexOf(d) < attackData.damage.length - 1) damage += ' + ';
+                // Prendi il primo tipo di danno per le resistenze
+                if (idx === 0) {
+                    primaryDamageType = d.damage_type?.name?.toLowerCase() || 'physical';
+                }
             });
         }
         
@@ -2344,6 +2423,7 @@ const CombatTracker = {
                         <button class="apply-attack-damage-btn" 
                                 data-target="${target.id}" 
                                 data-damage="${damageTotal}"
+                                data-damage-type="${primaryDamageType}"
                                 style="
                                     margin-top: 6px;
                                     padding: 4px 10px;
