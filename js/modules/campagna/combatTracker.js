@@ -1940,13 +1940,31 @@ const CombatTracker = {
      * Gestisce il click su un incantesimo.
      */
     handleSpellClick(combatantId, spellData, spellType) {
+        // Verifica se il combattente ha un'azione disponibile
+        const combatants = getCombatState();
+        const combatant = combatants.find(c => c.id === combatantId);
+        
+        if (!combatant) {
+            showToast('Combattente non trovato', 'error');
+            return;
+        }
+        
+        // Controlla se l'azione è già stata usata
+        const tracker = combatant.actionTracker || {};
+        
+        if (tracker.actionUsed) {
+            showToast('Azione già usata questo turno!', 'warning');
+            return;
+        }
+        
         const result = useSpell(combatantId, spellData);
         
         if (result.success) {
+            // Consuma l'azione
+            useAction(combatantId, 'action', spellData.name);
+            
             showToast(`✨ ${result.message}`, 'success');
             // Log nel results box
-            const combatants = getCombatState();
-            const combatant = combatants.find(c => c.id === combatantId);
             if (combatant) {
                 const resultsBox = this.container.querySelector('.results-box-mini');
                 if (resultsBox) {
@@ -2346,7 +2364,7 @@ const CombatTracker = {
             hitStatus = `🎯 CRITICO! ${toHit} ${rollBreakdown}`;
         } else if (isFumble) {
             isHit = false;
-            hitStatus = `❌ FUMO! ${toHit} ${rollBreakdown}`;
+            hitStatus = `❌ FALLIMENTO CRITICO! ${toHit} ${rollBreakdown}`;
         } else if (targetId === 'free') {
             // Bersaglio libero: non confrontiamo con CA ma mostriamo il risultato
             isHit = true;
