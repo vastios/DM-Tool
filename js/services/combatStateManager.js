@@ -886,6 +886,27 @@ export function startCombat() {
     
     currentTurnMonsterId = initiativeOrder[0]?.id || null;
     
+    // Resetta le azioni per TUTTI i combattenti all'inizio del combattimento
+    // Questo assicura che nessuno inizi con azioni già usate (es. da stato salvato)
+    combatState.forEach(combatant => {
+        if (!combatant.actionTracker) {
+            combatant.actionTracker = {
+                actionUsed: false,
+                bonusActionUsed: false,
+                reactionUsed: false,
+                legendaryActionsUsed: 0,
+                legendaryActionsMax: (combatant.legendary_actions || []).length > 0 ? 3 : 0,
+                abilityUses: initializeAbilityUses(combatant.actions || [], combatant.special_abilities || [])
+            };
+        } else {
+            // Reset completo per nuovo combattimento
+            combatant.actionTracker.actionUsed = false;
+            combatant.actionTracker.bonusActionUsed = false;
+            combatant.actionTracker.reactionUsed = false;
+            combatant.actionTracker.legendaryActionsUsed = 0;
+        }
+    });
+    
     console.log(`⚔️ [CombatStateManager] Combattimento avviato. Round ${currentRound}. Primo turno: ${initiativeOrder[0]?.customName}`);
     notifySubscribers();
 }
