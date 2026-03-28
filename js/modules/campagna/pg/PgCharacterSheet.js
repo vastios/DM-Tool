@@ -584,7 +584,12 @@ function renderCard2Back(pg, databases) {
             </div>
             
             <div class="card-section inventory-section flex-half">
-                <h3>🎒 Inventario</h3>
+                <div class="section-header-row">
+                    <h3>🎒 Inventario</h3>
+                    <button class="btn btn-equipment" data-action="open-equipment" data-pg-id="${pg.id}" title="Gestisci equipaggiamento">
+                        ⚔️ Equipaggiamento
+                    </button>
+                </div>
                 <div class="inventory-summary">
                     <span>📦 ${inventory.length} oggetti</span>
                     <span>⚖️ ${totalWeight.toFixed(1)} kg</span>

@@ -107,6 +107,7 @@ export class PgController {
             equipment: [...(EMPTY_PG.equipment || [])],
             magicItems: [...(EMPTY_PG.magicItems || [])],
             inventory: [],
+            equippedSlots: {},
             _acceptedSuggestions: [],
             _selectedChoices: {},
             treasure: { ...EMPTY_PG.treasure },
@@ -473,6 +474,10 @@ export class PgController {
         }
         if (action === 'combat') {
             if (pgId) this.addToCombat(pgId);
+            return;
+        }
+        if (action === 'open-equipment') {
+            if (pgId) this.openEquipmentPopup(pgId);
             return;
         }
         
@@ -917,6 +922,7 @@ export class PgController {
             equipment: [...(pg.equipment || [])],
             magicItems: [...(pg.magicItems || [])],
             inventory: [...(pg.inventory || [])],
+            equippedSlots: { ...(pg.equippedSlots || {}) },
             _acceptedSuggestions: [...(pg._acceptedSuggestions || [])],
             _selectedChoices: { ...(pg._selectedChoices || {}) },
             treasure: { ...pg.treasure },
@@ -2706,6 +2712,74 @@ export class PgController {
         
         addMonsterToCombat(combatant);
         showToast(`${pg.name} aggiunto al Combat Tracker!`, 'success');
+    }
+    
+    /**
+     * Apre il popup per gestire l'equipaggiamento del PG.
+     */
+    async openEquipmentPopup(pgId) {
+        const pg = this.dataManager.getById(pgId);
+        if (!pg) {
+            showToast('PG non trovato.', 'error');
+            return;
+        }
+        
+        try {
+            // Import dinamico per evitare dipendenze circolari
+            const equipmentModule = await import('../../equipment/index.js');
+            
+            equipmentModule.openEquipmentPopup({
+                owner: pg,
+                ownerType: 'pc',
+                onSave: (state) => {
+                    // Aggiorna i dati del PG
+                    const updatedData = {
+                        inventory: state.inventory,
+                        equippedSlots: state.equippedSlots,
+                        // Sincronizza equipment con gli oggetti equipaggiati
+                        equipment: state.inventory.filter(item => item.equipped)
+                    };
+                    
+                    this.dataManager.update(pgId, updatedData);
+                    
+                    // Ricalcola statistiche derivate (CA, peso, etc.)
+                    this.recalculateDerivedStats(pgId);
+                    
+                    // Aggiorna la vista
+                    this.render();
+                    
+                    console.log('🎮 [PgController] Equipaggiamento salvato per:', pg.name);
+                }
+            });
+        } catch (error) {
+            console.error('🎮 [PgController] Errore apertura popup equipaggiamento:', error);
+            showToast('Errore durante l\'apertura del popup equipaggiamento.', 'error');
+        }
+    }
+    
+    /**
+     * Ricalcola le statistiche derivate dopo modifiche all'equipaggiamento.
+     */
+    recalculateDerivedStats(pgId) {
+        const pg = this.dataManager.getById(pgId);
+        if (!pg) return;
+        
+        // Ricalcola CA dall'equipaggiamento
+        const acResult = calculateArmorClass(pg, this.databases.items);
+        
+        // Ricalcola peso
+        const inventory = pg.inventory || [];
+        const totalWeight = inventory.reduce((total, item) => {
+            const weight = item.weight || 0;
+            const qty = item.quantity || 1;
+            return total + (weight * qty);
+        }, 0);
+        
+        // Aggiorna solo i campi calcolati
+        this.dataManager.update(pgId, {
+            armorClass: acResult.ac,
+            weight: totalWeight
+        });
     }
     
     // ========================================================================

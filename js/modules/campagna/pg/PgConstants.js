@@ -205,6 +205,7 @@ export const EMPTY_PG = {
     equipment: [],
     magicItems: [],
     inventory: [],
+    equippedSlots: {},  // Slot equipaggiati: { mainHand: item, body: item, ... }
     _acceptedSuggestions: [],
     _selectedChoices: {},
     
