@@ -9,8 +9,8 @@
  * @version 1.0.0
  */
 
-import { itemDatabase } from '../../../database/items.js';
-import { magicItemsDatabase } from '../../../database/magicItems.js';
+import { itemDatabase } from '../../../../database/items.js';
+import { magicItemsDatabase } from '../../../../database/magicItems.js';
 
 // Cache per performance
 let cachedAllItems = null;
