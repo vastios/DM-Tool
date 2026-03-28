@@ -1125,11 +1125,11 @@ const CombatTracker = {
                             <!-- Stats compatte -->
                             <div class="stat-column">
                                 <div class="stat-row-inline">
-                                    <span class="stat-label">CA:</span>
+                                    <span class="stat-label">Classe Armatura:</span>
                                     <input type="number" class="ac-mini-input" value="${combatant.armor_class?.[0]?.value || combatant.armor_class || 10}" data-id="${combatant.id}" style="width: 45px; padding: 2px 4px; font-size: 0.85rem;">
                                 </div>
                                 <div class="stat-row-inline">
-                                    <span class="stat-label">Init:</span>
+                                    <span class="stat-label">Iniziativa:</span>
                                     <input type="number" class="init-mini-input" value="${combatant.initiative || 0}" data-id="${combatant.id}" style="width: 45px; padding: 2px 4px;">
                                 </div>
                             </div>

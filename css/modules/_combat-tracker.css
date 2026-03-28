@@ -1162,8 +1162,8 @@
 
 /* Colonna Sinistra (1/3) - HP, Condizioni, Note */
 .combatant-left-column {
-    flex: 0 0 180px;
-    min-width: 160px;
+    flex: 0 0 360px;
+    min-width: 300px;
     display: flex;
     flex-direction: column;
     gap: 8px;
