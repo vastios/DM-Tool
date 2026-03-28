@@ -11,7 +11,7 @@ import { renderInventoryPanel, renderItemDetail, renderAddItemPopup } from './co
 import { EquipmentService } from './services/equipmentService.js';
 import { searchItems, getItemByIndex } from './services/itemLoader.js';
 import { SLOT_TYPES } from './config/slotTypes.js';
-import { showToast } from '../../utils/toast.js';
+import { showToast } from '../../../utils/toast.js';
 
 /**
  * Popup per la gestione dell'equipaggiamento
