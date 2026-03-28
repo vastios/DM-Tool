@@ -17,8 +17,11 @@
  * });
  */
 
-// Popup principale
-export { EquipmentPopup, openEquipmentPopup, closeEquipmentPopup } from './equipmentPopup.js';
+// Popup principale - import prima di esportare
+import { EquipmentPopup, openEquipmentPopup, closeEquipmentPopup } from './equipmentPopup.js';
+
+// Riesporta come export nominati
+export { EquipmentPopup, openEquipmentPopup, closeEquipmentPopup };
 
 // Servizi
 export { EquipmentService } from './services/equipmentService.js';
