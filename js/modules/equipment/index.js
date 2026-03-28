@@ -19,12 +19,10 @@
 
 // Popup principale - import prima di esportare
 import { EquipmentPopup, openEquipmentPopup, closeEquipmentPopup } from './equipmentPopup.js';
+import { EquipmentService } from './services/equipmentService.js';
 
 // Riesporta come export nominati
-export { EquipmentPopup, openEquipmentPopup, closeEquipmentPopup };
-
-// Servizi
-export { EquipmentService } from './services/equipmentService.js';
+export { EquipmentPopup, openEquipmentPopup, closeEquipmentPopup, EquipmentService };
 export { 
     getAllItems, 
     getWeapons, 
