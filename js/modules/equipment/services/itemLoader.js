@@ -400,6 +400,155 @@ export function formatCost(cost) {
     return `${quantity} ${unitLabels[unit] || unit}`;
 }
 
+/**
+ * ==========================================================================
+ * FUNZIONI PER DETERMINARE SE UN OGGETTO È EQUIPAGGIABILE
+ * ==========================================================================
+ */
+
+/**
+ * Categorie di oggetti che sono SEMPRE equipaggiabili
+ */
+const EQUIPPABLE_CATEGORIES = ['weapon', 'armor'];
+
+/**
+ * Categorie di oggetti che NON sono MAI equipaggiabili
+ */
+const NON_EQUIPPABLE_CATEGORIES = [
+    'adventuring-gear',
+    'tools',
+    'mounts-and-vehicles',
+    'ammunition',
+    'equipment-packs'
+];
+
+/**
+ * Parole chiave per oggetti meravigliosi INDOSSABILI
+ * Questi oggetti possono essere equipaggiati in uno slot del corpo
+ */
+const WONDROUS_WEARABLE_KEYWORDS = [
+    // Anelli
+    'anello', 'ring',
+    // Amuleti/Collane
+    'amuleto', 'amulet', 'collana', 'necklace', 'pendant', 'ciondolo',
+    // Cinture
+    'cintura', 'cinturone', 'belt', 'girdle', 'sash',
+    // Mantelli/Cappe
+    'mantello', 'mantellina', 'cappa', 'cloak', 'cape', 'mantle',
+    // Stivali/Calzature
+    'stivali', 'stivale', 'stiv', 'boots', 'boot', 'shoes', 'sandals', 'sandali',
+    // Guanti
+    'guanto', 'guanti', 'glove', 'gauntlet', 'bracers', 'bracciali',
+    // Elmi/Corone
+    'elmo', 'elmetto', 'corona', 'coroncina', 'helm', 'helmet', 'crown', 'circlet', 'diadem',
+    // Bracciali (per slot hands)
+    'bracciale', 'braccialetto', 'bracelet', 'armband',
+    // Maschere (per slot head)
+    'maschera', 'mask',
+    // Occhiali/Lenti (per slot head o neck)
+    'occhiali', 'lenti', 'goggles', 'glasses', 'spectacles'
+];
+
+/**
+ * Parole chiave per oggetti meravigliosi NON indossabili
+ * Questi oggetti non possono essere equipaggiati in uno slot del corpo
+ */
+const WONDROUS_NON_WEARABLE_KEYWORDS = [
+    // Contenitori
+    'borsa', 'sacco', 'zaino', 'bag', 'sack', 'pouch', 'pack', 'holding',
+    // Libri/Documenti
+    'libro', 'tomo', 'pergamena', 'scroll', 'book', 'tome', 'manual', 'grimorie',
+    // Pozioni/Fluidi
+    'pozione', 'fiala', 'ampolla', 'flask', 'potion', 'vial', 'philter', 'elixir',
+    // Sfere/Oggetti tenuti in mano ma non indossati
+    'sfera', 'orb', 'sphere', 'crystal', 'cristallo',
+    // Bacchette/Verghe
+    'bacchetta', 'verga', 'wand', 'rod', 'staff', 'bastone',
+    // Pietre/Gemme (non montate)
+    'pietra', 'gemma', 'stone', 'gem', 'jewel', 'iol', 'perla', 'pearl',
+    // Strumenti (non indossati)
+    'strumento', 'lente', 'strument', 'tool', 'compass',
+    // Oggetti vari non indossabili
+    'tappeto', 'carpet', 'nave', 'ship', 'botta', 'tent', 'tenda',
+    'fagioli', 'beans', 'cubo', 'cube', 'scatola', 'box',
+    'clessidra', 'hourglass', 'moneta', 'coin', 'token', 'gettone',
+    'fischietto', 'whistle', 'campana', 'bell', 'corno', 'horn',
+    'balestra', 'ballista', 'macchina', 'machine', 'apparatus'
+];
+
+/**
+ * Verifica se un oggetto è equipaggiabile
+ * Un oggetto è equipaggiabile se:
+ * 1. È un'arma (weapon)
+ * 2. È un'armatura (armor)
+ * 3. È un oggetto meraviglioso INDOS ABILE (anelli, amuleti, cinture, ecc.)
+ * 
+ * @param {Object} item - L'oggetto da verificare
+ * @returns {boolean} True se l'oggetto può essere equipaggiato
+ */
+export function isItemEquippable(item) {
+    if (!item) return false;
+    
+    const category = item.equipment_category?.index || item.equipment_category?.name?.toLowerCase() || '';
+    const name = item.name?.toLowerCase() || '';
+    
+    // 1. Armi e armature sono sempre equipaggiabili
+    if (EQUIPPABLE_CATEGORIES.includes(category)) {
+        return true;
+    }
+    
+    // 2. Categorie non equipaggiabili
+    if (NON_EQUIPPABLE_CATEGORIES.some(cat => category.includes(cat))) {
+        return false;
+    }
+    
+    // 3. Oggetti meravigliosi - verifica se indossabili
+    if (category === 'wondrous-item' || category === 'wondrous items' || item.rarity || item.isMagical) {
+        // Prima controlla se è esplicitamente NON indossabile
+        for (const keyword of WONDROUS_NON_WEARABLE_KEYWORDS) {
+            if (name.includes(keyword)) {
+                return false;
+            }
+        }
+        
+        // Poi controlla se è esplicitamente indossabile
+        for (const keyword of WONDROUS_WEARABLE_KEYWORDS) {
+            if (name.includes(keyword)) {
+                return true;
+            }
+        }
+        
+        // Se ha la proprietà "desc" che menziona "indossi" o "while wearing", è equipaggiabile
+        const desc = Array.isArray(item.desc) ? item.desc.join(' ').toLowerCase() : (item.desc || '').toLowerCase();
+        if (desc.includes('indossi') || desc.includes('indossando') || 
+            desc.includes('while wearing') || desc.includes('worn') ||
+            desc.includes('mentre indoss') || desc.includes('quando indoss')) {
+            return true;
+        }
+        
+        // Default per oggetti magici senza chiare indicazioni: NON equipaggiabile
+        return false;
+    }
+    
+    // Default: non equipaggiabile
+    return false;
+}
+
+/**
+ * Ottiene gli slot compatibili per un oggetto equipaggiabile
+ * Restituisce un array di ID slot compatibili
+ * 
+ * @param {Object} item - L'oggetto
+ * @returns {Array} Array di ID slot compatibili (vuoto se non equipaggiabile)
+ */
+export function getEquippableSlots(item) {
+    if (!isItemEquippable(item)) {
+        return [];
+    }
+    
+    return getCompatibleSlotsForItem(item);
+}
+
 export default {
     getAllItems,
     getWeapons,
@@ -414,6 +563,8 @@ export default {
     calculateTotalWeight,
     formatWeight,
     formatCost,
+    isItemEquippable,
+    getEquippableSlots,
     invalidateCache,
     DATA_SOURCES
 };

@@ -11,7 +11,7 @@ import { showToast } from '../../../utils/toast.js';
 import { renderBodySVG } from './components/bodySlotRenderer.js';
 import { renderInventoryPanel, renderItemDetail } from './components/inventoryPanel.js';
 import { SLOT_TYPES, isItemCompatibleWithSlot } from './config/slotTypes.js';
-import { searchItems, getItemByIndex } from './services/itemLoader.js';
+import { searchItems, getItemByIndex, isItemEquippable } from './services/itemLoader.js';
 
 /**
  * Popup per la gestione dell'equipaggiamento
@@ -477,6 +477,11 @@ export class EquipmentPopup {
      * Evidenzia slot compatibili con un oggetto
      */
     _highlightCompatibleSlots(item) {
+        // Se l'oggetto non è equipaggiabile, non evidenziare nulla
+        if (!isItemEquippable(item)) {
+            return;
+        }
+        
         const slots = this.container.querySelectorAll('[data-slot]');
         slots.forEach(slot => {
             const slotId = slot.dataset.slot;
@@ -503,6 +508,12 @@ export class EquipmentPopup {
         const item = this.inventory[index];
         if (!item) return;
         
+        // Verifica che l'oggetto sia equipaggiabile
+        if (!isItemEquippable(item)) {
+            showToast('Questo oggetto non può essere equipaggiato', 'warning');
+            return;
+        }
+        
         // Trova lo slot migliore
         const slotId = this._findBestSlotForItem(item);
         if (!slotId) {
@@ -519,6 +530,12 @@ export class EquipmentPopup {
     _equipItemToSlot(index, slotId) {
         const item = this.inventory[index];
         if (!item) return;
+        
+        // Verifica che l'oggetto sia equipaggiabile
+        if (!isItemEquippable(item)) {
+            showToast('Questo oggetto non può essere equipaggiato', 'error');
+            return;
+        }
         
         // Verifica compatibilità
         if (!isItemCompatibleWithSlot(slotId, item)) {

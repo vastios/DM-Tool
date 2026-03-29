@@ -911,6 +911,26 @@
     transform: scale(0.98);
 }
 
+/* Non-equippable items */
+.inventory-item.not-equippable {
+    opacity: 0.7;
+    border-left: 3px solid #666;
+}
+
+.inventory-item.not-equippable .item-icon {
+    opacity: 0.6;
+}
+
+.inventory-item .item-tag {
+    display: inline-block;
+    padding: 1px 6px;
+    background: var(--bg-tertiary, #333);
+    border-radius: 3px;
+    font-size: 0.7rem;
+    color: var(--text-muted, #888);
+    margin-left: 6px;
+}
+
 /* Slot tooltip */
 .equipment-slot:hover .slot-tooltip {
     opacity: 1;

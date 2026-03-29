@@ -3,11 +3,11 @@
  * ─────────────────────────────────────────────────────────────
  * Pannello inventario per visualizzare e gestire gli oggetti.
  * 
- * @version 1.0.0
+ * @version 1.1.0 - Aggiunto controllo oggetti equipaggiabili
  */
 
 import { searchItems, getItemByIndex, formatWeight, formatCost, getEquipmentCategories } from '../services/itemLoader.js';
-import { getCompatibleSlotsForItem, itemRequiresAttunement } from '../services/itemLoader.js';
+import { getCompatibleSlotsForItem, itemRequiresAttunement, isItemEquippable } from '../services/itemLoader.js';
 import { SLOT_TYPES } from '../config/slotTypes.js';
 
 /**
@@ -121,21 +121,25 @@ function renderInventoryItem(item, index, selectedItem, editable) {
     const needsAttunement = itemRequiresAttunement(item);
     const isAttuned = item.isAttuned === true;
     
+    // Verifica se l'oggetto è equipaggiabile
+    const equippable = isItemEquippable(item);
+    
     // Ottieni icona
     const icon = getItemIcon(item);
     
     // Rarità
     const rarityClass = item.rarity ? `rarity-${item.rarity?.name?.toLowerCase().replace(' ', '-')}` : '';
     
-    // Slot compatibili
-    const compatibleSlots = getCompatibleSlotsForItem(item);
+    // Slot compatibili (solo se equipaggiabile)
+    const compatibleSlots = equippable ? getCompatibleSlotsForItem(item) : [];
     
     return `
-        <div class="inventory-item ${isSelected ? 'selected' : ''} ${isEquipped ? 'equipped' : ''} ${rarityClass}"
+        <div class="inventory-item ${isSelected ? 'selected' : ''} ${isEquipped ? 'equipped' : ''} ${rarityClass} ${!equippable ? 'not-equippable' : ''}"
              data-item-index="${index}"
              data-item-id="${item.id || item.index}"
-             draggable="${editable}"
-             data-compatible-slots="${compatibleSlots.join(',')}">
+             draggable="${editable && equippable}"
+             data-compatible-slots="${compatibleSlots.join(',')}"
+             data-equippable="${equippable}">
             
             <div class="item-main">
                 <span class="item-icon">${icon}</span>
@@ -145,6 +149,7 @@ function renderInventoryItem(item, index, selectedItem, editable) {
                         ${item.quantity > 1 ? `×${item.quantity}` : ''}
                         ${item.weight ? `${formatWeight(item.weight)}` : ''}
                         ${item.rarity ? `<span class="item-rarity">${item.rarity.name}</span>` : ''}
+                        ${!equippable ? '<span class="item-tag">non equipaggiabile</span>' : ''}
                     </span>
                 </div>
             </div>
@@ -156,7 +161,7 @@ function renderInventoryItem(item, index, selectedItem, editable) {
             </div>
             
             <div class="item-actions">
-                ${!isEquipped && editable ? `
+                ${!isEquipped && editable && equippable ? `
                     <button class="item-action-btn equip-btn" 
                             data-action="equip" 
                             data-item-index="${index}"
