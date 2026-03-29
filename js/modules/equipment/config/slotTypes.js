@@ -256,27 +256,160 @@ export function isItemCompatibleWithSlot(slotId, item) {
     const slot = getSlotDefinition(slotId);
     if (!slot) return false;
     
-    // Controlla categoria
-    const itemCategory = item.equipment_category?.name || item.equipment_category?.index || item.category;
-    const categoryMatch = slot.acceptedCategories.some(cat => 
-        cat.toLowerCase() === (itemCategory || '').toLowerCase()
-    );
+    const itemCategory = (item.equipment_category?.index || item.equipment_category?.name || item.category || '').toLowerCase();
+    const itemName = (item.name || '').toLowerCase();
     
-    if (!categoryMatch) return false;
-    
-    // Controlla tipo se definito
-    if (slot.acceptedTypes && slot.acceptedTypes.length > 0) {
-        const itemType = item.type || item.weapon_category || item.armor_category;
-        const typeMatch = slot.acceptedTypes.some(t => 
-            t.toLowerCase() === (itemType || '').toLowerCase()
-        );
-        if (!typeMatch) {
-            // Fallback: accetta se categoria matcha e tipo non è restrittivo
+    // === ARMI ===
+    if (itemCategory === 'weapon' || item.weapon_category) {
+        // Slot che accettano armi
+        if (!slot.acceptedCategories.includes('weapon')) {
             return false;
         }
+        
+        // mainHand accetta tutte le armi
+        if (slotId === 'mainHand') {
+            return true;
+        }
+        
+        // offHand accetta solo armi leggere/semplici o scudi
+        if (slotId === 'offHand') {
+            // Scudi
+            if (itemName.includes('scudo') || itemName.includes('shield')) {
+                return true;
+            }
+            // Armi semplici (considerate leggere)
+            if (item.weapon_category === 'Semplice') {
+                return true;
+            }
+            // Armi con proprietà "light" o "leggera"
+            const hasLightProperty = (item.properties || []).some(p => {
+                const propName = (p.name || p || '').toLowerCase();
+                return propName === 'light' || propName === 'leggera';
+            });
+            if (hasLightProperty) {
+                return true;
+            }
+            return false;
+        }
+        
+        return false;
     }
     
-    return true;
+    // === ARMATURE ===
+    if (itemCategory === 'armor' || item.armor_category) {
+        if (!slot.acceptedCategories.includes('armor')) {
+            return false;
+        }
+        
+        // Scudi vanno in mainHand o offHand
+        if (itemName.includes('scudo') || itemName.includes('shield') || 
+            item.armor_category?.toLowerCase().includes('scudo')) {
+            return slotId === 'mainHand' || slotId === 'offHand';
+        }
+        
+        // Armature corpo
+        if (item.armor_class && !itemName.includes('scudo') && !itemName.includes('shield')) {
+            return slotId === 'body';
+        }
+        
+        // Altri tipi di armatura per slot specifici
+        const armorType = (item.armor_category || '').toLowerCase();
+        if (armorType.includes('elmo') || armorType.includes('helm') || itemName.includes('elmo') || itemName.includes('helm')) {
+            return slotId === 'head';
+        }
+        if (armorType.includes('guanto') || armorType.includes('gauntlet') || itemName.includes('guanto') || itemName.includes('gauntlet')) {
+            return slotId === 'hands';
+        }
+        if (armorType.includes('stivali') || armorType.includes('boots') || itemName.includes('stivali') || itemName.includes('boots')) {
+            return slotId === 'feet';
+        }
+        
+        // Default per armature non specificate: body
+        return slotId === 'body';
+    }
+    
+    // === OGGETTI MAGICI / MERAVIGLIOSI ===
+    if (itemCategory === 'wondrous-item' || itemCategory === 'wondrous items' || item.rarity || item.isMagical) {
+        if (!slot.acceptedCategories.includes('magic-item') && !slot.acceptedCategories.includes('armor')) {
+            return false;
+        }
+        
+        // Anelli
+        if (itemName.includes('anello') || itemName.includes('ring')) {
+            return slotId === 'ringLeft' || slotId === 'ringRight';
+        }
+        
+        // Amuleti/Collane
+        if (itemName.includes('amuleto') || itemName.includes('amulet') || 
+            itemName.includes('collana') || itemName.includes('necklace') ||
+            itemName.includes('pendant') || itemName.includes('ciondolo')) {
+            return slotId === 'neck';
+        }
+        
+        // Cinture
+        if (itemName.includes('cintura') || itemName.includes('cinturone') || 
+            itemName.includes('belt') || itemName.includes('girdle')) {
+            return slotId === 'belt';
+        }
+        
+        // Mantelli
+        if (itemName.includes('mantello') || itemName.includes('mantellina') || 
+            itemName.includes('cappa') || itemName.includes('cloak') || 
+            itemName.includes('cape') || itemName.includes('mantle')) {
+            return slotId === 'cloak';
+        }
+        
+        // Stivali
+        if (itemName.includes('stivali') || itemName.includes('stivale') || 
+            itemName.includes('boots') || itemName.includes('boot') ||
+            itemName.includes('shoes') || itemName.includes('sandali')) {
+            return slotId === 'feet';
+        }
+        
+        // Guanti
+        if (itemName.includes('guanto') || itemName.includes('guanti') || 
+            itemName.includes('glove') || itemName.includes('gauntlet') ||
+            itemName.includes('bracers') || itemName.includes('bracciali')) {
+            return slotId === 'hands';
+        }
+        
+        // Elmi/Corone
+        if (itemName.includes('elmo') || itemName.includes('elmetto') || 
+            itemName.includes('corona') || itemName.includes('helm') || 
+            itemName.includes('helmet') || itemName.includes('crown') ||
+            itemName.includes('circlet') || itemName.includes('diadem')) {
+            return slotId === 'head';
+        }
+        
+        // Maschere
+        if (itemName.includes('maschera') || itemName.includes('mask')) {
+            return slotId === 'head';
+        }
+        
+        // Bracciali
+        if (itemName.includes('bracciale') || itemName.includes('braccialetto') ||
+            itemName.includes('bracelet') || itemName.includes('armband')) {
+            return slotId === 'hands';
+        }
+        
+        // Occhiali/Lenti
+        if (itemName.includes('occhiali') || itemName.includes('lenti') ||
+            itemName.includes('goggles') || itemName.includes('glasses')) {
+            return slotId === 'head';
+        }
+        
+        // Default per oggetti magici non identificati: controlla se la descrizione menziona "indossi"
+        const desc = Array.isArray(item.desc) ? item.desc.join(' ').toLowerCase() : (item.desc || '').toLowerCase();
+        if (desc.includes('indossi') || desc.includes('mentre indoss') || desc.includes('while wearing')) {
+            // Prova a dedurre dal tipo di oggetto
+            return false; // Non possiamo determinare lo slot
+        }
+        
+        return false;
+    }
+    
+    // Categoria non riconosciuta
+    return false;
 }
 
 export default SLOT_TYPES;
