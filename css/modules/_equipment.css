@@ -55,6 +55,43 @@
 }
 
 /* ==========================================================================
+   POPUP CONTENT
+   ========================================================================== */
+
+.popup-content {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.equipment-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.inventory-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 15px;
+}
+
+.inventory-section h4 {
+    margin: 0 0 12px;
+    color: var(--accent-color, #d4af37);
+    font-size: 1rem;
+}
+
+.inventory-section .inventory-list {
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* ==========================================================================
    POPUP HEADER
    ========================================================================== */
 

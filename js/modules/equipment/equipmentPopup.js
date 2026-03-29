@@ -111,7 +111,7 @@ export class EquipmentPopup {
                 `;
             }).join('');
         } else {
-            itemsHtml = '<div class="empty-inventory">Inventario vuoto</div>';
+            itemsHtml = '<div class="inventory-empty"><div class="empty-icon">📦</div><div class="empty-text">Inventario vuoto</div><div class="empty-hint">Aggiungi oggetti dal wizard del personaggio</div></div>';
         }
         
         return `
@@ -130,16 +130,26 @@ export class EquipmentPopup {
      * Collega gli event handler
      */
     _bindEvents() {
+        console.log('🎒 [EquipmentPopup] Binding events...');
+        
         // Click su overlay per chiudere
         this.container.addEventListener('click', (e) => {
+            console.log('🎒 [EquipmentPopup] Click detected on:', e.target);
+            
             if (e.target === this.container) {
+                console.log('🎒 [EquipmentPopup] Click on overlay, closing...');
                 this.close();
+                return;
             }
             
             const target = e.target.closest('[data-action]');
-            if (!target) return;
+            if (!target) {
+                console.log('🎒 [EquipmentPopup] No data-action target found');
+                return;
+            }
             
             const action = target.dataset.action;
+            console.log('🎒 [EquipmentPopup] Action:', action);
             
             switch (action) {
                 case 'close':
@@ -203,16 +213,24 @@ export class EquipmentPopup {
      * Salva le modifiche
      */
     _save() {
+        console.log('🎒 [EquipmentPopup] Salvataggio...', {
+            inventory: this.inventory,
+            equippedSlots: this.equippedSlots
+        });
+        
         // Aggiorna il personaggio
         this.character.equipment = this.inventory;
         this.character.equippedSlots = this.equippedSlots;
         
         // Callback
         if (this.onSave) {
+            console.log('🎒 [EquipmentPopup] Chiamata onSave callback');
             this.onSave({
                 inventory: this.inventory,
                 equippedSlots: this.equippedSlots
             });
+        } else {
+            console.warn('🎒 [EquipmentPopup] Nessun callback onSave definito');
         }
         
         showToast('Equipaggiamento salvato!', 'success');
