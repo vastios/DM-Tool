@@ -33,9 +33,9 @@
     background: var(--bg-primary, #1a1a1a);
     border-radius: 12px;
     width: 95%;
-    max-width: 1200px;
+    max-width: 1400px;
     height: 90vh;
-    max-height: 800px;
+    max-height: 900px;
     display: flex;
     flex-direction: column;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
@@ -162,7 +162,7 @@
 }
 
 .left-column {
-    flex: 0 0 260px;
+    flex: 0 0 300px;
     background: var(--bg-secondary, #222);
     border-right: 1px solid var(--border-color, #333);
     padding: 15px;
@@ -188,12 +188,13 @@
 .body-slots-container {
     display: flex;
     justify-content: center;
+    align-items: center;
     padding: 10px;
 }
 
 .body-slots-svg {
-    width: 200px;
-    height: 340px;
+    width: 220px;
+    height: 380px;
 }
 
 /* Silhouette */

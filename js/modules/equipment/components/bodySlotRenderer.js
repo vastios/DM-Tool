@@ -13,51 +13,85 @@ import { SLOT_TYPES } from '../config/slotTypes.js';
  * Configurazione dimensioni SVG
  */
 const SVG_CONFIG = {
-    width: 200,
-    height: 340,
-    viewBox: '0 0 200 340'
+    width: 220,
+    height: 380,
+    viewBox: '0 0 220 380'
 };
 
 /**
  * Coordinate SVG per la silhouette umana
- * I path sono disegnati per una figura stilizzata
+ * Una figura umana stilizzata più dettagliata
  */
 const SILHOUETTE_PATHS = {
-    // Testa (cerchio)
+    // Testa (ovale più naturale)
     head: {
-        type: 'circle',
-        cx: 100,
-        cy: 30,
-        r: 22
+        type: 'ellipse',
+        cx: 110,
+        cy: 35,
+        rx: 24,
+        ry: 28
     },
     // Collo
     neck: {
-        type: 'rect',
-        x: 92,
-        y: 50,
-        width: 16,
-        height: 15,
-        rx: 3
+        type: 'path',
+        d: 'M 100 62 Q 100 68 98 75 L 122 75 Q 120 68 120 62 Z'
+    },
+    // Spalle e parte superiore torso
+    shoulders: {
+        type: 'path',
+        d: 'M 60 85 Q 70 75 85 72 L 135 72 Q 150 75 160 85 L 158 95 Q 145 88 135 88 L 85 88 Q 75 88 62 95 Z'
     },
     // Torso
     torso: {
         type: 'path',
-        d: 'M 60 65 Q 60 75 70 90 L 70 150 Q 70 160 80 165 L 120 165 Q 130 160 130 150 L 130 90 Q 140 75 140 65 Q 140 60 130 60 L 70 60 Q 60 60 60 65 Z'
+        d: 'M 75 95 L 70 165 Q 70 175 80 180 L 140 180 Q 150 175 150 165 L 145 95 Q 145 92 140 92 L 80 92 Q 75 92 75 95 Z'
     },
     // Braccio sinistro
     leftArm: {
         type: 'path',
-        d: 'M 60 70 Q 50 75 40 95 L 35 130 Q 33 145 38 160 L 42 160 Q 47 145 45 130 L 50 95 Q 55 80 60 75 Z'
+        d: 'M 60 95 Q 45 100 35 125 L 28 170 Q 26 185 32 195 L 42 195 Q 44 185 45 170 L 52 130 Q 55 110 62 100 Z'
     },
     // Braccio destro
     rightArm: {
         type: 'path',
-        d: 'M 140 70 Q 150 75 160 95 L 165 130 Q 167 145 162 160 L 158 160 Q 153 145 155 130 L 150 95 Q 145 80 140 75 Z'
+        d: 'M 160 95 Q 175 100 185 125 L 192 170 Q 194 185 188 195 L 178 195 Q 176 185 175 170 L 168 130 Q 165 110 158 100 Z'
     },
-    // Gambe
-    legs: {
+    // Mano sinistra
+    leftHand: {
+        type: 'ellipse',
+        cx: 37,
+        cy: 202,
+        rx: 10,
+        ry: 12
+    },
+    // Mano destra
+    rightHand: {
+        type: 'ellipse',
+        cx: 183,
+        cy: 202,
+        rx: 10,
+        ry: 12
+    },
+    // Gamba sinistra
+    leftLeg: {
         type: 'path',
-        d: 'M 80 165 L 75 260 Q 73 280 75 300 L 85 300 Q 88 280 90 260 L 100 200 L 110 260 Q 112 280 115 300 L 125 300 Q 127 280 125 260 L 120 165 Z'
+        d: 'M 80 180 L 72 290 Q 70 310 75 340 L 90 340 Q 92 310 94 290 L 102 220 L 110 220 L 118 290 Q 120 310 122 340 L 137 340 Q 142 310 140 290 L 132 180 Z'
+    },
+    // Piede sinistro
+    leftFoot: {
+        type: 'ellipse',
+        cx: 82,
+        cy: 352,
+        rx: 18,
+        ry: 10
+    },
+    // Piede destro
+    rightFoot: {
+        type: 'ellipse',
+        cx: 130,
+        cy: 352,
+        rx: 18,
+        ry: 10
     }
 };
 
@@ -65,17 +99,17 @@ const SILHOUETTE_PATHS = {
  * Posizioni degli slot relativi alla silhouette
  */
 const SLOT_POSITIONS = {
-    head: { x: 100, y: 30, anchor: 'middle' },
-    neck: { x: 100, y: 58, anchor: 'middle' },
-    body: { x: 100, y: 110, anchor: 'middle' },
-    mainHand: { x: 35, y: 145, anchor: 'end' },
-    offHand: { x: 165, y: 145, anchor: 'start' },
-    ringLeft: { x: 38, y: 168, anchor: 'end' },
-    ringRight: { x: 162, y: 168, anchor: 'start' },
-    belt: { x: 100, y: 155, anchor: 'middle' },
-    hands: { x: 100, y: 145, anchor: 'middle' },
-    feet: { x: 100, y: 290, anchor: 'middle' },
-    cloak: { x: 170, y: 100, anchor: 'start' }
+    head: { x: 110, y: 35, anchor: 'middle' },
+    neck: { x: 110, y: 68, anchor: 'middle' },
+    body: { x: 110, y: 130, anchor: 'middle' },
+    mainHand: { x: 37, y: 170, anchor: 'end' },
+    offHand: { x: 183, y: 170, anchor: 'start' },
+    ringLeft: { x: 27, y: 210, anchor: 'end' },
+    ringRight: { x: 193, y: 210, anchor: 'start' },
+    belt: { x: 110, y: 175, anchor: 'middle' },
+    hands: { x: 110, y: 200, anchor: 'middle' },
+    feet: { x: 110, y: 350, anchor: 'middle' },
+    cloak: { x: 195, y: 120, anchor: 'start' }
 };
 
 /**
@@ -113,20 +147,36 @@ export function renderBodySVG(equipment = {}, options = {}) {
              height="${SVG_CONFIG.height}">
             <defs>
                 <filter id="slot-glow" x="-50%" y="-50%" width="200%" height="200%">
-                    <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                    <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
                     <feMerge>
                         <feMergeNode in="coloredBlur"/>
                         <feMergeNode in="SourceGraphic"/>
                     </feMerge>
                 </filter>
+                <!-- Gradiente per la silhouette -->
                 <linearGradient id="silhouette-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" style="stop-color:#4a4a4a;stop-opacity:0.8" />
-                    <stop offset="100%" style="stop-color:#2a2a2a;stop-opacity:0.6" />
+                    <stop offset="0%" style="stop-color:#5a5a5a;stop-opacity:0.9" />
+                    <stop offset="50%" style="stop-color:#3a3a3a;stop-opacity:0.8" />
+                    <stop offset="100%" style="stop-color:#2a2a2a;stop-opacity:0.7" />
                 </linearGradient>
+                <!-- Ombra per la silhouette -->
+                <filter id="silhouette-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.3"/>
+                </filter>
+                <!-- Effetto evidenziazione slot -->
+                <filter id="slot-highlight" x="-100%" y="-100%" width="300%" height="300%">
+                    <feGaussianBlur stdDeviation="4" result="blur"/>
+                    <feFlood flood-color="#d4af37" flood-opacity="0.6"/>
+                    <feComposite in2="blur" operator="in"/>
+                    <feMerge>
+                        <feMergeNode/>
+                        <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                </filter>
             </defs>
             
             <!-- Silhouette di base -->
-            <g class="silhouette">
+            <g class="silhouette" filter="url(#silhouette-shadow)">
                 ${renderSilhouette()}
             </g>
             
@@ -145,23 +195,27 @@ export function renderBodySVG(equipment = {}, options = {}) {
 function renderSilhouette() {
     let svg = '';
     
-    // Testa
+    // Testa (ellisse)
     svg += `
-        <circle class="silhouette-part head" 
+        <ellipse class="silhouette-part head" 
                 cx="${SILHOUETTE_PATHS.head.cx}" 
-                cy="${SILHOUETTE_PATHS.head.cy}" 
-                r="${SILHOUETTE_PATHS.head.r}"
+                cy="${SILHOUETTE_PATHS.head.cy}"
+                rx="${SILHOUETTE_PATHS.head.rx}"
+                ry="${SILHOUETTE_PATHS.head.ry}"
                 fill="url(#silhouette-gradient)" />
     `;
     
     // Collo
     svg += `
-        <rect class="silhouette-part neck"
-              x="${SILHOUETTE_PATHS.neck.x}"
-              y="${SILHOUETTE_PATHS.neck.y}"
-              width="${SILHOUETTE_PATHS.neck.width}"
-              height="${SILHOUETTE_PATHS.neck.height}"
-              rx="${SILHOUETTE_PATHS.neck.rx}"
+        <path class="silhouette-part neck"
+              d="${SILHOUETTE_PATHS.neck.d}"
+              fill="url(#silhouette-gradient)" />
+    `;
+    
+    // Spalle
+    svg += `
+        <path class="silhouette-part shoulders"
+              d="${SILHOUETTE_PATHS.shoulders.d}"
               fill="url(#silhouette-gradient)" />
     `;
     
@@ -182,11 +236,43 @@ function renderSilhouette() {
               fill="url(#silhouette-gradient)" />
     `;
     
+    // Mani
+    svg += `
+        <ellipse class="silhouette-part left-hand"
+                cx="${SILHOUETTE_PATHS.leftHand.cx}"
+                cy="${SILHOUETTE_PATHS.leftHand.cy}"
+                rx="${SILHOUETTE_PATHS.leftHand.rx}"
+                ry="${SILHOUETTE_PATHS.leftHand.ry}"
+                fill="url(#silhouette-gradient)" />
+        <ellipse class="silhouette-part right-hand"
+                cx="${SILHOUETTE_PATHS.rightHand.cx}"
+                cy="${SILHOUETTE_PATHS.rightHand.cy}"
+                rx="${SILHOUETTE_PATHS.rightHand.rx}"
+                ry="${SILHOUETTE_PATHS.rightHand.ry}"
+                fill="url(#silhouette-gradient)" />
+    `;
+    
     // Gambe
     svg += `
-        <path class="silhouette-part legs"
-              d="${SILHOUETTE_PATHS.legs.d}"
+        <path class="silhouette-part left-leg"
+              d="${SILHOUETTE_PATHS.leftLeg.d}"
               fill="url(#silhouette-gradient)" />
+    `;
+    
+    // Piedi
+    svg += `
+        <ellipse class="silhouette-part left-foot"
+                cx="${SILHOUETTE_PATHS.leftFoot.cx}"
+                cy="${SILHOUETTE_PATHS.leftFoot.cy}"
+                rx="${SILHOUETTE_PATHS.leftFoot.rx}"
+                ry="${SILHOUETTE_PATHS.leftFoot.ry}"
+                fill="url(#silhouette-gradient)" />
+        <ellipse class="silhouette-part right-foot"
+                cx="${SILHOUETTE_PATHS.rightFoot.cx}"
+                cy="${SILHOUETTE_PATHS.rightFoot.cy}"
+                rx="${SILHOUETTE_PATHS.rightFoot.rx}"
+                ry="${SILHOUETTE_PATHS.rightFoot.ry}"
+                fill="url(#silhouette-gradient)" />
     `;
     
     return svg;

@@ -23,12 +23,14 @@ export function renderInventoryPanel(inventory = [], options = {}) {
         showAddButton = true,
         editable = true,
         selectedItem = null,
-        filter = 'all'  // all, equipped, unequipped
+        filter = 'all'  // all, equippable, equipped, unequipped
     } = options;
     
     // Filtra l'inventario
     let filteredInventory = [...inventory];
-    if (filter === 'equipped') {
+    if (filter === 'equippable') {
+        filteredInventory = inventory.filter(item => isItemEquippable(item));
+    } else if (filter === 'equipped') {
         filteredInventory = inventory.filter(item => item.equipped === true);
     } else if (filter === 'unequipped') {
         filteredInventory = inventory.filter(item => !item.equipped);
@@ -90,7 +92,8 @@ function renderSearchBar() {
 function renderFilterTabs(activeFilter) {
     const tabs = [
         { id: 'all', label: 'Tutti', icon: '📦' },
-        { id: 'equipped', label: 'Equipaggiati', icon: '⚔️' },
+        { id: 'equippable', label: 'Equipaggiabili', icon: '⚔️' },
+        { id: 'equipped', label: 'Indossati', icon: '🛡️' },
         { id: 'unequipped', label: 'Zaino', icon: '🎒' }
     ];
     
