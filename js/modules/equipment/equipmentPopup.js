@@ -38,10 +38,23 @@ export class EquipmentPopup {
         this.characterType = ownerType || 'pc';
         this.onSave = onSave;
         
-        // Carica inventario (prova equipment, poi inventory)
-        this.inventory = [...(owner.equipment || owner.inventory || [])];
+        // Carica inventario - priorità a inventory (usato dalla scheda PG), fallback a equipment
+        // Nota: [] è truthy in JS, quindi dobbiamo controllare .length
+        const sourceInventory = (owner.inventory && owner.inventory.length > 0) 
+            ? owner.inventory 
+            : (owner.equipment && owner.equipment.length > 0)
+                ? owner.equipment
+                : [];
+        
+        this.inventory = [...sourceInventory];
         this.equippedSlots = { ...(owner.equippedSlots || {}) };
         
+        console.log('🎒 [EquipmentPopup] Dati owner:', {
+            hasInventory: !!owner.inventory,
+            inventoryLength: owner.inventory?.length || 0,
+            hasEquipment: !!owner.equipment,
+            equipmentLength: owner.equipment?.length || 0
+        });
         console.log('🎒 [EquipmentPopup] Inventario caricato:', this.inventory);
         console.log('🎒 [EquipmentPopup] Oggetti:', this.inventory.length);
         
