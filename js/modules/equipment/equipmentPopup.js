@@ -1,12 +1,17 @@
 /**
  * equipmentPopup.js
  * ─────────────────────────────────────────────────────────────
- * Popup semplificato per la gestione dell'equipaggiamento.
+ * Popup completo per la gestione dell'equipaggiamento.
+ * Include figura umana con slot e pannello inventario.
  * 
- * @version 1.1.0
+ * @version 2.0.0 - Figura umana + slot visivi
  */
 
 import { showToast } from '../../../utils/toast.js';
+import { renderBodySVG } from './components/bodySlotRenderer.js';
+import { renderInventoryPanel, renderItemDetail } from './components/inventoryPanel.js';
+import { SLOT_TYPES, isItemCompatibleWithSlot } from './config/slotTypes.js';
+import { searchItems, getItemByIndex } from './services/itemLoader.js';
 
 /**
  * Popup per la gestione dell'equipaggiamento
@@ -19,6 +24,12 @@ export class EquipmentPopup {
         this.inventory = [];
         this.equippedSlots = {};
         this.onSave = null;
+        this.selectedItem = null;
+        this.selectedSlot = null;
+        this.filter = 'all';
+        this.searchTerm = '';
+        this.draggedItem = null;
+        this.draggedIndex = null;
     }
     
     /**
@@ -39,7 +50,6 @@ export class EquipmentPopup {
         this.onSave = onSave;
         
         // Carica inventario - priorità a inventory (usato dalla scheda PG), fallback a equipment
-        // Nota: [] è truthy in JS, quindi dobbiamo controllare .length
         const sourceInventory = (owner.inventory && owner.inventory.length > 0) 
             ? owner.inventory 
             : (owner.equipment && owner.equipment.length > 0)
@@ -49,19 +59,92 @@ export class EquipmentPopup {
         this.inventory = [...sourceInventory];
         this.equippedSlots = { ...(owner.equippedSlots || {}) };
         
-        console.log('🎒 [EquipmentPopup] Dati owner:', {
-            hasInventory: !!owner.inventory,
-            inventoryLength: owner.inventory?.length || 0,
-            hasEquipment: !!owner.equipment,
-            equipmentLength: owner.equipment?.length || 0
-        });
-        console.log('🎒 [EquipmentPopup] Inventario caricato:', this.inventory);
-        console.log('🎒 [EquipmentPopup] Oggetti:', this.inventory.length);
+        // Costruisci mappa slot equipaggiati dallo stato degli oggetti
+        this._buildEquippedSlotsFromInventory();
+        
+        console.log('🎒 [EquipmentPopup] Inventario caricato:', this.inventory.length, 'oggetti');
+        console.log('🎒 [EquipmentPopup] Slot equipaggiati:', this.equippedSlots);
         
         this._createContainer();
         this._bindEvents();
         
         document.body.appendChild(this.container);
+    }
+    
+    /**
+     * Costruisce la mappa degli slot equipaggiati dall'inventario
+     */
+    _buildEquippedSlotsFromInventory() {
+        // Reset mappa slot
+        this.equippedSlots = {};
+        
+        // Trova oggetti equipaggiati e mappali agli slot
+        this.inventory.forEach((item, index) => {
+            if (item.equipped && item.equippedSlot) {
+                this.equippedSlots[item.equippedSlot] = { ...item, inventoryIndex: index };
+            }
+        });
+        
+        // Se non ci sono slot espliciti, prova a dedurre dalla categoria
+        if (Object.keys(this.equippedSlots).length === 0) {
+            this.inventory.forEach((item, index) => {
+                if (item.equipped) {
+                    const slotId = this._findBestSlotForItem(item);
+                    if (slotId && !this.equippedSlots[slotId]) {
+                        this.equippedSlots[slotId] = { ...item, inventoryIndex: index };
+                    }
+                }
+            });
+        }
+    }
+    
+    /**
+     * Trova lo slot migliore per un oggetto
+     */
+    _findBestSlotForItem(item) {
+        const category = item.equipment_category?.index || item.equipment_category?.name?.toLowerCase();
+        const name = item.name?.toLowerCase() || '';
+        
+        // Armi
+        if (category === 'weapon') {
+            // Se è a due mani
+            if (item.two_handed || name.includes('due mani') || name.includes('two-handed')) {
+                return 'mainHand';
+            }
+            // Se c'è già un'arma in mainHand, usa offHand
+            if (this.equippedSlots.mainHand && !this.equippedSlots.offHand) {
+                return 'offHand';
+            }
+            return 'mainHand';
+        }
+        
+        // Scudi
+        if (category === 'armor' && (name.includes('scudo') || name.includes('shield'))) {
+            return 'offHand';
+        }
+        
+        // Armature
+        if (category === 'armor') {
+            if (name.includes('elmo') || name.includes('helm')) return 'head';
+            if (name.includes('guanto') || name.includes('gauntlet')) return 'hands';
+            if (name.includes('stivali') || name.includes('boots')) return 'feet';
+            return 'body';
+        }
+        
+        // Oggetti magici
+        if (item.rarity || item.isMagical) {
+            if (name.includes('anello') || name.includes('ring')) {
+                return this.equippedSlots.ringLeft ? 'ringRight' : 'ringLeft';
+            }
+            if (name.includes('amuleto') || name.includes('amulet') || name.includes('collana')) return 'neck';
+            if (name.includes('cintura') || name.includes('belt')) return 'belt';
+            if (name.includes('mantello') || name.includes('cloak') || name.includes('cappa')) return 'cloak';
+            if (name.includes('guanto') || name.includes('gauntlet')) return 'hands';
+            if (name.includes('stivali') || name.includes('boots')) return 'feet';
+            if (name.includes('elmo') || name.includes('helm') || name.includes('corona')) return 'head';
+        }
+        
+        return null;
     }
     
     /**
@@ -90,50 +173,92 @@ export class EquipmentPopup {
                     </div>
                 </div>
                 <div class="popup-content">
-                    ${this._renderContent()}
+                    ${this._renderMainLayout()}
                 </div>
             </div>
         `;
     }
     
     /**
-     * Renderizza il contenuto
+     * Renderizza il layout principale
      */
-    _renderContent() {
-        const items = this.inventory;
-        const hasItems = items && items.length > 0;
-        
-        let itemsHtml = '';
-        if (hasItems) {
-            itemsHtml = items.map((item, idx) => {
-                const name = item.customName || item.name || 'Oggetto senza nome';
-                const qty = item.quantity > 1 ? ` (×${item.quantity})` : '';
-                const equipped = item.equipped ? ' ✓ Equipaggiato' : '';
-                
-                return `
-                    <div class="inventory-item" data-index="${idx}">
-                        <span class="item-name">${name}${qty}</span>
-                        <span class="item-status">${equipped}</span>
-                        <div class="item-actions">
-                            ${!item.equipped ? 
-                                `<button class="item-btn equip-btn" data-action="equip" data-index="${idx}">Equipaggia</button>` : 
-                                `<button class="item-btn unequip-btn" data-action="unequip" data-index="${idx}">Rimuovi</button>`
-                            }
-                        </div>
+    _renderMainLayout() {
+        return `
+            <div class="popup-main-layout">
+                <!-- Colonna sinistra: Figura umana + Stats -->
+                <div class="popup-column left-column">
+                    <div class="body-slots-container">
+                        ${renderBodySVG(this.equippedSlots, { showLabels: false, interactive: true })}
                     </div>
-                `;
-            }).join('');
-        } else {
-            itemsHtml = '<div class="inventory-empty"><div class="empty-icon">📦</div><div class="empty-text">Inventario vuoto</div><div class="empty-hint">Aggiungi oggetti dal wizard del personaggio</div></div>';
+                    ${this._renderStatsSummary()}
+                </div>
+                
+                <!-- Colonna centrale: Inventario -->
+                <div class="popup-column center-column">
+                    ${renderInventoryPanel(this.inventory, {
+                        showSearch: true,
+                        showFilters: true,
+                        showAddButton: false,
+                        editable: true,
+                        selectedItem: this.selectedItem,
+                        filter: this.filter
+                    })}
+                </div>
+                
+                <!-- Colonna destra: Dettagli oggetto -->
+                <div class="popup-column right-column">
+                    <div class="item-detail-container">
+                        ${renderItemDetail(this.selectedItem)}
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    /**
+     * Renderizza il riepilogo statistiche
+     */
+    _renderStatsSummary() {
+        const equippedCount = Object.keys(this.equippedSlots).length;
+        const totalWeight = this.inventory.reduce((sum, item) => {
+            return sum + ((item.weight || 0) * (item.quantity || 1));
+        }, 0);
+        
+        // Calcola CA equipaggiata
+        let baseAC = 10 + Math.floor((this.character.abilities?.dexterity || 10) / 2) - 5;
+        let armorBonus = 0;
+        let shieldBonus = 0;
+        
+        if (this.equippedSlots.body) {
+            const bodyItem = this.equippedSlots.body;
+            if (bodyItem.armor_class) {
+                baseAC = bodyItem.armor_class.base || baseAC;
+            }
+        }
+        if (this.equippedSlots.offHand) {
+            const offItem = this.equippedSlots.offHand;
+            if (offItem.name?.toLowerCase().includes('scudo') || offItem.name?.toLowerCase().includes('shield')) {
+                shieldBonus = 2;
+            }
         }
         
+        const totalAC = baseAC + armorBonus + shieldBonus;
+        
         return `
-            <div class="equipment-content">
-                <div class="inventory-section">
-                    <h4>📦 Inventario (${items.length} oggetti)</h4>
-                    <div class="inventory-list">
-                        ${itemsHtml}
-                    </div>
+            <div class="stats-summary">
+                <h4>📊 Riepilogo</h4>
+                <div class="stat-row">
+                    <span class="stat-label">Equipaggiati:</span>
+                    <span class="stat-value">${equippedCount}/11 slot</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">CA Totale:</span>
+                    <span class="stat-value">${totalAC}</span>
+                    <span class="stat-breakdown">(base ${baseAC}${shieldBonus ? ` + ${shieldBonus} scudo` : ''})</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Peso:</span>
+                    <span class="stat-value">${totalWeight.toFixed(1)} kg</span>
                 </div>
             </div>
         `;
@@ -143,42 +268,58 @@ export class EquipmentPopup {
      * Collega gli event handler
      */
     _bindEvents() {
-        console.log('🎒 [EquipmentPopup] Binding events...');
-        
         // Click su overlay per chiudere
         this.container.addEventListener('click', (e) => {
-            console.log('🎒 [EquipmentPopup] Click detected on:', e.target);
-            
+            // Chiudi se click su overlay
             if (e.target === this.container) {
-                console.log('🎒 [EquipmentPopup] Click on overlay, closing...');
                 this.close();
                 return;
             }
             
-            const target = e.target.closest('[data-action]');
-            if (!target) {
-                console.log('🎒 [EquipmentPopup] No data-action target found');
+            // Gestisci azioni
+            const actionTarget = e.target.closest('[data-action]');
+            if (actionTarget) {
+                const action = actionTarget.dataset.action;
+                this._handleAction(action, actionTarget, e);
                 return;
             }
             
-            const action = target.dataset.action;
-            console.log('🎒 [EquipmentPopup] Action:', action);
+            // Click su slot della figura
+            const slotTarget = e.target.closest('[data-slot]');
+            if (slotTarget && !actionTarget) {
+                const slotId = slotTarget.dataset.slot;
+                this._handleSlotClick(slotId);
+                return;
+            }
             
-            switch (action) {
-                case 'close':
-                    this.close();
-                    break;
-                case 'save':
-                    this._save();
-                    break;
-                case 'equip':
-                    this._equipItem(parseInt(target.dataset.index));
-                    break;
-                case 'unequip':
-                    this._unequipItem(parseInt(target.dataset.index));
-                    break;
+            // Click su oggetto inventario
+            const itemTarget = e.target.closest('.inventory-item');
+            if (itemTarget && !actionTarget) {
+                const index = parseInt(itemTarget.dataset.itemIndex);
+                this._handleItemClick(index);
+                return;
             }
         });
+        
+        // Filtro inventario
+        this.container.addEventListener('click', (e) => {
+            const filterBtn = e.target.closest('.filter-tab');
+            if (filterBtn) {
+                this.filter = filterBtn.dataset.filter;
+                this._refresh();
+            }
+        });
+        
+        // Ricerca inventario
+        this.container.addEventListener('input', (e) => {
+            if (e.target.matches('[data-action="search-inventory"]')) {
+                this.searchTerm = e.target.value.toLowerCase();
+                this._filterInventoryItems();
+            }
+        });
+        
+        // Drag & Drop
+        this._bindDragDrop();
         
         // Keyboard
         this.container.addEventListener('keydown', (e) => {
@@ -189,36 +330,285 @@ export class EquipmentPopup {
     }
     
     /**
-     * Equipaggia un oggetto
+     * Gestisce le azioni
      */
-    _equipItem(index) {
+    _handleAction(action, target, event) {
+        switch (action) {
+            case 'close':
+                this.close();
+                break;
+            case 'save':
+                this._save();
+                break;
+            case 'equip':
+                const equipIndex = parseInt(target.dataset.itemIndex);
+                this._equipItemByIndex(equipIndex);
+                break;
+            case 'unequip':
+                const unequipIndex = parseInt(target.dataset.itemIndex);
+                this._unequipItemByIndex(unequipIndex);
+                break;
+            case 'info':
+                const infoIndex = parseInt(target.dataset.itemIndex);
+                this._selectItem(infoIndex);
+                break;
+            case 'unequip-slot':
+                const slotId = target.dataset.slot;
+                this._unequipSlot(slotId);
+                break;
+        }
+    }
+    
+    /**
+     * Gestisce click su slot
+     */
+    _handleSlotClick(slotId) {
+        console.log('🎒 [EquipmentPopup] Click su slot:', slotId);
+        
+        // Se c'è un oggetto nello slot, selezionalo
+        if (this.equippedSlots[slotId]) {
+            const item = this.equippedSlots[slotId];
+            if (item.inventoryIndex !== undefined) {
+                this._selectItem(item.inventoryIndex);
+            }
+            this.selectedSlot = slotId;
+            this._refresh();
+        } else {
+            // Slot vuoto - mostra oggetti compatibili
+            this.selectedSlot = slotId;
+            this._highlightCompatibleItems(slotId);
+            this._refresh();
+        }
+    }
+    
+    /**
+     * Gestisce click su oggetto inventario
+     */
+    _handleItemClick(index) {
+        this._selectItem(index);
+    }
+    
+    /**
+     * Seleziona un oggetto
+     */
+    _selectItem(index) {
+        if (index >= 0 && index < this.inventory.length) {
+            this.selectedItem = this.inventory[index];
+            this._refreshDetailPanel();
+        }
+    }
+    
+    /**
+     * Evidenzia oggetti compatibili con uno slot
+     */
+    _highlightCompatibleItems(slotId) {
+        const items = this.container.querySelectorAll('.inventory-item');
+        items.forEach(item => {
+            const compatibleSlots = (item.dataset.compatibleSlots || '').split(',');
+            if (compatibleSlots.includes(slotId)) {
+                item.classList.add('compatible');
+            } else {
+                item.classList.remove('compatible');
+            }
+        });
+    }
+    
+    /**
+     * Collega eventi drag & drop
+     */
+    _bindDragDrop() {
+        // Drag start su oggetto inventario
+        this.container.addEventListener('dragstart', (e) => {
+            const item = e.target.closest('.inventory-item');
+            if (item) {
+                this.draggedIndex = parseInt(item.dataset.itemIndex);
+                this.draggedItem = this.inventory[this.draggedIndex];
+                item.classList.add('dragging');
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', this.draggedIndex);
+                
+                // Evidenzia slot compatibili
+                this._highlightCompatibleSlots(this.draggedItem);
+            }
+        });
+        
+        // Drag end
+        this.container.addEventListener('dragend', (e) => {
+            const item = e.target.closest('.inventory-item');
+            if (item) {
+                item.classList.remove('dragging');
+            }
+            this.draggedItem = null;
+            this.draggedIndex = null;
+            this._clearSlotHighlights();
+        });
+        
+        // Drag over slot
+        this.container.addEventListener('dragover', (e) => {
+            const slot = e.target.closest('[data-slot]');
+            if (slot) {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                slot.classList.add('drag-over');
+            }
+        });
+        
+        // Drag leave slot
+        this.container.addEventListener('dragleave', (e) => {
+            const slot = e.target.closest('[data-slot]');
+            if (slot) {
+                slot.classList.remove('drag-over');
+            }
+        });
+        
+        // Drop su slot
+        this.container.addEventListener('drop', (e) => {
+            const slot = e.target.closest('[data-slot]');
+            if (slot && this.draggedItem) {
+                e.preventDefault();
+                const slotId = slot.dataset.slot;
+                this._equipItemToSlot(this.draggedIndex, slotId);
+                slot.classList.remove('drag-over');
+            }
+        });
+    }
+    
+    /**
+     * Evidenzia slot compatibili con un oggetto
+     */
+    _highlightCompatibleSlots(item) {
+        const slots = this.container.querySelectorAll('[data-slot]');
+        slots.forEach(slot => {
+            const slotId = slot.dataset.slot;
+            if (isItemCompatibleWithSlot(slotId, item)) {
+                slot.classList.add('highlighted');
+            }
+        });
+    }
+    
+    /**
+     * Rimuove evidenziazione slot
+     */
+    _clearSlotHighlights() {
+        const slots = this.container.querySelectorAll('[data-slot]');
+        slots.forEach(slot => {
+            slot.classList.remove('highlighted', 'drag-over');
+        });
+    }
+    
+    /**
+     * Equipaggia un oggetto per indice
+     */
+    _equipItemByIndex(index) {
         const item = this.inventory[index];
         if (!item) return;
         
+        // Trova lo slot migliore
+        const slotId = this._findBestSlotForItem(item);
+        if (!slotId) {
+            showToast('Impossibile determinare lo slot per questo oggetto', 'warning');
+            return;
+        }
+        
+        this._equipItemToSlot(index, slotId);
+    }
+    
+    /**
+     * Equipaggia un oggetto in uno slot specifico
+     */
+    _equipItemToSlot(index, slotId) {
+        const item = this.inventory[index];
+        if (!item) return;
+        
+        // Verifica compatibilità
+        if (!isItemCompatibleWithSlot(slotId, item)) {
+            showToast('Questo oggetto non è compatibile con lo slot selezionato', 'error');
+            return;
+        }
+        
+        // Se lo slot è occupato, disequipaggia l'oggetto precedente
+        if (this.equippedSlots[slotId]) {
+            const prevItem = this.equippedSlots[slotId];
+            if (prevItem.inventoryIndex !== undefined) {
+                this.inventory[prevItem.inventoryIndex].equipped = false;
+                this.inventory[prevItem.inventoryIndex].equippedSlot = null;
+            }
+        }
+        
+        // Equipaggia il nuovo oggetto
         item.equipped = true;
-        showToast(`${item.name || 'Oggetto'} equipaggiato`, 'success');
+        item.equippedSlot = slotId;
+        this.equippedSlots[slotId] = { ...item, inventoryIndex: index };
+        
+        showToast(`${item.name || 'Oggetto'} equipaggiato in ${SLOT_TYPES[slotId]?.name || slotId}`, 'success');
         this._refresh();
     }
     
     /**
-     * Disequipaggia un oggetto
+     * Disequipaggia un oggetto per indice
      */
-    _unequipItem(index) {
+    _unequipItemByIndex(index) {
         const item = this.inventory[index];
-        if (!item) return;
+        if (!item || !item.equipped) return;
         
+        const slotId = item.equippedSlot;
         item.equipped = false;
+        item.equippedSlot = null;
+        
+        if (slotId && this.equippedSlots[slotId]) {
+            delete this.equippedSlots[slotId];
+        }
+        
         showToast(`${item.name || 'Oggetto'} rimosso`, 'success');
         this._refresh();
     }
     
     /**
-     * Refresh del contenuto
+     * Disequipaggia uno slot
+     */
+    _unequipSlot(slotId) {
+        const equipped = this.equippedSlots[slotId];
+        if (!equipped) return;
+        
+        if (equipped.inventoryIndex !== undefined) {
+            this.inventory[equipped.inventoryIndex].equipped = false;
+            this.inventory[equipped.inventoryIndex].equippedSlot = null;
+        }
+        
+        delete this.equippedSlots[slotId];
+        showToast(`${equipped.name || 'Oggetto'} rimosso da ${SLOT_TYPES[slotId]?.name || slotId}`, 'success');
+        this._refresh();
+    }
+    
+    /**
+     * Filtra gli elementi dell'inventario
+     */
+    _filterInventoryItems() {
+        const items = this.container.querySelectorAll('.inventory-item');
+        items.forEach(item => {
+            const name = item.querySelector('.item-name')?.textContent?.toLowerCase() || '';
+            const matches = name.includes(this.searchTerm);
+            item.style.display = matches ? '' : 'none';
+        });
+    }
+    
+    /**
+     * Aggiorna solo il pannello dettagli
+     */
+    _refreshDetailPanel() {
+        const detailContainer = this.container.querySelector('.item-detail-container');
+        if (detailContainer) {
+            detailContainer.innerHTML = renderItemDetail(this.selectedItem);
+        }
+    }
+    
+    /**
+     * Refresh completo del popup
      */
     _refresh() {
         const content = this.container.querySelector('.popup-content');
         if (content) {
-            content.innerHTML = this._renderContent();
+            content.innerHTML = this._renderMainLayout();
         }
     }
     
@@ -232,8 +622,9 @@ export class EquipmentPopup {
         });
         
         // Aggiorna il personaggio
-        this.character.equipment = this.inventory;
+        this.character.inventory = this.inventory;
         this.character.equippedSlots = this.equippedSlots;
+        this.character.equipment = this.inventory.filter(item => item.equipped);
         
         // Callback
         if (this.onSave) {

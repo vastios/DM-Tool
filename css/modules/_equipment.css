@@ -891,6 +891,68 @@
 }
 
 /* ==========================================================================
+   DRAG & DROP
+   ========================================================================== */
+
+.inventory-item.compatible {
+    border-color: #4caf50;
+    background: rgba(76, 175, 80, 0.1);
+}
+
+.inventory-item.compatible::before {
+    content: '✓';
+    position: absolute;
+    left: -20px;
+    color: #4caf50;
+}
+
+.inventory-item.dragging {
+    opacity: 0.5;
+    transform: scale(0.98);
+}
+
+/* Slot tooltip */
+.equipment-slot:hover .slot-tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
+.slot-tooltip {
+    position: absolute;
+    background: var(--bg-primary, #1a1a1a);
+    border: 1px solid var(--border-color, #444);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s;
+    pointer-events: none;
+    z-index: 100;
+}
+
+.slot-tooltip .tooltip-name {
+    color: var(--text-primary, #fff);
+    font-weight: 500;
+}
+
+.slot-tooltip .tooltip-item {
+    color: var(--accent-color, #d4af37);
+    margin-top: 4px;
+}
+
+/* Quick equip button on slot hover */
+.equipment-slot .quick-actions {
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.equipment-slot:hover .quick-actions {
+    opacity: 1;
+}
+
+/* ==========================================================================
    RESPONSIVE
    ========================================================================== */
 
