@@ -263,6 +263,7 @@ export function calculateSpellAttackBonus(proficiencyBonus, spellcastingAbility)
 
 /**
  * Calcola la Classe Armatura (CA) del personaggio
+ * Considera prima gli equippedSlots, poi fallback agli oggetti con equipped: true
  * @param {Object} pg - Dati del personaggio
  * @param {Array} itemsDatabase - Database degli oggetti (opzionale, per lookup armature)
  * @returns {Object} - { ac: number, armorName: string, shieldBonus: number, hasShield: boolean }
@@ -270,22 +271,42 @@ export function calculateSpellAttackBonus(proficiencyBonus, spellcastingAbility)
 export function calculateArmorClass(pg, itemsDatabase = null) {
     const dexterity = pg.abilities?.dexterity || 10;
     const dexMod = calculateModifier(dexterity);
-    const inventory = pg.inventory || [];
     
-    // Trova armatura e scudo nell'inventario
     let armor = null;
     let shield = null;
     
-    // Prima cerca nel database se fornito, altrimenti usa i dati dell'inventario
-    for (const item of inventory) {
-        const isArmor = item.equipment_category?.index === 'armor';
+    // 1. Prima controlla gli equippedSlots (nuovo sistema)
+    const equippedSlots = pg.equippedSlots || {};
+    
+    if (equippedSlots.body) {
+        armor = equippedSlots.body;
+    }
+    if (equippedSlots.mainHand || equippedSlots.offHand) {
+        // Controlla se uno degli slot mano ha uno scudo
+        const mainHandItem = equippedSlots.mainHand;
+        const offHandItem = equippedSlots.offHand;
         
-        if (isArmor && item.armor_category === 'Scudo') {
-            shield = item;
-        } else if (isArmor && item.armor_category !== 'Scudo') {
-            // Prendi l'armatura con CA base più alta (quella "equipaggiata")
-            if (!armor || (item.armor_class?.base || 0) > (armor.armor_class?.base || 0)) {
-                armor = item;
+        if (mainHandItem && _isShield(mainHandItem)) {
+            shield = mainHandItem;
+        } else if (offHandItem && _isShield(offHandItem)) {
+            shield = offHandItem;
+        }
+    }
+    
+    // 2. Fallback: cerca nell'inventario oggetti con equipped: true (vecchio sistema)
+    if (!armor || !shield) {
+        const inventory = pg.inventory || [];
+        
+        for (const item of inventory) {
+            if (!item.equipped) continue;
+            
+            const isArmor = item.equipment_category?.index === 'armor';
+            const nameLower = (item.name || '').toLowerCase();
+            
+            if (_isShield(item)) {
+                if (!shield) shield = item;
+            } else if (isArmor && !_isShield(item)) {
+                if (!armor) armor = item;
             }
         }
     }
@@ -298,7 +319,6 @@ export function calculateArmorClass(pg, itemsDatabase = null) {
     if (armor) {
         const armorClass = armor.armor_class || { base: 10, dex_bonus: true };
         const base = armorClass.base || 10;
-        const dexBonus = armorClass.dex_bonus !== false;
         const maxBonus = armorClass.max_bonus || null;
         
         if (armor.armor_category === 'Pesante') {
@@ -329,6 +349,24 @@ export function calculateArmorClass(pg, itemsDatabase = null) {
         hasShield: !!shield,
         hasArmor: !!armor
     };
+}
+
+/**
+ * Verifica se un oggetto è uno scudo
+ * @param {Object} item - L'oggetto da verificare
+ * @returns {boolean}
+ */
+function _isShield(item) {
+    if (!item) return false;
+    
+    const nameLower = (item.name || '').toLowerCase();
+    const category = (item.armor_category || '').toLowerCase();
+    const equipCategory = (item.equipment_category?.index || '').toLowerCase();
+    
+    return nameLower.includes('scudo') || 
+           nameLower.includes('shield') ||
+           category.includes('scudo') ||
+           equipCategory === 'shield';
 }
 
 /**

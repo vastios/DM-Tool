@@ -689,40 +689,58 @@ function initializeNpcSpellState(npcData) {
 
 /**
  * Genera le azioni base per un PG (attacchi con arma).
+ * Considera gli equippedSlots per le armi equipaggiate.
  * @param {Object} pcData - I dati del PG
  * @returns {Array} Array di azioni
  */
 function generatePcActions(pcData) {
     const actions = [];
     
-    // Attacco base con arma principale
     const strMod = getAbilityModifier(pcData.abilities?.strength || 10);
     const dexMod = getAbilityModifier(pcData.abilities?.dexterity || 10);
     const profBonus = pcData.proficiencyBonus || 2;
     
-    // Determina se usa DES o FOR
-    const isFinesse = true; // Assumiamo arma finesse per semplificare
-    const attackMod = isFinesse ? Math.max(strMod, dexMod) : strMod;
+    // Raccogli armi equipaggiate
+    const weapons = [];
     
-    // Cerca arma nell'inventario
-    const weapons = pcData.equipment?.filter(e => 
-        e.type === 'weapon' || e.category?.includes('arma')
-    ) || [];
+    // 1. Controlla equippedSlots (nuovo sistema)
+    const equippedSlots = pcData.equippedSlots || {};
     
+    if (equippedSlots.mainHand && _isWeapon(equippedSlots.mainHand)) {
+        weapons.push(equippedSlots.mainHand);
+    }
+    if (equippedSlots.offHand && _isWeapon(equippedSlots.offHand)) {
+        weapons.push(equippedSlots.offHand);
+    }
+    
+    // 2. Fallback: cerca nell'inventario oggetti con equipped: true (vecchio sistema)
+    if (weapons.length === 0) {
+        const inventory = pcData.inventory || [];
+        const equippedWeapons = inventory.filter(item => 
+            item.equipped && _isWeapon(item)
+        );
+        weapons.push(...equippedWeapons.slice(0, 2));
+    }
+    
+    // 3. Ultimo fallback: cerca nel vecchio equipment array
+    if (weapons.length === 0 && pcData.equipment) {
+        const equipWeapons = pcData.equipment.filter(e => 
+            e.type === 'weapon' || e.category?.includes('arma') || 
+            e.equipment_category?.index === 'weapon'
+        );
+        weapons.push(...equipWeapons.slice(0, 2));
+    }
+    
+    // Genera azioni per ogni arma
     if (weapons.length > 0) {
-        weapons.slice(0, 3).forEach(weapon => {
-            actions.push({
-                name: weapon.name || 'Attacco',
-                desc: `Attacco con ${weapon.name || 'arma'}`,
-                attack_bonus: profBonus + attackMod,
-                damage: [{
-                    damage_dice: weapon.damage || '1d8',
-                    damage_type: { name: weapon.damageType || 'Slashing' }
-                }]
-            });
+        weapons.forEach(weapon => {
+            const action = _createWeaponAction(weapon, strMod, dexMod, profBonus);
+            if (action) actions.push(action);
         });
-    } else {
-        // Attacco base unarmed
+    }
+    
+    // Se nessuna arma, aggiungi attacco senz'armi
+    if (actions.length === 0) {
         actions.push({
             name: 'Attacco Senza Armi',
             desc: 'Attacco con pugni',
@@ -735,6 +753,76 @@ function generatePcActions(pcData) {
     }
     
     return actions;
+}
+
+/**
+ * Verifica se un oggetto è un'arma
+ */
+function _isWeapon(item) {
+    if (!item) return false;
+    const category = (item.equipment_category?.index || '').toLowerCase();
+    return category === 'weapon';
+}
+
+/**
+ * Crea un'azione di attacco da un'arma
+ */
+function _createWeaponAction(weapon, strMod, dexMod, profBonus) {
+    if (!weapon) return null;
+    
+    // Determina il modificatore di attacco
+    let attackMod = strMod;
+    
+    // Controlla se è un'arma Finesse o a distanza
+    const isFinesse = (weapon.properties || []).some(p => {
+        const propName = (p.name || p.index || p || '').toLowerCase();
+        return propName === 'finesse' || propName === 'agile';
+    });
+    
+    const isRanged = (weapon.weapon_range || weapon.category_range || '').toLowerCase().includes('distanza');
+    
+    if (isFinesse) {
+        attackMod = Math.max(strMod, dexMod);
+    } else if (isRanged) {
+        attackMod = dexMod;
+    }
+    
+    // Estrai danno
+    let damageDice = '1d8';
+    let damageType = 'Slashing';
+    
+    if (weapon.damage) {
+        damageDice = weapon.damage.damage_dice || '1d8';
+        damageType = weapon.damage.damage_type?.name || 'Slashing';
+    } else if (weapon.damage_dice) {
+        damageDice = weapon.damage_dice;
+    }
+    
+    // Traduci tipo danno in inglese se necessario
+    const damageTypeMap = {
+        'tagliente': 'Slashing',
+        'perforante': 'Piercing',
+        'contundente': 'Bludgeoning',
+        'slashing': 'Slashing',
+        'piercing': 'Piercing',
+        'bludgeoning': 'Bludgeoning'
+    };
+    damageType = damageTypeMap[damageType.toLowerCase()] || damageType;
+    
+    return {
+        name: weapon.name || 'Attacco',
+        desc: `Attacco con ${weapon.name || 'arma'}`,
+        attack_bonus: profBonus + attackMod,
+        damage: [{
+            damage_dice: damageDice,
+            damage_type: { name: damageType }
+        }],
+        _weaponData: {
+            name: weapon.name,
+            range: weapon.weapon_range,
+            properties: weapon.properties
+        }
+    };
 }
 
 /**
