@@ -243,6 +243,65 @@ export class PgViewManager {
         // Delega alla funzione nel modulo PgCharacterSheet
         return renderCharacterSheet(pg, databases);
     }
+
+    // ========================================================================
+    // LEVEL-UP WIZARD
+    // ========================================================================
+
+    /**
+     * Renderizza il level-up wizard nel pannello destro.
+     * @param {number} step - Lo step corrente (1 o 2)
+     * @param {Object} levelUpData - Dati del level-up (incluso pg, currentLevel, newLevel, hasSpellStep, renderStep callback)
+     * @returns {string} HTML
+     */
+    renderLevelUpWizard(step, levelUpData) {
+        const pg = levelUpData.pg;
+        const currentLevel = levelUpData.currentLevel;
+        const newLevel = levelUpData.newLevel;
+        const hasSpells = levelUpData.hasSpellStep;
+        const totalSteps = hasSpells ? 2 : 1;
+        const isLastStep = step >= totalSteps;
+
+        return `
+            <div class="pg-wizard level-up-wizard">
+                <div class="wizard-header">
+                    <div class="wizard-steps">
+                        <div class="wizard-step active">
+                            <div class="step-circle">${step > 1 ? '✓' : '1'}</div>
+                            <span class="step-label">HP &amp; Caratteristiche</span>
+                        </div>
+                        ${hasSpells ? `
+                        <div class="wizard-step ${step >= 2 ? 'active' : ''}">
+                            <div class="step-circle">2</div>
+                            <span class="step-label">Incantesimi</span>
+                        </div>` : ''}
+                    </div>
+                    <h2 class="wizard-title">
+                        ⬆️ Level Up: ${pg.name} — ${pg.className || pg.class}
+                        <span class="level-change-display">
+                            <span class="level-old">Lv.${currentLevel}</span>
+                            <span class="level-arrow">→</span>
+                            <span class="level-new">Lv.${newLevel}</span>
+                        </span>
+                    </h2>
+                </div>
+                <div class="wizard-content">
+                    ${levelUpData.renderStep ? levelUpData.renderStep(step) : ''}
+                </div>
+                <div class="wizard-footer">
+                    <button class="btn btn-secondary" id="btn-prev" ${step === 1 ? 'disabled' : ''}>
+                        ← Indietro
+                    </button>
+                    <button class="btn btn-secondary" id="btn-cancel">
+                        Annulla
+                    </button>
+                    <button class="btn btn-primary" id="btn-next">
+                        ${isLastStep ? '✅ Conferma Level Up' : 'Avanti →'}
+                    </button>
+                </div>
+            </div>
+        `;
+    }
     
     // ========================================================================
     // UTILITÀ

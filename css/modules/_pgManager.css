@@ -7229,3 +7229,21 @@ label.spell-cb input {
         max-height: 120px;
     }
 }
+
+/* =========================================================================
+   LEVEL-UP WIZARD (in-panel)
+   ========================================================================= */
+
+.level-up-wizard .wizard-title {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.level-change-display {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+}

@@ -84,6 +84,30 @@ export class PgController {
          */
         this.isEditMode = false;
         
+        /**
+         * Flag modalità level-up wizard.
+         * @type {boolean}
+         */
+        this.isLevelUpMode = false;
+        
+        /**
+         * Step corrente del wizard level-up (1-2).
+         * @type {number}
+         */
+        this.levelUpStep = 1;
+        
+        /**
+         * Dati calcolati per il level-up corrente.
+         * @type {Object|null}
+         */
+        this.levelUpData = null;
+        
+        /**
+         * ID del PG che sta facendo level-up.
+         * @type {string|null}
+         */
+        this.levelUpPgId = null;
+        
         console.log('🎮 [PgController] Inizializzato.');
     }
     
@@ -273,6 +297,12 @@ export class PgController {
                 this.databases, 
                 errors
             );
+        } else if (this.isLevelUpMode && this.levelUpData) {
+            // Modalità level-up wizard
+            rightContent = this.viewManager.renderLevelUpWizard(
+                this.levelUpStep,
+                this.levelUpData
+            );
         } else if (this.selectedPgId) {
             // Modalità visualizzazione PG
             const pg = this.dataManager.getById(this.selectedPgId);
@@ -447,13 +477,62 @@ export class PgController {
         }
         
         // Navigazione wizard
-        if (button.id === 'btn-prev') { this.prevStep(); return; }
-        if (button.id === 'btn-next') { this.nextStep(); return; }
-        if (button.id === 'btn-cancel') { this.cancelWizard(); return; }
+        if (button.id === 'btn-prev') { 
+            if (this.isLevelUpMode) { this.levelUpPrevStep(); }
+            else { this.prevStep(); }
+            return; 
+        }
+        if (button.id === 'btn-next') { 
+            if (this.isLevelUpMode) { this.levelUpNextStep(); }
+            else { this.nextStep(); }
+            return; 
+        }
+        if (button.id === 'btn-cancel') { 
+            if (this.isLevelUpMode) { this.cancelLevelUp(); }
+            else { this.cancelWizard(); }
+            return; 
+        }
         
         // Generazione caratteristiche
         if (button.id === 'btn-roll-abilities') { this.rollAbilities(); return; }
         if (button.id === 'btn-standard-array') { this.applyStandardArray(); return; }
+        
+        // === LEVEL-UP WIZARD ACTIONS ===
+        if (this.isLevelUpMode) {
+            // ASI buttons
+            if (button.dataset.asiAbility && button.dataset.asiAction) {
+                this._handleWizardASI(button);
+                return;
+            }
+            // HP choice
+            if (button.dataset.hpChoice) {
+                this._handleWizardHpChoice(button);
+                return;
+            }
+            // Spell toggle
+            const spellLabel = button.closest('[data-lu-spell]');
+            if (spellLabel) {
+                this._handleWizardSpellToggle(spellLabel);
+                return;
+            }
+            // Spell swap out
+            const swapOutItem = button.closest('[data-swap-out]');
+            if (swapOutItem && !swapOutItem.classList.contains('already-known')) {
+                this._handleWizardSwapOut(swapOutItem);
+                return;
+            }
+            // Spell swap in
+            const swapInItem = button.closest('[data-swap-in]');
+            if (swapInItem && !swapInItem.classList.contains('already-known')) {
+                this._handleWizardSwapIn(swapInItem);
+                return;
+            }
+            // Clear swap
+            if (button.dataset.luAction === 'clear-swap') {
+                this._handleWizardClearSwap();
+                return;
+            }
+        }
         
         // Modifica caratteristiche +/-
         if (button.dataset.ability && button.dataset.action) {
@@ -493,7 +572,7 @@ export class PgController {
             return;
         }
         if (action === 'level-up') {
-            if (pgId) this.showLevelUpModal(pgId);
+            if (pgId) this.startLevelUp(pgId);
             return;
         }
         
@@ -2951,13 +3030,13 @@ export class PgController {
     }
     
     // ========================================================================
-    // LEVEL UP
+    // LEVEL UP (Wizard in-panel)
     // ========================================================================
 
     /**
-     * Mostra il modal per l'aumento di livello
+     * Avvia il level-up wizard per un PG.
      */
-    showLevelUpModal(pgId) {
+    startLevelUp(pgId) {
         const pg = this.dataManager.getById(pgId);
         if (!pg) {
             showToast('PG non trovato.', 'error');
@@ -2972,7 +3051,7 @@ export class PgController {
         const currentLevel = pg.level || 1;
         const newLevel = currentLevel + 1;
         const classData = this.databases.classes?.find(c => c.index === pg.class);
-        
+
         if (!classData) {
             showToast('Classe del PG non trovata nel database.', 'error');
             return;
@@ -2981,71 +3060,212 @@ export class PgController {
         // Calcola cosa cambia
         const changes = this._calculateLevelUpChanges(pg, classData, currentLevel, newLevel);
 
-        // Crea il modal
-        const modal = document.createElement('div');
-        modal.className = 'level-up-overlay';
-        modal.innerHTML = this._renderLevelUpModal(pg, classData, currentLevel, newLevel, changes);
+        // Determina se c'è uno step incantesimi
+        const hasSpellStep = !!(changes.cantrips || changes.spellsKnown ||
+            changes.wizardNewSpellCount > 0 ||
+            (changes.newSpellLevelsAccessible && changes.newSpellLevelsAccessible.length > 0) ||
+            changes.canSwapSpells);
 
-        // Binding eventi
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.remove();
-                return;
+        this.levelUpData = {
+            pg,
+            currentLevel,
+            newLevel,
+            classData,
+            ...changes,
+            hasSpellStep,
+            renderStep: (step) => this._renderLevelUpStep(step)
+        };
+
+        this.isLevelUpMode = true;
+        this.levelUpPgId = pgId;
+        this.levelUpStep = 1;
+        this.selectedPgId = pgId;
+        this.render();
+    }
+
+    /**
+     * Passa allo step successivo del level-up wizard.
+     */
+    levelUpNextStep() {
+        const data = this.levelUpData;
+        if (!data) return;
+
+        // Se siamo allo step 1 e non c'è uno step spell, conferma direttamente
+        if (this.levelUpStep === 1 && !data.hasSpellStep) {
+            this.confirmLevelUp();
+            return;
+        }
+
+        // Se siamo allo step 1 con spell, passa allo step 2
+        if (this.levelUpStep === 1) {
+            this.levelUpStep = 2;
+            this.render();
+            return;
+        }
+
+        // Se siamo all'ultimo step, conferma
+        const totalSteps = data.hasSpellStep ? 2 : 1;
+        if (this.levelUpStep >= totalSteps) {
+            this.confirmLevelUp();
+        }
+    }
+
+    /**
+     * Passa allo step precedente del level-up wizard.
+     */
+    levelUpPrevStep() {
+        if (this.levelUpStep > 1) {
+            this.levelUpStep--;
+            this.render();
+        }
+    }
+
+    /**
+     * Annulla il level-up e torna alla visualizzazione PG.
+     */
+    cancelLevelUp() {
+        this.isLevelUpMode = false;
+        this.levelUpData = null;
+        this.levelUpPgId = null;
+        this.levelUpStep = 1;
+        this.render();
+    }
+
+    /**
+     * Conferma e salva il level-up.
+     */
+    confirmLevelUp() {
+        const data = this.levelUpData;
+        if (!data) return;
+
+        const pgId = this.levelUpPgId;
+        const pg = this.dataManager.getById(pgId);
+        if (!pg) return;
+
+        const classData = this.databases.classes?.find(c => c.index === pg.class);
+        if (!classData) return;
+
+        // Validazione selezioni spell
+        if (data.cantrips && data.selectedNewCantrips.length !== data.cantrips) {
+            showToast(`Devi selezionare esattamente ${data.cantrips} truccett${data.cantrips > 1 ? 'i' : 'o'} nuovo${data.cantrips > 1 ? 'i' : ''}.`, 'warning');
+            return;
+        }
+        const expectedNewSpells = data.isWizard ? data.wizardNewSpellCount : (data.spellsKnown || 0);
+        if (expectedNewSpells > 0 && data.selectedNewSpells.length !== expectedNewSpells) {
+            showToast(`Devi selezionare esattamente ${expectedNewSpells} incantesim${expectedNewSpells > 1 ? 'i' : 'o'} nuov${expectedNewSpells > 1 ? 'i' : 'o'}.`, 'warning');
+            return;
+        }
+
+        // 1. Aggiorna livello
+        const updates = {
+            level: data.newLevel,
+            proficiencyBonus: calculateProficiencyBonus(data.newLevel)
+        };
+
+        // 2. Aggiorna HP (incrementale)
+        const hpGain = Math.max(1, data.hp.totalGain);
+        updates.hp = {
+            current: (pg.hp?.current || 0) + hpGain,
+            max: (pg.hp?.max || 0) + hpGain,
+            temp: pg.hp?.temp || 0
+        };
+
+        // 3. Aggiorna dadi vita
+        updates.hitDice = {
+            total: data.newLevel,
+            current: data.newLevel,
+            size: `d${classData.hit_die}`
+        };
+
+        // 4. Aggiorna ASI (somma i nuovi a quelli esistenti)
+        const oldASI = { ...(pg._asiBonuses || { strength: 0, dexterity: 0, constitution: 0, intelligence: 0, wisdom: 0, charisma: 0 }) };
+        const newASI = { ...oldASI };
+        for (const [prop, val] of Object.entries(data.modalASI)) {
+            newASI[prop] = (newASI[prop] || 0) + val;
+        }
+        updates._asiBonuses = newASI;
+
+        // Applica i nuovi ASI alle abilità
+        const newAbilities = { ...(pg.abilities || {}) };
+        for (const [prop, val] of Object.entries(data.modalASI)) {
+            if (val) {
+                newAbilities[prop] = Math.min(20, (newAbilities[prop] || 10) + val);
+            }
+        }
+        updates.abilities = newAbilities;
+
+        // 5. Aggiorna spell slots e spellcasting (se incantatore)
+        if (ALL_SPELLCASTERS.includes(classData.index)) {
+            const spellAbility = this.getSpellcastingAbility(classData.index);
+            const abilityScore = newAbilities[spellAbility] || 10;
+            const spellSlots = calculateSpellSlots(classData.index, data.newLevel);
+
+            // Aggiorna lista incantesimi conosciuti
+            let updatedSpellsKnown = [...(pg.spellcasting?.spellsKnown || [])];
+
+            // Normalizza a oggetti { name, level }
+            updatedSpellsKnown = updatedSpellsKnown.map(s => {
+                if (typeof s === 'string') {
+                    const lvl = this._findSpellLevel(s, data.classSpellsByLevel || {});
+                    return { name: s, level: lvl };
+                }
+                return s;
+            });
+
+            // Aggiungi nuovi trucchetti
+            for (const spell of data.selectedNewCantrips) {
+                updatedSpellsKnown.push({ name: spell.name, level: 0 });
             }
 
-            if (e.target.dataset.luAction === 'cancel') {
-                modal.remove();
-                return;
+            // Aggiungi nuovi incantesimi (known casters, warlock, mago)
+            for (const spell of data.selectedNewSpells) {
+                updatedSpellsKnown.push({ name: spell.name, level: spell.level });
             }
 
-            if (e.target.dataset.luAction === 'confirm') {
-                this._handleLevelUpConfirm(pgId, modal, currentLevel, newLevel, changes);
-                return;
+            // Gestisci scambio (Bardo, Stregone)
+            if (data.swappedOut && data.swappedIn) {
+                updatedSpellsKnown = updatedSpellsKnown.filter(s =>
+                    (typeof s === 'string' ? s : s.name) !== data.swappedOut
+                );
+                const newSpellLevel = this._findSpellLevel(data.swappedIn, data.classSpellsByLevel || {});
+                updatedSpellsKnown.push({ name: data.swappedIn, level: newSpellLevel });
             }
 
-            // ASI buttons
-            if (e.target.dataset.asiAbility && e.target.dataset.asiAction) {
-                this._handleModalASI(e.target, modal, changes);
-                return;
-            }
+            updates.spellcasting = {
+                ...(pg.spellcasting || {}),
+                ability: spellAbility,
+                spellSaveDC: 8 + updates.proficiencyBonus + calculateModifier(abilityScore),
+                spellAttackBonus: updates.proficiencyBonus + calculateModifier(abilityScore),
+                slots: spellSlots,
+                spellsKnown: updatedSpellsKnown
+            };
+        }
 
-            // HP choice
-            if (e.target.dataset.hpChoice) {
-                this._handleHpChoice(modal, e.target.dataset.hpChoice, changes);
-                return;
-            }
+        // 6. Ricalcola iniziativa
+        updates.initiative = calculateModifier(newAbilities.dexterity);
 
-            // Spell selection (cantrip/spell checkbox)
-            const spellLabel = e.target.closest('[data-lu-spell]');
-            if (spellLabel) {
-                const spellName = spellLabel.dataset.luSpell;
-                const spellLevel = parseInt(spellLabel.dataset.luLevel) || 0;
-                this._handleModalSpellToggle(modal, spellName, spellLevel, changes);
-                return;
-            }
+        // Salva
+        this.dataManager.update(pgId, updates);
+        this.selectedPgId = pgId;
 
-            // Spell swap: click "Rimuovi"
-            const swapOutItem = e.target.closest('[data-swap-out]');
-            if (swapOutItem && !swapOutItem.classList.contains('already-known')) {
-                this._handleModalSwapOut(modal, swapOutItem.dataset.swapOut, parseInt(swapOutItem.dataset.swapOutLevel) || 0, changes);
-                return;
-            }
+        showToast(`${pg.name} è salito al livello ${data.newLevel}!`, 'success');
 
-            // Spell swap: click "Aggiungi"
-            const swapInItem = e.target.closest('[data-swap-in]');
-            if (swapInItem && !swapInItem.classList.contains('already-known')) {
-                this._handleModalSwapIn(modal, swapInItem.dataset.swapIn, parseInt(swapInItem.dataset.swapInLevel) || 0, changes);
-                return;
-            }
+        // Resetta stato level-up
+        this.isLevelUpMode = false;
+        this.levelUpData = null;
+        this.levelUpPgId = null;
+        this.levelUpStep = 1;
+        this.render();
+    }
 
-            // Clear swap
-            if (e.target.dataset.luAction === 'clear-swap') {
-                this._handleModalClearSwap(modal, changes);
-                return;
-            }
-        });
-
-        document.body.appendChild(modal);
+    /**
+     * Dispatch alla renderizzazione dello step corretto.
+     */
+    _renderLevelUpStep(step) {
+        if (step === 2) {
+            return this._renderLevelUpStep2Spells();
+        }
+        return this._renderLevelUpStep1HP();
     }
 
     /**
@@ -3226,145 +3446,154 @@ export class PgController {
     }
 
     /**
-     * Renderizza il modal di level up
+     * Renderizza lo Step 1 del level-up wizard: HP, ASI, Features, info spell slot.
+     * @returns {string} HTML
      */
-    _renderLevelUpModal(pg, classData, currentLevel, newLevel, changes) {
-        const isNewASI = changes.asi.newPoints > 0;
-        const hasNewFeatures = changes.newFeatures.length > 0 || changes.newSubclassFeatures.length > 0;
-        const hasSpellChanges = changes.spellSlots || changes.cantrips || changes.spellsKnown ||
-            (changes.newSpellLevelsAccessible && changes.newSpellLevelsAccessible.length > 0) ||
-            (changes.wizardNewSpellCount > 0) ||
-            (changes.canSwapSpells);
+    _renderLevelUpStep1HP() {
+        const data = this.levelUpData;
+        if (!data) return '';
+        const pg = data.pg;
+        const isNewASI = data.asi.newPoints > 0;
+        const hasNewFeatures = data.newFeatures.length > 0 || data.newSubclassFeatures.length > 0;
+        const hasSpellChanges = data.spellSlots || data.cantrips || data.spellsKnown ||
+            (data.newSpellLevelsAccessible && data.newSpellLevelsAccessible.length > 0) ||
+            (data.wizardNewSpellCount > 0) ||
+            (data.canSwapSpells);
+
+        const hpChoice = data.hp.choice;
+        const hpGainText = hpChoice === 'roll'
+            ? ` (Tiro: ${data.hp.rolled}${data.hp.conMod >= 0 ? '+' + data.hp.conMod : data.hp.conMod})`
+            : '';
+        const newCurrent = (pg.hp?.current || 0) + data.hp.totalGain;
+        const newMax = (pg.hp?.max || 0) + data.hp.totalGain;
+
+        const allocatedASI = Object.values(data.modalASI).reduce((s, v) => s + v, 0);
+        const remainingASI = data.asi.newPoints - allocatedASI;
 
         return `
-            <div class="level-up-modal">
-                <div class="level-up-header">
-                    <h3>⬆️ Aumento di Livello</h3>
-                    <p class="level-up-subtitle">${pg.name} — ${pg.className || pg.class}</p>
-                    <div class="level-change-display">
-                        <span class="level-old">Lv.${currentLevel}</span>
-                        <span class="level-arrow">→</span>
-                        <span class="level-new">Lv.${newLevel}</span>
-                    </div>
-                </div>
-
-                <div class="level-up-body">
-                    ${changes.profBonus.changed ? `
-                        <div class="lu-section">
-                            <h4>🎯 Bonus di Competenza</h4>
-                            <div class="lu-stat-change">
-                                <span>+${changes.profBonus.old}</span>
-                                <span class="lu-arrow">→</span>
-                                <span class="lu-highlight">+${changes.profBonus.new}</span>
-                            </div>
-                        </div>
-                    ` : ''}
-
+            <div class="level-up-body">
+                ${data.profBonus.changed ? `
                     <div class="lu-section">
-                        <h4>❤️ Punti Ferita</h4>
-                        <p class="lu-desc">Guadagni PF per il nuovo livello (d${changes.hp.hitDie} + ${changes.hp.conMod >= 0 ? '+' : ''}${changes.hp.conMod} COS):</p>
-                        <div class="lu-hp-choice">
-                            <button class="btn btn-sm ${changes.hp.choice === 'average' ? 'btn-primary' : 'btn-secondary'}" 
-                                    data-hp-choice="average">
-                                📊 Media: +${changes.hp.totalGain} PF
-                            </button>
-                            <button class="btn btn-sm ${changes.hp.choice === 'roll' ? 'btn-primary' : 'btn-secondary'}" 
-                                    data-hp-choice="roll">
-                                🎲 Tira il dado (1d${changes.hp.hitDie}${changes.hp.conMod >= 0 ? '+' + changes.hp.conMod : changes.hp.conMod})
-                            </button>
-                        </div>
-                        <div class="lu-hp-result">
-                            HP attuali: <strong>${pg.hp?.current || 0}/${pg.hp?.max || 0}</strong>
-                            → Nuovi: <strong id="lu-new-hp">${(pg.hp?.current || 0) + changes.hp.totalGain}/${(pg.hp?.max || 0) + changes.hp.totalGain}</strong>
+                        <h4>🎯 Bonus di Competenza</h4>
+                        <div class="lu-stat-change">
+                            <span>+${data.profBonus.old}</span>
+                            <span class="lu-arrow">→</span>
+                            <span class="lu-highlight">+${data.profBonus.new}</span>
                         </div>
                     </div>
+                ` : ''}
 
-                    ${isNewASI ? `
-                        <div class="lu-section lu-asi-section">
-                            <h4>📈 Miglioramento Punteggi di Caratteristica</h4>
-                            <p class="lu-desc">Hai <strong>${changes.asi.newPoints} punti</strong> da distribuire (+2 a una o +1 a due caratteristiche).</p>
-                            <div class="lu-asi-points">
-                                <span>Punti rimanenti: <strong class="lu-asi-remaining">${changes.asi.newPoints}/${changes.asi.newPoints}</strong></span>
-                            </div>
-                            <div class="lu-asi-grid">
-                                ${['str', 'dex', 'con', 'int', 'wis', 'cha'].map(key => {
-                                    const prop = ABILITY_KEY_TO_PROPERTY[key];
-                                    const totalScore = (pg.abilities?.[prop] || 10) + 
-                                        ((pg._asiBonuses || {})[prop] || 0);
-                                    const mod = calculateModifier(totalScore);
-                                    const allocated = changes.modalASI[prop] || 0;
-                                    return `
-                                        <div class="lu-asi-item">
-                                            <span class="lu-asi-name">${key.toUpperCase()}</span>
-                                            <span class="lu-asi-score">${totalScore}${allocated > 0 ? `<span class="lu-asi-added">+${allocated}</span>` : ''}</span>
-                                            <span class="lu-asi-mod">${mod >= 0 ? '+' : ''}${mod}</span>
-                                            <div class="lu-asi-buttons">
-                                                <button class="btn btn-mini" data-asi-ability="${prop}" data-asi-action="decrease">−</button>
-                                                <button class="btn btn-mini" data-asi-ability="${prop}" data-asi-action="increase">+</button>
-                                            </div>
+                <div class="lu-section">
+                    <h4>❤️ Punti Ferita</h4>
+                    <p class="lu-desc">Guadagni PF per il nuovo livello (d${data.hp.hitDie} + ${data.hp.conMod >= 0 ? '+' : ''}${data.hp.conMod} COS):</p>
+                    <div class="lu-hp-choice">
+                        <button class="btn btn-sm ${hpChoice === 'average' ? 'btn-primary' : 'btn-secondary'}"
+                                data-hp-choice="average">
+                            📊 Media: +${data.hp.totalGain} PF
+                        </button>
+                        <button class="btn btn-sm ${hpChoice === 'roll' ? 'btn-primary' : 'btn-secondary'}"
+                                data-hp-choice="roll">
+                            🎲 Tira il dado (1d${data.hp.hitDie}${data.hp.conMod >= 0 ? '+' + data.hp.conMod : data.hp.conMod})
+                        </button>
+                    </div>
+                    <div class="lu-hp-result">
+                        HP attuali: <strong>${pg.hp?.current || 0}/${pg.hp?.max || 0}</strong>
+                        → Nuovi: <strong>${newCurrent}/${newMax}</strong>${hpGainText}
+                    </div>
+                </div>
+
+                ${isNewASI ? `
+                    <div class="lu-section lu-asi-section">
+                        <h4>📈 Miglioramento Punteggi di Caratteristica</h4>
+                        <p class="lu-desc">Hai <strong>${data.asi.newPoints} punti</strong> da distribuire (+2 a una o +1 a due caratteristiche).</p>
+                        <div class="lu-asi-points">
+                            <span>Punti rimanenti: <strong class="lu-asi-remaining">${remainingASI}/${data.asi.newPoints}</strong></span>
+                        </div>
+                        <div class="lu-asi-grid">
+                            ${['str', 'dex', 'con', 'int', 'wis', 'cha'].map(key => {
+                                const prop = ABILITY_KEY_TO_PROPERTY[key];
+                                const oldASI = (pg._asiBonuses || {})[prop] || 0;
+                                const newASI = data.modalASI[prop] || 0;
+                                const totalScore = (pg.abilities?.[prop] || 10) + oldASI + newASI;
+                                const mod = calculateModifier(totalScore);
+                                return `
+                                    <div class="lu-asi-item">
+                                        <span class="lu-asi-name">${key.toUpperCase()}</span>
+                                        <span class="lu-asi-score">${totalScore}${newASI > 0 ? `<span class="lu-asi-added">+${newASI}</span>` : ''}</span>
+                                        <span class="lu-asi-mod">${mod >= 0 ? '+' : ''}${mod}</span>
+                                        <div class="lu-asi-buttons">
+                                            <button class="btn btn-mini" data-asi-ability="${prop}" data-asi-action="decrease">−</button>
+                                            <button class="btn btn-mini" data-asi-ability="${prop}" data-asi-action="increase">+</button>
                                         </div>
-                                    `;
-                                }).join('')}
-                            </div>
+                                    </div>
+                                `;
+                            }).join('')}
                         </div>
-                    ` : ''}
+                    </div>
+                ` : ''}
 
-                    ${hasNewFeatures ? `
-                        <div class="lu-section">
-                            <h4>⚔️ Nuovi Privilegi di Classe</h4>
-                            <div class="lu-features">
-                                ${changes.newFeatures.map(f => `
-                                    <div class="lu-feature-tag class-feature">⚔️ ${f}</div>
-                                `).join('')}
-                                ${changes.newSubclassFeatures.map(f => `
-                                    <div class="lu-feature-tag subclass-feature">🌟 ${f.nome}</div>
-                                `).join('')}
-                            </div>
+                ${hasNewFeatures ? `
+                    <div class="lu-section">
+                        <h4>⚔️ Nuovi Privilegi di Classe</h4>
+                        <div class="lu-features">
+                            ${data.newFeatures.map(f => `
+                                <div class="lu-feature-tag class-feature">⚔️ ${f}</div>
+                            `).join('')}
+                            ${data.newSubclassFeatures.map(f => `
+                                <div class="lu-feature-tag subclass-feature">🌟 ${f.nome || f}</div>
+                            `).join('')}
                         </div>
-                    ` : ''}
+                    </div>
+                ` : ''}
 
-                    ${hasSpellChanges ? this._renderLevelUpSpellsSection(pg, classData, currentLevel, newLevel, changes) : ''}
-                </div>
-
-                <div class="level-up-footer">
-                    <button class="btn btn-secondary" data-lu-action="cancel">Annulla</button>
-                    <button class="btn btn-primary" data-lu-action="confirm">✅ Conferma Level Up</button>
-                </div>
+                ${hasSpellChanges ? `
+                    <div class="lu-section">
+                        <h4>✨ Incantesimi</h4>
+                        <p class="lu-hint">Vedi il prossimo step per gestire gli incantesimi.</p>
+                    </div>
+                ` : ''}
             </div>
         `;
     }
 
     /**
-     * Renderizza la sezione incantesimi nel modal di level up
+     * Renderizza lo Step 2 del level-up wizard: selezione incantesimi.
+     * @returns {string} HTML
      */
-    _renderLevelUpSpellsSection(pg, classData, currentLevel, newLevel, changes) {
+    _renderLevelUpStep2Spells() {
+        const data = this.levelUpData;
+        if (!data) return '';
+
         const { classNameIt, classSpellsByLevel, casterType, isWizard, canSwapSpells,
                 newSpellLevelsAccessible, currentKnownSpells, cantrips, spellsKnown,
-                wizardNewSpellCount } = changes;
-        
+                wizardNewSpellCount, classData, newLevel } = data;
+
+        if (!classSpellsByLevel) {
+            return '<p>Nessun dato incantesimi disponibile.</p>';
+        }
+
         const levelLabels = {
             0: 'Trucchetti', 1: '1° Livello', 2: '2° Livello', 3: '3° Livello',
             4: '4° Livello', 5: '5° Livello', 6: '6° Livello',
             7: '7° Livello', 8: '8° Livello', 9: '9° Livello'
         };
-        
-        let html = '<div class="lu-section lu-spells-section">';
-        html += '<h4>✨ Incantesimi</h4>';
-        
+
+        let html = '';
+
         // --- Nuovi slot ---
-        if (changes.spellSlots) {
-            html += `<p class="lu-desc">Nuovi slot incantesimo:</p>`;
+        if (data.spellSlots) {
+            html += `<div class="lu-section"><h4>✨ Nuovi Slot Incantesimo</h4>`;
             html += '<div class="lu-spell-slots">';
-            for (const [lvl, count] of Object.entries(changes.spellSlots)) {
+            for (const [lvl, count] of Object.entries(data.spellSlots)) {
                 html += `<span class="lu-slot-tag">+${count} slot ${levelLabels[lvl]}</span>`;
             }
-            html += '</div>';
+            html += '</div></div>';
         }
-        
+
         // --- Nuovi livelli di incantesimo accessibili ---
         if (newSpellLevelsAccessible.length > 0) {
-            html += '<div class="lu-new-spell-levels">';
-            html += '<p class="lu-desc">🔓 Nuovi livelli sbloccati:</p>';
+            html += '<div class="lu-section lu-new-spell-levels">';
+            html += '<h4>🔓 Nuovi Livelli Sbloccati</h4>';
             for (const lvl of newSpellLevelsAccessible) {
                 const spells = classSpellsByLevel[lvl] || [];
                 html += `<div class="lu-spell-level-block">`;
@@ -3378,59 +3607,60 @@ export class PgController {
             }
             html += '</div>';
         }
-        
+
         // --- Selezione nuovi trucchetti ---
         if (cantrips && cantrips > 0 && classSpellsByLevel[0]) {
             const allCantrips = classSpellsByLevel[0];
+            const selectedCantripNames = data.selectedNewCantrips.map(s => s.name);
             const availableCantrips = allCantrips.filter(c => !currentKnownSpells.includes(c));
-            
-            html += '<div class="lu-cantrip-selection">';
-            html += `<h5>✨ Scegli ${cantrips} nuovo${cantrips > 1 ? 'i' : ''} truccetto${cantrips > 1 ? 'i' : ''}</h5>`;
-            html += `<p class="lu-hint">Trucchetti attuali: ${currentKnownSpells.filter(s => (classSpellsByLevel[0] || []).includes(s)).length}/${changes.maxCantripsNew}</p>`;
-            html += `<div class="lu-spell-counter">Selezionati: <strong class="lu-cantrip-count">0</strong> / ${cantrips}</div>`;
+
+            html += '<div class="lu-section lu-cantrip-selection">';
+            html += `<h4>✨ Scegli ${cantrips} nuovo${cantrips > 1 ? 'i' : ''} truccetto${cantrips > 1 ? 'i' : ''}</h4>`;
+            html += `<p class="lu-hint">Trucchetti attuali: ${currentKnownSpells.filter(s => (classSpellsByLevel[0] || []).includes(s)).length}/${data.maxCantripsNew}</p>`;
+            html += `<div class="lu-spell-counter">Selezionati: <strong class="lu-cantrip-count">${data.selectedNewCantrips.length}</strong> / ${cantrips}</div>`;
             html += '<div class="lu-spell-select-grid lu-cantrip-grid">';
             for (const cantrip of availableCantrips) {
-                html += `<label class="lu-spell-cb" data-lu-spell="${cantrip}" data-lu-level="0">`;
-                html += `<input type="checkbox" data-lu-spell-input="${cantrip}" data-lu-level="0">`;
+                const isSelected = selectedCantripNames.includes(cantrip);
+                html += `<label class="lu-spell-cb ${isSelected ? 'selected' : ''}" data-lu-spell="${cantrip}" data-lu-level="0">`;
+                html += `<input type="checkbox" data-lu-spell-input="${cantrip}" data-lu-level="0" ${isSelected ? 'checked' : ''}>`;
                 html += `<span class="lu-spell-cb-name">${cantrip}</span>`;
                 html += '</label>';
             }
             html += '</div></div>';
         }
-        
-        // --- Selezione nuovi incantesimi (Known casters: Bardo, Stregone) ---
+
+        // --- Selezione nuovi incantesimi (Known casters: Bardo, Stregone, Warlock) ---
         if (spellsKnown && spellsKnown > 0 && (casterType === 'known' || casterType === 'warlock')) {
             const maxLevel = this._getMaxSpellLevelForClass(classNameIt, newLevel);
-            
-            // Per il Warlock, calcola il livello effettivo degli slot (es. lv.5 → slot lv.3)
+
             let warlockEffectiveLevel = maxLevel;
             if (casterType === 'warlock') {
                 const newSlots = calculateSpellSlots(classData.index, newLevel);
-                // Trova il livello più alto degli slot disponibili
                 for (let l = 9; l >= 1; l--) {
                     if (newSlots[l]?.max > 0) { warlockEffectiveLevel = l; break; }
                 }
             }
-            
-            html += '<div class="lu-new-spells-selection">';
-            html += `<h5>📖 Scegli ${spellsKnown} nuovo${spellsKnown > 1 ? 'i' : ''} incantesimo${spellsKnown > 1 ? 'i' : ''}</h5>`;
-            html += `<p class="lu-hint">Incantesimi conosciuti: ${currentKnownSpells.filter(s => s && !this._isCantrip(s, classSpellsByLevel)).length}/${changes.maxSpellsKnownNew}</p>`;
-            html += `<div class="lu-spell-counter">Selezionati: <strong class="lu-new-spell-count">0</strong> / ${spellsKnown}</div>`;
-            
-            // Mostra tutti gli incantesimi di livello 1+ disponibili fino al livello massimo
+
+            const selectedSpellNames = data.selectedNewSpells.map(s => s.name);
+
+            html += '<div class="lu-section lu-new-spells-selection">';
+            html += `<h4>📖 Scegli ${spellsKnown} nuovo${spellsKnown > 1 ? 'i' : ''} incantesimo${spellsKnown > 1 ? 'i' : ''}</h4>`;
+            html += `<p class="lu-hint">Incantesimi conosciuti: ${currentKnownSpells.filter(s => s && !this._isCantrip(s, classSpellsByLevel)).length}/${data.maxSpellsKnownNew}</p>`;
+            html += `<div class="lu-spell-counter">Selezionati: <strong class="lu-new-spell-count">${data.selectedNewSpells.length}</strong> / ${spellsKnown}</div>`;
+
             for (let lvl = 1; lvl <= (casterType === 'warlock' ? warlockEffectiveLevel : maxLevel); lvl++) {
                 const spells = classSpellsByLevel[lvl] || [];
                 if (spells.length === 0) continue;
-                
                 const available = spells.filter(s => !currentKnownSpells.includes(s));
                 if (available.length === 0) continue;
-                
+
                 html += '<div class="lu-spell-level-block">';
                 html += `<h5>${levelLabels[lvl]} <span class="lu-spell-count">(${available.length} disponibili)</span></h5>`;
                 html += '<div class="lu-spell-select-grid">';
                 for (const spell of available) {
-                    html += `<label class="lu-spell-cb" data-lu-spell="${spell}" data-lu-level="${lvl}">`;
-                    html += `<input type="checkbox" data-lu-spell-input="${spell}" data-lu-level="${lvl}">`;
+                    const isSelected = selectedSpellNames.includes(spell);
+                    html += `<label class="lu-spell-cb ${isSelected ? 'selected' : ''}" data-lu-spell="${spell}" data-lu-level="${lvl}">`;
+                    html += `<input type="checkbox" data-lu-spell-input="${spell}" data-lu-level="${lvl}" ${isSelected ? 'checked' : ''}>`;
                     html += `<span class="lu-spell-cb-name">${spell}</span>`;
                     html += '</label>';
                 }
@@ -3438,29 +3668,30 @@ export class PgController {
             }
             html += '</div>';
         }
-        
+
         // --- Selezione incantesimi grimorio (Mago) ---
         if (isWizard && wizardNewSpellCount > 0) {
             const maxLevel = this._getMaxSpellLevelForClass('Mago', newLevel);
-            
-            html += '<div class="lu-wizard-spellbook">';
-            html += `<h5>📖 Aggiungi ${wizardNewSpellCount} incantesimo${wizardNewSpellCount > 1 ? 'i' : ''} al grimorio</h5>`;
-            html += `<p class="lu-hint">Grimorio: ${currentKnownSpells.filter(s => s && !this._isCantrip(s, classSpellsByLevel)).length}/${changes.maxSpellsKnownNew}</p>`;
-            html += `<div class="lu-spell-counter">Selezionati: <strong class="lu-wizard-count">0</strong> / ${wizardNewSpellCount}</div>`;
-            
+            const selectedSpellNames = data.selectedNewSpells.map(s => s.name);
+
+            html += '<div class="lu-section lu-wizard-spellbook">';
+            html += `<h4>📖 Aggiungi ${wizardNewSpellCount} incantesimo${wizardNewSpellCount > 1 ? 'i' : ''} al grimorio</h4>`;
+            html += `<p class="lu-hint">Grimorio: ${currentKnownSpells.filter(s => s && !this._isCantrip(s, classSpellsByLevel)).length}/${data.maxSpellsKnownNew}</p>`;
+            html += `<div class="lu-spell-counter">Selezionati: <strong class="lu-wizard-count">${data.selectedNewSpells.length}</strong> / ${wizardNewSpellCount}</div>`;
+
             for (let lvl = 1; lvl <= maxLevel; lvl++) {
                 const spells = classSpellsByLevel[lvl] || [];
                 if (spells.length === 0) continue;
-                
                 const available = spells.filter(s => !currentKnownSpells.includes(s));
                 if (available.length === 0) continue;
-                
+
                 html += '<div class="lu-spell-level-block">';
                 html += `<h5>${levelLabels[lvl]} <span class="lu-spell-count">(${available.length} disponibili)</span></h5>`;
                 html += '<div class="lu-spell-select-grid">';
                 for (const spell of available) {
-                    html += `<label class="lu-spell-cb" data-lu-spell="${spell}" data-lu-level="${lvl}">`;
-                    html += `<input type="checkbox" data-lu-spell-input="${spell}" data-lu-level="${lvl}">`;
+                    const isSelected = selectedSpellNames.includes(spell);
+                    html += `<label class="lu-spell-cb ${isSelected ? 'selected' : ''}" data-lu-spell="${spell}" data-lu-level="${lvl}">`;
+                    html += `<input type="checkbox" data-lu-spell-input="${spell}" data-lu-level="${lvl}" ${isSelected ? 'checked' : ''}>`;
                     html += `<span class="lu-spell-cb-name">${spell}</span>`;
                     html += '</label>';
                 }
@@ -3468,60 +3699,59 @@ export class PgController {
             }
             html += '</div>';
         }
-        
+
         // --- Scambio incantesimi (Bardo, Stregone) ---
         if (canSwapSpells) {
             const maxLevel = this._getMaxSpellLevelForClass(classNameIt, newLevel);
             const swapLabel = classNameIt === 'Bardo' ? 'Bardo' : 'Stregone';
-            
-            html += '<div class="lu-swap-section">';
-            html += `<h5>🔄 Scambio Incantesimo (${swapLabel})</h5>`;
+
+            const outLevel = data.swappedOut ? this._findSpellLevel(data.swappedOut, classSpellsByLevel) : null;
+
+            html += '<div class="lu-section lu-swap-section">';
+            html += `<h4>🔄 Scambio Incantesimo (${swapLabel})</h4>`;
             html += '<p class="lu-hint">Puoi sostituire un incantesimo conosciuto con un altro della tua lista di classe.</p>';
-            
-            // Incantesimi attuali (da cui rimuovere)
+
             html += '<div class="lu-swap-column">';
             html += '<h6>Rimuovi:</h6>';
-            html += '<div class="lu-swap-list" id="lu-swap-out-list">';
+            html += '<div class="lu-swap-list">';
             const knownNonCantrips = currentKnownSpells.filter(s => s && !this._isCantrip(s, classSpellsByLevel));
             if (knownNonCantrips.length > 0) {
                 for (const spell of knownNonCantrips) {
-                    // Trova il livello dello spell
                     const spellLvl = this._findSpellLevel(spell, classSpellsByLevel);
-                    html += `<span class="lu-swap-item lu-swap-out-item" data-swap-out="${spell}" data-swap-out-level="${spellLvl}">${spell} ${spellLvl > 0 ? `(${levelLabels[spellLvl] || 'lv.'+spellLvl})` : ''}</span>`;
+                    const isSel = data.swappedOut === spell;
+                    html += `<span class="lu-swap-item lu-swap-out-item ${isSel ? 'selected' : ''}" data-swap-out="${spell}" data-swap-out-level="${spellLvl}">${spell} ${spellLvl > 0 ? `(${levelLabels[spellLvl] || 'lv.'+spellLvl})` : ''}</span>`;
                 }
             } else {
                 html += '<p class="lu-hint">Nessun incantesimo da cui scegliere.</p>';
             }
             html += '</div></div>';
-            
-            // Incantesimi disponibili (da cui aggiungere)
+
             html += '<div class="lu-swap-column">';
             html += '<h6>Aggiungi:</h6>';
-            html += '<div class="lu-swap-list" id="lu-swap-in-list">';
+            html += '<div class="lu-swap-list">';
             for (let lvl = 1; lvl <= maxLevel; lvl++) {
                 const spells = classSpellsByLevel[lvl] || [];
                 for (const spell of spells) {
                     const isKnown = currentKnownSpells.includes(spell);
-                    html += `<span class="lu-swap-item lu-swap-in-item ${isKnown ? 'already-known' : ''}" data-swap-in="${spell}" data-swap-in-level="${lvl}">${spell} (${levelLabels[lvl]})</span>`;
+                    const isSel = data.swappedIn === spell;
+                    const isDisabled = outLevel !== null && lvl > outLevel;
+                    html += `<span class="lu-swap-item lu-swap-in-item ${isKnown ? 'already-known' : ''} ${isSel ? 'selected' : ''} ${isDisabled ? 'disabled' : ''}" data-swap-in="${spell}" data-swap-in-level="${lvl}">${spell} (${levelLabels[lvl]})</span>`;
                 }
             }
             html += '</div></div>';
-            
+
             html += '<div class="lu-swap-actions">';
             html += '<button class="btn btn-sm btn-secondary" data-lu-action="clear-swap">🗑️ Resetta scambio</button>';
             html += '</div>';
             html += '</div>';
         }
-        
+
         // --- Nota per prepared casters ---
-        if (casterType === 'prepared' && !cantrips && !isWizard) {
-            if (newSpellLevelsAccessible.length === 0) {
-                html += '<p class="lu-desc">Nessun cambiamento agli incantesimi.</p>';
-            }
-            html += '<p class="lu-hint">Conosci tutti gli incantesimi della tua lista. La gestione della preparazione avviene in-game.</p>';
+        if (casterType === 'prepared' && !cantrips && !isWizard && !newSpellLevelsAccessible.length) {
+            html += '<div class="lu-section"><p class="lu-desc">Nessun cambiamento agli incantesimi.</p>';
+            html += '<p class="lu-hint">Conosci tutti gli incantesimi della tua lista. La gestione della preparazione avviene in-game.</p></div>';
         }
-        
-        html += '</div>'; // chiude lu-section
+
         return html;
     }
     
@@ -3543,362 +3773,153 @@ export class PgController {
     }
 
     /**
-     * Gestisce toggle selezione incantesimo/trucco nel modal di level up
+     * Gestisce il toggle selezione incantesimo/trucco nel level-up wizard.
      */
-    _handleModalSpellToggle(modal, spellName, spellLevel, changes) {
+    _handleWizardSpellToggle(spellLabel) {
+        const data = this.levelUpData;
+        if (!data) return;
+
+        const spellName = spellLabel.dataset.luSpell;
+        const spellLevel = parseInt(spellLabel.dataset.luLevel) || 0;
         const isCantrip = spellLevel === 0;
-        const checkbox = modal.querySelector(`input[data-lu-spell-input="${spellName}"]`);
-        if (!checkbox) return;
-        
+
         if (isCantrip) {
-            // Trucchetti
-            const max = changes.cantrips || 0;
-            if (checkbox.checked) {
-                if (changes.selectedNewCantrips.length >= max) {
+            const max = data.cantrips || 0;
+            const idx = data.selectedNewCantrips.findIndex(s => s.name === spellName);
+            if (idx >= 0) {
+                data.selectedNewCantrips.splice(idx, 1);
+            } else {
+                if (data.selectedNewCantrips.length >= max) {
                     showToast(`Hai già selezionato ${max} truccett${max > 1 ? 'i' : 'o'}. Deseleziona uno prima.`, 'warning');
-                    checkbox.checked = false;
                     return;
                 }
-                if (!changes.selectedNewCantrips.includes(spellName)) {
-                    changes.selectedNewCantrips.push({ name: spellName, level: 0 });
-                }
-            } else {
-                changes.selectedNewCantrips = changes.selectedNewCantrips.filter(s => s.name !== spellName);
+                data.selectedNewCantrips.push({ name: spellName, level: 0 });
             }
-            // Aggiorna label
-            const label = checkbox.closest('[data-lu-spell]');
-            if (label) label.classList.toggle('selected', checkbox.checked);
-            // Aggiorna contatore
-            const counter = modal.querySelector('.lu-cantrip-count');
-            if (counter) counter.textContent = changes.selectedNewCantrips.length;
-        } else if (changes.isWizard) {
-            // Mago: grimorio
-            const max = changes.wizardNewSpellCount;
-            if (checkbox.checked) {
-                if (changes.selectedNewSpells.length >= max) {
-                    showToast(`Puoi aggiungere al massimo ${max} incantesim${max > 1 ? 'i' : 'o'} al grimorio. Deseleziona uno prima.`, 'warning');
-                    checkbox.checked = false;
-                    return;
-                }
-                if (!changes.selectedNewSpells.find(s => s.name === spellName)) {
-                    changes.selectedNewSpells.push({ name: spellName, level: spellLevel });
-                }
-            } else {
-                changes.selectedNewSpells = changes.selectedNewSpells.filter(s => s.name !== spellName);
-            }
-            const label = checkbox.closest('[data-lu-spell]');
-            if (label) label.classList.toggle('selected', checkbox.checked);
-            const counter = modal.querySelector('.lu-wizard-count');
-            if (counter) counter.textContent = changes.selectedNewSpells.length;
         } else {
-            // Known casters (Bardo, Stregone) e Warlock
-            const max = changes.spellsKnown || 0;
-            if (checkbox.checked) {
-                if (changes.selectedNewSpells.length >= max) {
+            const max = data.isWizard ? data.wizardNewSpellCount : (data.spellsKnown || 0);
+            const idx = data.selectedNewSpells.findIndex(s => s.name === spellName);
+            if (idx >= 0) {
+                data.selectedNewSpells.splice(idx, 1);
+            } else {
+                if (data.selectedNewSpells.length >= max) {
                     showToast(`Hai già selezionato ${max} incantesim${max > 1 ? 'i' : 'o'}. Deseleziona uno prima.`, 'warning');
-                    checkbox.checked = false;
                     return;
                 }
-                if (!changes.selectedNewSpells.find(s => s.name === spellName)) {
-                    changes.selectedNewSpells.push({ name: spellName, level: spellLevel });
-                }
-            } else {
-                changes.selectedNewSpells = changes.selectedNewSpells.filter(s => s.name !== spellName);
+                data.selectedNewSpells.push({ name: spellName, level: spellLevel });
             }
-            const label = checkbox.closest('[data-lu-spell]');
-            if (label) label.classList.toggle('selected', checkbox.checked);
-            const counter = modal.querySelector('.lu-new-spell-count');
-            if (counter) counter.textContent = changes.selectedNewSpells.length;
         }
+
+        this.render();
     }
 
     /**
-     * Gestisce la selezione dell'incantesimo da rimuovere nello swap
+     * Gestisce la selezione dell'incantesimo da rimuovere nello swap (wizard).
      */
-    _handleModalSwapOut(modal, spellName, spellLevel, changes) {
-        // Resetta la selezione out precedente
-        modal.querySelectorAll('.lu-swap-out-item.selected').forEach(el => el.classList.remove('selected'));
-        
+    _handleWizardSwapOut(swapOutItem) {
+        const data = this.levelUpData;
+        if (!data) return;
+
+        const spellName = swapOutItem.dataset.swapOut;
+
         // Se era già selezionato, deseleziona
-        if (changes.swappedOut === spellName) {
-            changes.swappedOut = null;
-            changes.swappedIn = null;
-            // Resetta anche la selezione in
-            modal.querySelectorAll('.lu-swap-in-item.selected').forEach(el => el.classList.remove('selected'));
-            return;
+        if (data.swappedOut === spellName) {
+            data.swappedOut = null;
+            data.swappedIn = null;
+        } else {
+            data.swappedOut = spellName;
+            data.swappedIn = null;
         }
-        
-        changes.swappedOut = spellName;
-        changes.swappedIn = null; // Resetta la selezione in quando si cambia out
-        const item = modal.querySelector(`[data-swap-out="${spellName}"]`);
-        if (item) item.classList.add('selected');
-        
-        // Resetta selezione in
-        modal.querySelectorAll('.lu-swap-in-item.selected').forEach(el => el.classList.remove('selected'));
-        
-        // Evidenzia gli incantesimi selezionabili (stesso livello o inferiore)
-        modal.querySelectorAll('.lu-swap-in-item').forEach(el => {
-            const inLevel = parseInt(el.dataset.swapInLevel) || 0;
-            if (inLevel <= spellLevel) {
-                el.classList.remove('disabled');
-            } else {
-                el.classList.add('disabled');
-            }
-        });
+
+        this.render();
     }
 
     /**
-     * Gestisce la selezione dell'incantesimo da aggiungere nello swap
+     * Gestisce la selezione dell'incantesimo da aggiungere nello swap (wizard).
      */
-    _handleModalSwapIn(modal, spellName, spellLevel, changes) {
-        if (!changes.swappedOut) {
+    _handleWizardSwapIn(swapInItem) {
+        const data = this.levelUpData;
+        if (!data) return;
+
+        const spellName = swapInItem.dataset.swapIn;
+        const spellLevel = parseInt(swapInItem.dataset.swapInLevel) || 0;
+
+        if (!data.swappedOut) {
             showToast('Prima seleziona l\'incantesimo da rimuovere.', 'warning');
             return;
         }
-        
-        // Verifica che il livello sia <= del livello dell'incantesimo rimosso
-        const outLevel = changes.classSpellsByLevel ? 
-            this._findSpellLevel(changes.swappedOut, changes.classSpellsByLevel) : 0;
+
+        const outLevel = this._findSpellLevel(data.swappedOut, data.classSpellsByLevel || {});
         if (spellLevel > outLevel) {
             showToast(`Puoi scegliere solo incantesimi di livello ${outLevel} o inferiore.`, 'warning');
             return;
         }
-        
-        // Resetta la selezione in precedente
-        modal.querySelectorAll('.lu-swap-in-item.selected').forEach(el => el.classList.remove('selected'));
-        
+
         // Se era già selezionato, deseleziona
-        if (changes.swappedIn === spellName) {
-            changes.swappedIn = null;
-            return;
-        }
-        
-        changes.swappedIn = spellName;
-        const item = modal.querySelector(`[data-swap-in="${spellName}"]`);
-        if (item) item.classList.add('selected');
-    }
-
-    /**
-     * Resetta lo scambio incantesimi
-     */
-    _handleModalClearSwap(modal, changes) {
-        changes.swappedOut = null;
-        changes.swappedIn = null;
-        modal.querySelectorAll('.lu-swap-out-item.selected').forEach(el => el.classList.remove('selected'));
-        modal.querySelectorAll('.lu-swap-in-item.selected').forEach(el => el.classList.remove('selected'));
-        modal.querySelectorAll('.lu-swap-in-item.disabled').forEach(el => el.classList.remove('disabled'));
-    }
-    
-    /**
-     * Gestisce la scelta HP (media o tiro)
-     */
-    _handleHpChoice(modal, choice, changes) {
-        if (choice === 'roll') {
-            const roll = Math.floor(Math.random() * changes.hp.hitDie) + 1;
-            changes.hp.totalGain = roll + changes.hp.conMod;
-            changes.hp.choice = 'roll';
-            changes.hp.rolled = roll;
+        if (data.swappedIn === spellName) {
+            data.swappedIn = null;
         } else {
-            changes.hp.totalGain = changes.hp.avgGain + changes.hp.conMod;
-            changes.hp.choice = 'average';
-            delete changes.hp.rolled;
+            data.swappedIn = spellName;
         }
 
-        // Aggiorna display
-        const hpResult = modal.querySelector('.lu-hp-result');
-        if (hpResult) {
-            // Retrieve pg from DOM context - we need pg for current HP
-            const pgId = this.selectedPgId;
-            const pg = this.dataManager.getById(pgId);
-            if (pg) {
-                const newCurrent = (pg.hp?.current || 0) + changes.hp.totalGain;
-                const newMax = (pg.hp?.max || 0) + changes.hp.totalGain;
-                const choiceText = choice === 'roll' 
-                    ? ` (Tiro: ${changes.hp.rolled}${changes.hp.conMod >= 0 ? '+' + changes.hp.conMod : changes.hp.conMod})` 
-                    : '';
-                hpResult.innerHTML = `HP attuali: <strong>${pg.hp?.current || 0}/${pg.hp?.max || 0}</strong> → Nuovi: <strong>${newCurrent}/${newMax}</strong>${choiceText}`;
-            }
-        }
-
-        // Aggiorna bottoni
-        modal.querySelectorAll('.lu-hp-choice .btn').forEach(btn => {
-            const isActive = btn.dataset.hpChoice === choice;
-            btn.className = `btn btn-sm ${isActive ? 'btn-primary' : 'btn-secondary'}`;
-        });
+        this.render();
     }
 
     /**
-     * Gestisce ASI nel modal
+     * Resetta lo scambio incantesimi (wizard).
      */
-    _handleModalASI(target, modal, changes) {
-        const prop = target.dataset.asiAbility;
-        const action = target.dataset.asiAction;
-        
-        const allocated = Object.values(changes.modalASI).reduce((s, v) => s + v, 0);
-        const maxPoints = changes.asi.newPoints;
+    _handleWizardClearSwap() {
+        const data = this.levelUpData;
+        if (!data) return;
+        data.swappedOut = null;
+        data.swappedIn = null;
+        this.render();
+    }
+
+    /**
+     * Gestisce la scelta HP (media o tiro) nel wizard.
+     */
+    _handleWizardHpChoice(button) {
+        const data = this.levelUpData;
+        if (!data) return;
+
+        const choice = button.dataset.hpChoice;
+        if (choice === 'roll') {
+            const roll = Math.floor(Math.random() * data.hp.hitDie) + 1;
+            data.hp.totalGain = roll + data.hp.conMod;
+            data.hp.choice = 'roll';
+            data.hp.rolled = roll;
+        } else {
+            data.hp.totalGain = data.hp.avgGain + data.hp.conMod;
+            data.hp.choice = 'average';
+            delete data.hp.rolled;
+        }
+
+        this.render();
+    }
+
+    /**
+     * Gestisce ASI nel wizard.
+     */
+    _handleWizardASI(button) {
+        const data = this.levelUpData;
+        if (!data) return;
+
+        const prop = button.dataset.asiAbility;
+        const action = button.dataset.asiAction;
+        const allocated = Object.values(data.modalASI).reduce((s, v) => s + v, 0);
+        const maxPoints = data.asi.newPoints;
 
         if (action === 'increase') {
             if (allocated >= maxPoints) {
                 showToast('Hai distribuito tutti i punti ASI disponibili.', 'warning');
                 return;
             }
-            changes.modalASI[prop] = (changes.modalASI[prop] || 0) + 1;
+            data.modalASI[prop] = (data.modalASI[prop] || 0) + 1;
         } else {
-            if ((changes.modalASI[prop] || 0) <= 0) return;
-            changes.modalASI[prop]--;
+            if ((data.modalASI[prop] || 0) <= 0) return;
+            data.modalASI[prop]--;
         }
 
-        // Aggiorna display
-        const remaining = maxPoints - Object.values(changes.modalASI).reduce((s, v) => s + v, 0);
-        const remainingEl = modal.querySelector('.lu-asi-remaining');
-        if (remainingEl) {
-            remainingEl.textContent = `${remaining}/${maxPoints}`;
-        }
-
-        // Aggiorna righe ASI
-        const pgId = this.selectedPgId;
-        const pg = this.dataManager.getById(pgId);
-        if (pg) {
-            modal.querySelectorAll('.lu-asi-item').forEach(item => {
-                const btns = item.querySelectorAll('[data-asi-ability]');
-                if (btns.length > 0) {
-                    const abilityProp = btns[0].dataset.asiAbility;
-                    const base = pg.abilities?.[abilityProp] || 10;
-                    const oldASI = (pg._asiBonuses || {})[abilityProp] || 0;
-                    const newASI = changes.modalASI[abilityProp] || 0;
-                    const total = base + oldASI + newASI;
-                    const mod = calculateModifier(total);
-                    
-                    const scoreEl = item.querySelector('.lu-asi-score');
-                    const modEl = item.querySelector('.lu-asi-mod');
-                    if (scoreEl) {
-                        scoreEl.innerHTML = `${total}${newASI > 0 ? `<span class="lu-asi-added">+${newASI}</span>` : ''}`;
-                    }
-                    if (modEl) {
-                        modEl.textContent = `${mod >= 0 ? '+' : ''}${mod}`;
-                    }
-                }
-            });
-        }
-    }
-
-    /**
-     * Conferma il level up
-     */
-    _handleLevelUpConfirm(pgId, modal, currentLevel, newLevel, changes) {
-        const pg = this.dataManager.getById(pgId);
-        if (!pg) return;
-
-        const classData = this.databases.classes?.find(c => c.index === pg.class);
-        if (!classData) return;
-
-        // Validazione selezioni spell
-        if (changes.cantrips && changes.selectedNewCantrips.length !== changes.cantrips) {
-            showToast(`Devi selezionare esattamente ${changes.cantrips} truccett${changes.cantrips > 1 ? 'i' : 'o'} nuovo${changes.cantrips > 1 ? 'i' : ''}.`, 'warning');
-            return;
-        }
-        const expectedNewSpells = changes.isWizard ? changes.wizardNewSpellCount : (changes.spellsKnown || 0);
-        if (expectedNewSpells > 0 && changes.selectedNewSpells.length !== expectedNewSpells) {
-            showToast(`Devi selezionare esattamente ${expectedNewSpells} incantesim${expectedNewSpells > 1 ? 'i' : 'o'} nuov${expectedNewSpells > 1 ? 'i' : 'o'}.`, 'warning');
-            return;
-        }
-
-        // 1. Aggiorna livello
-        const updates = {
-            level: newLevel,
-            proficiencyBonus: calculateProficiencyBonus(newLevel)
-        };
-
-        // 2. Aggiorna HP (incrementale)
-        const hpGain = Math.max(1, changes.hp.totalGain); // Minimo 1 PF per livello
-        updates.hp = {
-            current: (pg.hp?.current || 0) + hpGain,
-            max: (pg.hp?.max || 0) + hpGain,
-            temp: pg.hp?.temp || 0
-        };
-
-        // 3. Aggiorna dadi vita
-        updates.hitDice = {
-            total: newLevel,
-            current: newLevel,
-            size: `d${classData.hit_die}`
-        };
-
-        // 4. Aggiorna ASI (somma i nuovi a quelli esistenti)
-        const oldASI = { ...(pg._asiBonuses || { strength: 0, dexterity: 0, constitution: 0, intelligence: 0, wisdom: 0, charisma: 0 }) };
-        const newASI = { ...oldASI };
-        for (const [prop, val] of Object.entries(changes.modalASI)) {
-            newASI[prop] = (newASI[prop] || 0) + val;
-        }
-        updates._asiBonuses = newASI;
-
-        // Applica i nuovi ASI alle abilità
-        const newAbilities = { ...(pg.abilities || {}) };
-        for (const [prop, val] of Object.entries(changes.modalASI)) {
-            if (val) {
-                newAbilities[prop] = Math.min(20, (newAbilities[prop] || 10) + val);
-            }
-        }
-        updates.abilities = newAbilities;
-
-        // 5. Aggiorna spell slots e spellcasting (se incantatore)
-        if (ALL_SPELLCASTERS.includes(classData.index)) {
-            const spellAbility = this.getSpellcastingAbility(classData.index);
-            const abilityScore = newAbilities[spellAbility] || 10;
-            const spellSlots = calculateSpellSlots(classData.index, newLevel);
-
-            // Aggiorna lista incantesimi conosciuti
-            let updatedSpellsKnown = [...(pg.spellcasting?.spellsKnown || [])];
-            
-            // Normalizza a oggetti { name, level }
-            updatedSpellsKnown = updatedSpellsKnown.map(s => {
-                if (typeof s === 'string') {
-                    const lvl = this._findSpellLevel(s, changes.classSpellsByLevel || {});
-                    return { name: s, level: lvl };
-                }
-                return s;
-            });
-            
-            // Aggiungi nuovi trucchetti
-            for (const spell of changes.selectedNewCantrips) {
-                updatedSpellsKnown.push({ name: spell.name, level: 0 });
-            }
-            
-            // Aggiungi nuovi incantesimi (known casters, warlock, mago)
-            for (const spell of changes.selectedNewSpells) {
-                updatedSpellsKnown.push({ name: spell.name, level: spell.level });
-            }
-            
-            // Gestisci scambio (Bardo, Stregone)
-            if (changes.swappedOut && changes.swappedIn) {
-                // Rimuovi il vecchio
-                updatedSpellsKnown = updatedSpellsKnown.filter(s => 
-                    (typeof s === 'string' ? s : s.name) !== changes.swappedOut
-                );
-                // Aggiungi il nuovo
-                const newSpellLevel = this._findSpellLevel(changes.swappedIn, changes.classSpellsByLevel || {});
-                updatedSpellsKnown.push({ name: changes.swappedIn, level: newSpellLevel });
-            }
-
-            updates.spellcasting = {
-                ...(pg.spellcasting || {}),
-                ability: spellAbility,
-                spellSaveDC: 8 + updates.proficiencyBonus + calculateModifier(abilityScore),
-                spellAttackBonus: updates.proficiencyBonus + calculateModifier(abilityScore),
-                slots: spellSlots,
-                spellsKnown: updatedSpellsKnown
-            };
-        }
-
-        // 6. Ricalcola iniziativa
-        updates.initiative = calculateModifier(newAbilities.dexterity);
-
-        // Salva
-        this.dataManager.update(pgId, updates);
-        this.selectedPgId = pgId;
-
-        showToast(`${pg.name} è salito al livello ${newLevel}!`, 'success');
-        modal.remove();
         this.render();
     }
     
