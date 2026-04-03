@@ -945,6 +945,14 @@ export class PgController {
      * Step successivo o salva.
      */
     nextStep() {
+        // Passa i dati di contesto per la validazione prima di validare
+        if (this.currentStep === 3) {
+            this.wizardData._classNumSkillChoices = this.databases.selectedClass?.proficiency_choices?.[0]?.choose || 2;
+        }
+        if (this.currentStep === 4) {
+            this.wizardData._maxCantrips = this.getMaxCantrips();
+        }
+        
         const validation = this.dataManager.validate(this.wizardData, this.currentStep);
         
         if (!validation.isValid) {
@@ -1151,6 +1159,29 @@ export class PgController {
         // o se è il primo caricamento
         if (inputEl && !inputEl.dataset.manuallyChanged) {
             inputEl.value = this.wizardData.hp?.max || calculatedHp;
+        }
+    }
+    
+    /**
+     * Applica i bonus razziali alle capacità del personaggio.
+     * I bonus vengono salvati separatamente in _racialBonuses per riferimento.
+     */
+    applyRacialBonusesToWizardData() {
+        const race = this.databases.selectedRace;
+        if (!race || !race.ability_bonuses) return;
+        
+        this.wizardData._racialBonuses = race.ability_bonuses;
+        
+        for (const bonus of race.ability_bonuses) {
+            const abilityKey = bonus.ability_score?.index;
+            if (abilityKey && ABILITY_KEY_TO_PROPERTY[abilityKey]) {
+                const property = ABILITY_KEY_TO_PROPERTY[abilityKey];
+                // Le capacità nel wizard sono i valori base (senza bonus razziali)
+                // I bonus razziali vengono applicati qui prima del salvataggio finale
+                if (this.wizardData.abilities[property] !== undefined) {
+                    this.wizardData.abilities[property] += bonus.bonus;
+                }
+            }
         }
     }
     
@@ -2146,7 +2177,15 @@ export class PgController {
         const silver = parseInt(this.container.querySelector('#coins-silver')?.value) || 0;
         const copper = parseInt(this.container.querySelector('#coins-copper')?.value) || 0;
         
-        this.wizardData.coins = { gold, silver, copper };
+        // Converti nel sistema di monete D&D (1 mo = 10 ma = 100 mr = 1000 mc)
+        this.wizardData.treasure = {
+            cp: copper,
+            sp: silver,
+            ep: 0,
+            gp: gold,
+            pp: 0,
+            items: []
+        };
     }
     
     /**
@@ -2220,6 +2259,10 @@ export class PgController {
     
     calculateFinalStats() {
         this.wizardData.proficiencyBonus = calculateProficiencyBonus(this.wizardData.level);
+        
+        // Applica i bonus razziali alle capacità prima di calcolare il resto
+        this.applyRacialBonusesToWizardData();
+        
         this.recalculateHp();
         
         this.wizardData.initiative = calculateModifier(this.wizardData.abilities.dexterity);

@@ -906,15 +906,15 @@ export function renderStep5Inventory(pgData, databases) {
                 <div class="coins-inputs">
                     <label>
                         <span>mo</span>
-                        <input type="number" id="coins-gold" value="${pgData.coins?.gold || 0}" min="0">
+                        <input type="number" id="coins-gold" value="${pgData.treasure?.gp || 0}" min="0">
                     </label>
                     <label>
                         <span>ma</span>
-                        <input type="number" id="coins-silver" value="${pgData.coins?.silver || 0}" min="0">
+                        <input type="number" id="coins-silver" value="${pgData.treasure?.sp || 0}" min="0">
                     </label>
                     <label>
                         <span>mr</span>
-                        <input type="number" id="coins-copper" value="${pgData.coins?.copper || 0}" min="0">
+                        <input type="number" id="coins-copper" value="${pgData.treasure?.cp || 0}" min="0">
                     </label>
                 </div>
             </div>

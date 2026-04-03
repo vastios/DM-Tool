@@ -26,14 +26,16 @@ function escapeHtml(text) {
 }
 
 /**
- * Formatta le monete per il display
+ * Formatta le monete per il display (sistema D&D: pp, gp, ep, sp, cp)
  */
-function formatCoins(coins) {
-    if (!coins) return '-';
+function formatCoins(treasure) {
+    if (!treasure) return '-';
     const parts = [];
-    if (coins.gold) parts.push(`${coins.gold} mo`);
-    if (coins.silver) parts.push(`${coins.silver} ma`);
-    if (coins.copper) parts.push(`${coins.copper} mr`);
+    if (treasure.pp) parts.push(`${treasure.pp} pp`);
+    if (treasure.gp) parts.push(`${treasure.gp} mo`);
+    if (treasure.ep) parts.push(`${treasure.ep} me`);
+    if (treasure.sp) parts.push(`${treasure.sp} ma`);
+    if (treasure.cp) parts.push(`${treasure.cp} mr`);
     return parts.length > 0 ? parts.join(', ') : '-';
 }
 
@@ -56,7 +58,8 @@ function calculateTotalWeight(inventory) {
  */
 export function renderStep7Summary(pgData, databases, traitsHtml = '') {
     const { selectedRace, selectedClass } = databases;
-    const bonuses = selectedRace?.ability_bonuses || [];
+    // Le capacità includono già i bonus razziali (applicati in calculateFinalStats)
+    const racialBonuses = pgData._racialBonuses || selectedRace?.ability_bonuses || [];
     const inventory = pgData.inventory || [];
     const totalWeight = calculateTotalWeight(inventory);
     
@@ -73,11 +76,11 @@ export function renderStep7Summary(pgData, databases, traitsHtml = '') {
                     <div class="sum-abilities">
                         ${['str', 'dex', 'con', 'int', 'wis', 'cha'].map(key => {
                             const prop = ABILITY_KEY_TO_PROPERTY[key];
-                            const base = pgData.abilities?.[prop] || 10;
-                            const bonus = bonuses.find(b => b.ability_score?.index === key)?.bonus || 0;
-                            const total = base + bonus;
+                            const total = pgData.abilities?.[prop] || 10;
+                            const bonus = racialBonuses.find(b => b.ability_score?.index === key)?.bonus || 0;
                             const mod = calculateModifier(total);
-                            return `<div class="sum-ab"><strong>${key.toUpperCase()}</strong>: ${total} (${mod >= 0 ? '+' : ''}${mod})</div>`;
+                            const bonusStr = bonus > 0 ? ` (+${bonus})` : '';
+                            return `<div class="sum-ab"><strong>${key.toUpperCase()}</strong>: ${total}${bonusStr} (${mod >= 0 ? '+' : ''}${mod})</div>`;
                         }).join('')}
                     </div>
                 </div>
@@ -100,7 +103,7 @@ export function renderStep7Summary(pgData, databases, traitsHtml = '') {
                     <h4>Inventario</h4>
                     <p><strong>Oggetti:</strong> ${inventory.length}</p>
                     <p><strong>Peso:</strong> ${totalWeight.toFixed(1)} kg</p>
-                    <p><strong>Monete:</strong> ${formatCoins(pgData.coins)}</p>
+                    <p><strong>Monete:</strong> ${formatCoins(pgData.treasure)}</p>
                 </div>
             </div>
             

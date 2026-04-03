@@ -149,8 +149,31 @@ export class PgDataManager {
         if (step === 2 || step === null) {
             const abilities = pgData.abilities || {};
             for (const [key, value] of Object.entries(abilities)) {
-                if (typeof value !== 'number' || value < 1 || value > 30) {
-                    errors.push(`La caratteristica ${key} deve essere tra 1 e 30.`);
+                if (typeof value !== 'number' || value < 1 || value > 20) {
+                    errors.push(`La caratteristica ${key} deve essere tra 1 e 20.`);
+                }
+            }
+        }
+        
+        if (step === 3 || step === null) {
+            const skills = pgData.skills || [];
+            const classProfChoices = pgData._classNumSkillChoices;
+            if (classProfChoices && skills.length > classProfChoices) {
+                errors.push(`Hai selezionato ${skills.length} abilità, ma il limite è ${classProfChoices}.`);
+            }
+        }
+        
+        if (step === 4 || step === null) {
+            // Valida che i trucchetti siano entro il limite
+            if (pgData.spellcasting && pgData.spellcasting.spellsKnown) {
+                const cantrips = pgData.spellcasting.spellsKnown.filter(s => {
+                    const name = typeof s === 'string' ? s : s.name;
+                    const level = typeof s === 'object' ? s.level : 0;
+                    return level === 0;
+                });
+                const maxCantrips = pgData._maxCantrips;
+                if (maxCantrips !== null && maxCantrips !== undefined && cantrips.length > maxCantrips) {
+                    errors.push(`Troppi trucchetti: ${cantrips.length} selezionati, massimo ${maxCantrips}.`);
                 }
             }
         }
