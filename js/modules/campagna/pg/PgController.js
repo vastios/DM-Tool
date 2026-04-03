@@ -20,6 +20,7 @@ import {
     calculateMaxHp,
     calculateArmorClass,
     calculateSpellSlots,
+    calculateAvailableASI,
     ABILITY_KEY_TO_PROPERTY,
     PROPERTY_TO_ABILITY_KEY,
     SKILL_ABILITY_MAP,
@@ -110,6 +111,11 @@ export class PgController {
             equippedSlots: {},
             _acceptedSuggestions: [],
             _selectedChoices: {},
+            _racialBonuses: [],
+            _asiBonuses: {
+                strength: 0, dexterity: 0, constitution: 0,
+                intelligence: 0, wisdom: 0, charisma: 0
+            },
             treasure: { ...EMPTY_PG.treasure },
             conditions: [...(EMPTY_PG.conditions || [])],
             wikiLinks: [...(EMPTY_PG.wikiLinks || [])]
@@ -452,6 +458,12 @@ export class PgController {
         // Modifica caratteristiche +/-
         if (button.dataset.ability && button.dataset.action) {
             this.modifyAbility(button.dataset.ability, button.dataset.action);
+            return;
+        }
+        
+        // Modifica ASI (bonus da livello)
+        if (button.dataset.asiAbility && button.dataset.asiAction) {
+            this.modifyASI(button.dataset.asiAbility, button.dataset.asiAction);
             return;
         }
         
@@ -898,7 +910,49 @@ export class PgController {
             this.wizardData.subclassMinLevel = this.getSubclassMinLevel(this.databases.selectedClass);
         }
         
+        // IMPORTANTISSIMO: Sottrai bonus razziali e ASI dalle abilità
+        // così il wizard mostra solo i valori base (come in creazione)
+        this._stripBonusesFromAbilities();
+        
         this.render();
+    }
+    
+    /**
+     * Rimuove bonus razziali e ASI dalle abilità del wizardData
+     * per mostrare solo i valori base nell'editor
+     */
+    _stripBonusesFromAbilities() {
+        const race = this.databases.selectedRace;
+        const racialBonuses = this.wizardData._racialBonuses || race?.ability_bonuses || [];
+        const asiBonuses = this.wizardData._asiBonuses || {};
+        
+        // Salva i bonus razziali per riferimento
+        if (race?.ability_bonuses) {
+            this.wizardData._racialBonuses = race.ability_bonuses;
+        }
+        
+        // Sottrai bonus razziali
+        for (const bonus of racialBonuses) {
+            const abilityKey = bonus.ability_score?.index;
+            if (abilityKey && ABILITY_KEY_TO_PROPERTY[abilityKey]) {
+                const property = ABILITY_KEY_TO_PROPERTY[abilityKey];
+                if (this.wizardData.abilities[property] !== undefined) {
+                    this.wizardData.abilities[property] -= bonus.bonus;
+                }
+            }
+        }
+        
+        // Sottrai bonus ASI
+        for (const [property, bonus] of Object.entries(asiBonuses)) {
+            if (bonus && this.wizardData.abilities[property] !== undefined) {
+                this.wizardData.abilities[property] -= bonus;
+            }
+        }
+        
+        // Assicurati che i valori base non scendano sotto 1
+        for (const key of Object.keys(this.wizardData.abilities)) {
+            this.wizardData.abilities[key] = Math.max(1, this.wizardData.abilities[key]);
+        }
     }
     
     /**
@@ -925,6 +979,8 @@ export class PgController {
             equippedSlots: { ...(pg.equippedSlots || {}) },
             _acceptedSuggestions: [...(pg._acceptedSuggestions || [])],
             _selectedChoices: { ...(pg._selectedChoices || {}) },
+            _racialBonuses: [...(pg._racialBonuses || [])],
+            _asiBonuses: { ...(pg._asiBonuses || { strength: 0, dexterity: 0, constitution: 0, intelligence: 0, wisdom: 0, charisma: 0 }) },
             treasure: { ...pg.treasure },
             conditions: [...(pg.conditions || [])],
             wikiLinks: [...(pg.wikiLinks || [])]
@@ -1110,11 +1166,51 @@ export class PgController {
         this.updateAbilityDisplay(abilityKey);
     }
     
+    /**
+     * Modifica i bonus ASI per una caratteristica
+     */
+    modifyASI(abilityKey, action) {
+        const property = ABILITY_KEY_TO_PROPERTY[abilityKey];
+        if (!property) return;
+        
+        const remaining = this.getRemainingASIPoints();
+        const currentBonus = this.wizardData._asiBonuses?.[property] || 0;
+        
+        if (action === 'increase') {
+            if (remaining <= 0) {
+                showToast('Non hai più punti ASI disponibili', 'warning');
+                return;
+            }
+            this.wizardData._asiBonuses[property] = currentBonus + 1;
+        } else {
+            if (currentBonus <= 0) return;
+            this.wizardData._asiBonuses[property] = currentBonus - 1;
+        }
+        
+        this.updateAbilityDisplay(abilityKey);
+        this._updateASIDisplay();
+    }
+    
+    /**
+     * Aggiorna il display dei punti ASI rimanenti
+     */
+    _updateASIDisplay() {
+        const remaining = this.getRemainingASIPoints();
+        const totalASI = calculateAvailableASI(this.databases.selectedClass, this.wizardData.level || 1);
+        const usedASI = totalASI - remaining;
+        
+        const remainingEl = this.container.querySelector('.asi-remaining');
+        if (remainingEl) {
+            remainingEl.textContent = `${remaining}/${totalASI}`;
+        }
+    }
+    
     updateAbilityDisplay(abilityKey) {
         const property = ABILITY_KEY_TO_PROPERTY[abilityKey];
         const input = this.container.querySelector(`#ability-${abilityKey}`);
         const bonuses = this.databases.selectedRace?.ability_bonuses || [];
-        const bonus = bonuses.find(b => b.ability_score?.index === abilityKey)?.bonus || 0;
+        const racialBonus = bonuses.find(b => b.ability_score?.index === abilityKey)?.bonus || 0;
+        const asiBonus = this.wizardData._asiBonuses?.[property] || 0;
         
         if (input) {
             input.value = this.wizardData.abilities[property];
@@ -1124,13 +1220,19 @@ export class PgController {
                 const totalEl = box.querySelector('.total');
                 const modEl = box.querySelector('.mod');
                 
-                const totalScore = this.wizardData.abilities[property] + bonus;
+                const totalScore = this.wizardData.abilities[property] + racialBonus + asiBonus;
                 const modifier = calculateModifier(totalScore);
                 
                 if (totalEl) totalEl.textContent = `Tot: ${totalScore}`;
                 if (modEl) {
                     modEl.textContent = `${modifier >= 0 ? '+' : ''}${modifier}`;
                     modEl.className = `mod ${modifier >= 0 ? 'pos' : 'neg'}`;
+                }
+                
+                // Aggiorna il display ASI
+                const asiDisplay = box.querySelector('.asi-bonus-value');
+                if (asiDisplay) {
+                    asiDisplay.textContent = asiBonus > 0 ? `+${asiBonus}` : '0';
                 }
             }
         }
@@ -1143,8 +1245,16 @@ export class PgController {
         if (!hpPreview || !this.databases.selectedClass) return;
         
         const hitDieSize = this.databases.selectedClass.hit_die;
-        const conMod = calculateModifier(this.wizardData.abilities.constitution);
         const level = this.wizardData.level;
+        
+        // Usa il valore TOTALE della costituzione (base + razziale + ASI)
+        const conBase = this.wizardData.abilities.constitution;
+        const racialBonuses = this.databases.selectedRace?.ability_bonuses || [];
+        const racialCon = racialBonuses.find(b => b.ability_score?.index === 'con')?.bonus || 0;
+        const asiCon = this.wizardData._asiBonuses?.constitution || 0;
+        const totalCon = conBase + racialCon + asiCon;
+        const conMod = calculateModifier(totalCon);
+        
         const avgPerLevel = Math.floor(hitDieSize / 2) + 1;
         const calculatedHp = hitDieSize + (avgPerLevel * (level - 1)) + (conMod * level);
         
@@ -1164,7 +1274,8 @@ export class PgController {
     
     /**
      * Applica i bonus razziali alle capacità del personaggio.
-     * I bonus vengono salvati separatamente in _racialBonuses per riferimento.
+     * Le capacità nel wizard sono valori base; questo metodo aggiunge i bonus
+     * razziali prima del salvataggio finale.
      */
     applyRacialBonusesToWizardData() {
         const race = this.databases.selectedRace;
@@ -1176,8 +1287,6 @@ export class PgController {
             const abilityKey = bonus.ability_score?.index;
             if (abilityKey && ABILITY_KEY_TO_PROPERTY[abilityKey]) {
                 const property = ABILITY_KEY_TO_PROPERTY[abilityKey];
-                // Le capacità nel wizard sono i valori base (senza bonus razziali)
-                // I bonus razziali vengono applicati qui prima del salvataggio finale
                 if (this.wizardData.abilities[property] !== undefined) {
                     this.wizardData.abilities[property] += bonus.bonus;
                 }
@@ -1185,12 +1294,47 @@ export class PgController {
         }
     }
     
+    /**
+     * Applica i bonus ASI (Ability Score Improvement) alle capacità.
+     * Ogni ASI concede +2 punti da distribuire.
+     */
+    applyASIToWizardData() {
+        const asiBonuses = this.wizardData._asiBonuses;
+        if (!asiBonuses) return;
+        
+        for (const [property, bonus] of Object.entries(asiBonuses)) {
+            if (bonus && this.wizardData.abilities[property] !== undefined) {
+                this.wizardData.abilities[property] += bonus;
+            }
+        }
+    }
+    
+    /**
+     * Calcola i punti ASI rimanenti da distribuire
+     */
+    getRemainingASIPoints() {
+        const classData = this.databases.selectedClass;
+        const level = this.wizardData.level || 1;
+        const totalASI = calculateAvailableASI(classData, level);
+        const usedASI = Object.values(this.wizardData._asiBonuses || {}).reduce((sum, v) => sum + (v || 0), 0);
+        return totalASI - usedASI;
+    }
+    
     recalculateHp() {
         if (!this.databases.selectedClass) return;
         
         const hitDieSize = this.databases.selectedClass.hit_die;
         const level = this.wizardData.level;
-        const conMod = calculateModifier(this.wizardData.abilities.constitution);
+        
+        // Usa il valore TOTALE della costituzione (base + razziale + ASI)
+        // poiché nel wizard le abilities sono base, aggiungiamo i bonus qui
+        const conBase = this.wizardData.abilities.constitution;
+        const racialBonuses = this.databases.selectedRace?.ability_bonuses || [];
+        const racialCon = racialBonuses.find(b => b.ability_score?.index === 'con')?.bonus || 0;
+        const asiCon = this.wizardData._asiBonuses?.constitution || 0;
+        const totalCon = conBase + racialCon + asiCon;
+        const conMod = calculateModifier(totalCon);
+        
         const avgPerLevel = Math.floor(hitDieSize / 2) + 1;
         
         this.wizardData.hp = {
@@ -2260,8 +2404,10 @@ export class PgController {
     calculateFinalStats() {
         this.wizardData.proficiencyBonus = calculateProficiencyBonus(this.wizardData.level);
         
-        // Applica i bonus razziali alle capacità prima di calcolare il resto
+        // Applica bonus razziali e ASI alle capacità prima di calcolare il resto
+        // Le abilità nel wizard sono valori base; questi metodi aggiungono i bonus
         this.applyRacialBonusesToWizardData();
+        this.applyASIToWizardData();
         
         this.recalculateHp();
         

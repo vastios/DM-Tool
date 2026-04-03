@@ -58,8 +58,9 @@ function calculateTotalWeight(inventory) {
  */
 export function renderStep7Summary(pgData, databases, traitsHtml = '') {
     const { selectedRace, selectedClass } = databases;
-    // Le capacità includono già i bonus razziali (applicati in calculateFinalStats)
+    // Le capacità qui includono bonus razziali + ASI (applicati in calculateFinalStats)
     const racialBonuses = pgData._racialBonuses || selectedRace?.ability_bonuses || [];
+    const asiBonuses = pgData._asiBonuses || {};
     const inventory = pgData.inventory || [];
     const totalWeight = calculateTotalWeight(inventory);
     
@@ -77,9 +78,10 @@ export function renderStep7Summary(pgData, databases, traitsHtml = '') {
                         ${['str', 'dex', 'con', 'int', 'wis', 'cha'].map(key => {
                             const prop = ABILITY_KEY_TO_PROPERTY[key];
                             const total = pgData.abilities?.[prop] || 10;
-                            const bonus = racialBonuses.find(b => b.ability_score?.index === key)?.bonus || 0;
+                            const racial = racialBonuses.find(b => b.ability_score?.index === key)?.bonus || 0;
+                            const asi = asiBonuses[prop] || 0;
                             const mod = calculateModifier(total);
-                            const bonusStr = bonus > 0 ? ` (+${bonus})` : '';
+                            const bonusStr = (racial > 0 || asi > 0) ? ` (+${racial} razza${asi > 0 ? ', +' + asi + ' ASI' : ''})` : '';
                             return `<div class="sum-ab"><strong>${key.toUpperCase()}</strong>: ${total}${bonusStr} (${mod >= 0 ? '+' : ''}${mod})</div>`;
                         }).join('')}
                     </div>

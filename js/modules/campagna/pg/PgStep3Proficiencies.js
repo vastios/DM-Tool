@@ -138,11 +138,12 @@ export function renderStep3Proficiencies(pgData, databases) {
                         const isFromBackground = bgSkills.includes(skill);
                         const isDoubleProf = isFromBackground && isSelectedByUser;
                         
-                        // Calcola bonus
+                        // Calcola bonus (base + razziale + ASI)
                         const ability = SKILL_ABILITY_MAP[skill];
                         const abilityKey = PROPERTY_TO_ABILITY_KEY[ability];
                         const racialBonus = (selectedRace?.ability_bonuses || []).find(b => b.ability_score?.index === abilityKey)?.bonus || 0;
-                        const abilityScore = (pgData.abilities?.[ability] || 10) + racialBonus;
+                        const asiBonus = pgData._asiBonuses?.[ability] || 0;
+                        const abilityScore = (pgData.abilities?.[ability] || 10) + racialBonus + asiBonus;
                         const abilityMod = calculateModifier(abilityScore);
                         
                         // Determina se è competente (da background, da classe o entrambi)

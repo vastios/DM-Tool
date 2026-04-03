@@ -234,6 +234,33 @@ export function calculateModifier(score) {
     return Math.floor((score - 10) / 2);
 }
 
+/**
+ * Calcola i punti ASI (Ability Score Improvement) disponibili per una classe e livello.
+ * Ogni ASI concede +2 punti totali (es. +2 a una caratteristica o +1 a due).
+ * Il valore restituito è il totale di punti disponibili.
+ * 
+ * @param {Object} classData - Dati della classe (con tabella_progressione)
+ * @param {number} level - Livello del personaggio
+ * @returns {number} Punti ASI disponibili (ogni ASI = 2 punti)
+ */
+export function calculateAvailableASI(classData, level) {
+    if (!classData || !classData.tabella_progressione || level <= 1) return 0;
+    
+    let asiCount = 0;
+    for (let i = 0; i < Math.min(level, classData.tabella_progressione.length); i++) {
+        const lvlData = classData.tabella_progressione[i];
+        if (lvlData.privilegi && lvlData.privilegi.some(p => 
+            p.includes('Aumento dei Punteggi di Caratteristica') ||
+            p.includes('Miglioramento dei Punteggi di Caratteristica')
+        )) {
+            asiCount++;
+        }
+    }
+    
+    // Ogni ASI = 2 punti da distribuire
+    return asiCount * 2;
+}
+
 export function calculateProficiencyBonus(level) {
     return Math.ceil(level / 4) + 1;
 }
