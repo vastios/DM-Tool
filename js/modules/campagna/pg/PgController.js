@@ -3231,7 +3231,10 @@ export class PgController {
     _renderLevelUpModal(pg, classData, currentLevel, newLevel, changes) {
         const isNewASI = changes.asi.newPoints > 0;
         const hasNewFeatures = changes.newFeatures.length > 0 || changes.newSubclassFeatures.length > 0;
-        const hasSpellChanges = changes.spellSlots || changes.cantrips || changes.spellsKnown;
+        const hasSpellChanges = changes.spellSlots || changes.cantrips || changes.spellsKnown ||
+            (changes.newSpellLevelsAccessible && changes.newSpellLevelsAccessible.length > 0) ||
+            (changes.wizardNewSpellCount > 0) ||
+            (changes.canSwapSpells);
 
         return `
             <div class="level-up-modal">
