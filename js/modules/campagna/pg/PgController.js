@@ -3014,6 +3014,35 @@ export class PgController {
                 this._handleHpChoice(modal, e.target.dataset.hpChoice, changes);
                 return;
             }
+
+            // Spell selection (cantrip/spell checkbox)
+            const spellLabel = e.target.closest('[data-lu-spell]');
+            if (spellLabel) {
+                const spellName = spellLabel.dataset.luSpell;
+                const spellLevel = parseInt(spellLabel.dataset.luLevel) || 0;
+                this._handleModalSpellToggle(modal, spellName, spellLevel, changes);
+                return;
+            }
+
+            // Spell swap: click "Rimuovi"
+            const swapOutItem = e.target.closest('[data-swap-out]');
+            if (swapOutItem && !swapOutItem.classList.contains('already-known')) {
+                this._handleModalSwapOut(modal, swapOutItem.dataset.swapOut, parseInt(swapOutItem.dataset.swapOutLevel) || 0, changes);
+                return;
+            }
+
+            // Spell swap: click "Aggiungi"
+            const swapInItem = e.target.closest('[data-swap-in]');
+            if (swapInItem && !swapInItem.classList.contains('already-known')) {
+                this._handleModalSwapIn(modal, swapInItem.dataset.swapIn, parseInt(swapInItem.dataset.swapInLevel) || 0, changes);
+                return;
+            }
+
+            // Clear swap
+            if (e.target.dataset.luAction === 'clear-swap') {
+                this._handleModalClearSwap(modal, changes);
+                return;
+            }
         });
 
         document.body.appendChild(modal);
@@ -3055,12 +3084,37 @@ export class PgController {
         const avgHpGain = Math.floor(hitDieSize / 2) + 1;
         const hpGain = avgHpGain + conMod;
 
-        // Spell slots (se incantatore)
+        // === SPELL DATA ===
+        const classMap = {
+            'bard': 'Bardo', 'cleric': 'Chierico', 'druid': 'Druido',
+            'paladin': 'Paladino', 'ranger': 'Ranger', 'sorcerer': 'Stregone',
+            'warlock': 'Warlock', 'wizard': 'Mago'
+        };
+        const classNameIt = classMap[classData.index] || null;
+        const classSpellsByLevel = this.databases.spellLevelsByClass?.[classNameIt] || null;
+        
         let spellSlotChanges = null;
         let cantripsChange = null;
         let spellsKnownChange = null;
+        let newSpellLevelsAccessible = []; // Nuovi livelli di incantesimo sbloccati
+        let casterType = 'none'; // 'known' | 'prepared' | 'warlock' | 'none'
+        let canSwapSpells = false;
+        let isWizard = false;
+        let wizardNewSpellCount = 0;
+        let maxCantripsNew = null;
+        let maxSpellsKnownNew = null;
+        let maxCantripsOld = null;
+        let maxSpellsKnownOld = null;
         
-        if (ALL_SPELLCASTERS.includes(classData.index)) {
+        // Incantesimi attualmente conosciuti dal PG
+        const currentKnownSpells = (pg.spellcasting?.spellsKnown || []).map(s => typeof s === 'string' ? s : s.name);
+        
+        if (ALL_SPELLCASTERS.includes(classData.index) && classSpellsByLevel) {
+            casterType = this.spellHelpers?.getCasterType(classNameIt) || 'none';
+            isWizard = classNameIt === 'Mago';
+            canSwapSpells = ['Bardo', 'Stregone'].includes(classNameIt);
+            
+            // Spell slots
             const oldSlots = calculateSpellSlots(classData.index, currentLevel);
             const newSlots = calculateSpellSlots(classData.index, newLevel);
             
@@ -3076,19 +3130,48 @@ export class PgController {
                 spellSlotChanges = diff;
             }
 
-            // Trucchetti e incantesimi conosciuti
-            if (lvlData.trucchetti_conosciuti !== undefined) {
-                const oldLvlData = classData.tabella_progressione?.[currentLevel - 1];
-                const oldCantrips = oldLvlData?.trucchetti_conosciuti ?? 0;
-                if (lvlData.trucchetti_conosciuti > oldCantrips) {
-                    cantripsChange = lvlData.trucchetti_conosciuti - oldCantrips;
+            // Nuovi livelli di incantesimo accessibili
+            const oldMaxLevel = this.spellHelpers?.spellLevelsByClass ? 
+                this._getMaxSpellLevelForClass(classNameIt, currentLevel) : 0;
+            const newMaxLevel = this._getMaxSpellLevelForClass(classNameIt, newLevel);
+            for (let lvl = oldMaxLevel + 1; lvl <= newMaxLevel; lvl++) {
+                if (classSpellsByLevel[lvl]?.length > 0) {
+                    newSpellLevelsAccessible.push(lvl);
                 }
             }
-            if (lvlData.incantesimi_conosciuti !== undefined) {
+            
+            // Trucchetti
+            if (this.spellHelpers?.getMaxCantripsKnown) {
+                maxCantripsOld = this.spellHelpers.getMaxCantripsKnown(classNameIt, currentLevel);
+                maxCantripsNew = this.spellHelpers.getMaxCantripsKnown(classNameIt, newLevel);
+                if (maxCantripsOld !== null && maxCantripsNew !== null && maxCantripsNew > maxCantripsOld) {
+                    cantripsChange = maxCantripsNew - maxCantripsOld;
+                }
+            }
+            
+            // Incantesimi conosciuti
+            if (isWizard) {
+                // Mago: grimorio = 6 + 2*(livello-1)
+                const oldBook = 6 + (currentLevel - 1) * 2;
+                const newBook = 6 + (newLevel - 1) * 2;
+                wizardNewSpellCount = newBook - oldBook; // Sempre 2
+                maxSpellsKnownOld = oldBook;
+                maxSpellsKnownNew = newBook;
+            } else if (casterType === 'known' && this.spellHelpers?.getMaxSpellsKnown) {
+                maxSpellsKnownOld = this.spellHelpers.getMaxSpellsKnown(classNameIt, currentLevel);
+                maxSpellsKnownNew = this.spellHelpers.getMaxSpellsKnown(classNameIt, newLevel);
+                if (maxSpellsKnownOld !== null && maxSpellsKnownNew !== null && maxSpellsKnownNew > maxSpellsKnownOld) {
+                    spellsKnownChange = maxSpellsKnownNew - maxSpellsKnownOld;
+                }
+            } else if (casterType === 'warlock') {
+                // Warlock: incantesimi conosciuti dalla tabella progressione
                 const oldLvlData = classData.tabella_progressione?.[currentLevel - 1];
-                const oldSpells = oldLvlData?.incantesimi_conosciuti ?? 0;
-                if (lvlData.incantesimi_conosciuti > oldSpells) {
-                    spellsKnownChange = lvlData.incantesimi_conosciuti - oldSpells;
+                const oldKnown = oldLvlData?.incantesimi_conosciuti ?? 0;
+                const newKnown = lvlData?.incantesimi_conosciuti ?? 0;
+                if (newKnown > oldKnown) {
+                    spellsKnownChange = newKnown - oldKnown;
+                    maxSpellsKnownOld = oldKnown;
+                    maxSpellsKnownNew = newKnown;
                 }
             }
         }
@@ -3102,9 +3185,44 @@ export class PgController {
             spellSlots: spellSlotChanges,
             cantrips: cantripsChange,
             spellsKnown: spellsKnownChange,
+            // Nuovi dati spell
+            classNameIt,
+            classSpellsByLevel,
+            casterType,
+            isWizard,
+            canSwapSpells,
+            newSpellLevelsAccessible,
+            wizardNewSpellCount,
+            currentKnownSpells,
+            maxCantripsOld,
+            maxCantripsNew,
+            maxSpellsKnownOld,
+            maxSpellsKnownNew,
+            // Stato selezioni nel modal
+            selectedNewCantrips: [],
+            selectedNewSpells: [],
+            swappedOut: null,   // Nome incantesimo rimosso
+            swappedIn: null,    // Nome incantesimo aggiunto
             // Stato corrente ASI allocation nel modal (per i nuovi punti)
             modalASI: { strength: 0, dexterity: 0, constitution: 0, intelligence: 0, wisdom: 0, charisma: 0 }
         };
+    }
+    
+    /**
+     * Helper: ottiene il livello max di incantesimo per classe e livello PG
+     */
+    _getMaxSpellLevelForClass(classNameIt, pgLevel) {
+        const halfCasters = ['Paladino', 'Ranger'];
+        if (halfCasters.includes(classNameIt)) {
+            // Half casters: max spell level by pg level
+            const table = { 1:0, 2:1, 3:1, 4:1, 5:2, 6:2, 7:2, 8:2, 9:3, 10:3,
+                11:3, 12:3, 13:4, 14:4, 15:4, 16:4, 17:5, 18:5, 19:5, 20:5 };
+            return table[pgLevel] || 0;
+        }
+        // Full casters
+        const table = { 1:1, 2:1, 3:2, 4:2, 5:3, 6:3, 7:4, 8:4, 9:5, 10:5,
+            11:6, 12:6, 13:7, 14:7, 15:8, 16:8, 17:9, 18:9, 19:9, 20:9 };
+        return table[pgLevel] || 0;
     }
 
     /**
@@ -3202,21 +3320,7 @@ export class PgController {
                         </div>
                     ` : ''}
 
-                    ${hasSpellChanges ? `
-                        <div class="lu-section">
-                            <h4>✨ Incantesimi</h4>
-                            ${changes.spellSlots ? `
-                                <p class="lu-desc">Nuovi slot incantesimo:</p>
-                                <div class="lu-spell-slots">
-                                    ${Object.entries(changes.spellSlots).map(([lvl, count]) => `
-                                        <span class="lu-slot-tag">+${count} slot lv.${lvl}</span>
-                                    `).join('')}
-                                </div>
-                            ` : ''}
-                            ${changes.cantrips ? `<p class="lu-desc">🎉 +${changes.cantrips} trucchetti</p>` : ''}
-                            ${changes.spellsKnown ? `<p class="lu-desc">📖 +${changes.spellsKnown} incantesimi nello spazio dei preparati</p>` : ''}
-                        </div>
-                    ` : ''}
+                    ${hasSpellChanges ? this._renderLevelUpSpellsSection(pg, classData, currentLevel, newLevel, changes) : ''}
                 </div>
 
                 <div class="level-up-footer">
@@ -3227,6 +3331,361 @@ export class PgController {
         `;
     }
 
+    /**
+     * Renderizza la sezione incantesimi nel modal di level up
+     */
+    _renderLevelUpSpellsSection(pg, classData, currentLevel, newLevel, changes) {
+        const { classNameIt, classSpellsByLevel, casterType, isWizard, canSwapSpells,
+                newSpellLevelsAccessible, currentKnownSpells, cantrips, spellsKnown,
+                wizardNewSpellCount } = changes;
+        
+        const levelLabels = {
+            0: 'Trucchetti', 1: '1° Livello', 2: '2° Livello', 3: '3° Livello',
+            4: '4° Livello', 5: '5° Livello', 6: '6° Livello',
+            7: '7° Livello', 8: '8° Livello', 9: '9° Livello'
+        };
+        
+        let html = '<div class="lu-section lu-spells-section">';
+        html += '<h4>✨ Incantesimi</h4>';
+        
+        // --- Nuovi slot ---
+        if (changes.spellSlots) {
+            html += `<p class="lu-desc">Nuovi slot incantesimo:</p>`;
+            html += '<div class="lu-spell-slots">';
+            for (const [lvl, count] of Object.entries(changes.spellSlots)) {
+                html += `<span class="lu-slot-tag">+${count} slot ${levelLabels[lvl]}</span>`;
+            }
+            html += '</div>';
+        }
+        
+        // --- Nuovi livelli di incantesimo accessibili ---
+        if (newSpellLevelsAccessible.length > 0) {
+            html += '<div class="lu-new-spell-levels">';
+            html += '<p class="lu-desc">🔓 Nuovi livelli sbloccati:</p>';
+            for (const lvl of newSpellLevelsAccessible) {
+                const spells = classSpellsByLevel[lvl] || [];
+                html += `<div class="lu-spell-level-block">`;
+                html += `<h5>${levelLabels[lvl]} <span class="lu-spell-count">(${spells.length} incantesimi)</span></h5>`;
+                html += '<div class="lu-spell-tags">';
+                for (const spell of spells) {
+                    const isKnown = currentKnownSpells.includes(spell);
+                    html += `<span class="lu-spell-tag ${isKnown ? 'already-known' : 'new-available'}" data-spell-name="${spell}" data-spell-level="${lvl}">${spell}</span>`;
+                }
+                html += '</div></div>';
+            }
+            html += '</div>';
+        }
+        
+        // --- Selezione nuovi trucchetti ---
+        if (cantrips && cantrips > 0 && classSpellsByLevel[0]) {
+            const allCantrips = classSpellsByLevel[0];
+            const availableCantrips = allCantrips.filter(c => !currentKnownSpells.includes(c));
+            
+            html += '<div class="lu-cantrip-selection">';
+            html += `<h5>✨ Scegli ${cantrips} nuovo${cantrips > 1 ? 'i' : ''} truccetto${cantrips > 1 ? 'i' : ''}</h5>`;
+            html += `<p class="lu-hint">Trucchetti attuali: ${currentKnownSpells.filter(s => (classSpellsByLevel[0] || []).includes(s)).length}/${changes.maxCantripsNew}</p>`;
+            html += `<div class="lu-spell-counter">Selezionati: <strong class="lu-cantrip-count">0</strong> / ${cantrips}</div>`;
+            html += '<div class="lu-spell-select-grid lu-cantrip-grid">';
+            for (const cantrip of availableCantrips) {
+                html += `<label class="lu-spell-cb" data-lu-spell="${cantrip}" data-lu-level="0">`;
+                html += `<input type="checkbox" data-lu-spell-input="${cantrip}" data-lu-level="0">`;
+                html += `<span class="lu-spell-cb-name">${cantrip}</span>`;
+                html += '</label>';
+            }
+            html += '</div></div>';
+        }
+        
+        // --- Selezione nuovi incantesimi (Known casters: Bardo, Stregone) ---
+        if (spellsKnown && spellsKnown > 0 && (casterType === 'known' || casterType === 'warlock')) {
+            const maxLevel = this._getMaxSpellLevelForClass(classNameIt, newLevel);
+            
+            // Per il Warlock, calcola il livello effettivo degli slot (es. lv.5 → slot lv.3)
+            let warlockEffectiveLevel = maxLevel;
+            if (casterType === 'warlock') {
+                const newSlots = calculateSpellSlots(classData.index, newLevel);
+                // Trova il livello più alto degli slot disponibili
+                for (let l = 9; l >= 1; l--) {
+                    if (newSlots[l]?.max > 0) { warlockEffectiveLevel = l; break; }
+                }
+            }
+            
+            html += '<div class="lu-new-spells-selection">';
+            html += `<h5>📖 Scegli ${spellsKnown} nuovo${spellsKnown > 1 ? 'i' : ''} incantesimo${spellsKnown > 1 ? 'i' : ''}</h5>`;
+            html += `<p class="lu-hint">Incantesimi conosciuti: ${currentKnownSpells.filter(s => s && !this._isCantrip(s, classSpellsByLevel)).length}/${changes.maxSpellsKnownNew}</p>`;
+            html += `<div class="lu-spell-counter">Selezionati: <strong class="lu-new-spell-count">0</strong> / ${spellsKnown}</div>`;
+            
+            // Mostra tutti gli incantesimi di livello 1+ disponibili fino al livello massimo
+            for (let lvl = 1; lvl <= (casterType === 'warlock' ? warlockEffectiveLevel : maxLevel); lvl++) {
+                const spells = classSpellsByLevel[lvl] || [];
+                if (spells.length === 0) continue;
+                
+                const available = spells.filter(s => !currentKnownSpells.includes(s));
+                if (available.length === 0) continue;
+                
+                html += '<div class="lu-spell-level-block">';
+                html += `<h5>${levelLabels[lvl]} <span class="lu-spell-count">(${available.length} disponibili)</span></h5>`;
+                html += '<div class="lu-spell-select-grid">';
+                for (const spell of available) {
+                    html += `<label class="lu-spell-cb" data-lu-spell="${spell}" data-lu-level="${lvl}">`;
+                    html += `<input type="checkbox" data-lu-spell-input="${spell}" data-lu-level="${lvl}">`;
+                    html += `<span class="lu-spell-cb-name">${spell}</span>`;
+                    html += '</label>';
+                }
+                html += '</div></div>';
+            }
+            html += '</div>';
+        }
+        
+        // --- Selezione incantesimi grimorio (Mago) ---
+        if (isWizard && wizardNewSpellCount > 0) {
+            const maxLevel = this._getMaxSpellLevelForClass('Mago', newLevel);
+            
+            html += '<div class="lu-wizard-spellbook">';
+            html += `<h5>📖 Aggiungi ${wizardNewSpellCount} incantesimo${wizardNewSpellCount > 1 ? 'i' : ''} al grimorio</h5>`;
+            html += `<p class="lu-hint">Grimorio: ${currentKnownSpells.filter(s => s && !this._isCantrip(s, classSpellsByLevel)).length}/${changes.maxSpellsKnownNew}</p>`;
+            html += `<div class="lu-spell-counter">Selezionati: <strong class="lu-wizard-count">0</strong> / ${wizardNewSpellCount}</div>`;
+            
+            for (let lvl = 1; lvl <= maxLevel; lvl++) {
+                const spells = classSpellsByLevel[lvl] || [];
+                if (spells.length === 0) continue;
+                
+                const available = spells.filter(s => !currentKnownSpells.includes(s));
+                if (available.length === 0) continue;
+                
+                html += '<div class="lu-spell-level-block">';
+                html += `<h5>${levelLabels[lvl]} <span class="lu-spell-count">(${available.length} disponibili)</span></h5>`;
+                html += '<div class="lu-spell-select-grid">';
+                for (const spell of available) {
+                    html += `<label class="lu-spell-cb" data-lu-spell="${spell}" data-lu-level="${lvl}">`;
+                    html += `<input type="checkbox" data-lu-spell-input="${spell}" data-lu-level="${lvl}">`;
+                    html += `<span class="lu-spell-cb-name">${spell}</span>`;
+                    html += '</label>';
+                }
+                html += '</div></div>';
+            }
+            html += '</div>';
+        }
+        
+        // --- Scambio incantesimi (Bardo, Stregone) ---
+        if (canSwapSpells) {
+            const maxLevel = this._getMaxSpellLevelForClass(classNameIt, newLevel);
+            const swapLabel = classNameIt === 'Bardo' ? 'Bardo' : 'Stregone';
+            
+            html += '<div class="lu-swap-section">';
+            html += `<h5>🔄 Scambio Incantesimo (${swapLabel})</h5>`;
+            html += '<p class="lu-hint">Puoi sostituire un incantesimo conosciuto con un altro della tua lista di classe.</p>';
+            
+            // Incantesimi attuali (da cui rimuovere)
+            html += '<div class="lu-swap-column">';
+            html += '<h6>Rimuovi:</h6>';
+            html += '<div class="lu-swap-list" id="lu-swap-out-list">';
+            const knownNonCantrips = currentKnownSpells.filter(s => s && !this._isCantrip(s, classSpellsByLevel));
+            if (knownNonCantrips.length > 0) {
+                for (const spell of knownNonCantrips) {
+                    // Trova il livello dello spell
+                    const spellLvl = this._findSpellLevel(spell, classSpellsByLevel);
+                    html += `<span class="lu-swap-item lu-swap-out-item" data-swap-out="${spell}" data-swap-out-level="${spellLvl}">${spell} ${spellLvl > 0 ? `(${levelLabels[spellLvl] || 'lv.'+spellLvl})` : ''}</span>`;
+                }
+            } else {
+                html += '<p class="lu-hint">Nessun incantesimo da cui scegliere.</p>';
+            }
+            html += '</div></div>';
+            
+            // Incantesimi disponibili (da cui aggiungere)
+            html += '<div class="lu-swap-column">';
+            html += '<h6>Aggiungi:</h6>';
+            html += '<div class="lu-swap-list" id="lu-swap-in-list">';
+            for (let lvl = 1; lvl <= maxLevel; lvl++) {
+                const spells = classSpellsByLevel[lvl] || [];
+                for (const spell of spells) {
+                    const isKnown = currentKnownSpells.includes(spell);
+                    html += `<span class="lu-swap-item lu-swap-in-item ${isKnown ? 'already-known' : ''}" data-swap-in="${spell}" data-swap-in-level="${lvl}">${spell} (${levelLabels[lvl]})</span>`;
+                }
+            }
+            html += '</div></div>';
+            
+            html += '<div class="lu-swap-actions">';
+            html += '<button class="btn btn-sm btn-secondary" data-lu-action="clear-swap">🗑️ Resetta scambio</button>';
+            html += '</div>';
+            html += '</div>';
+        }
+        
+        // --- Nota per prepared casters ---
+        if (casterType === 'prepared' && !cantrips && !isWizard) {
+            if (newSpellLevelsAccessible.length === 0) {
+                html += '<p class="lu-desc">Nessun cambiamento agli incantesimi.</p>';
+            }
+            html += '<p class="lu-hint">Conosci tutti gli incantesimi della tua lista. La gestione della preparazione avviene in-game.</p>';
+        }
+        
+        html += '</div>'; // chiude lu-section
+        return html;
+    }
+    
+    /**
+     * Helper: verifica se un incantesimo è un trucco
+     */
+    _isCantrip(spellName, classSpellsByLevel) {
+        return (classSpellsByLevel[0] || []).includes(spellName);
+    }
+    
+    /**
+     * Helper: trova il livello di un incantesimo nella lista classe
+     */
+    _findSpellLevel(spellName, classSpellsByLevel) {
+        for (let lvl = 0; lvl <= 9; lvl++) {
+            if ((classSpellsByLevel[lvl] || []).includes(spellName)) return lvl;
+        }
+        return 0;
+    }
+
+    /**
+     * Gestisce toggle selezione incantesimo/trucco nel modal di level up
+     */
+    _handleModalSpellToggle(modal, spellName, spellLevel, changes) {
+        const isCantrip = spellLevel === 0;
+        const checkbox = modal.querySelector(`input[data-lu-spell-input="${spellName}"]`);
+        if (!checkbox) return;
+        
+        if (isCantrip) {
+            // Trucchetti
+            const max = changes.cantrips || 0;
+            if (checkbox.checked) {
+                if (changes.selectedNewCantrips.length >= max) {
+                    showToast(`Hai già selezionato ${max} truccett${max > 1 ? 'i' : 'o'}. Deseleziona uno prima.`, 'warning');
+                    checkbox.checked = false;
+                    return;
+                }
+                if (!changes.selectedNewCantrips.includes(spellName)) {
+                    changes.selectedNewCantrips.push({ name: spellName, level: 0 });
+                }
+            } else {
+                changes.selectedNewCantrips = changes.selectedNewCantrips.filter(s => s.name !== spellName);
+            }
+            // Aggiorna label
+            const label = checkbox.closest('[data-lu-spell]');
+            if (label) label.classList.toggle('selected', checkbox.checked);
+            // Aggiorna contatore
+            const counter = modal.querySelector('.lu-cantrip-count');
+            if (counter) counter.textContent = changes.selectedNewCantrips.length;
+        } else if (changes.isWizard) {
+            // Mago: grimorio
+            const max = changes.wizardNewSpellCount;
+            if (checkbox.checked) {
+                if (changes.selectedNewSpells.length >= max) {
+                    showToast(`Puoi aggiungere al massimo ${max} incantesim${max > 1 ? 'i' : 'o'} al grimorio. Deseleziona uno prima.`, 'warning');
+                    checkbox.checked = false;
+                    return;
+                }
+                if (!changes.selectedNewSpells.find(s => s.name === spellName)) {
+                    changes.selectedNewSpells.push({ name: spellName, level: spellLevel });
+                }
+            } else {
+                changes.selectedNewSpells = changes.selectedNewSpells.filter(s => s.name !== spellName);
+            }
+            const label = checkbox.closest('[data-lu-spell]');
+            if (label) label.classList.toggle('selected', checkbox.checked);
+            const counter = modal.querySelector('.lu-wizard-count');
+            if (counter) counter.textContent = changes.selectedNewSpells.length;
+        } else {
+            // Known casters (Bardo, Stregone) e Warlock
+            const max = changes.spellsKnown || 0;
+            if (checkbox.checked) {
+                if (changes.selectedNewSpells.length >= max) {
+                    showToast(`Hai già selezionato ${max} incantesim${max > 1 ? 'i' : 'o'}. Deseleziona uno prima.`, 'warning');
+                    checkbox.checked = false;
+                    return;
+                }
+                if (!changes.selectedNewSpells.find(s => s.name === spellName)) {
+                    changes.selectedNewSpells.push({ name: spellName, level: spellLevel });
+                }
+            } else {
+                changes.selectedNewSpells = changes.selectedNewSpells.filter(s => s.name !== spellName);
+            }
+            const label = checkbox.closest('[data-lu-spell]');
+            if (label) label.classList.toggle('selected', checkbox.checked);
+            const counter = modal.querySelector('.lu-new-spell-count');
+            if (counter) counter.textContent = changes.selectedNewSpells.length;
+        }
+    }
+
+    /**
+     * Gestisce la selezione dell'incantesimo da rimuovere nello swap
+     */
+    _handleModalSwapOut(modal, spellName, spellLevel, changes) {
+        // Resetta la selezione out precedente
+        modal.querySelectorAll('.lu-swap-out-item.selected').forEach(el => el.classList.remove('selected'));
+        
+        // Se era già selezionato, deseleziona
+        if (changes.swappedOut === spellName) {
+            changes.swappedOut = null;
+            changes.swappedIn = null;
+            // Resetta anche la selezione in
+            modal.querySelectorAll('.lu-swap-in-item.selected').forEach(el => el.classList.remove('selected'));
+            return;
+        }
+        
+        changes.swappedOut = spellName;
+        changes.swappedIn = null; // Resetta la selezione in quando si cambia out
+        const item = modal.querySelector(`[data-swap-out="${spellName}"]`);
+        if (item) item.classList.add('selected');
+        
+        // Resetta selezione in
+        modal.querySelectorAll('.lu-swap-in-item.selected').forEach(el => el.classList.remove('selected'));
+        
+        // Evidenzia gli incantesimi selezionabili (stesso livello o inferiore)
+        modal.querySelectorAll('.lu-swap-in-item').forEach(el => {
+            const inLevel = parseInt(el.dataset.swapInLevel) || 0;
+            if (inLevel <= spellLevel) {
+                el.classList.remove('disabled');
+            } else {
+                el.classList.add('disabled');
+            }
+        });
+    }
+
+    /**
+     * Gestisce la selezione dell'incantesimo da aggiungere nello swap
+     */
+    _handleModalSwapIn(modal, spellName, spellLevel, changes) {
+        if (!changes.swappedOut) {
+            showToast('Prima seleziona l\'incantesimo da rimuovere.', 'warning');
+            return;
+        }
+        
+        // Verifica che il livello sia <= del livello dell'incantesimo rimosso
+        const outLevel = changes.classSpellsByLevel ? 
+            this._findSpellLevel(changes.swappedOut, changes.classSpellsByLevel) : 0;
+        if (spellLevel > outLevel) {
+            showToast(`Puoi scegliere solo incantesimi di livello ${outLevel} o inferiore.`, 'warning');
+            return;
+        }
+        
+        // Resetta la selezione in precedente
+        modal.querySelectorAll('.lu-swap-in-item.selected').forEach(el => el.classList.remove('selected'));
+        
+        // Se era già selezionato, deseleziona
+        if (changes.swappedIn === spellName) {
+            changes.swappedIn = null;
+            return;
+        }
+        
+        changes.swappedIn = spellName;
+        const item = modal.querySelector(`[data-swap-in="${spellName}"]`);
+        if (item) item.classList.add('selected');
+    }
+
+    /**
+     * Resetta lo scambio incantesimi
+     */
+    _handleModalClearSwap(modal, changes) {
+        changes.swappedOut = null;
+        changes.swappedIn = null;
+        modal.querySelectorAll('.lu-swap-out-item.selected').forEach(el => el.classList.remove('selected'));
+        modal.querySelectorAll('.lu-swap-in-item.selected').forEach(el => el.classList.remove('selected'));
+        modal.querySelectorAll('.lu-swap-in-item.disabled').forEach(el => el.classList.remove('disabled'));
+    }
+    
     /**
      * Gestisce la scelta HP (media o tiro)
      */
@@ -3330,6 +3789,17 @@ export class PgController {
         const classData = this.databases.classes?.find(c => c.index === pg.class);
         if (!classData) return;
 
+        // Validazione selezioni spell
+        if (changes.cantrips && changes.selectedNewCantrips.length !== changes.cantrips) {
+            showToast(`Devi selezionare esattamente ${changes.cantrips} truccett${changes.cantrips > 1 ? 'i' : 'o'} nuovo${changes.cantrips > 1 ? 'i' : ''}.`, 'warning');
+            return;
+        }
+        const expectedNewSpells = changes.isWizard ? changes.wizardNewSpellCount : (changes.spellsKnown || 0);
+        if (expectedNewSpells > 0 && changes.selectedNewSpells.length !== expectedNewSpells) {
+            showToast(`Devi selezionare esattamente ${expectedNewSpells} incantesim${expectedNewSpells > 1 ? 'i' : 'o'} nuov${expectedNewSpells > 1 ? 'i' : 'o'}.`, 'warning');
+            return;
+        }
+
         // 1. Aggiorna livello
         const updates = {
             level: newLevel,
@@ -3374,12 +3844,46 @@ export class PgController {
             const abilityScore = newAbilities[spellAbility] || 10;
             const spellSlots = calculateSpellSlots(classData.index, newLevel);
 
+            // Aggiorna lista incantesimi conosciuti
+            let updatedSpellsKnown = [...(pg.spellcasting?.spellsKnown || [])];
+            
+            // Normalizza a oggetti { name, level }
+            updatedSpellsKnown = updatedSpellsKnown.map(s => {
+                if (typeof s === 'string') {
+                    const lvl = this._findSpellLevel(s, changes.classSpellsByLevel || {});
+                    return { name: s, level: lvl };
+                }
+                return s;
+            });
+            
+            // Aggiungi nuovi trucchetti
+            for (const spell of changes.selectedNewCantrips) {
+                updatedSpellsKnown.push({ name: spell.name, level: 0 });
+            }
+            
+            // Aggiungi nuovi incantesimi (known casters, warlock, mago)
+            for (const spell of changes.selectedNewSpells) {
+                updatedSpellsKnown.push({ name: spell.name, level: spell.level });
+            }
+            
+            // Gestisci scambio (Bardo, Stregone)
+            if (changes.swappedOut && changes.swappedIn) {
+                // Rimuovi il vecchio
+                updatedSpellsKnown = updatedSpellsKnown.filter(s => 
+                    (typeof s === 'string' ? s : s.name) !== changes.swappedOut
+                );
+                // Aggiungi il nuovo
+                const newSpellLevel = this._findSpellLevel(changes.swappedIn, changes.classSpellsByLevel || {});
+                updatedSpellsKnown.push({ name: changes.swappedIn, level: newSpellLevel });
+            }
+
             updates.spellcasting = {
                 ...(pg.spellcasting || {}),
                 ability: spellAbility,
                 spellSaveDC: 8 + updates.proficiencyBonus + calculateModifier(abilityScore),
                 spellAttackBonus: updates.proficiencyBonus + calculateModifier(abilityScore),
-                slots: spellSlots
+                slots: spellSlots,
+                spellsKnown: updatedSpellsKnown
             };
         }
 
