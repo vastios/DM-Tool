@@ -162,6 +162,7 @@ function renderSheetHeader(pg) {
             <div class="header-right">
                 <p class="char-class-info">${pg.raceName || pg.race || ''} ${pg.className || pg.class || ''} Liv.${pg.level || 1}</p>
                 <p class="char-player">Giocato da: ${pg.playerName || 'Nessun giocatore'}</p>
+                <button class="btn btn-sm btn-level-up-sheet" data-action="level-up" data-pg-id="${pg.id}" title="Aumenta Livello">⬆️ Livello Su</button>
             </div>
         </div>
     `;

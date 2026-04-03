@@ -118,6 +118,7 @@ export class PgViewManager {
                     </div>
                     <div class="card-actions">
                         <button class="btn-icon-sm" data-action="edit" data-pg-id="${pg.id}" title="Modifica">✏️</button>
+                        <button class="btn-icon-sm btn-level-up" data-action="level-up" data-pg-id="${pg.id}" title="Aumenta Livello">⬆️</button>
                         <button class="btn-icon-sm" data-action="combat" data-pg-id="${pg.id}" title="Aggiungi al Combat">⚔️</button>
                         <button class="btn-icon-sm btn-danger" data-action="delete" data-pg-id="${pg.id}" title="Elimina">🗑️</button>
                     </div>

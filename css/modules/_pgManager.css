@@ -6705,3 +6705,304 @@ label.spell-cb input {
 .pg-sheet-v2 .btn-equipment:hover {
     background: linear-gradient(135deg, #e6c84a 0%, #d4af37 100%);
 }
+
+/* ============================================================================
+   LEVEL UP MODAL
+   ============================================================================ */
+
+.level-up-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9000;
+    animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.level-up-modal {
+    background: var(--card-bg, #2a2a2a);
+    border: 2px solid var(--accent-color, #d4af37);
+    border-radius: 12px;
+    width: 90%;
+    max-width: 550px;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Header */
+.level-up-header {
+    text-align: center;
+    padding: 1.25rem 1.5rem 1rem;
+    border-bottom: 1px solid var(--border-color, #333);
+}
+
+.level-up-header h3 {
+    margin: 0 0 0.25rem;
+    font-size: 1.3rem;
+    color: var(--accent-color, #d4af37);
+}
+
+.level-up-subtitle {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-secondary, #aaa);
+}
+
+.level-change-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 0.75rem;
+}
+
+.level-old {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--text-muted, #666);
+    text-decoration: line-through;
+}
+
+.level-arrow {
+    font-size: 1.5rem;
+    color: var(--text-secondary, #888);
+}
+
+.level-new {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--success-color, #4caf50);
+    text-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+}
+
+/* Body */
+.level-up-body {
+    padding: 1rem 1.5rem;
+}
+
+.lu-section {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color, #333);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.lu-section h4 {
+    margin: 0 0 0.5rem;
+    font-size: 0.95rem;
+    color: var(--accent-color, #d4af37);
+}
+
+.lu-desc {
+    font-size: 0.8rem;
+    color: var(--text-secondary, #aaa);
+    margin: 0 0 0.5rem;
+}
+
+.lu-stat-change {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.lu-arrow {
+    color: var(--text-muted, #666);
+}
+
+.lu-highlight {
+    color: var(--success-color, #4caf50);
+}
+
+/* HP choice */
+.lu-hp-choice {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.lu-hp-result {
+    font-size: 0.85rem;
+    color: var(--text-secondary, #aaa);
+    padding-top: 0.5rem;
+    border-top: 1px dashed var(--border-color, #444);
+}
+
+/* ASI section in level up */
+.lu-asi-section {
+    border-color: var(--accent-color, #2196f3);
+    background: rgba(33, 150, 243, 0.05);
+}
+
+.lu-asi-points {
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.lu-asi-remaining {
+    color: var(--accent-color, #2196f3);
+}
+
+.lu-asi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+}
+
+.lu-asi-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0.4rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    border: 1px solid var(--border-color, #444);
+}
+
+.lu-asi-name {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-primary, #fff);
+}
+
+.lu-asi-score {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--text-primary, #fff);
+}
+
+.lu-asi-added {
+    color: var(--accent-color, #2196f3);
+    font-weight: bold;
+}
+
+.lu-asi-mod {
+    font-size: 0.85rem;
+    color: var(--success-color, #4caf50);
+}
+
+.lu-asi-buttons {
+    display: flex;
+    gap: 0.15rem;
+}
+
+/* Features */
+.lu-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.lu-feature-tag {
+    display: inline-block;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.lu-feature-tag.class-feature {
+    background: rgba(212, 175, 55, 0.2);
+    color: var(--accent-color, #d4af37);
+    border: 1px solid var(--accent-color, #d4af37);
+}
+
+.lu-feature-tag.subclass-feature {
+    background: rgba(156, 39, 176, 0.2);
+    color: #ce93d8;
+    border: 1px solid #9c27b0;
+}
+
+/* Spell slots */
+.lu-spell-slots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.3rem;
+}
+
+.lu-slot-tag {
+    display: inline-block;
+    padding: 0.2rem 0.5rem;
+    background: rgba(33, 150, 243, 0.2);
+    color: #64b5f6;
+    border: 1px solid #2196f3;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* Footer */
+.level-up-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-color, #333);
+}
+
+.level-up-footer .btn-primary {
+    font-size: 1rem;
+    padding: 0.6rem 1.5rem;
+}
+
+/* Level up button in sidebar */
+.btn-level-up:hover {
+    background: rgba(76, 175, 80, 0.3);
+    color: var(--success-color, #4caf50);
+}
+
+/* Level up button in sheet header */
+.btn-level-up-sheet {
+    background: rgba(76, 175, 80, 0.2);
+    border: 1px solid var(--success-color, #4caf50);
+    color: var(--success-color, #4caf50);
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-family: 'Cinzel', serif;
+    transition: all 0.2s;
+}
+
+.btn-level-up-sheet:hover {
+    background: rgba(76, 175, 80, 0.4);
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .level-up-modal {
+        width: 95%;
+        max-height: 90vh;
+    }
+    
+    .lu-asi-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

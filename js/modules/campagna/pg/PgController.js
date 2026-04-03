@@ -492,6 +492,10 @@ export class PgController {
             if (pgId) this.openEquipmentPopup(pgId);
             return;
         }
+        if (action === 'level-up') {
+            if (pgId) this.showLevelUpModal(pgId);
+            return;
+        }
         
         // Aggiungi condizione
         if (button.id === 'btn-add-condition') {
@@ -2944,6 +2948,451 @@ export class PgController {
             console.error('🎮 [PgController] Errore apertura popup equipaggiamento:', error);
             showToast('Errore durante l\'apertura del popup equipaggiamento.', 'error');
         }
+    }
+    
+    // ========================================================================
+    // LEVEL UP
+    // ========================================================================
+
+    /**
+     * Mostra il modal per l'aumento di livello
+     */
+    showLevelUpModal(pgId) {
+        const pg = this.dataManager.getById(pgId);
+        if (!pg) {
+            showToast('PG non trovato.', 'error');
+            return;
+        }
+
+        if ((pg.level || 1) >= 20) {
+            showToast('Il PG è già al livello massimo (20).', 'warning');
+            return;
+        }
+
+        const currentLevel = pg.level || 1;
+        const newLevel = currentLevel + 1;
+        const classData = this.databases.classes?.find(c => c.index === pg.class);
+        
+        if (!classData) {
+            showToast('Classe del PG non trovata nel database.', 'error');
+            return;
+        }
+
+        // Calcola cosa cambia
+        const changes = this._calculateLevelUpChanges(pg, classData, currentLevel, newLevel);
+
+        // Crea il modal
+        const modal = document.createElement('div');
+        modal.className = 'level-up-overlay';
+        modal.innerHTML = this._renderLevelUpModal(pg, classData, currentLevel, newLevel, changes);
+
+        // Binding eventi
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.remove();
+                return;
+            }
+
+            if (e.target.dataset.luAction === 'cancel') {
+                modal.remove();
+                return;
+            }
+
+            if (e.target.dataset.luAction === 'confirm') {
+                this._handleLevelUpConfirm(pgId, modal, currentLevel, newLevel, changes);
+                return;
+            }
+
+            // ASI buttons
+            if (e.target.dataset.asiAbility && e.target.dataset.asiAction) {
+                this._handleModalASI(e.target, modal, changes);
+                return;
+            }
+
+            // HP choice
+            if (e.target.dataset.hpChoice) {
+                this._handleHpChoice(modal, e.target.dataset.hpChoice, changes);
+                return;
+            }
+        });
+
+        document.body.appendChild(modal);
+    }
+
+    /**
+     * Calcola tutti i cambiamenti per il level up
+     */
+    _calculateLevelUpChanges(pg, classData, currentLevel, newLevel) {
+        const oldProfBonus = calculateProficiencyBonus(currentLevel);
+        const newProfBonus = calculateProficiencyBonus(newLevel);
+        
+        // Nuovi privilegi guadagnati al livello newLevel
+        const lvlData = classData.tabella_progressione?.[newLevel - 1];
+        const newFeatures = lvlData?.privilegi || [];
+        
+        // Nuovi privilegi di sottoclasse
+        let newSubclassFeatures = [];
+        if (pg.subclass && classData.sottoclassi) {
+            const sc = classData.sottoclassi.find(s => s.nome === pg.subclass);
+            if (sc?.privilegi?.[String(newLevel)]) {
+                newSubclassFeatures = [sc.privilegi[String(newLevel)]];
+            }
+        }
+
+        // ASI: calcola totali vecchi e nuovi
+        const oldASITotal = calculateAvailableASI(classData, currentLevel);
+        const newASITotal = calculateAvailableASI(classData, newLevel);
+        const newASIPoints = newASITotal - oldASITotal; // Punti nuovi guadagnati
+        const oldASIUsed = Object.values(pg._asiBonuses || {}).reduce((s, v) => s + (v || 0), 0);
+        const availableASIToAllocate = newASIPoints; // Solo i nuovi punti
+
+        // HP incrementali
+        const hitDieSize = classData.hit_die;
+        const racialBonuses = pg._racialBonuses || this.databases.races?.find(r => r.index === pg.race)?.ability_bonuses || [];
+        const asiBonuses = pg._asiBonuses || {};
+        const totalCon = (pg.abilities?.constitution || 10) + (racialBonuses.find(b => b.ability_score?.index === 'con')?.bonus || 0) + (asiBonuses.constitution || 0);
+        const conMod = calculateModifier(totalCon);
+        const avgHpGain = Math.floor(hitDieSize / 2) + 1;
+        const hpGain = avgHpGain + conMod;
+
+        // Spell slots (se incantatore)
+        let spellSlotChanges = null;
+        let cantripsChange = null;
+        let spellsKnownChange = null;
+        
+        if (ALL_SPELLCASTERS.includes(classData.index)) {
+            const oldSlots = calculateSpellSlots(classData.index, currentLevel);
+            const newSlots = calculateSpellSlots(classData.index, newLevel);
+            
+            const diff = {};
+            for (const [level, slots] of Object.entries(newSlots)) {
+                const old = oldSlots[level]?.max || 0;
+                const nv = slots.max || 0;
+                if (nv > old) {
+                    diff[level] = nv - old;
+                }
+            }
+            if (Object.keys(diff).length > 0) {
+                spellSlotChanges = diff;
+            }
+
+            // Trucchetti e incantesimi conosciuti
+            if (lvlData.trucchetti_conosciuti !== undefined) {
+                const oldLvlData = classData.tabella_progressione?.[currentLevel - 1];
+                const oldCantrips = oldLvlData?.trucchetti_conosciuti ?? 0;
+                if (lvlData.trucchetti_conosciuti > oldCantrips) {
+                    cantripsChange = lvlData.trucchetti_conosciuti - oldCantrips;
+                }
+            }
+            if (lvlData.incantesimi_conosciuti !== undefined) {
+                const oldLvlData = classData.tabella_progressione?.[currentLevel - 1];
+                const oldSpells = oldLvlData?.incantesimi_conosciuti ?? 0;
+                if (lvlData.incantesimi_conosciuti > oldSpells) {
+                    spellsKnownChange = lvlData.incantesimi_conosciuti - oldSpells;
+                }
+            }
+        }
+
+        return {
+            profBonus: { old: oldProfBonus, new: newProfBonus, changed: oldProfBonus !== newProfBonus },
+            newFeatures,
+            newSubclassFeatures,
+            asi: { newPoints: newASIPoints, total: newASITotal, oldUsed: oldASIUsed },
+            hp: { avgGain: avgHpGain, totalGain: hpGain, conMod, hitDie: hitDieSize, choice: 'average' },
+            spellSlots: spellSlotChanges,
+            cantrips: cantripsChange,
+            spellsKnown: spellsKnownChange,
+            // Stato corrente ASI allocation nel modal (per i nuovi punti)
+            modalASI: { strength: 0, dexterity: 0, constitution: 0, intelligence: 0, wisdom: 0, charisma: 0 }
+        };
+    }
+
+    /**
+     * Renderizza il modal di level up
+     */
+    _renderLevelUpModal(pg, classData, currentLevel, newLevel, changes) {
+        const isNewASI = changes.asi.newPoints > 0;
+        const hasNewFeatures = changes.newFeatures.length > 0 || changes.newSubclassFeatures.length > 0;
+        const hasSpellChanges = changes.spellSlots || changes.cantrips || changes.spellsKnown;
+
+        return `
+            <div class="level-up-modal">
+                <div class="level-up-header">
+                    <h3>⬆️ Aumento di Livello</h3>
+                    <p class="level-up-subtitle">${pg.name} — ${pg.className || pg.class}</p>
+                    <div class="level-change-display">
+                        <span class="level-old">Lv.${currentLevel}</span>
+                        <span class="level-arrow">→</span>
+                        <span class="level-new">Lv.${newLevel}</span>
+                    </div>
+                </div>
+
+                <div class="level-up-body">
+                    ${changes.profBonus.changed ? `
+                        <div class="lu-section">
+                            <h4>🎯 Bonus di Competenza</h4>
+                            <div class="lu-stat-change">
+                                <span>+${changes.profBonus.old}</span>
+                                <span class="lu-arrow">→</span>
+                                <span class="lu-highlight">+${changes.profBonus.new}</span>
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    <div class="lu-section">
+                        <h4>❤️ Punti Ferita</h4>
+                        <p class="lu-desc">Guadagni PF per il nuovo livello (d${changes.hp.hitDie} + ${changes.hp.conMod >= 0 ? '+' : ''}${changes.hp.conMod} COS):</p>
+                        <div class="lu-hp-choice">
+                            <button class="btn btn-sm ${changes.hp.choice === 'average' ? 'btn-primary' : 'btn-secondary'}" 
+                                    data-hp-choice="average">
+                                📊 Media: +${changes.hp.totalGain} PF
+                            </button>
+                            <button class="btn btn-sm ${changes.hp.choice === 'roll' ? 'btn-primary' : 'btn-secondary'}" 
+                                    data-hp-choice="roll">
+                                🎲 Tira il dado (1d${changes.hp.hitDie}${changes.hp.conMod >= 0 ? '+' + changes.hp.conMod : changes.hp.conMod})
+                            </button>
+                        </div>
+                        <div class="lu-hp-result">
+                            HP attuali: <strong>${pg.hp?.current || 0}/${pg.hp?.max || 0}</strong>
+                            → Nuovi: <strong id="lu-new-hp">${(pg.hp?.current || 0) + changes.hp.totalGain}/${(pg.hp?.max || 0) + changes.hp.totalGain}</strong>
+                        </div>
+                    </div>
+
+                    ${isNewASI ? `
+                        <div class="lu-section lu-asi-section">
+                            <h4>📈 Miglioramento Punteggi di Caratteristica</h4>
+                            <p class="lu-desc">Hai <strong>${changes.asi.newPoints} punti</strong> da distribuire (+2 a una o +1 a due caratteristiche).</p>
+                            <div class="lu-asi-points">
+                                <span>Punti rimanenti: <strong class="lu-asi-remaining">${changes.asi.newPoints}/${changes.asi.newPoints}</strong></span>
+                            </div>
+                            <div class="lu-asi-grid">
+                                ${['str', 'dex', 'con', 'int', 'wis', 'cha'].map(key => {
+                                    const prop = ABILITY_KEY_TO_PROPERTY[key];
+                                    const totalScore = (pg.abilities?.[prop] || 10) + 
+                                        ((pg._asiBonuses || {})[prop] || 0);
+                                    const mod = calculateModifier(totalScore);
+                                    const allocated = changes.modalASI[prop] || 0;
+                                    return `
+                                        <div class="lu-asi-item">
+                                            <span class="lu-asi-name">${key.toUpperCase()}</span>
+                                            <span class="lu-asi-score">${totalScore}${allocated > 0 ? `<span class="lu-asi-added">+${allocated}</span>` : ''}</span>
+                                            <span class="lu-asi-mod">${mod >= 0 ? '+' : ''}${mod}</span>
+                                            <div class="lu-asi-buttons">
+                                                <button class="btn btn-mini" data-asi-ability="${prop}" data-asi-action="decrease">−</button>
+                                                <button class="btn btn-mini" data-asi-ability="${prop}" data-asi-action="increase">+</button>
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    ${hasNewFeatures ? `
+                        <div class="lu-section">
+                            <h4>⚔️ Nuovi Privilegi di Classe</h4>
+                            <div class="lu-features">
+                                ${changes.newFeatures.map(f => `
+                                    <div class="lu-feature-tag class-feature">⚔️ ${f}</div>
+                                `).join('')}
+                                ${changes.newSubclassFeatures.map(f => `
+                                    <div class="lu-feature-tag subclass-feature">🌟 ${f.nome}</div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    ${hasSpellChanges ? `
+                        <div class="lu-section">
+                            <h4>✨ Incantesimi</h4>
+                            ${changes.spellSlots ? `
+                                <p class="lu-desc">Nuovi slot incantesimo:</p>
+                                <div class="lu-spell-slots">
+                                    ${Object.entries(changes.spellSlots).map(([lvl, count]) => `
+                                        <span class="lu-slot-tag">+${count} slot lv.${lvl}</span>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                            ${changes.cantrips ? `<p class="lu-desc">🎉 +${changes.cantrips} trucchetti</p>` : ''}
+                            ${changes.spellsKnown ? `<p class="lu-desc">📖 +${changes.spellsKnown} incantesimi nello spazio dei preparati</p>` : ''}
+                        </div>
+                    ` : ''}
+                </div>
+
+                <div class="level-up-footer">
+                    <button class="btn btn-secondary" data-lu-action="cancel">Annulla</button>
+                    <button class="btn btn-primary" data-lu-action="confirm">✅ Conferma Level Up</button>
+                </div>
+            </div>
+        `;
+    }
+
+    /**
+     * Gestisce la scelta HP (media o tiro)
+     */
+    _handleHpChoice(modal, choice, changes) {
+        if (choice === 'roll') {
+            const roll = Math.floor(Math.random() * changes.hp.hitDie) + 1;
+            changes.hp.totalGain = roll + changes.hp.conMod;
+            changes.hp.choice = 'roll';
+            changes.hp.rolled = roll;
+        } else {
+            changes.hp.totalGain = changes.hp.avgGain + changes.hp.conMod;
+            changes.hp.choice = 'average';
+            delete changes.hp.rolled;
+        }
+
+        // Aggiorna display
+        const hpResult = modal.querySelector('.lu-hp-result');
+        if (hpResult) {
+            // Retrieve pg from DOM context - we need pg for current HP
+            const pgId = this.selectedPgId;
+            const pg = this.dataManager.getById(pgId);
+            if (pg) {
+                const newCurrent = (pg.hp?.current || 0) + changes.hp.totalGain;
+                const newMax = (pg.hp?.max || 0) + changes.hp.totalGain;
+                const choiceText = choice === 'roll' 
+                    ? ` (Tiro: ${changes.hp.rolled}${changes.hp.conMod >= 0 ? '+' + changes.hp.conMod : changes.hp.conMod})` 
+                    : '';
+                hpResult.innerHTML = `HP attuali: <strong>${pg.hp?.current || 0}/${pg.hp?.max || 0}</strong> → Nuovi: <strong>${newCurrent}/${newMax}</strong>${choiceText}`;
+            }
+        }
+
+        // Aggiorna bottoni
+        modal.querySelectorAll('.lu-hp-choice .btn').forEach(btn => {
+            const isActive = btn.dataset.hpChoice === choice;
+            btn.className = `btn btn-sm ${isActive ? 'btn-primary' : 'btn-secondary'}`;
+        });
+    }
+
+    /**
+     * Gestisce ASI nel modal
+     */
+    _handleModalASI(target, modal, changes) {
+        const prop = target.dataset.asiAbility;
+        const action = target.dataset.asiAction;
+        
+        const allocated = Object.values(changes.modalASI).reduce((s, v) => s + v, 0);
+        const maxPoints = changes.asi.newPoints;
+
+        if (action === 'increase') {
+            if (allocated >= maxPoints) {
+                showToast('Hai distribuito tutti i punti ASI disponibili.', 'warning');
+                return;
+            }
+            changes.modalASI[prop] = (changes.modalASI[prop] || 0) + 1;
+        } else {
+            if ((changes.modalASI[prop] || 0) <= 0) return;
+            changes.modalASI[prop]--;
+        }
+
+        // Aggiorna display
+        const remaining = maxPoints - Object.values(changes.modalASI).reduce((s, v) => s + v, 0);
+        const remainingEl = modal.querySelector('.lu-asi-remaining');
+        if (remainingEl) {
+            remainingEl.textContent = `${remaining}/${maxPoints}`;
+        }
+
+        // Aggiorna righe ASI
+        const pgId = this.selectedPgId;
+        const pg = this.dataManager.getById(pgId);
+        if (pg) {
+            modal.querySelectorAll('.lu-asi-item').forEach(item => {
+                const btns = item.querySelectorAll('[data-asi-ability]');
+                if (btns.length > 0) {
+                    const abilityProp = btns[0].dataset.asiAbility;
+                    const base = pg.abilities?.[abilityProp] || 10;
+                    const oldASI = (pg._asiBonuses || {})[abilityProp] || 0;
+                    const newASI = changes.modalASI[abilityProp] || 0;
+                    const total = base + oldASI + newASI;
+                    const mod = calculateModifier(total);
+                    
+                    const scoreEl = item.querySelector('.lu-asi-score');
+                    const modEl = item.querySelector('.lu-asi-mod');
+                    if (scoreEl) {
+                        scoreEl.innerHTML = `${total}${newASI > 0 ? `<span class="lu-asi-added">+${newASI}</span>` : ''}`;
+                    }
+                    if (modEl) {
+                        modEl.textContent = `${mod >= 0 ? '+' : ''}${mod}`;
+                    }
+                }
+            });
+        }
+    }
+
+    /**
+     * Conferma il level up
+     */
+    _handleLevelUpConfirm(pgId, modal, currentLevel, newLevel, changes) {
+        const pg = this.dataManager.getById(pgId);
+        if (!pg) return;
+
+        const classData = this.databases.classes?.find(c => c.index === pg.class);
+        if (!classData) return;
+
+        // 1. Aggiorna livello
+        const updates = {
+            level: newLevel,
+            proficiencyBonus: calculateProficiencyBonus(newLevel)
+        };
+
+        // 2. Aggiorna HP (incrementale)
+        const hpGain = Math.max(1, changes.hp.totalGain); // Minimo 1 PF per livello
+        updates.hp = {
+            current: (pg.hp?.current || 0) + hpGain,
+            max: (pg.hp?.max || 0) + hpGain,
+            temp: pg.hp?.temp || 0
+        };
+
+        // 3. Aggiorna dadi vita
+        updates.hitDice = {
+            total: newLevel,
+            current: newLevel,
+            size: `d${classData.hit_die}`
+        };
+
+        // 4. Aggiorna ASI (somma i nuovi a quelli esistenti)
+        const oldASI = { ...(pg._asiBonuses || { strength: 0, dexterity: 0, constitution: 0, intelligence: 0, wisdom: 0, charisma: 0 }) };
+        const newASI = { ...oldASI };
+        for (const [prop, val] of Object.entries(changes.modalASI)) {
+            newASI[prop] = (newASI[prop] || 0) + val;
+        }
+        updates._asiBonuses = newASI;
+
+        // Applica i nuovi ASI alle abilità
+        const newAbilities = { ...(pg.abilities || {}) };
+        for (const [prop, val] of Object.entries(changes.modalASI)) {
+            if (val) {
+                newAbilities[prop] = Math.min(20, (newAbilities[prop] || 10) + val);
+            }
+        }
+        updates.abilities = newAbilities;
+
+        // 5. Aggiorna spell slots e spellcasting (se incantatore)
+        if (ALL_SPELLCASTERS.includes(classData.index)) {
+            const spellAbility = this.getSpellcastingAbility(classData.index);
+            const abilityScore = newAbilities[spellAbility] || 10;
+            const spellSlots = calculateSpellSlots(classData.index, newLevel);
+
+            updates.spellcasting = {
+                ...(pg.spellcasting || {}),
+                ability: spellAbility,
+                spellSaveDC: 8 + updates.proficiencyBonus + calculateModifier(abilityScore),
+                spellAttackBonus: updates.proficiencyBonus + calculateModifier(abilityScore),
+                slots: spellSlots
+            };
+        }
+
+        // 6. Ricalcola iniziativa
+        updates.initiative = calculateModifier(newAbilities.dexterity);
+
+        // Salva
+        this.dataManager.update(pgId, updates);
+        this.selectedPgId = pgId;
+
+        showToast(`${pg.name} è salito al livello ${newLevel}!`, 'success');
+        modal.remove();
+        this.render();
     }
     
     /**
