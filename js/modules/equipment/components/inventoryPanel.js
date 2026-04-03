@@ -26,14 +26,16 @@ export function renderInventoryPanel(inventory = [], options = {}) {
         filter = 'all'  // all, equippable, equipped, unequipped
     } = options;
     
-    // Filtra l'inventario
-    let filteredInventory = [...inventory];
+    // Filtra l'inventario mantenendo gli indici originali
+    // Questo è CRITICO: i data-item-index devono sempre corrispondere
+    // all'indice nell'array inventory originale, non a quello filtrato
+    let filteredItems = inventory.map((item, index) => ({ item, originalIndex: index }));
     if (filter === 'equippable') {
-        filteredInventory = inventory.filter(item => isItemEquippable(item));
+        filteredItems = filteredItems.filter(({ item }) => isItemEquippable(item));
     } else if (filter === 'equipped') {
-        filteredInventory = inventory.filter(item => item.equipped === true);
+        filteredItems = filteredItems.filter(({ item }) => item.equipped === true);
     } else if (filter === 'unequipped') {
-        filteredInventory = inventory.filter(item => !item.equipped);
+        filteredItems = filteredItems.filter(({ item }) => !item.equipped);
     }
     
     // Calcola peso totale
@@ -49,10 +51,10 @@ export function renderInventoryPanel(inventory = [], options = {}) {
             ${showFilters ? renderFilterTabs(filter) : ''}
             
             <div class="inventory-list">
-                ${filteredInventory.length === 0 
+                ${filteredItems.length === 0 
                     ? renderEmptyInventory() 
-                    : filteredInventory.map((item, index) => 
-                        renderInventoryItem(item, index, selectedItem, editable)
+                    : filteredItems.map(({ item, originalIndex }) => 
+                        renderInventoryItem(item, originalIndex, selectedItem, editable)
                     ).join('')
                 }
             </div>
