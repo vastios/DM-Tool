@@ -468,6 +468,29 @@ export class PgController {
             return;
         }
         
+        // === LEVEL-UP WIZARD: click su elementi non-button (label, span) ===
+        if (this.isLevelUpMode && !button) {
+            // Spell toggle (label con checkbox)
+            const spellLabel = target.closest('[data-lu-spell]');
+            if (spellLabel) {
+                e.preventDefault();
+                this._handleWizardSpellToggle(spellLabel);
+                return;
+            }
+            // Spell swap out (span)
+            const swapOutItem = target.closest('[data-swap-out]');
+            if (swapOutItem && !swapOutItem.classList.contains('already-known')) {
+                this._handleWizardSwapOut(swapOutItem);
+                return;
+            }
+            // Spell swap in (span)
+            const swapInItem = target.closest('[data-swap-in]');
+            if (swapInItem && !swapInItem.classList.contains('already-known')) {
+                this._handleWizardSwapIn(swapInItem);
+                return;
+            }
+        }
+
         if (!button) return;
         
         // Pulsante Nuovo PG
@@ -507,24 +530,6 @@ export class PgController {
             // HP choice
             if (button.dataset.hpChoice) {
                 this._handleWizardHpChoice(button);
-                return;
-            }
-            // Spell toggle
-            const spellLabel = button.closest('[data-lu-spell]');
-            if (spellLabel) {
-                this._handleWizardSpellToggle(spellLabel);
-                return;
-            }
-            // Spell swap out
-            const swapOutItem = button.closest('[data-swap-out]');
-            if (swapOutItem && !swapOutItem.classList.contains('already-known')) {
-                this._handleWizardSwapOut(swapOutItem);
-                return;
-            }
-            // Spell swap in
-            const swapInItem = button.closest('[data-swap-in]');
-            if (swapInItem && !swapInItem.classList.contains('already-known')) {
-                this._handleWizardSwapIn(swapInItem);
                 return;
             }
             // Clear swap
