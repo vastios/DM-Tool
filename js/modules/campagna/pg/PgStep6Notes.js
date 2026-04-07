@@ -4,20 +4,10 @@
  * Renderizza lo Step 6 del wizard: Background e Note.
  * 
  * @author DM Tool
- * @version 1.0.0
+ * @version 1.1.0 - escapeHtml importata da PgConstants
  */
 
-/**
- * Escape HTML per prevenire XSS
- * @param {string} text - Testo da escapare
- * @returns {string} Testo escapato
- */
-function escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
+import { escapeHtml } from './PgConstants.js';
 
 /**
  * Renderizza lo Step 6: Background e Note

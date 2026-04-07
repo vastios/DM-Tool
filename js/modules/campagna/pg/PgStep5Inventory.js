@@ -11,8 +11,10 @@
  * - Mostra peso totale e costo totale
  * 
  * @author DM Tool
- * @version 2.0.0
+ * @version 2.1.0 - escapeHtml importata da PgConstants
  */
+
+import { escapeHtml } from './PgConstants.js';
 
 /**
  * Categorie di equipaggiamento per il filtro
@@ -24,16 +26,6 @@ const EQUIPMENT_CATEGORIES = {
     'tools': { name: 'Strumenti', icon: '🔧' },
     'mounts-and-vehicles': { name: 'Veicoli', icon: '🐴' }
 };
-
-/**
- * Escape HTML per prevenire XSS
- */
-function escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
 
 /**
  * Formatta il costo in monete

@@ -4,58 +4,10 @@
  * Renderizza lo Step 1 del wizard: Identità del personaggio.
  * 
  * @author DM Tool
- * @version 1.0.0
+ * @version 1.1.0 - getSubclassMinLevel importata da PgConstants
  */
 
-/**
- * Escape HTML per prevenire XSS
- * @param {string} text - Testo da escapare
- * @returns {string} Testo escapato
- */
-function escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-
-/**
- * Determina il livello minimo per scegliere la sottoclasse
- * @param {Object} selectedClass - Classe selezionata
- * @returns {number} Livello minimo
- */
-function getSubclassMinLevel(selectedClass) {
-    if (!selectedClass) return 1;
-    
-    // Nomi comuni dei privilegi che introducono la sottoclasse
-    const subclassKeywords = [
-        'Cammino', 'Tradizione', 'College', 'Dominio', 'Cerchio', 
-        'Archetipo', 'Monachesimo', 'Giuramento', 'Conclave', 
-        'Origine', 'Patrono', 'Sottoclasse'
-    ];
-    
-    // Cerca nella tabella progressione
-    const table = selectedClass.tabella_progressione || [];
-    for (const row of table) {
-        if (row.privilegi) {
-            for (const priv of row.privilegi) {
-                if (subclassKeywords.some(k => priv.includes(k))) {
-                    return row.livello || 1;
-                }
-            }
-        }
-    }
-    
-    // Default per classe
-    const index = selectedClass.index;
-    if (['sorcerer', 'warlock', 'cleric'].includes(index)) {
-        return 1;
-    }
-    if (['wizard'].includes(index)) {
-        return 2;
-    }
-    return 3;
-}
+import { escapeHtml, getSubclassMinLevel } from './PgConstants.js';
 
 /**
  * Renderizza il selettore della sottoclasse con controllo livello

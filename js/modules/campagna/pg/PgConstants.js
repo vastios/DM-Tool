@@ -230,6 +230,19 @@ export const EMPTY_PG = {
 // FUNZIONI DI UTILITÀ
 // ============================================================================
 
+/**
+ * Escape HTML per prevenire XSS.
+ * Centralizzata per evitare duplicazione in più file.
+ * @param {string} text - Testo da escapare
+ * @returns {string} Testo escapato
+ */
+export function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
 export function calculateModifier(score) {
     return Math.floor((score - 10) / 2);
 }
@@ -477,8 +490,8 @@ export function calculateSpellSlots(classIndex, level) {
     
     // Determina tipo di caster
     const fullCasters = ['bard', 'cleric', 'druid', 'sorcerer', 'wizard', 'bardo', 'chierico', 'druido', 'stregone', 'mago'];
-    const halfCasters = ['paladin', 'ranger', 'paladino', 'ranger'];
-    const warlockClasses = ['warlock', 'warlock'];
+    const halfCasters = ['paladin', 'ranger', 'paladino'];
+    const warlockClasses = ['warlock'];
     
     const normalizedClass = classIndex?.toLowerCase() || '';
     
@@ -507,6 +520,47 @@ export function calculateSpellSlots(classIndex, level) {
     }
     
     return result;
+}
+
+/**
+ * Determina il livello minimo per scegliere la sottoclasse
+ * basandosi sulla tabella progressione della classe.
+ * Centralizzata per evitare duplicazione e incoerenza.
+ * 
+ * @param {Object} selectedClass - Classe selezionata (con tabella_progressione)
+ * @returns {number} Livello minimo per la sottoclasse
+ */
+export function getSubclassMinLevel(selectedClass) {
+    if (!selectedClass) return 1;
+    
+    // Nomi comuni dei privilegi che introducono la sottoclasse
+    const subclassKeywords = [
+        'Cammino', 'Tradizione', 'College', 'Dominio', 'Cerchio', 
+        'Archetipo', 'Monachesimo', 'Giuramento', 'Conclave', 
+        'Origine', 'Patrono', 'Sottoclasse'
+    ];
+    
+    // Cerca nella tabella progressione
+    const table = selectedClass.tabella_progressione || [];
+    for (const row of table) {
+        if (row.privilegi) {
+            for (const priv of row.privilegi) {
+                if (subclassKeywords.some(k => priv.includes(k))) {
+                    return row.livello || 1;
+                }
+            }
+        }
+    }
+    
+    // Default per classe (D&D 5e SRD 2014)
+    const index = selectedClass.index;
+    if (['sorcerer', 'warlock', 'cleric'].includes(index)) {
+        return 1;
+    }
+    if (['wizard'].includes(index)) {
+        return 2;
+    }
+    return 3;
 }
 
 console.log('📋 [PgConstants] Modulo costanti caricato.');

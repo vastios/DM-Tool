@@ -24,7 +24,8 @@ import {
     ABILITY_KEY_TO_PROPERTY,
     PROPERTY_TO_ABILITY_KEY,
     SKILL_ABILITY_MAP,
-    ALL_SPELLCASTERS
+    ALL_SPELLCASTERS,
+    getSubclassMinLevel
 } from './PgConstants.js';
 import { addMonsterToCombat } from '../../../../stateManager.js';
 import { showToast } from '../../../../utils/toast.js';
@@ -1008,7 +1009,7 @@ export class PgController {
         if (this.databases.selectedClass) {
             // Fix: usa 'sottoclassi' (italiano) invece di 'subclasses'
             this.wizardData.subclassOptions = this.databases.selectedClass.sottoclassi || this.databases.selectedClass.subclasses || [];
-            this.wizardData.subclassMinLevel = this.getSubclassMinLevel(this.databases.selectedClass);
+            this.wizardData.subclassMinLevel = getSubclassMinLevel(this.databases.selectedClass);
         }
         
         // IMPORTANTISSIMO: Sottrai bonus razziali e ASI dalle abilità
@@ -1166,45 +1167,11 @@ export class PgController {
             this.wizardData.subclassOptions = this.databases.selectedClass.sottoclassi || this.databases.selectedClass.subclasses || [];
             this.wizardData.subclass = '';
             // Calcola il livello minimo per la sottoclasse
-            this.wizardData.subclassMinLevel = this.getSubclassMinLevel(this.databases.selectedClass);
+            this.wizardData.subclassMinLevel = getSubclassMinLevel(this.databases.selectedClass);
             this.recalculateHp();
         }
         
         this.render();
-    }
-    
-    /**
-     * Determina il livello minimo per scegliere la sottoclasse
-     * basandosi sulla tabella progressione
-     */
-    getSubclassMinLevel(selectedClass) {
-        if (!selectedClass) return 1;
-        
-        // Nomi comuni dei privilegi che introducono la sottoclasse
-        const subclassKeywords = [
-            'Cammino', 'Tradizione', 'College', 'Dominio', 'Cerchio', 
-            'Archetipo', 'Monachesimo', 'Giuramento', 'Conclave', 
-            'Origine', 'Patrono', 'Sottoclasse'
-        ];
-        
-        // Cerca nella tabella progressione
-        const table = selectedClass.tabella_progressione || [];
-        for (const row of table) {
-            if (row.privilegi) {
-                for (const priv of row.privilegi) {
-                    if (subclassKeywords.some(k => priv.includes(k))) {
-                        return row.livello || 1;
-                    }
-                }
-            }
-        }
-        
-        // Default: livello 1 per Stregoni e Warlock, livello 3 per altri
-        const index = selectedClass.index;
-        if (['sorcerer', 'warlock', 'cleric'].includes(index)) {
-            return 1;
-        }
-        return 3;
     }
     
     updateBackground(bgIndex) {

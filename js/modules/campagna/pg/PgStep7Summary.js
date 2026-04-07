@@ -9,21 +9,10 @@
 
 import { 
     ABILITY_KEY_TO_PROPERTY,
-    calculateModifier 
+    calculateModifier, 
+    escapeHtml
 } from './PgConstants.js';
 import { linkifyConditions } from '/utils/htmlHelpers.js';
-
-/**
- * Escape HTML per prevenire XSS
- * @param {string} text - Testo da escapare
- * @returns {string} Testo escapato
- */
-function escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
 
 /**
  * Formatta le monete per il display (sistema D&D: pp, gp, ep, sp, cp)
@@ -67,8 +56,8 @@ export function renderStep7Summary(pgData, databases, traitsHtml = '') {
     return `
         <div class="wizard-form">
             <div class="summary-header">
-                <h2>${pgData.name || 'Nome PG'}</h2>
-                <p>${pgData.raceName || selectedRace?.classe || selectedRace?.name || ''} ${pgData.className || selectedClass?.classe || selectedClass?.name || ''} Lv.${pgData.level || 1}</p>
+                <h2>${escapeHtml(pgData.name || 'Nome PG')}</h2>
+                <p>${escapeHtml(pgData.raceName || selectedRace?.classe || selectedRace?.name || '')} ${escapeHtml(pgData.className || selectedClass?.classe || selectedClass?.name || '')} Lv.${pgData.level || 1}</p>
             </div>
             
             <div class="summary-grid">
