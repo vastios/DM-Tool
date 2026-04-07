@@ -18,11 +18,9 @@ import {
     ABILITY_ABBREVIATIONS,
     SKILL_ABILITY_MAP,
     ALL_SKILLS,
-    calculateModifier
+    calculateModifier,
+    escapeHtml
 } from './PgConstants.js';
-import { linkifyConditions } from '/utils/htmlHelpers.js';
-import { linkifyCampaignReferences, getAutocompleteSuggestions } from '/utils/campaignLinker.js';
-import { getRaceTraitsWithDescriptions } from '/database/traitDescriptions.js';
 import { renderStep5Inventory } from './PgStep5Inventory.js';
 import { renderStep6Notes } from './PgStep6Notes.js';
 import { renderStep7Summary } from './PgStep7Summary.js';
@@ -32,13 +30,8 @@ import { renderStep3Proficiencies } from './PgStep3Proficiencies.js';
 import { renderStep4Spells } from './PgStep4Spells.js';
 import { 
     renderCharacterSheet, 
-    renderTraitsAndPrivileges,
-    renderTraitTag,
-    getClassPrivileges,
-    getSubclassPrivileges,
-    getRacialTraits
+    renderTraitsAndPrivileges
 } from './PgCharacterSheet.js';
-import { escapeHtml } from './PgConstants.js';
 
 export class PgViewManager {
     

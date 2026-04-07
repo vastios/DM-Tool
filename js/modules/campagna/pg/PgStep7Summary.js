@@ -12,7 +12,7 @@ import {
     calculateModifier, 
     escapeHtml
 } from './PgConstants.js';
-import { linkifyConditions } from '/utils/htmlHelpers.js';
+import { linkifyConditions } from '../../../../utils/htmlHelpers.js';
 
 /**
  * Formatta le monete per il display (sistema D&D: pp, gp, ep, sp, cp)

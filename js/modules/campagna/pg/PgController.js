@@ -17,13 +17,10 @@ import {
     EMPTY_PG, 
     calculateModifier, 
     calculateProficiencyBonus, 
-    calculateMaxHp,
     calculateArmorClass,
     calculateSpellSlots,
     calculateAvailableASI,
     ABILITY_KEY_TO_PROPERTY,
-    PROPERTY_TO_ABILITY_KEY,
-    SKILL_ABILITY_MAP,
     ALL_SPELLCASTERS,
     getSubclassMinLevel,
     escapeHtml
@@ -39,9 +36,8 @@ export class PgController {
     // COSTRUTTORE E INIZIALIZZAZIONE
     // ========================================================================
     
-    constructor(container, initialState) {
+    constructor(container) {
         this.container = container;
-        this.initialState = initialState;
         this.dataManager = new PgDataManager();
         this.viewManager = new PgViewManager(container);
         
@@ -259,22 +255,6 @@ export class PgController {
             console.error('🎮 [PgController] Errore caricamento database:', error);
             showToast('Errore nel caricamento dei database.', 'error');
         }
-    }
-    
-    extractArrayFromModule(module) {
-        if (Array.isArray(module)) return module;
-        if (Array.isArray(module.default)) return module.default;
-        if (module.default && typeof module.default === 'object') {
-            const values = Object.values(module.default);
-            if (values.length > 0 && values[0].index) return values;
-        }
-        return [];
-    }
-    
-    extractObjectFromModule(module) {
-        if (module.default && typeof module.default === 'object') return module.default;
-        if (typeof module === 'object' && !Array.isArray(module)) return module;
-        return {};
     }
     
     // ========================================================================
@@ -946,15 +926,6 @@ export class PgController {
         this.render();
     }
     
-    /**
-     * Deseleziona il PG corrente.
-     */
-    deselectPg() {
-        this.selectedPgId = null;
-        this.mode = 'view';
-        this.render();
-    }
-    
     // ========================================================================
     // WIZARD
     // ========================================================================
@@ -971,6 +942,7 @@ export class PgController {
         this.isEditMode = false;
         this.databases.selectedRace = null;
         this.databases.selectedClass = null;
+        this.databases.selectedBackground = null;
         
         this.render();
     }
@@ -1175,6 +1147,11 @@ export class PgController {
             this.wizardData.backgroundName = this.databases.selectedBackground.nome;
             // Salva le abilità del background separatamente per escluderle dal conteggio classe
             const bgSkills = this.databases.selectedBackground.competenze?.abilita || [];
+            // Rimuovi vecchie abilità del background prima di aggiungere le nuove
+            const oldBgSkills = this.wizardData._bgSkills || [];
+            if (this.wizardData.skills && oldBgSkills.length > 0) {
+                this.wizardData.skills = this.wizardData.skills.filter(s => !oldBgSkills.includes(s));
+            }
             this.wizardData._bgSkills = bgSkills;
             if (!this.wizardData.skills) this.wizardData.skills = [];
             bgSkills.forEach(skill => {

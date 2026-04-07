@@ -23,7 +23,7 @@ import {
     getMaxSpellsKnown,
     isKnownCaster,
     isPreparedCaster
-} from '/database/classSpells.js';
+} from '../../../../database/classSpells.js';
 
 // Mappatura indizi classi (inglese) -> nomi italiani
 const CLASS_NAME_IT = {

@@ -19,9 +19,9 @@ import {
     calculateModifier,
     escapeHtml
 } from './PgConstants.js';
-import { linkifyConditions } from '/utils/htmlHelpers.js';
-import { linkifyCampaignReferences } from '/utils/campaignLinker.js';
-import { getRaceTraitsWithDescriptions } from '/database/traitDescriptions.js';
+import { linkifyConditions } from '../../../../utils/htmlHelpers.js';
+import { linkifyCampaignReferences } from '../../../../utils/campaignLinker.js';
+import { getRaceTraitsWithDescriptions } from '../../../../database/traitDescriptions.js';
 
 // ========================================================================
 // TRATTI E PRIVILEGI
