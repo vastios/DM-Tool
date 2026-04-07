@@ -11,7 +11,7 @@ import { showToast } from '../../../utils/toast.js';
 import { renderBodySVG } from './components/bodySlotRenderer.js';
 import { renderInventoryPanel, renderItemDetail } from './components/inventoryPanel.js';
 import { SLOT_TYPES, isItemCompatibleWithSlot } from './config/slotTypes.js';
-import { searchItems, getItemByIndex, isItemEquippable } from './services/itemLoader.js';
+import { searchItems, getItemByIndex, isItemEquippable, getEquipmentCategories, formatCost, formatWeight } from './services/itemLoader.js';
 
 /**
  * Popup per la gestione dell'equipaggiamento
@@ -30,6 +30,10 @@ export class EquipmentPopup {
         this.searchTerm = '';
         this.draggedItem = null;
         this.draggedIndex = null;
+        // Stato pannello aggiunta oggetti
+        this.showAddPanel = false;
+        this.addSearchTerm = '';
+        this.addCategory = 'all';
     }
     
     /**
@@ -193,22 +197,127 @@ export class EquipmentPopup {
                     ${this._renderStatsSummary()}
                 </div>
                 
-                <!-- Colonna centrale: Inventario -->
+                <!-- Colonna centrale: Inventario o Aggiungi -->
                 <div class="popup-column center-column">
-                    ${renderInventoryPanel(this.inventory, {
-                        showSearch: true,
-                        showFilters: true,
-                        showAddButton: false,
-                        editable: true,
-                        selectedItem: this.selectedItem,
-                        filter: this.filter
-                    })}
+                    ${this.showAddPanel ? this._renderAddItemPanel() : this._renderInventoryColumn()}
                 </div>
                 
                 <!-- Colonna destra: Dettagli oggetto -->
                 <div class="popup-column right-column">
                     <div class="item-detail-container">
                         ${renderItemDetail(this.selectedItem)}
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    /**
+     * Renderizza la colonna inventario con toggle aggiunta
+     */
+    _renderInventoryColumn() {
+        return `
+            <div class="inventory-column-header">
+                <button class="popup-btn add-toggle-btn ${this.showAddPanel ? 'active' : ''}" data-action="toggle-add-panel">
+                    ${this.showAddPanel ? '📦 Inventario' : '➕ Aggiungi Oggetto'}
+                </button>
+            </div>
+            ${renderInventoryPanel(this.inventory, {
+                showSearch: true,
+                showFilters: true,
+                showAddButton: false,
+                editable: true,
+                selectedItem: this.selectedItem,
+                filter: this.filter
+            })}
+        `;
+    }
+
+    /**
+     * Renderizza il pannello per aggiungere oggetti dal database
+     */
+    _renderAddItemPanel() {
+        const categories = getEquipmentCategories();
+        const results = this.addSearchTerm 
+            ? searchItems(this.addSearchTerm, { category: this.addCategory !== 'all' ? this.addCategory : null, limit: 40 }) 
+            : (this.addCategory !== 'all' 
+                ? searchItems('', { category: this.addCategory, limit: 40 }) 
+                : []);
+
+        // Nomi già in inventario (per evitare duplicati visivi)
+        const ownedNames = new Set(
+            this.inventory.map(i => (i.name || i.index || '').toLowerCase())
+        );
+
+        return `
+            <div class="add-item-panel">
+                <div class="add-panel-header">
+                    <button class="popup-btn add-toggle-btn" data-action="toggle-add-panel">
+                        📦 Torna all'Inventario
+                    </button>
+                </div>
+
+                <!-- Ricerca -->
+                <div class="add-search-box">
+                    <input type="text" 
+                           class="popup-search-input" 
+                           placeholder="🔍 Cerca nel database..." 
+                           value="${this.addSearchTerm.replace(/"/g, '&quot;')}"
+                           data-action="add-search">
+                </div>
+
+                <!-- Filtri categoria -->
+                <div class="add-category-filters">
+                    <button class="filter-tab ${this.addCategory === 'all' ? 'active' : ''}" data-action="add-filter" data-category="all">Tutti</button>
+                    ${categories.map(cat => `
+                        <button class="filter-tab ${this.addCategory === cat.index ? 'active' : ''}" 
+                                data-action="add-filter" data-category="${cat.index}">
+                            ${cat.name}
+                        </button>
+                    `).join('')}
+                </div>
+
+                <!-- Risultati -->
+                <div class="add-item-results">
+                    ${results.length === 0 && !this.addSearchTerm && this.addCategory === 'all'
+                        ? '<p class="add-hint">Digita un nome o seleziona una categoria per cercare oggetti.</p>'
+                        : results.length === 0
+                            ? '<p class="add-hint">Nessun oggetto trovato.</p>'
+                            : results.map(item => {
+                                const owned = ownedNames.has((item.name || '').toLowerCase());
+                                return `
+                                    <div class="add-item-row ${owned ? 'already-owned' : ''}" data-item-index="${item.index}">
+                                        <div class="add-item-info">
+                                            <span class="add-item-icon">${getItemIconForAdd(item)}</span>
+                                            <div class="add-item-text">
+                                                <span class="add-item-name">${escapeHtmlPopup(item.name)}</span>
+                                                <span class="add-item-meta">
+                                                    ${item.equipment_category?.name || ''}
+                                                    ${item.cost ? ' • ' + formatCost(item.cost) : ''}
+                                                    ${item.weight ? ' • ' + formatWeight(item.weight) : ''}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <button class="popup-btn add-btn-sm" 
+                                                data-action="add-to-inventory" 
+                                                data-item-index="${item.index}"
+                                                ${owned ? 'disabled title="Già in inventario"' : 'title="Aggiungi"'}>
+                                            ${owned ? '✓' : '+'}
+                                        </button>
+                                    </div>
+                                `;
+                            }).join('')
+                    }
+                </div>
+
+                <!-- Oggetto personalizzato -->
+                <div class="add-custom-section">
+                    <h5>✏️ Oggetto Personalizzato</h5>
+                    <div class="add-custom-form">
+                        <input type="text" class="popup-form-input" id="popup-custom-name" placeholder="Nome">
+                        <input type="number" class="popup-form-input" id="popup-custom-qty" placeholder="Q.tà" value="1" min="1" style="width:60px">
+                        <input type="number" class="popup-form-input" id="popup-custom-weight" placeholder="Peso" value="0" min="0" step="0.1" style="width:70px">
+                        <button class="popup-btn save-btn" data-action="create-custom" style="white-space:nowrap">+ Aggiungi</button>
                     </div>
                 </div>
             </div>
@@ -316,6 +425,11 @@ export class EquipmentPopup {
                 this.searchTerm = e.target.value.toLowerCase();
                 this._filterInventoryItems();
             }
+            // Ricerca nel pannello aggiunta
+            if (e.target.matches('[data-action="add-search"]')) {
+                this.addSearchTerm = e.target.value;
+                this._refreshAddResults();
+            }
         });
         
         // Drag & Drop
@@ -353,10 +467,93 @@ export class EquipmentPopup {
                 this._selectItem(infoIndex);
                 break;
             case 'unequip-slot':
-                const slotId = target.dataset.slot;
-                this._unequipSlot(slotId);
+                const unequipSlotId = target.dataset.slot;
+                this._unequipSlot(unequipSlotId);
+                break;
+            case 'toggle-add-panel':
+                this.showAddPanel = !this.showAddPanel;
+                this._refresh();
+                break;
+            case 'add-to-inventory':
+                this._addFromDatabase(target.dataset.itemIndex);
+                break;
+            case 'create-custom':
+                this._addCustomItem();
+                break;
+            case 'add-filter':
+                this.addCategory = target.dataset.category || 'all';
+                this._refresh();
                 break;
         }
+    }
+
+    /**
+     * Aggiunge un oggetto dal database all'inventario
+     */
+    _addFromDatabase(itemIndex) {
+        const item = getItemByIndex(itemIndex);
+        if (!item) {
+            showToast('Oggetto non trovato nel database.', 'error');
+            return;
+        }
+
+        // Verifica se già presente (merge quantità)
+        const existingIdx = this.inventory.findIndex(
+            i => (i.index || i.name || '').toLowerCase() === (item.index || item.name || '').toLowerCase()
+        );
+
+        if (existingIdx >= 0) {
+            this.inventory[existingIdx].quantity = (this.inventory[existingIdx].quantity || 1) + 1;
+            showToast(`${item.name} — quantità aumentata a ${this.inventory[existingIdx].quantity}`, 'success');
+        } else {
+            this.inventory.push({
+                ...item,
+                quantity: 1,
+                equipped: false,
+                equippedSlot: null
+            });
+            showToast(`${item.name} aggiunto all'inventario!`, 'success');
+        }
+
+        this._refresh();
+    }
+
+    /**
+     * Aggiunge un oggetto personalizzato
+     */
+    _addCustomItem() {
+        const nameInput = this.container.querySelector('#popup-custom-name');
+        const qtyInput = this.container.querySelector('#popup-custom-qty');
+        const weightInput = this.container.querySelector('#popup-custom-weight');
+
+        const name = nameInput?.value?.trim();
+        if (!name) {
+            showToast('Inserisci un nome per l\'oggetto.', 'warning');
+            nameInput?.focus();
+            return;
+        }
+
+        const qty = Math.max(1, parseInt(qtyInput?.value) || 1);
+        const weight = Math.max(0, parseFloat(weightInput?.value) || 0);
+
+        this.inventory.push({
+            name: name,
+            custom: true,
+            quantity: qty,
+            weight: weight,
+            cost: null,
+            equipped: false,
+            equippedSlot: null
+        });
+
+        showToast(`${name} aggiunto all'inventario!`, 'success');
+
+        // Reset form
+        if (nameInput) nameInput.value = '';
+        if (qtyInput) qtyInput.value = '1';
+        if (weightInput) weightInput.value = '0';
+
+        this._refresh();
     }
     
     /**
@@ -610,6 +807,53 @@ export class EquipmentPopup {
     }
     
     /**
+     * Aggiorna solo i risultati del pannello aggiunta (senza rifare tutto)
+     */
+    _refreshAddResults() {
+        const resultsContainer = this.container.querySelector('.add-item-results');
+        if (!resultsContainer) return;
+
+        const results = this.addSearchTerm 
+            ? searchItems(this.addSearchTerm, { category: this.addCategory !== 'all' ? this.addCategory : null, limit: 40 }) 
+            : (this.addCategory !== 'all' 
+                ? searchItems('', { category: this.addCategory, limit: 40 }) 
+                : []);
+
+        const ownedNames = new Set(
+            this.inventory.map(i => (i.name || i.index || '').toLowerCase())
+        );
+
+        resultsContainer.innerHTML = results.length === 0 && !this.addSearchTerm && this.addCategory === 'all'
+            ? '<p class="add-hint">Digita un nome o seleziona una categoria per cercare oggetti.</p>'
+            : results.length === 0
+                ? '<p class="add-hint">Nessun oggetto trovato.</p>'
+                : results.map(item => {
+                    const owned = ownedNames.has((item.name || '').toLowerCase());
+                    return `
+                        <div class="add-item-row ${owned ? 'already-owned' : ''}" data-item-index="${item.index}">
+                            <div class="add-item-info">
+                                <span class="add-item-icon">${getItemIconForAdd(item)}</span>
+                                <div class="add-item-text">
+                                    <span class="add-item-name">${escapeHtmlPopup(item.name)}</span>
+                                    <span class="add-item-meta">
+                                        ${item.equipment_category?.name || ''}
+                                        ${item.cost ? ' • ' + formatCost(item.cost) : ''}
+                                        ${item.weight ? ' • ' + formatWeight(item.weight) : ''}
+                                    </span>
+                                </div>
+                            </div>
+                            <button class="popup-btn add-btn-sm" 
+                                    data-action="add-to-inventory" 
+                                    data-item-index="${item.index}"
+                                    ${owned ? 'disabled title="Già in inventario"' : 'title="Aggiungi"'}>
+                                ${owned ? '✓' : '+'}
+                            </button>
+                        </div>
+                    `;
+                }).join('');
+    }
+
+    /**
      * Aggiorna solo il pannello dettagli
      */
     _refreshDetailPanel() {
@@ -657,6 +901,44 @@ export class EquipmentPopup {
         showToast('Equipaggiamento salvato!', 'success');
         this.close();
     }
+}
+
+// =========================================================================
+// HELPER FUNCTIONS
+// =========================================================================
+
+/**
+ * Escape HTML per prevenire XSS nel popup
+ */
+function escapeHtmlPopup(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+/**
+ * Icona per un oggetto nel pannello aggiunta
+ */
+function getItemIconForAdd(item) {
+    if (!item) return '❓';
+    const cat = item.equipment_category?.index || '';
+    const name = (item.name || '').toLowerCase();
+    
+    if (cat === 'weapon') {
+        if (name.includes('spada') || name.includes('sword')) return '🗡️';
+        if (name.includes('ascia') || name.includes('axe')) return '🪓';
+        if (name.includes('arco') || name.includes('bow')) return '🏹';
+        return '⚔️';
+    }
+    if (cat === 'armor') {
+        if (name.includes('scudo')) return '🛡️';
+        return '🦺';
+    }
+    if (cat === 'tools') return '🔧';
+    if (cat === 'mounts-and-vehicles') return '🐴';
+    if (item.rarity || item.isMagical) return '✨';
+    return '📦';
 }
 
 // Singleton
