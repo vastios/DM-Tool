@@ -16,6 +16,12 @@ import {
     ABILITY_KEY_TO_PROPERTY,
     SKILL_ABILITY_MAP,
     ALL_SKILLS,
+    MAX_LEVEL,
+    MAX_AC,
+    DEFAULT_AC,
+    MAX_TOOLTIP_DESC_LENGTH,
+    MAX_VISIBLE_PRIVILEGES,
+    MAX_VISIBLE_INVENTORY_ITEMS,
     calculateModifier,
     escapeHtml
 } from './PgConstants.js';
@@ -29,8 +35,8 @@ import { getRaceTraitsWithDescriptions } from '../../../../database/traitDescrip
 
 export function renderTraitTag(name, description, type = 'trait') {
     const escapedDesc = escapeHtml(description || '');
-    const truncatedDesc = escapedDesc.length > 500 
-        ? escapedDesc.substring(0, 500) + '...' 
+    const truncatedDesc = escapedDesc.length > MAX_TOOLTIP_DESC_LENGTH 
+        ? escapedDesc.substring(0, MAX_TOOLTIP_DESC_LENGTH) + '...' 
         : escapedDesc;
     
     // Aggiunge padding-top per il titolo del tooltip
@@ -49,7 +55,7 @@ export function getClassPrivileges(selectedClass, level) {
     const privileges = [];
     const table = selectedClass.tabella_progressione;
     
-    for (let i = 0; i < Math.min(level, 20); i++) {
+    for (let i = 0; i < Math.min(level, MAX_LEVEL); i++) {
         const rowData = table[i];
         if (rowData && rowData.privilegi) {
             rowData.privilegi.forEach(priv => {
@@ -249,7 +255,7 @@ function renderCard1Front(pg, databases) {
                         </div>
                         <div class="combat-stat-mini">
                             <label>CA</label>
-                            <input type="number" id="ac-input" class="ac-input" value="${pg.armorClass || 10}" min="1" max="30">
+                            <input type="number" id="ac-input" class="ac-input" value="${pg.armorClass || DEFAULT_AC}" min="1" max="${MAX_AC}">
                         </div>
                         <div class="combat-stat-mini">
                             <label>Iniziativa</label>
@@ -514,8 +520,8 @@ function renderCard2Back(pg, databases) {
                     <div class="traits-group">
                         <span class="traits-label">Classe:</span>
                         <div class="traits-tags">
-                            ${classPrivs.slice(0, 6).map(p => renderTraitTag(p.nome, p.descrizione, 'class')).join('')}
-                            ${classPrivs.length > 6 ? `<span class="more-hint">+${classPrivs.length - 6}</span>` : ''}
+                            ${classPrivs.slice(0, MAX_VISIBLE_PRIVILEGES).map(p => renderTraitTag(p.nome, p.descrizione, 'class')).join('')}
+                            ${classPrivs.length > MAX_VISIBLE_PRIVILEGES ? `<span class="more-hint">+${classPrivs.length - MAX_VISIBLE_PRIVILEGES}</span>` : ''}
                         </div>
                     </div>
                 ` : ''}
@@ -550,14 +556,14 @@ function renderCard2Back(pg, databases) {
                 </div>
                 <div class="inventory-compact">
                     ${inventory.length > 0 
-                        ? inventory.slice(0, 12).map(item => {
+                        ? inventory.slice(0, MAX_VISIBLE_INVENTORY_ITEMS).map(item => {
                             const qty = item.quantity || 1;
                             const displayText = qty > 1 ? `${qty}× ${item.name}` : item.name;
                             return `<span class="inv-item">${escapeHtml(displayText)}</span>`;
                         }).join('')
                         : '<span class="empty-inv">Inventario vuoto</span>'
                     }
-                    ${inventory.length > 12 ? `<span class="more-hint">+${inventory.length - 12}</span>` : ''}
+                    ${inventory.length > MAX_VISIBLE_INVENTORY_ITEMS ? `<span class="more-hint">+${inventory.length - MAX_VISIBLE_INVENTORY_ITEMS}</span>` : ''}
                 </div>
             </div>
             
@@ -598,7 +604,7 @@ export function renderCharacterSheet(pg, databases) {
         <div class="ca-modal hidden" id="ca-modal">
             <div class="ca-modal-content">
                 <h4>Modifica Classe Armatura</h4>
-                <input type="number" id="ca-input" value="${pg.armorClass || 10}" min="1" max="30">
+                <input type="number" id="ca-input" value="${pg.armorClass || DEFAULT_AC}" min="1" max="${MAX_AC}">
                 <div class="ca-modal-actions">
                     <button class="btn btn-secondary btn-sm" id="btn-ca-cancel">Annulla</button>
                     <button class="btn btn-primary btn-sm" id="btn-ca-save">Salva</button>

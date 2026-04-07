@@ -22,6 +22,12 @@ import {
     calculateAvailableASI,
     ABILITY_KEY_TO_PROPERTY,
     ALL_SPELLCASTERS,
+    CONDITIONS,
+    MAX_AC,
+    DEFAULT_AC,
+    MAX_AUTOCOMPLETE_SUGGESTIONS,
+    TOOLTIP_DISMISS_DELAY_MS,
+    SPELL_LIMIT_POPUP_TIMEOUT_MS,
     getSubclassMinLevel,
     escapeHtml
 } from './PgConstants.js';
@@ -345,6 +351,10 @@ export class PgController {
         // invece di accumularlo ad ogni render().
         this.container.onmouseover = (e) => this.handleTraitHover(e);
         this.container.onmouseout = (e) => this.handleTraitLeave(e);
+        
+        // Timeout IDs per cleanup in destroy()
+        this._tooltipTimeout = null;
+        this._popupTimeout = null;
     }
     
     /**
@@ -371,13 +381,13 @@ export class PgController {
         const traitTag = e.target.closest('.trait-tag');
         if (!traitTag) return;
         
-        // Nascondi con un piccolo delay
-        setTimeout(() => {
+        // Nascondi con un piccolo delay (traccia il timeout per cleanup)
+        this._tooltipTimeout = setTimeout(() => {
             const hoveredTag = this.container.querySelector('.trait-tag:hover');
             if (!hoveredTag) {
                 this.hideTooltipOverlay();
             }
-        }, 100);
+            }, TOOLTIP_DISMISS_DELAY_MS);
     }
     
     /**
@@ -835,7 +845,7 @@ export class PgController {
             return;
         }
         
-        dropdown.innerHTML = suggestions.slice(0, 8).map(s => `
+        dropdown.innerHTML = suggestions.slice(0, MAX_AUTOCOMPLETE_SUGGESTIONS).map(s => `
             <div class="autocomplete-item" data-name="${escapeHtml(s.name)}" data-section="${s.section}" data-id="${s.id}">
                 <span class="autocomplete-icon">${this.getCategoryIcon(s.section)}</span>
                 <span class="autocomplete-name">${escapeHtml(s.name)}</span>
@@ -1781,12 +1791,12 @@ export class PgController {
         popup.innerHTML = message.replace(/\n/g, '<br>');
         document.body.appendChild(popup);
         
-        // Rimuovi dopo 3 secondi
-        setTimeout(() => {
+        // Rimuovi dopo 3 secondi (traccia il timeout per cleanup)
+        this._popupTimeout = setTimeout(() => {
             if (popup.parentNode) {
                 popup.remove();
             }
-        }, 3000);
+            }, SPELL_LIMIT_POPUP_TIMEOUT_MS);
     }
     
     /**
@@ -1845,14 +1855,14 @@ export class PgController {
         this.hideAcModal();
         
         const pg = this.dataManager.getById(this.selectedPgId);
-        const currentAc = pg?.armorClass || 10;
+        const currentAc = pg?.armorClass || DEFAULT_AC;
         
         // Crea modal inline
         const modal = document.createElement('div');
         modal.className = 'ac-modal';
         modal.id = 'ac-modal';
         modal.innerHTML = `
-            <input type="number" id="ac-input" value="${currentAc}" min="1" max="30">
+            <input type="number" id="ac-input" value="${currentAc}" min="1" max="${MAX_AC}">
             <button class="btn-save-ac" title="Salva">✓</button>
             <button class="btn-cancel-ac" title="Annulla">✕</button>
         `;
@@ -1884,21 +1894,15 @@ export class PgController {
         if (!input) return;
         
         const newAc = parseInt(input.value) || 10;
+        if (!this.selectedPgId) return;
         
-        // Aggiorna il PG
-        const pg = this.dataManager.getById(this.selectedPgId);
-        if (pg) {
-            pg.armorClass = newAc;
-            pg.armorClassOverride = true; // Flag per indicare override manuale
-            this.dataManager.update(pg);
-            
-            // Aggiorna display
-            const acDisplay = document.getElementById('ca-value');
-            if (acDisplay) acDisplay.textContent = newAc;
-            
-            showToast(`CA aggiornata a ${newAc}`, 'success');
-        }
+        // Update mirato — non passare l'intero oggetto pg per evitare merge di dati stale
+        this.dataManager.update(this.selectedPgId, {
+            armorClass: newAc,
+            armorClassOverride: true
+        });
         
+        showToast(`CA aggiornata a ${newAc}`, 'success');
         this.hideAcModal();
     }
     
@@ -3920,7 +3924,7 @@ export class PgController {
         const pg = this.dataManager.getById(this.selectedPgId);
         if (!pg) return;
         
-        const clampedAc = Math.max(1, Math.min(30, newAc));
+        const clampedAc = Math.max(1, Math.min(MAX_AC, newAc));
         
         this.dataManager.update(this.selectedPgId, {
             armorClass: clampedAc
@@ -3952,12 +3956,7 @@ export class PgController {
     promptAddCondition() {
         if (!this.selectedPgId) return;
         
-        const condition = prompt(`Condizione:\n\n${[
-            'Accecato', 'Affascinato', 'Afferrato', 'Assordato',
-            'Avvelenato', 'Inabile', 'Intralciato', 'Invisibile',
-            'Paralizzato', 'Pietrificato', 'Prono', 'Spaventato',
-            'Stordito', 'Svenuto'
-        ].join(', ')}`);
+        const condition = prompt(`Condizione:\n\n${CONDITIONS.join(', ')}`);
         
         if (condition && condition.trim()) {
             this.addCondition(condition.trim());
@@ -4005,15 +4004,24 @@ export class PgController {
     destroy() {
         console.log('🎮 [PgController] Distruzione modulo');
         
+        // Pulisci tutti gli event handler per prevenire memory leak
         this.container.onclick = null;
         this.container.onchange = null;
         this.container.oninput = null;
+        this.container.onmouseover = null;
+        this.container.onmouseout = null;
         this.container.innerHTML = '';
         
+        // Cancella timeout pendenti per evitare callback su componente distrutto
+        if (this._tooltipTimeout) { clearTimeout(this._tooltipTimeout); this._tooltipTimeout = null; }
+        if (this._popupTimeout) { clearTimeout(this._popupTimeout); this._popupTimeout = null; }
+        
+        // Reset stato
         this.selectedPgId = null;
         this.mode = 'view';
         this.currentStep = 1;
         this.wizardData = this.createEmptyPg();
+        this.databases = null;
     }
 }
 

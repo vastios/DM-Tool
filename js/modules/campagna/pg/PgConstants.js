@@ -145,6 +145,23 @@ export const CONDITIONS = [
 ];
 
 // ============================================================================
+// LIMITI E COSTANTI DI GIOCO
+// ============================================================================
+
+export const MAX_LEVEL = 20;
+export const MAX_ABILITY_SCORE = 20;
+export const MIN_ABILITY_SCORE = 1;
+export const DEFAULT_AC = 10;
+export const MAX_AC = 30;
+export const DEFAULT_SPEED = 9;
+export const MAX_TOOLTIP_DESC_LENGTH = 500;
+export const MAX_VISIBLE_PRIVILEGES = 6;
+export const MAX_VISIBLE_INVENTORY_ITEMS = 12;
+export const MAX_AUTOCOMPLETE_SUGGESTIONS = 8;
+export const TOOLTIP_DISMISS_DELAY_MS = 100;
+export const SPELL_LIMIT_POPUP_TIMEOUT_MS = 3000;
+
+// ============================================================================
 // MODELLO DATI PG VUOTO
 // ============================================================================
 
@@ -361,10 +378,10 @@ export function calculateArmorClass(pg, itemsDatabase = null) {
         const base = armorClass.base || 10;
         const maxBonus = armorClass.max_bonus || null;
         
-        if (armor.armor_category === 'Pesante') {
+        if ((armor.armor_category || '').trim().toLowerCase() === 'pesante') {
             // Armatura pesante: non aggiunge DES
             ac = base;
-        } else if (armor.armor_category === 'Media') {
+        } else if ((armor.armor_category || '').trim().toLowerCase() === 'media') {
             // Armatura media: DES limitato a max_bonus (solitamente +2)
             const effectiveDexMod = maxBonus !== null ? Math.min(dexMod, maxBonus) : dexMod;
             ac = base + effectiveDexMod;

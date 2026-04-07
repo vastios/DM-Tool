@@ -308,15 +308,6 @@ export class PgViewManager {
             </div>
         `;
     }
-    
-    showError(message) {
-        return `
-            <div class="error-container">
-                <h3>❌ Errore</h3>
-                <p>${escapeHtml(message)}</p>
-            </div>
-        `;
-    }
 }
 
 console.log('🎨 [PgViewManager] Modulo caricato.');

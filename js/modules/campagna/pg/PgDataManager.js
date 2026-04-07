@@ -144,10 +144,6 @@ export class PgDataManager {
         return [...this.pcs];
     }
     
-    filter(predicate) {
-        return this.pcs.filter(predicate);
-    }
-    
     // ========================================================================
     // VALIDAZIONE
     // ========================================================================
