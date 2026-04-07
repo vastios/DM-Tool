@@ -312,9 +312,21 @@ export class PgController {
         }
         // Se nessun PG selezionato e non in wizard, rightContent = null (messaggio vuoto)
         
+        // Salva la posizione di scroll del pannello contenuti (per non far saltare la vista)
+        const contentPanel = this.container.querySelector('.pg-content');
+        const savedScroll = contentPanel ? contentPanel.scrollTop : 0;
+
         // Renderizza layout principale
         this.viewManager.renderMainLayout(pcs, this.selectedPgId, rightContent);
         this.bindEvents();
+
+        // Ripristina scroll position (utile nel level-up wizard per non tornare in cima)
+        if (savedScroll > 0 && (this.isLevelUpMode || this.mode === 'wizard')) {
+            const newPanel = this.container.querySelector('.pg-content');
+            if (newPanel) {
+                newPanel.scrollTop = savedScroll;
+            }
+        }
     }
     
     /**

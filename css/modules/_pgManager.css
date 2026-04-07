@@ -6837,6 +6837,7 @@ label.spell-cb input {
 /* HP choice */
 .lu-hp-choice {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.5rem;
     margin-bottom: 0.5rem;
 }
@@ -7239,6 +7240,7 @@ label.spell-cb input {
     align-items: center;
     gap: 1rem;
     flex-wrap: wrap;
+    font-size: 1.1rem;
 }
 
 .level-change-display {
@@ -7246,4 +7248,5 @@ label.spell-cb input {
     align-items: center;
     gap: 0.5rem;
     margin: 0;
+    font-size: 1rem;
 }
