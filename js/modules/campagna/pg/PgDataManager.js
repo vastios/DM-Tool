@@ -83,11 +83,35 @@ export class PgDataManager {
             return null;
         }
         
-        this.pcs[index] = {
-            ...this.pcs[index],
-            ...updates,
-            updatedAt: new Date().toISOString()
-        };
+        // Deep merge: per ogni proprietà in updates, se sia il valore corrente
+        // che il nuovo valore sono oggetti plain (non array, non null),
+        // fai il merge ricorsivo invece di sovrascrivere.
+        // Questo evita che update({ hp: { current: 5 } }) perda hp.max e hp.temp.
+        const current = this.pcs[index];
+        const merged = { ...current };
+        
+        for (const key of Object.keys(updates)) {
+            const newVal = updates[key];
+            const oldVal = current[key];
+            
+            if (
+                newVal !== null &&
+                typeof newVal === 'object' &&
+                !Array.isArray(newVal) &&
+                oldVal !== null &&
+                typeof oldVal === 'object' &&
+                !Array.isArray(oldVal)
+            ) {
+                // Deep merge per oggetti plain (es. hp, hitDice, proficiencies, treasure)
+                merged[key] = { ...oldVal, ...newVal };
+            } else {
+                // Sovrascrittura per primitive, array, null
+                merged[key] = newVal;
+            }
+        }
+        
+        merged.updatedAt = new Date().toISOString();
+        this.pcs[index] = merged;
         
         this.save();
         console.log('📊 [PgDataManager] PG aggiornato:', pgId);

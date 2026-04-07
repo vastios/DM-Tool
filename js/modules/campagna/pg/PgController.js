@@ -67,7 +67,7 @@ export class PgController {
         this.mode = 'view';
         
         /**
-         * Step corrente del wizard (1-6).
+         * Step corrente del wizard (1-7).
          * @type {number}
          */
         this.currentStep = 1;
@@ -358,8 +358,11 @@ export class PgController {
         this.container.oninput = (e) => this.handleInput(e);
         
         // Hover sui trait-tag per mostrare tooltip nella sidebar
-        this.container.addEventListener('mouseover', (e) => this.handleTraitHover(e));
-        this.container.addEventListener('mouseout', (e) => this.handleTraitLeave(e));
+        // NOTA: usiamo onmouseover/onmouseout (property) invece di addEventListener
+        // per evitare memory leak — le property sovrascrivono il listener precedente
+        // invece di accumularlo ad ogni render().
+        this.container.onmouseover = (e) => this.handleTraitHover(e);
+        this.container.onmouseout = (e) => this.handleTraitLeave(e);
     }
     
     /**
@@ -731,10 +734,7 @@ export class PgController {
             this.updateCurrentHp(parseInt(target.value) || 0);
         }
         
-        // Scheda - CA (Classe Armatura)
-        if (target.id === 'ac-input') {
-            this.updateArmorClass(parseInt(target.value) || 10);
-        }
+        // NOTA: ac-input è gestito in handleInput() per aggiornamento realtime
         
         // Step 5 - Inventario: quantità oggetto
         if (target.classList.contains('qty-input') && target.dataset.index !== undefined) {
@@ -760,7 +760,8 @@ export class PgController {
             this.render();
             return; // Il render è già stato chiamato
         }
-        if (target.id === 'pg-background') this.wizardData.background = target.value;
+        // NOTA: pg-background è gestito in handleChange() tramite updateBackground()
+        // che esegue logiche aggiuntive (nome, competenze, render)
         if (target.id === 'pg-player') this.wizardData.playerName = target.value;
         if (target.id === 'pg-backstory') this.wizardData.backstory = target.value;
         if (target.id === 'pg-notes') this.wizardData.notes = target.value;
@@ -1056,35 +1057,19 @@ export class PgController {
     }
     
     /**
-     * Clona un PG con deep copy degli array/oggetti nidificati
+     * Clona un PG con deep copy completa.
+     * Usa structuredClone() per garantire che tutti gli oggetti/array
+     * nidificati (inclusi gli elementi dentro gli array) siano clonati
+     * e non condividano riferimenti con l'originale.
      */
     clonePg(pg) {
-        return {
-            ...pg,
-            abilities: { ...pg.abilities },
-            hp: { ...pg.hp },
-            hitDice: { ...pg.hitDice },
-            proficiencies: {
-                armor: [...(pg.proficiencies?.armor || [])],
-                weapons: [...(pg.proficiencies?.weapons || [])],
-                tools: [...(pg.proficiencies?.tools || [])],
-                languages: [...(pg.proficiencies?.languages || [])]
-            },
-            racialTraits: [...(pg.racialTraits || [])],
-            classFeatures: [...(pg.classFeatures || [])],
-            feats: [...(pg.feats || [])],
-            equipment: [...(pg.equipment || [])],
-            magicItems: [...(pg.magicItems || [])],
-            inventory: [...(pg.inventory || [])],
-            equippedSlots: { ...(pg.equippedSlots || {}) },
-            _acceptedSuggestions: [...(pg._acceptedSuggestions || [])],
-            _selectedChoices: { ...(pg._selectedChoices || {}) },
-            _racialBonuses: [...(pg._racialBonuses || [])],
-            _asiBonuses: { ...(pg._asiBonuses || { strength: 0, dexterity: 0, constitution: 0, intelligence: 0, wisdom: 0, charisma: 0 }) },
-            treasure: { ...pg.treasure },
-            conditions: [...(pg.conditions || [])],
-            wikiLinks: [...(pg.wikiLinks || [])]
-        };
+        try {
+            return structuredClone(pg);
+        } catch (e) {
+            // Fallback per ambienti molto vecchi senza structuredClone
+            console.warn('🎮 [PgController] structuredClone non disponibile, uso fallback manuale');
+            return JSON.parse(JSON.stringify(pg));
+        }
     }
     
     /**
