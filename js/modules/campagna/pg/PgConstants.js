@@ -160,6 +160,26 @@ export const MAX_VISIBLE_INVENTORY_ITEMS = 12;
 export const MAX_AUTOCOMPLETE_SUGGESTIONS = 8;
 export const TOOLTIP_DISMISS_DELAY_MS = 100;
 export const SPELL_LIMIT_POPUP_TIMEOUT_MS = 3000;
+export const INPUT_DEBOUNCE_MS = 300;
+
+// ============================================================================
+// UTILITÀ
+// ============================================================================
+
+/**
+ * Debounce: ritarda l'esecuzione di fn finché non passano ms millisecondi
+ * dall'ultima chiamata. Utile per input testuali frequenti (autocomplete, search).
+ * @param {Function} fn - Funzione da debouncare
+ * @param {number} ms - Millisecondi di attesa
+ * @returns {Function} Funzione debouncata
+ */
+export function debounce(fn, ms) {
+    let timer;
+    return function (...args) {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn.apply(this, args), ms);
+    };
+}
 
 // ============================================================================
 // MODELLO DATI PG VUOTO
