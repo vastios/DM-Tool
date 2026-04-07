@@ -113,8 +113,8 @@ export class PgViewManager {
             <div class="pg-sidebar-card ${isSelected ? 'selected' : ''}" data-pg-id="${pg.id}">
                 <div class="card-main">
                     <div class="card-info">
-                        <span class="card-name">${pg.name || 'Senza Nome'}</span>
-                        <span class="card-class">${pg.className || pg.class || '?'} Lv.${pg.level || 1}</span>
+                        <span class="card-name">${escapeHtml(pg.name || 'Senza Nome')}</span>
+                        <span class="card-class">${escapeHtml(pg.className || pg.class || '?')} Lv.${pg.level || 1}</span>
                     </div>
                     <div class="card-actions">
                         <button class="btn-icon-sm" data-action="edit" data-pg-id="${pg.id}" title="Modifica">✏️</button>
@@ -123,7 +123,7 @@ export class PgViewManager {
                         <button class="btn-icon-sm btn-danger" data-action="delete" data-pg-id="${pg.id}" title="Elimina">🗑️</button>
                     </div>
                 </div>
-                <div class="card-player">${pg.playerName || 'Nessun giocatore'}</div>
+                <div class="card-player">${escapeHtml(pg.playerName || 'Nessun giocatore')}</div>
                 <div class="card-hp-bar">
                     <div class="hp-fill ${hpClass}" style="width: ${hpPercent}%"></div>
                 </div>
@@ -277,7 +277,7 @@ export class PgViewManager {
                         </div>` : ''}
                     </div>
                     <h2 class="wizard-title">
-                        ⬆️ Level Up: ${pg.name} — ${pg.className || pg.class}
+                        ⬆️ Level Up: ${escapeHtml(pg.name)} — ${escapeHtml(pg.className || pg.class)}
                         <span class="level-change-display">
                             <span class="level-old">Lv.${currentLevel}</span>
                             <span class="level-arrow">→</span>

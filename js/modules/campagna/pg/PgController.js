@@ -859,7 +859,7 @@ export class PgController {
             <div class="autocomplete-item" data-name="${escapeHtml(s.name)}" data-section="${s.section}" data-id="${s.id}">
                 <span class="autocomplete-icon">${this.getCategoryIcon(s.section)}</span>
                 <span class="autocomplete-name">${escapeHtml(s.name)}</span>
-                <span class="autocomplete-type">${s.categoryLabel}</span>
+                <span class="autocomplete-type">${escapeHtml(s.categoryLabel)}</span>
             </div>
         `).join('');
         
@@ -1102,6 +1102,8 @@ export class PgController {
         this.currentStep++;
         
         if (this.currentStep === 7) {
+            // Strip eventuali bonus residui (navigazione avanti-indietro) prima di ricalcolare
+            this._stripBonusesFromAbilities();
             this.calculateFinalStats();
         }
         
@@ -2349,7 +2351,7 @@ export class PgController {
             : items.map(item => `
                 <div class="item-result-row" data-item-index="${item.index}">
                     <span class="item-icon">${getItemIcon(item)}</span>
-                    <span class="item-name">${item.name}</span>
+                    <span class="item-name">${escapeHtml(item.name)}</span>
                     <span class="item-weight">${item.weight || 0} kg</span>
                     <span class="item-cost">${formatCost(item.cost)}</span>
                     <button type="button" class="btn btn-sm btn-add-item" 
@@ -2424,7 +2426,7 @@ export class PgController {
                 <tr class="inventory-row ${item.custom ? 'custom-item' : ''}" data-index="${idx}">
                     <td class="item-name">
                         <span class="item-icon">${getItemIcon(item)}</span>
-                        ${item.name}
+                        ${escapeHtml(item.name)}
                         ${item.custom ? '<span class="custom-badge">custom</span>' : ''}
                     </td>
                     <td class="item-qty">
@@ -2643,8 +2645,8 @@ export class PgController {
                 <div class="dynamic-selector-modal">
                     <div class="dynamic-selector-header">
                         <h3>🎯 Seleziona ${quantity > 1 ? quantity + ' oggetti' : 'un oggetto'}</h3>
-                        <p class="dynamic-selector-subtitle">${suggestionText}</p>
-                        <span class="dynamic-selector-category">${category}</span>
+                        <p class="dynamic-selector-subtitle">${escapeHtml(suggestionText)}</p>
+                        <span class="dynamic-selector-category">${escapeHtml(category)}</span>
                     </div>
                     
                     <div class="dynamic-selector-search">
@@ -2662,7 +2664,7 @@ export class PgController {
                                 <div class="dynamic-item" data-item-index="${item.index}">
                                     <div class="dynamic-item-info">
                                         <span class="dynamic-item-icon">${getItemIcon(item)}</span>
-                                        <span class="dynamic-item-name">${item.name}</span>
+                                        <span class="dynamic-item-name">${escapeHtml(item.name)}</span>
                                     </div>
                                     <div class="dynamic-item-details">
                                         <span class="dynamic-item-weight">${item.weight || 0} kg</span>
@@ -2670,7 +2672,7 @@ export class PgController {
                                     </div>
                                     <button type="button" class="btn btn-sm btn-toggle-dynamic-item" 
                                             data-item-index="${item.index}"
-                                            data-item-name="${item.name}"
+                                            data-item-name="${escapeHtml(item.name)}"
                                             data-item-weight="${item.weight || 0}"
                                             title="Seleziona">☐</button>
                                 </div>
@@ -2876,7 +2878,8 @@ export class PgController {
             return;
         }
         
-        this.calculateFinalStats();
+        // calculateFinalStats() viene chiamato in nextStep() quando si arriva allo step 7.
+        // Non va richiamato qui per evitare double-apply dei bonus razziali/ASI.
         
         // Assicurati che l'inventario sia un array
         if (!this.wizardData.inventory) {

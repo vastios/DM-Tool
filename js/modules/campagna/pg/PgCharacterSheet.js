@@ -147,11 +147,11 @@ function renderSheetHeader(pg) {
     return `
         <div class="sheet-header-split">
             <div class="header-left">
-                <h2 class="char-name">${pg.name || 'Senza Nome'}</h2>
+                <h2 class="char-name">${escapeHtml(pg.name || 'Senza Nome')}</h2>
             </div>
             <div class="header-right">
-                <p class="char-class-info">${pg.raceName || pg.race || ''} ${pg.className || pg.class || ''} Liv.${pg.level || 1}</p>
-                <p class="char-player">Giocato da: ${pg.playerName || 'Nessun giocatore'}</p>
+                <p class="char-class-info">${escapeHtml(pg.raceName || pg.race || '')} ${escapeHtml(pg.className || pg.class || '')} Liv.${pg.level || 1}</p>
+                <p class="char-player">Giocato da: ${escapeHtml(pg.playerName || 'Nessun giocatore')}</p>
                 <button class="btn btn-sm btn-level-up-sheet" data-action="level-up" data-pg-id="${pg.id}" title="Aumenta Livello">⬆️ Livello Su</button>
             </div>
         </div>
@@ -219,11 +219,11 @@ function renderCard1Front(pg, databases) {
                     <div class="identity-grid-split">
                         <div class="id-item">
                             <span class="id-label">Background</span>
-                            <span class="id-value">${pg.backgroundName || pg.background || '-'}</span>
+                            <span class="id-value">${escapeHtml(pg.backgroundName || pg.background || '-')}</span>
                         </div>
                         <div class="id-item">
                             <span class="id-label">Allineamento</span>
-                            <span class="id-value">${pg.alignment || '-'}</span>
+                            <span class="id-value">${escapeHtml(pg.alignment || '-')}</span>
                         </div>
                         <div class="id-item">
                             <span class="id-label">Competenza</span>
