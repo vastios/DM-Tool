@@ -25,7 +25,8 @@ import {
     PROPERTY_TO_ABILITY_KEY,
     SKILL_ABILITY_MAP,
     ALL_SPELLCASTERS,
-    getSubclassMinLevel
+    getSubclassMinLevel,
+    escapeHtml
 } from './PgConstants.js';
 import { addMonsterToCombat } from '../../../../stateManager.js';
 import { showToast } from '../../../../utils/toast.js';
@@ -855,9 +856,9 @@ export class PgController {
         }
         
         dropdown.innerHTML = suggestions.slice(0, 8).map(s => `
-            <div class="autocomplete-item" data-name="${this.escapeHtml(s.name)}" data-section="${s.section}" data-id="${s.id}">
+            <div class="autocomplete-item" data-name="${escapeHtml(s.name)}" data-section="${s.section}" data-id="${s.id}">
                 <span class="autocomplete-icon">${this.getCategoryIcon(s.section)}</span>
-                <span class="autocomplete-name">${this.escapeHtml(s.name)}</span>
+                <span class="autocomplete-name">${escapeHtml(s.name)}</span>
                 <span class="autocomplete-type">${s.categoryLabel}</span>
             </div>
         `).join('');
@@ -928,16 +929,6 @@ export class PgController {
             'secrets': '🔒'
         };
         return icons[section] || '📄';
-    }
-    
-    /**
-     * Escape HTML per sicurezza
-     */
-    escapeHtml(text) {
-        if (!text) return '';
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
     }
     
     // ========================================================================
@@ -1180,8 +1171,9 @@ export class PgController {
         
         if (this.databases.selectedBackground) {
             this.wizardData.backgroundName = this.databases.selectedBackground.nome;
-            // Aggiungi le abilità del background alle skills
+            // Salva le abilità del background separatamente per escluderle dal conteggio classe
             const bgSkills = this.databases.selectedBackground.competenze?.abilita || [];
+            this.wizardData._bgSkills = bgSkills;
             if (!this.wizardData.skills) this.wizardData.skills = [];
             bgSkills.forEach(skill => {
                 if (!this.wizardData.skills.includes(skill)) {
@@ -1407,6 +1399,7 @@ export class PgController {
         if (!this.wizardData.skills) this.wizardData.skills = [];
         
         const numChoices = this.databases.selectedClass?.proficiency_choices?.[0]?.choose || 2;
+        const bgSkills = this.wizardData._bgSkills || [];
         
         if (isChecked) {
             if (!this.wizardData.skills.includes(skillName)) {
@@ -1416,16 +1409,16 @@ export class PgController {
             this.wizardData.skills = this.wizardData.skills.filter(s => s !== skillName);
         }
         
-        // Aggiorna il contatore visivo
+        // Aggiorna il contatore visivo (escludi le skill del background dal conteggio)
         const counterBox = this.container.querySelector('.skill-counter-box');
         if (counterBox) {
-            const selectedCount = this.wizardData.skills.length;
-            const isOverLimit = selectedCount > numChoices;
+            const userSelectedCount = this.wizardData.skills.filter(s => !bgSkills.includes(s)).length;
+            const isOverLimit = userSelectedCount > numChoices;
             
             counterBox.className = `skill-counter-box ${isOverLimit ? 'over-limit' : ''}`;
             
             const selectedNum = counterBox.querySelector('.selected-num');
-            if (selectedNum) selectedNum.textContent = selectedCount;
+            if (selectedNum) selectedNum.textContent = userSelectedCount;
             
             // Aggiorna il warning
             let warningEl = counterBox.querySelector('.counter-warning');
@@ -1435,7 +1428,7 @@ export class PgController {
                     warningEl.className = 'counter-warning';
                     counterBox.appendChild(warningEl);
                 }
-                warningEl.textContent = `⚠️ ${selectedCount - numChoices} abilità oltre il limite`;
+                warningEl.textContent = `⚠️ ${userSelectedCount - numChoices} abilità oltre il limite`;
             } else if (warningEl) {
                 warningEl.remove();
             }

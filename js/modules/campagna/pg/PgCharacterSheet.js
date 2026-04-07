@@ -16,22 +16,12 @@ import {
     ABILITY_KEY_TO_PROPERTY,
     SKILL_ABILITY_MAP,
     ALL_SKILLS,
-    calculateModifier 
+    calculateModifier,
+    escapeHtml
 } from './PgConstants.js';
 import { linkifyConditions } from '/utils/htmlHelpers.js';
 import { linkifyCampaignReferences } from '/utils/campaignLinker.js';
 import { getRaceTraitsWithDescriptions } from '/database/traitDescriptions.js';
-
-// ========================================================================
-// HELPER FUNCTIONS
-// ========================================================================
-
-export function escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
 
 // ========================================================================
 // TRATTI E PRIVILEGI

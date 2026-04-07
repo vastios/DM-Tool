@@ -181,9 +181,12 @@ export class PgDataManager {
         
         if (step === 3 || step === null) {
             const skills = pgData.skills || [];
+            const bgSkills = pgData._bgSkills || [];
             const classProfChoices = pgData._classNumSkillChoices;
-            if (classProfChoices && skills.length > classProfChoices) {
-                errors.push(`Hai selezionato ${skills.length} abilità, ma il limite è ${classProfChoices}.`);
+            // Escludi le skill del background dal conteggio (sono automatiche)
+            const userSkillCount = skills.filter(s => !bgSkills.includes(s)).length;
+            if (classProfChoices && userSkillCount > classProfChoices) {
+                errors.push(`Hai selezionato ${userSkillCount} abilità da classe, ma il limite è ${classProfChoices}.`);
             }
         }
         

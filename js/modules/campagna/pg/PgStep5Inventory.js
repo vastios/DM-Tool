@@ -164,25 +164,29 @@ function parseEquipmentChoices(line) {
  * Es: "Armatura di cuoio e un pugnale" -> ["Armatura di cuoio", "pugnale"]
  * Es: "20 frecce e una corda" -> ["20 frecce", "corda"]
  * 
+ * Nota: la rimozione articoli è selettiva per evitare di troncare nomi di oggetti
+ * che iniziano con parole simili ad articoli italiani (es. "Stendardo").
+ * 
  * @param {string} text - Il testo da parsare
  * @returns {Array} - Array di {name, quantity}
  */
 function parseFixedItems(text) {
     const items = [];
     
-    // Rimuovi articoli iniziali comuni
-    text = text.replace(/^(un|una|uno|il|la|lo|le|i|gli)\s+/i, '');
+    // Rimuovi articoli determinativi/indeterminativi all'inizio, ma solo se
+    // la parola che segue ha >= 3 caratteri (evita di troncare nomi corti)
+    text = text.replace(/^(un['a]?|una|uno|il|la|lo|le|i|gli)\s+(?=\w{3,})/i, '');
     
     // Pattern per separare: divide per ", " o " e " o " e un/una/uno "
     // Ma mantiene insieme cose come "20 frecce"
-    const parts = text.split(/,\s*(?:(?:e|and)\s+)?|\s+(?:e|and)\s+(?=(?:un|una|uno|il|la|lo|le|i|gli|\d+))/i);
+    const parts = text.split(/,\s*(?:(?:e|and)\s+)?|\s+(?:e|and)\s+(?=(?:un['a]?|una|uno|il|la|lo|le|i|gli|\d+))/i);
     
     parts.forEach(part => {
         part = part.trim();
         if (!part) return;
         
-        // Rimuovi articoli
-        part = part.replace(/^(un|una|uno|il|la|lo|le|i|gli)\s+/i, '');
+        // Rimuovi articoli solo se la parola seguente ha >= 3 caratteri
+        part = part.replace(/^(un['a]?|una|uno|il|la|lo|le|i|gli)\s+(?=\w{3,})/i, '');
         
         // Controlla se c'è una quantità all'inizio
         const qtyMatch = part.match(/^(\d+)\s+(.+)$/);

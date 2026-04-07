@@ -72,7 +72,8 @@ export function renderStep3Proficiencies(pgData, databases) {
     
     // Skill selezionate dall'utente
     const selectedSkills = pgData.skills || [];
-    const selectedCount = selectedSkills.length;
+    // Escludi le skill del background dal conteggio classe
+    const userSelectedCount = selectedSkills.filter(s => !bgSkills.includes(s)).length;
     
     // Calcola bonus competenza
     const profBonus = pgData.proficiencyBonus || 2;
@@ -121,14 +122,14 @@ export function renderStep3Proficiencies(pgData, databases) {
                     </div>
                 ` : ''}
                 
-                <div class="skill-counter-box ${selectedCount > numChoices ? 'over-limit' : ''}">
+                <div class="skill-counter-box ${userSelectedCount > numChoices ? 'over-limit' : ''}">
                     <div class="counter-label">Competenze da classe (scegli ${numChoices}):</div>
                     <div class="counter-value">
-                        <span class="selected-num">${selectedCount}</span>
+                        <span class="selected-num">${userSelectedCount}</span>
                         <span class="separator">/</span>
                         <span class="max-num">${numChoices}</span>
                     </div>
-                    ${selectedCount > numChoices ? `<span class="counter-warning">⚠️ ${selectedCount - numChoices} abilità oltre il limite</span>` : ''}
+                    ${userSelectedCount > numChoices ? `<span class="counter-warning">⚠️ ${userSelectedCount - numChoices} abilità oltre il limite</span>` : ''}
                 </div>
                 
                 <div class="skills-grid with-bonus">

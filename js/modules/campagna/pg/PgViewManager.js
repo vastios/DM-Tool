@@ -33,12 +33,12 @@ import { renderStep4Spells } from './PgStep4Spells.js';
 import { 
     renderCharacterSheet, 
     renderTraitsAndPrivileges,
-    escapeHtml,
     renderTraitTag,
     getClassPrivileges,
     getSubclassPrivileges,
     getRacialTraits
 } from './PgCharacterSheet.js';
+import { escapeHtml } from './PgConstants.js';
 
 export class PgViewManager {
     
