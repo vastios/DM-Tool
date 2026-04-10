@@ -55,6 +55,10 @@ const MagicItemList = {
                         <div class="filter-group-title">Rarità</div>
                         <div class="filter-buttons-container" id="rarity-filters"></div>
                     </div>
+                    <label class="filter-toggle" style="display: flex; align-items: center; gap: 8px; padding: 8px 0; cursor: pointer; font-size: 0.9rem; color: #c9b896;">
+                        <input type="checkbox" id="hide-variants" checked style="accent-color: #8a7d60;">
+                        Nascondi varianti (+1, +2, +3)
+                    </label>
                     <button class="reset-filters-btn">Resetta Filtri</button>
                 </div>
                 <div class="monster-list-cell">
@@ -82,6 +86,7 @@ const MagicItemList = {
         const typeFilterContainer = listContainer.querySelector('#type-filters');
         const rarityFilterContainer = listContainer.querySelector('#rarity-filters');
         const resetBtn = listContainer.querySelector('.reset-filters-btn');
+        const hideVariantsToggle = listContainer.querySelector('#hide-variants');
 
         let activeTypeFilter = 'Tutti';
         let activeRarityFilter = 'Tutti';
@@ -108,6 +113,11 @@ const MagicItemList = {
             for (const item of magicItemsDatabase) {
                 if (!item || typeof item.name !== 'string') {
                     console.warn("⚠️ Oggetto magico malformato o senza nome, saltato:", item);
+                    continue;
+                }
+
+                // --- FIX M1: Nascondi varianti se il toggle è attivo ---
+                if (hideVariantsToggle.checked && item.variant === true) {
                     continue;
                 }
 
@@ -293,6 +303,7 @@ const MagicItemList = {
 
         searchInput.addEventListener('input', renderList);
         resetBtn.addEventListener('click', resetFilters);
+        hideVariantsToggle.addEventListener('change', renderList);
     }
 };
 

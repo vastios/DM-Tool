@@ -536,7 +536,7 @@ const CLASS_EQUIPMENT = {
         other: ['Simbolo Sacro', 'Zaino da Esploratore']
     },
     'Barbaro': {
-        weapons: [{ name: 'Greataxe', damage: '1d12', type: 'melee', twoHanded: true }],
+        weapons: [{ name: 'Ascia bipenne', damage: '1d12', type: 'melee', twoHanded: true }],
         backupWeapons: [{ name: 'Ascia da Battaglia', damage: '1d8', type: 'melee' }, { name: 'Giavellotto', damage: '1d6', type: 'ranged' }],
         armor: 'Armatura di Pelle',
         shield: false,
@@ -581,7 +581,7 @@ const CLASS_EQUIPMENT = {
     },
     'Druido': {
         weapons: [{ name: 'Bastone', damage: '1d6', type: 'melee', versatile: '1d8' }],
-        backupWeapons: [{ name: 'Falcetto', damage: '1d4', type: 'melee' }],
+        backupWeapons: [{ name: 'Falce', damage: '1d4', type: 'melee' }],
         armor: 'Armatura di Pelle',
         shield: true,
         other: ['Focus Druidico', 'Zaino da Esploratore', 'Erbe Mediche']
@@ -610,12 +610,13 @@ const CLASS_EQUIPMENT = {
 };
 
 // Oggetti magici per rarità e livello appropriato
+// Nomi corrispondenti al database magicItems.js
 const MAGIC_ITEMS_BY_RARITY = {
-    common: ['Pietra di Ioun (Comune)', 'Pozione di Guarigione', 'Borsa Conservante'],
-    uncommon: ['Armatura in Adamantio', 'Amuleto di Protezione', 'Mantello Elfico', 'Stivali Elfici', 'Pozione di Guarigione Maggiore', 'Frecce +1', 'Armatura +1'],
-    rare: ['Armatura della Resistenza', 'Scudo Acchiappa-Frecce', 'Mantello della Resistenza', 'Spada +1', 'Pozione di Guarigione Superiore', 'Anello di Protezione'],
-    veryRare: ['Armatura +2', 'Spada +2', 'Amuleto della Salute', 'Cintura della Forza dei Giganti (Hill)'],
-    legendary: ['Armatura +3', 'Spada +3', 'Armatura dell\'Invulnerabilità', 'Cintura della Forza dei Giganti (Storm)']
+    common: ['Pozione Di Scalare', 'Armatura Di Cuoio Borchiato Incantata', 'Anello Della Vista Ai Raggi X', 'Pozione Di Resistenza', 'Perla Del Potere'],
+    uncommon: ['Borsa Conservante', 'Mantello Elfico', 'Stivali Elfici', 'Armatura in Adamantio', 'Munizioni, +1', 'Pozione Del Respirare Sottacqua', 'Pozione Di Crescita', 'Guanti del Potere d\'Ogre'],
+    rare: ['Armatura della Resistenza', 'Armatura, +1', 'Scudo Acchiappa-Frecce', 'Amuleto della Salute', 'Cintura della Forza dei Giganti delle Colline', 'Spada Affilata', 'Stivali della Velocità', 'Munizioni, +2', 'Pozione Di Eroismo'],
+    veryRare: ['Armatura, +2', 'Spada Danzante', 'Munizioni, +3', 'Cintura della Forza dei Giganti del Fuoco', 'Cintura della Forza dei Giganti del Gelo', 'Cintura della Forza dei Giganti delle Pietre', 'Tappeto Volante', 'Pozione Di Invisibilita'],
+    legendary: ['Armatura, +3', 'Armatura dell\'Invulnerabilità', 'Martello dei Fulmini', 'Cintura della Forza dei Giganti delle Tempeste', 'Cintura della Forza dei Giganti delle Nuvole', 'Spada Vorpal', 'Mazzo Delle Meraviglie']
 };
 
 function getRarityForLevel(level) {
