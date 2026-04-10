@@ -72,6 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { id: 'appendix', name: 'APPENDICE CONDIZIONI', modulePath: './modules/compendio/appendix.js' },
             { id: 'races', name: 'Razze', modulePath: './modules/compendio/raceList.js', requiresCampaign: false },
             { id: 'Alignment', name: 'Allineamento', modulePath: './modules/compendio/AlignmentGuide.js', requiresCampaign: false },
+            { id: 'combatRules', name: 'REGOLE COMBATTIMENTO', modulePath: './modules/compendio/combatRules.js', requiresCampaign: false },
         ]
     };
 
