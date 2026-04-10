@@ -69,3 +69,30 @@ Stage Summary:
 - File modificati: js/modules/compendio/magicItemList.js, css/modules/_items.css
 - 10 item con tabelle ora renderizzate correttamente come HTML table
 - Stili tabella coerenti con il tema D&D esistente (sfondo scuro, header oro, hover)
+
+---
+Task ID: BG-EQUIP
+Agent: Main Agent
+Task: Ristrutturazione equipaggiamento background — formato strutturato con quantità e split
+
+Work Log:
+- Analisi completa del flusso: background data → PgStep5Inventory.js → PgController.js
+- Identificati problemi nel formato stringa: "o" non riconosciuto come scelta, "contenente" non estrae quantità, item composti in un'unica stringa
+- Ristrutturati tutti e 6 i background da array di stringhe a array di oggetti strutturati:
+  - Accolito: 6 entry → 5 oggetti + 1 scelta (libro/ruota preghiere), qty 5 bastoncini
+  - Criminale: 3 entry → 3 oggetti singoli
+  - Eroe Popolare: 5 entry → 5 oggetti singoli
+  - Nobile: 4 entry → 4 oggetti singoli
+  - Sapiente: 6 entry → 6 oggetti singoli
+  - Soldato: 5 entry → 3 oggetti + 2 scelte (trofeo 3 opzioni, dadi/carte)
+- Modificato PgStep5Inventory.js: renderEquipmentLine() gestisce ora formato oggetto e formato stringa (backward compat per classi)
+- Le scelte strutturate usano indici numerici (0, 1, 2) invece di lettere (a, b, c)
+- Ogni item passa JSON esplicito [{name, quantity}] a acceptSuggestion(), garantendo split corretto in inventario
+- acceptSuggestion() in PgController.js NON modificato: già gestiva il formato JSON
+
+Stage Summary:
+- File modificati: database/backgrounds/{accolito,criminale,eroePopolare,nobile,sapiente,soldato}.js, js/modules/campagna/pg/PgStep5Inventory.js
+- 6 background ristrutturati con formato oggetto {nome, quantita} e {tipo: "scelta", opzioni}
+- Quantità esplicite: 5x bastoncini incenso, 15 mo, 10 mo, 25 mo, ecc.
+- Scelte "o" ora correttamente strutturate: libro/ruota preghiere, trofeo, dadi/carte
+- Compatibilità totale col formato stringa delle classi
