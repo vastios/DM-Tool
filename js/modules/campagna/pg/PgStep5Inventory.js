@@ -160,49 +160,100 @@ function parseEquipmentChoices(line) {
 }
 
 /**
- * Parse oggetti fissi da una stringa
- * Es: "Armatura di cuoio e un pugnale" -> ["Armatura di cuoio", "pugnale"]
- * Es: "20 frecce e una corda" -> ["20 frecce", "corda"]
- * 
+ * Funzione helper per processare un singolo componente estratto dal testo.
+ * Rimuove articoli iniziali, estrae quantità e aggiunge l'item all'array.
+ */
+function _processParsedItem(part, items, placeholders) {
+    // Ripristina placeholder parentetici
+    placeholders.forEach((ph, i) => {
+        part = part.replace(`__PH${i}__`, ph);
+    });
+
+    part = part.trim();
+    if (!part) return;
+
+    // Rimuovi articoli determinativi/indeterminativi all'inizio, ma solo se
+    // la parola che segue ha >= 3 caratteri (evita di troncare nomi corti come "Stendardo")
+    part = part.replace(/^(un['a]?|una|uno|il|la|lo|le|i|gli)\s+(?=\w{3,})/i, '');
+
+    // Controlla se c'è una quantità all'inizio (es. "20 frecce")
+    const qtyMatch = part.match(/^(\d+)\s+(.+)$/);
+    if (qtyMatch) {
+        items.push({
+            name: qtyMatch[2].trim(),
+            quantity: parseInt(qtyMatch[1])
+        });
+    } else {
+        items.push({
+            name: part,
+            quantity: 1
+        });
+    }
+}
+
+/**
+ * Parse oggetti fissi da una stringa di equipaggiamento.
+ * Gestisce articoli, quantità, parentesi descrittive e sub-item "con N Y".
+ *
+ * Es: "arco lungo e faretra con 20 frecce" -> [
+ *   {name: "arco lungo", quantity: 1},
+ *   {name: "faretra", quantity: 1},
+ *   {name: "frecce", quantity: 20}
+ * ]
+ * Es: "una balestra leggera e 20 dardi" -> [
+ *   {name: "balestra leggera", quantity: 1},
+ *   {name: "dardi", quantity: 20}
+ * ]
+ * Es: "5 bastoncini di incenso" -> [{name: "bastoncini di incenso", quantity: 5}]
+ *
  * Nota: la rimozione articoli è selettiva per evitare di troncare nomi di oggetti
  * che iniziano con parole simili ad articoli italiani (es. "Stendardo").
- * 
+ *
  * @param {string} text - Il testo da parsare
- * @returns {Array} - Array di {name, quantity}
+ * @returns {Array<{name: string, quantity: number}>} - Array di oggetti
  */
 function parseFixedItems(text) {
     const items = [];
-    
-    // Rimuovi articoli determinativi/indeterminativi all'inizio, ma solo se
-    // la parola che segue ha >= 3 caratteri (evita di troncare nomi corti)
-    text = text.replace(/^(un['a]?|una|uno|il|la|lo|le|i|gli)\s+(?=\w{3,})/i, '');
-    
-    // Pattern per separare: divide per ", " o " e " o " e un/una/uno "
-    // Ma mantiene insieme cose come "20 frecce"
-    const parts = text.split(/,\s*(?:(?:e|and)\s+)?|\s+(?:e|and)\s+(?=(?:un['a]?|una|uno|il|la|lo|le|i|gli|\d+))/i);
-    
+
+    // Step 1: Proteggi il contenuto tra parentesi dalla suddivisione
+    // Es. "Un simbolo sacro (un dono ricevuto...)" → il testo tra parentesi
+    // non deve causare split su " e " o articoli interni
+    const placeholders = [];
+    let processed = text.replace(/\(([^)]+)\)/g, (match) => {
+        const idx = placeholders.length;
+        placeholders.push(match);
+        return `__PH${idx}__`;
+    });
+
+    // Step 2: Dividi per virgola (con eventuale "e" dopo) e per " e "
+    // Non c'è più il lookahead restrictivo: ogni " e " separa item distinti
+    const parts = processed.split(/,\s*(?:e\s+)?|\s+e\s+/i);
+
+    // Step 3: Processa ogni parte
     parts.forEach(part => {
-        part = part.trim();
-        if (!part) return;
-        
-        // Rimuovi articoli solo se la parola seguente ha >= 3 caratteri
-        part = part.replace(/^(un['a]?|una|uno|il|la|lo|le|i|gli)\s+(?=\w{3,})/i, '');
-        
-        // Controlla se c'è una quantità all'inizio
-        const qtyMatch = part.match(/^(\d+)\s+(.+)$/);
-        if (qtyMatch) {
+        // Gestisci il pattern "X con N Y" (es. "faretra con 20 frecce")
+        // → item principale X + sub-item Y con quantità N
+        const conMatch = part.match(/^(.+?)\s+con\s+(\d+)\s+(.+)$/);
+        if (conMatch) {
+            // Processa l'item principale (prima di "con"), qty rimane 1
+            _processParsedItem(conMatch[1], items, placeholders);
+            // Aggiungi il sub-item (dopo "con") con quantità specificata
+            let subName = conMatch[3];
+            placeholders.forEach((ph, i) => {
+                subName = subName.replace(`__PH${i}__`, ph);
+            });
+            subName = subName.trim();
+            // Rimuovi eventuali articoli dal sub-item
+            subName = subName.replace(/^(un['a]?|una|uno|il|la|lo|le|i|gli)\s+(?=\w{3,})/i, '');
             items.push({
-                name: qtyMatch[2].trim(),
-                quantity: parseInt(qtyMatch[1])
+                name: subName,
+                quantity: parseInt(conMatch[2])
             });
         } else {
-            items.push({
-                name: part,
-                quantity: 1
-            });
+            _processParsedItem(part, items, placeholders);
         }
     });
-    
+
     return items;
 }
 
@@ -475,12 +526,103 @@ function renderSuggestedEquipment(pgData, databases) {
 
 /**
  * Renderizza una singola riga di equipaggiamento
- * Gestisce tre tipi:
- * - choice: scelta multipla (a), (b), (c)...
- * - fixed: oggetti fissi (possono essere più di uno)
+ * Gestisce due formati di input:
+ * - OGGETTO STRUTTURATO: { nome, quantita } o { tipo: "scelta", opzioni: [...] }
+ * - STRINGA (legacy per classi): "testo libero con (a) e (b)"
  */
 function renderEquipmentLine(eq, idx, source, acceptedSuggestions, selectedChoices) {
     const lineKey = `${source}-${idx}`;
+
+    // ── FORMATO STRUTTURATO (background ristrutturati) ──
+    if (typeof eq === 'object' && eq !== null) {
+        // Controlla se questa riga è già stata accettata
+        if (acceptedSuggestions.includes(lineKey)) {
+            return '';
+        }
+
+        // Tipo SCELTA: { tipo: "scelta", opzioni: [...] }
+        if (eq.tipo === 'scelta' && Array.isArray(eq.opzioni)) {
+            const selectedOption = selectedChoices[lineKey];
+            if (selectedOption !== undefined) {
+                // L'utente ha già scelto un'opzione — mostra solo quella
+                const selIdx = parseInt(selectedOption);
+                const selected = eq.opzioni[selIdx];
+                if (!selected) return '';
+
+                const displayText = selected.quantita > 1
+                    ? `${selected.quantita} ${selected.nome}`
+                    : selected.nome;
+                const itemsJson = encodeURIComponent(JSON.stringify([{
+                    name: selected.nome,
+                    quantity: selected.quantita
+                }]));
+
+                return `
+                    <li class="suggested-item choice-selected">
+                        <span class="suggested-text">${escapeHtml(displayText)}</span>
+                        <div class="choice-actions">
+                            <button type="button" class="btn btn-sm btn-add-suggested"
+                                    data-suggestion-key="${lineKey}"
+                                    data-suggestion-text="${escapeHtml(displayText)}"
+                                    data-suggestion-items="${itemsJson}"
+                                    data-source="${source}"
+                                    title="Aggiungi">✓</button>
+                            <button type="button" class="btn btn-sm btn-reset-choice"
+                                    data-choice-key="${lineKey}"
+                                    title="Cambia scelta">↩</button>
+                        </div>
+                    </li>`;
+            }
+
+            // Mostra tutte le opzioni disponibili
+            return `
+                <li class="suggested-item choice-item">
+                    <div class="choice-label">Scegli una opzione:</div>
+                    ${eq.opzioni.map((opt, i) => {
+                        const displayText = opt.quantita > 1
+                            ? `${opt.quantita} ${opt.nome}`
+                            : opt.nome;
+                        return `
+                            <div class="choice-option">
+                                <span class="choice-key">(${i + 1})</span>
+                                <span class="choice-text">${escapeHtml(displayText)}</span>
+                                <button type="button" class="btn btn-sm btn-select-choice"
+                                        data-choice-key="${lineKey}"
+                                        data-choice-option="${i}"
+                                        data-choice-text="${escapeHtml(displayText)}"
+                                        data-source="${source}"
+                                        title="Seleziona">${i + 1}</button>
+                            </div>`;
+                    }).join('')}
+                </li>`;
+        }
+
+        // Tipo OGGETTO SINGOLO: { nome, quantita }
+        if (eq.nome) {
+            const displayText = eq.quantita > 1
+                ? `${eq.quantita} ${eq.nome}`
+                : eq.nome;
+            const itemsJson = encodeURIComponent(JSON.stringify([{
+                name: eq.nome,
+                quantity: eq.quantita || 1
+            }]));
+
+            return `
+                <li class="suggested-item fixed-item">
+                    <span class="suggested-text">${escapeHtml(displayText)}</span>
+                    <button type="button" class="btn btn-sm btn-add-suggested"
+                            data-suggestion-key="${lineKey}"
+                            data-suggestion-text="${escapeHtml(displayText)}"
+                            data-suggestion-items="${itemsJson}"
+                            data-source="${source}"
+                            title="Aggiungi">+</button>
+                </li>`;
+        }
+
+        return '';
+    }
+
+    // ── FORMATO STRINGA (legacy per classi) ──
     const parsed = parseEquipmentChoices(eq);
     
     // Controlla se questa riga è già stata accettata

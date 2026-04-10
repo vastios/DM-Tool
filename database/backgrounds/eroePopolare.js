@@ -14,11 +14,11 @@ export const eroePopolare = {
     },
     
     equipaggiamento: [
-        "Un set di strumenti da artigiano (uno a tua scelta)",
-        "Una vanga",
-        "Un calderone di ferro",
-        "Un abito comune",
-        "Una scarsella contenente 10 mo"
+        { nome: "Set di strumenti da artigiano", quantita: 1 },
+        { nome: "Vanga", quantita: 1 },
+        { nome: "Calderone di ferro", quantita: 1 },
+        { nome: "Abito comune", quantita: 1 },
+        { nome: "Scarsella con 10 mo", quantita: 1 }
     ],
     
     evento_cruciale: {

@@ -2125,18 +2125,32 @@ export class PgController {
      */
     parseEquipmentText(text) {
         const items = [];
-        
-        // Pattern per oggetti con quantità: "20 frecce", "5 bastoncini", "10 chiodi"
-        const quantityPattern = /^(\d+)\s+(.+)$/;
-        
-        // Separa per virgole e "e"
-        const parts = text.split(/,\s*(?:e\s+)?|\s+e\s+/);
-        
-        parts.forEach(part => {
+
+        // Step 1: Proteggi il contenuto tra parentesi dalla suddivisione
+        const placeholders = [];
+        let processed = text.replace(/\(([^)]+)\)/g, (match) => {
+            const idx = placeholders.length;
+            placeholders.push(match);
+            return `__PH${idx}__`;
+        });
+
+        // Step 2: Dividi per virgola (con eventuale "e" dopo) e per " e "
+        const parts = processed.split(/,\s*(?:e\s+)?|\s+e\s+/i);
+
+        // Helper locale per processare un singolo componente
+        const processPart = (part) => {
+            // Ripristina placeholder parentetici
+            placeholders.forEach((ph, i) => {
+                part = part.replace(`__PH${i}__`, ph);
+            });
             part = part.trim();
             if (!part) return;
-            
-            const qtyMatch = part.match(quantityPattern);
+
+            // Rimuovi articoli iniziali (solo se parola seguente >= 3 caratteri)
+            part = part.replace(/^(un['a]?|una|uno|il|la|lo|le|i|gli)\s+(?=\w{3,})/i, '');
+
+            // Estrai quantità all'inizio: "20 frecce" → qty 20, name "frecce"
+            const qtyMatch = part.match(/^(\d+)\s+(.+)$/);
             if (qtyMatch) {
                 items.push({
                     name: qtyMatch[2].trim(),
@@ -2148,8 +2162,31 @@ export class PgController {
                     quantity: 1
                 });
             }
+        };
+
+        // Step 3: Processa ogni parte
+        parts.forEach(part => {
+            // Gestisci il pattern "X con N Y" (es. "faretra con 20 frecce")
+            const conMatch = part.match(/^(.+?)\s+con\s+(\d+)\s+(.+)$/);
+            if (conMatch) {
+                // Processa l'item principale (prima di "con")
+                processPart(conMatch[1]);
+                // Aggiungi il sub-item (dopo "con") con quantità specificata
+                let subName = conMatch[3];
+                placeholders.forEach((ph, i) => {
+                    subName = subName.replace(`__PH${i}__`, ph);
+                });
+                subName = subName.trim();
+                subName = subName.replace(/^(un['a]?|una|uno|il|la|lo|le|i|gli)\s+(?=\w{3,})/i, '');
+                items.push({
+                    name: subName,
+                    quantity: parseInt(conMatch[2])
+                });
+            } else {
+                processPart(part);
+            }
         });
-        
+
         return items;
     }
     

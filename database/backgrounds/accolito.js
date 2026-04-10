@@ -14,12 +14,18 @@ export const accolito = {
     },
     
     equipaggiamento: [
-        "Un simbolo sacro (un dono ricevuto all'ingresso nel sacerdozio)",
-        "Un libro di preghiere o una ruota delle preghiere",
-        "5 bastoncini di incenso",
-        "Paramenti sacri",
-        "Un abito comune",
-        "Una scarsella contenente 15 mo"
+        { nome: "Simbolo sacro", quantita: 1 },
+        {
+            tipo: "scelta",
+            opzioni: [
+                { nome: "Libro di preghiere", quantita: 1 },
+                { nome: "Ruota delle preghiere", quantita: 1 }
+            ]
+        },
+        { nome: "Bastoncini di incenso", quantita: 5 },
+        { nome: "Paramenti sacri", quantita: 1 },
+        { nome: "Abito comune", quantita: 1 },
+        { nome: "Scarsella con 15 mo", quantita: 1 }
     ],
     
     privilegio: {

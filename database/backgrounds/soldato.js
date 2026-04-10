@@ -14,11 +14,24 @@ export const soldato = {
     },
     
     equipaggiamento: [
-        "Un'insegna del grado",
-        "Un trofeo sottratto a un nemico caduto (un pugnale, una lama spezzata o un frammento di uno stendardo)",
-        "Un set di dadi d'osso o un mazzo di carte",
-        "Un abito comune",
-        "Una scarsella contenente 10 mo"
+        { nome: "Insegna del grado", quantita: 1 },
+        {
+            tipo: "scelta",
+            opzioni: [
+                { nome: "Pugnale (trofeo nemico)", quantita: 1 },
+                { nome: "Lama spezzata (trofeo nemico)", quantita: 1 },
+                { nome: "Frammento di stendardo (trofeo nemico)", quantita: 1 }
+            ]
+        },
+        {
+            tipo: "scelta",
+            opzioni: [
+                { nome: "Set di dadi d'osso", quantita: 1 },
+                { nome: "Mazzo di carte", quantita: 1 }
+            ]
+        },
+        { nome: "Abito comune", quantita: 1 },
+        { nome: "Scarsella con 10 mo", quantita: 1 }
     ],
     
     specializzazione: {

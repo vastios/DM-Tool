@@ -178,3 +178,48 @@
     line-height: 1.6;
     color: #b0a090;
 }
+
+/* ==========================================================================
+   STILI PER LE TABELLE NELLE DESCRIZIONI DEGLI OGGETTI MAGICI
+   ========================================================================== */
+
+.magic-item-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+    font-family: 'Lora', serif;
+    font-size: 0.9rem;
+    color: #d4c8b0;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.magic-item-table thead {
+    background-color: rgba(201, 169, 89, 0.25);
+    border-bottom: 2px solid #c9a959;
+}
+
+.magic-item-table th {
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 700;
+    color: #f0ad4e;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.magic-item-table td {
+    padding: 6px 12px;
+    border-bottom: 1px solid rgba(201, 169, 89, 0.15);
+    color: #b0a090;
+}
+
+.magic-item-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.magic-item-table tbody tr:hover {
+    background-color: rgba(201, 169, 89, 0.1);
+}

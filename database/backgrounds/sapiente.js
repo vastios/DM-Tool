@@ -14,12 +14,12 @@ export const sapiente = {
     },
     
     equipaggiamento: [
-        "Una boccetta di inchiostro nero",
-        "Un pennino",
-        "Un coltellino",
-        "Una lettera di un collega defunto che pone un quesito a cui non sei ancora riuscito a rispondere",
-        "Un abito comune",
-        "Una scarsella contenente 10 mo"
+        { nome: "Boccetta di inchiostro nero", quantita: 1 },
+        { nome: "Pennino", quantita: 1 },
+        { nome: "Coltellino", quantita: 1 },
+        { nome: "Lettera di un collega defunto che pone un quesito", quantita: 1 },
+        { nome: "Abito comune", quantita: 1 },
+        { nome: "Scarsella con 10 mo", quantita: 1 }
     ],
     
     specializzazione: {

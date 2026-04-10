@@ -14,9 +14,9 @@ export const criminale = {
     },
     
     equipaggiamento: [
-        "Un piede di porco",
-        "Un abito comune scuro munito di cappuccio",
-        "Una scarsella contenente 15 mo"
+        { nome: "Piede di porco", quantita: 1 },
+        { nome: "Abito comune scuro con cappuccio", quantita: 1 },
+        { nome: "Scarsella con 15 mo", quantita: 1 }
     ],
     
     specialita_criminale: {

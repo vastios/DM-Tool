@@ -53,7 +53,7 @@ export const magicItemsDatabase = [
     ],
     "variant": false,
     "desc": [
-      "Arma (qualsiasi munizione), non comune (+1), Rara (+2), o Molto rara (+3)",
+      "Arma (qualsiasi munizione), non comune (+1), Rara (+2), o Molto Rara (+3)",
       "Hai un bonus ai tiri per colpire e ai tiri per i danni effettuati con questo pezzo di munizione magica. Il bonus è determinato dalla rarità della munizione. Una volta che colpisce un bersaglio, la munizione non è più magica."
     ],
     "image": "/api/images/magic-items/ammunition.png",
@@ -111,12 +111,12 @@ export const magicItemsDatabase = [
       "url": "/api/2014/equipment-categories/ammunition"
     },
     "rarity": {
-      "name": "Molto rara"
+      "name": "Molto Rara"
     },
     "variants": [],
     "variant": true,
     "desc": [
-      "Arma (qualsiasi munizione), Molto rara",
+      "Arma (qualsiasi munizione), Molto Rara",
       "Hai un bonus di +3 ai tiri per colpire e ai tiri per i danni effettuati con questo pezzo di munizione magica. Una volta che colpisce un bersaglio, la munizione non è più magica."
     ],
     "image": "/api/images/magic-items/ammunition.png",
@@ -176,13 +176,13 @@ export const magicItemsDatabase = [
       "url": "/api/2014/equipment-categories/wondrous-items"
     },
     "rarity": {
-      "name": "Molto rara"
+      "name": "Molto Rara"
     },
     "variants": [],
     "variant": false,
     "requires_attunement": true,
     "desc": [
-      "Oggetto meraviglioso, Molto rara (richiede sintonizzazione)",
+      "Oggetto meraviglioso, Molto Rara (richiede sintonizzazione)",
       "Mentre indossi questo amuleto, puoi usare un'azione per nominare un luogo che ti è familiare su un altro piano di esistenza. Poi effettua una prova di Intelligenza con CD 15. Se la prova ha successo, lanci l'incantesimo spostamento planare. In caso di fallimento, tu e ogni creatura e oggetto entro 4,5 metri da te viaggiate verso una destinazione casuale. Tira un d100. Con 1-60, viaggi verso un luogo casuale sul piano che hai nominato. Con 61-100, viaggi verso un piano di esistenza determinato casualmente."
     ],
     "image": "/api/images/magic-items/amulet-of-the-planes.png",
@@ -198,13 +198,13 @@ export const magicItemsDatabase = [
       "url": "/api/2014/equipment-categories/armor"
     },
     "rarity": {
-      "name": "Molto rara"
+      "name": "Molto Rara"
     },
     "variants": [],
     "variant": false,
     "requires_attunement": true,
     "desc": [
-      "Armatura (scudo), Molto rara (richiede sintonizzazione)",
+      "Armatura (scudo), Molto Rara (richiede sintonizzazione)",
       "Mentre impugni questo scudo, puoi pronunciare la sua parola di comando come azione bonus per farlo animare. Lo scudo balza in aria e fluttua nel tuo spazio per proteggerti come se lo stessi impugnando, lasciandoti le mani libere. Lo scudo rimane animato per 1 minuto, finché non usi un'azione bonus per terminare questo effetto, o finché non sei inabile o muori, momento in cui lo scudo cade a terra o nella tua mano se ne hai una libera."
     ],
     "image": "/api/images/magic-items/animated-shield.png",
@@ -283,7 +283,7 @@ export const magicItemsDatabase = [
     ],
     "variant": false,
     "desc": [
-      "Armatura (leggera, media o pesante), Rara (+1), Molto rara (+2), o leggendaria (+3)",
+      "Armatura (leggera, media o pesante), Rara (+1), Molto Rara (+2), o Leggendaria (+3)",
       "Hai un bonus alla CA mentre indossi questa armatura. Il bonus è determinato dalla sua rarità."
     ],
     "image": "/api/images/magic-items/armor.png",
@@ -320,12 +320,12 @@ export const magicItemsDatabase = [
       "url": "/api/2014/equipment-categories/armor"
     },
     "rarity": {
-      "name": "Molto rara"
+      "name": "Molto Rara"
     },
     "variants": [],
     "variant": true,
     "desc": [
-      "Armatura (leggera, media o pesante), Molto rara",
+      "Armatura (leggera, media o pesante), Molto Rara",
       "Hai un bonus di +2 alla CA mentre indossi questa armatura."
     ],
     "image": "/api/images/magic-items/armor-2.png",
@@ -346,7 +346,7 @@ export const magicItemsDatabase = [
     "variants": [],
     "variant": true,
     "desc": [
-      "Armatura (leggera, media o pesante), leggendaria",
+      "Armatura (leggera, media o pesante), Leggendaria",
       "Hai un bonus di +3 alla CA mentre indossi questa armatura."
     ],
     "image": "/api/images/magic-items/armor-3.png",
@@ -368,7 +368,7 @@ export const magicItemsDatabase = [
     "variant": false,
     "requires_attunement": true,
     "desc": [
-      "Armatura (a piastre), leggendaria (richiede sintonizzazione)",
+      "Armatura (a piastre), Leggendaria (richiede sintonizzazione)",
       "Hai resistenza ai danni non magici mentre indossi questa armatura. Inoltre, puoi usare un'azione per renderti immune ai danni non magici per 10 minuti o finché non indossi più l'armatura. Una volta utilizzata questa azione speciale, non può essere utilizzata di nuovo fino all'alba successiva."
     ],
     "image": "/api/images/magic-items/armor-of-invulnerability.png",
@@ -463,12 +463,12 @@ export const magicItemsDatabase = [
       "url": "/api/2014/equipment-categories/ammunition"
     },
     "rarity": {
-      "name": "Molto rara"
+      "name": "Molto Rara"
     },
     "variants": [],
     "variant": false,
     "desc": [
-      "Arma (freccia), Molto rara",
+      "Arma (freccia), Molto Rara",
       "Una freccia dell'uccisione è un'arma magica destinata a uccidere un particolare tipo di creatura. Alcune sono più focalizzate di altre; ad esempio, ci sono sia frecce dell'uccisione dei draghi che frecce dell'uccisione dei draghi blu. Se una creatura appartenente al tipo, razza o gruppo associato a una freccia dell'uccisione subisce danni dalla freccia, la creatura deve effettuare un tiro salvezza su Costituzione con CD 17, subendo 6d10 danni perforanti extra se fallisce il tiro salvezza, o la metà dei danni extra se ha successo.",
       "Una volta che una freccia dell'uccisione infligge i suoi danni extra a una creatura, diventa una freccia non magica.",
       "Esistono altri tipi di munizioni magiche di questo tipo, come i quadrelli dell'uccisione destinati a una balestra, sebbene le frecce siano le più comuni."
@@ -523,12 +523,12 @@ export const magicItemsDatabase = [
       "url": "/api/2014/equipment-categories/wondrous-items"
     },
     "rarity": {
-      "name": "Molto rara"
+      "name": "Molto Rara"
     },
     "variants": [],
     "variant": false,
     "desc": [
-      "Oggetto meraviglioso, Molto rara",
+      "Oggetto meraviglioso, Molto Rara",
       "Questo sacco assomiglia superficialmente a una borsa conservante ma è un orifizio di alimentazione per una gigantesca creatura extradimensionale. Rivoltare il sacco chiude l'orifizio.",
       "La creatura extradimensionale attaccata al sacco può percepire qualunque cosa venga posta all'interno del sacco. Materia animale o vegetale posta interamente nel sacco viene divorata e persa per sempre. Quando parte di una creatura vivente viene posta nel sacco, come accade quando qualcuno vi infila la mano, c'è una probabilità del 50 percento che la creatura venga tirata dentro il sacco. Una creatura all'interno del sacco può usare la sua azione per cercare di scappare con una prova di Forza con CD 15 riuscita. Un'altra creatura può usare la sua azione per infilare la mano nel sacco e tirare fuori una creatura, facendolo con una prova di Forza con CD 20 riuscita (a condizione che non venga tirata dentro il sacco prima). Qualsiasi creatura che inizia il suo turno all'interno del sacco viene divorata, il suo corpo distrutto.",
       "Gli oggetti inanimati possono essere conservati nel sacco, che può contenere 30 decimetri cubi di tale materiale. Tuttavia, una volta al giorno, il sacco ingoia qualsiasi oggetto al suo interno e lo sputa in un altro piano di esistenza. Il GM determina il tempo e il piano.",
@@ -842,8 +842,8 @@ export const magicItemsDatabase = [
       "| Tipo | Forza | Rarità |",
       "|---|---|---|",
       "| Gigante delle Colline | 21 | Rara |",
-      "| Gigante delle Pietre / Gigante del Gelo | 23 | Molto rara |",
-      "| Gigante del Fuoco | 25 | Molto rara |",
+      "| Gigante delle Pietre / Gigante del Gelo | 23 | Molto Rara |",
+      "| Gigante del Fuoco | 25 | Molto Rara |",
       "| Gigante delle Nuvole | 27 | Leggendaria |",
       "| Gigante delle Tempeste | 29 | Leggendaria |"
     ],
@@ -864,6 +864,7 @@ export const magicItemsDatabase = [
     },
     "variants": [],
     "variant": true,
+    "requires_attunement": true,
     "desc": [
       "Oggetto meraviglioso, Leggendaria (richiede sintonizzazione)",
       "Mentre indossi questa cintura, il tuo punteggio di Forza diventa 27. Se la tua Forza è già uguale o superiore al punteggio della cintura, l'oggetto non ha alcun Effetto su di te."
@@ -881,12 +882,13 @@ export const magicItemsDatabase = [
       "url": "/api/2014/equipment-categories/wondrous-items"
     },
     "rarity": {
-      "name": "Molto rara"
+      "name": "Molto Rara"
     },
     "variants": [],
     "variant": true,
+    "requires_attunement": true,
     "desc": [
-      "Oggetto meraviglioso, Molto rara (richiede sintonizzazione)",
+      "Oggetto meraviglioso, Molto Rara (richiede sintonizzazione)",
       "Mentre indossi questa cintura, il tuo punteggio di Forza diventa 25. Se la tua Forza è già uguale o superiore al punteggio della cintura, l'oggetto non ha alcun Effetto su di te."
     ],
     "image": "/api/images/magic-items/belt-of-giant-strength.png",
@@ -902,12 +904,13 @@ export const magicItemsDatabase = [
       "url": "/api/2014/equipment-categories/wondrous-items"
     },
     "rarity": {
-      "name": "Molto rara"
+      "name": "Molto Rara"
     },
     "variants": [],
     "variant": true,
+    "requires_attunement": true,
     "desc": [
-      "Oggetto meraviglioso, Molto rara (richiede sintonizzazione)",
+      "Oggetto meraviglioso, Molto Rara (richiede sintonizzazione)",
       "Mentre indossi questa cintura, il tuo punteggio di Forza diventa 23. Se la tua Forza è già uguale o superiore al punteggio della cintura, l'oggetto non ha alcun Effetto su di te."
     ],
     "image": "/api/images/magic-items/belt-of-giant-strength.png",
@@ -927,6 +930,7 @@ export const magicItemsDatabase = [
     },
     "variants": [],
     "variant": true,
+    "requires_attunement": true,
     "desc": [
       "Oggetto meraviglioso, Rara (richiede sintonizzazione)",
       "Mentre indossi questa cintura, il tuo punteggio di Forza diventa 21. Se la tua Forza è già uguale o superiore al punteggio della cintura, l'oggetto non ha alcun Effetto su di te."
@@ -944,12 +948,13 @@ export const magicItemsDatabase = [
       "url": "/api/2014/equipment-categories/wondrous-items"
     },
     "rarity": {
-      "name": "Molto rara"
+      "name": "Molto Rara"
     },
     "variants": [],
     "variant": true,
+    "requires_attunement": true,
     "desc": [
-      "Oggetto meraviglioso, Molto rara (richiede sintonizzazione)",
+      "Oggetto meraviglioso, Molto Rara (richiede sintonizzazione)",
       "Mentre indossi questa cintura, il tuo punteggio di Forza diventa 23. Se la tua Forza è già uguale o superiore al punteggio della cintura, l'oggetto non ha alcun Effetto su di te."
     ],
     "image": "/api/images/magic-items/belt-of-giant-strength.png",
@@ -969,6 +974,7 @@ export const magicItemsDatabase = [
     },
     "variants": [],
     "variant": true,
+    "requires_attunement": true,
     "desc": [
       "Oggetto meraviglioso, Leggendaria (richiede sintonizzazione)",
       "Mentre indossi questa cintura, il tuo punteggio di Forza diventa 29. Se la tua Forza è già uguale o superiore al punteggio della cintura, l'oggetto non ha alcun Effetto su di te."
@@ -1254,13 +1260,13 @@ export const magicItemsDatabase = [
       "url": "/api/2014/equipment-categories/wondrous-items"
     },
     "rarity": {
-      "name": "Molto rara"
+      "name": "Molto Rara"
     },
     "variants": [],
     "variant": false,
     "requires_attunement": true,
     "desc": [
-      "Oggetto meraviglioso, Molto rara (richiede sintonizzazione)",
+      "Oggetto meraviglioso, Molto Rara (richiede sintonizzazione)",
       "Questa sottile candela è dedicata a una divinità e condivide l'allineamento di quella divinità. L'allineamento della candela può essere rilevato con l'incantesimo individuazione del bene e del male. Il GM sceglie il dio e l'allineamento associato o determina l'allineamento casualmente.",
       "| d20 | Allineamento |",
       "|---|---|",
@@ -1312,7 +1318,7 @@ export const magicItemsDatabase = [
       "url": "/api/2014/equipment-categories/wondrous-items"
     },
     "rarity": {
-      "name": "Molto rara"
+      "name": "Molto Rara"
     },
     "variants": [
       {
@@ -1338,7 +1344,7 @@ export const magicItemsDatabase = [
     ],
     "variant": false,
     "desc": [
-      "Oggetto meraviglioso, Molto rara",
+      "Oggetto meraviglioso, Molto Rara",
       "Puoi pronunciare la parola di comando del tappeto come azione per far fluttuare e volare il tappeto. Si muove secondo le tue indicazioni vocali, a condizione che tu sia entro 9 metri da esso.",
       "Esistono quattro dimensioni di tappeto volante. Il GM sceglie la dimensione di un dato tappeto o la determina casualmente.",
       "| d100 | Dimensione | Capacità | Velocità di Volo |",
@@ -1487,7 +1493,7 @@ export const magicItemsDatabase = [
       "url": "/api/2014/equipment-categories/weapon"
     },
     "rarity": {
-      "name": "Molto rara"
+      "name": "Molto Rara"
     },
     "variants": [],
     "variant": false,
@@ -1508,7 +1514,7 @@ export const magicItemsDatabase = [
       "url": "/api/2014/equipment-categories/armor"
     },
     "rarity": {
-      "name": "Molto rara"
+      "name": "Molto Rara"
     },
     "variants": [],
     "variant": false,
@@ -1529,7 +1535,7 @@ export const magicItemsDatabase = [
       "url": "/api/2014/equipment-categories/armor"
     },
     "rarity": {
-      "name": "Molto rara"
+      "name": "Molto Rara"
     },
     "variants": [],
     "variant": false,
@@ -1665,7 +1671,7 @@ export const magicItemsDatabase = [
       "url": "/api/2014/equipment-categories/weapon"
     },
     "rarity": {
-      "name": "Molto rara"
+      "name": "Molto Rara"
     },
     "variants": [],
     "variant": false,
@@ -4348,7 +4354,7 @@ export const magicItemsDatabase = [
     "variants": [],
     "variant": false,
     "desc": [
-      "Di solito lo si trova in un borsello o una scatola, che contiene delle carte fatte d’avorio o vello. La maggior parte di questi mazzi (il 75%) ha solo tredici carte, mentre i restanti mazzi ne hanno ventidue.Prima di pescare una carta, devi dichiarare quante carte intendi pescare e poi pescarle casualmente (puoi usare un mazzo di carte da gioco modificato per simulare il mazzo). Qualsiasi carta pescata in eccesso di questo numero non ha effetto. Altrimenti, appena peschi una carta dal mazzo, la sua magia ha effetto. Devi pescare ciascuna carta entro 1 ora dalla pescata precedente. Se non peschi il numero scelto di carte, il numero di carte rimanenti uscirà fuori dal mazzo spontaneamente e avrà effetto in contemporanea.Una volta estratta una carta, questa svanirà dall’esistenza. A meno che la carta non sia il Matto o il Buffone, la carta ricompare nel mazzo, rendendo possibile pescare due volte la stessa carta. * Solo in mazzi da 22 carte Artigli Ogni oggetto magico che indossi o trasporti viene disintegrato. Gli artefatti in tuo possesso non vengono disintegrati, ma svaniscono. Bilancia La tua mente è sconvolta, e cambi allineamento. Il legale diventa caotico, il buono diventa malvagio e viceversa. Se sei neutrale puro o disallineato, questa carta non avrà alcun effetto su di te. Cavaliere Ottieni i servigi di un guerriero di 4° livello che compare in uno spazio a tua scelta entro 9 metri da te. Il guerriero è della tua stessa razza e ti servirà lealmente fino alla morte, credendo che sia stato il fato a portarlo al tuo servizio. Il personaggio è controllato da te. Chiave Un’arma magica rara, molto rara o leggendaria con la quale sei competente compare tra le tue mani. Il GM determina di che tipo di arma si tratta. Cometa Se sconfiggi da solo il prossimo mostro o gruppo ostile che incontrerai, otterrai abbastanza punti esperienza da guadagnare un livello. Altrimenti, questa carta non avrà effetto. Destino La struttura della realtà si dissolve e riforma, permettendoti di evitare o cancellare un evento come se non fosse mai accaduto. Puoi usare la magia di questa carta non appena l’hai pescata o aspettare un qualsiasi altro momento fino alla tua morte. Eurialo Sei maledetto dalla carta e subisci una penalità di -2 a tutti i tiri salvezza finché resterai maledetto a questo modo. Solo un dio o la magia della carta del Fato può porre fine a questa maledizione. Fiamme Un potente diavolo diventa tuo nemico. Il diavolo cercherà di rovinare e infestare la tua esistenza, assaporando le tue sofferenze fino al momento in cui cercherà di ucciderti. Questa inimicizia durerà fino alla morte tua o del diavolo. Davanti ai tuoi piedi compaiono venticinque gioielli del valore di 2.000 mo ciascuno o cinquanta gemme del valore di 1.000 mo ciascuna. Giullare Ottieni 10.000 PE o puoi pescare due carte aggiuntive oltre alle tue pescate dichiarate. Idiota Riduci permanentemente il tuo punteggio di Intelligenza di 1d4 + 1 (fino a un punteggio minimo di 1). Puoi pescare un’ulteriore carta prima delle tue altre pescate dichiarate. Un personaggio non dei giocatori a scelta del GM diventa ostile nei tuoi confronti. L’identità del nuovo nemico è ignota fino a quando il PNG o qualcun altro la rivelerà. Nulla a meno di un desiderio o intervento divino potrà porre fine all’ostilità del PNG nei tuoi confronti confronti. Ricevi la capacità di lanciare l’incantesimo desiderio 1d3 volte. Perdi 10.000 PE, scarti questa carta, e peschi di nuovo dal mazzo, contando entrambe le pescate come solo una delle tue pescate. Se perdere quel numero di PE ti farebbe perdere un livello, rimarrai invece con il numero di PE appena sufficienti per mantenere il tuo livello. Prigione Scompari e vienisepolto in uno stato d i animazione sospesa all’interno di una sfera extra dimensionale. Tutto ciò che stavi indossando o trasportando rimane nello spazio da te occupato quando sei scomparso. Rimarrai imprigionato finché non sarai ritrovato e rimosso dalla sfera. Non puoi essere localizzato tramite nessuna magia di divinazione, ma l’incantesimo desiderio può rivelare la posizione della tua prigione. Non si pescano ulteriori carte. Rovina Perdi tutte le ricchezze che hai con te, a parte gli altri oggetti magici. Attività, edifici e le terre che possiedi vengono perse nel modo che altera di meno la realtà. Qualsiasi documento che provi che tu sia il proprietario di qualcosa che hai perso a causa di questa carta, scompare. Ottieni 50.000 PE, e un oggetto meraviglioso (determinato dal GM) compare tra le tue mani. Stella Aumenta un tuo punteggio di caratteristica di 2. Il punteggio può superare il 20, ma non può superare 24. Teschio Evochi un avatar della morte (uno spettrale scheletro umanoide avvolto in una vestaglia nera e sbrindellata, il quale impugna una falce spettrale). Esso compare in uno spazio a scelta del GM entro 3 metri da te e ti attacca, avvisando tutti gli altri che devi vincere la bat..."
+      "Di solito lo si trova in un borsello o una scatola, che contiene delle carte fatte d’avorio o vello. La maggior parte di questi mazzi (il 75%) ha solo tredici carte, mentre i restanti mazzi ne hanno ventidue.Prima di pescare una carta, devi dichiarare quante carte intendi pescare e poi pescarle casualmente (puoi usare un mazzo di carte da gioco modificato per simulare il mazzo). Qualsiasi carta pescata in eccesso di questo numero non ha effetto. Altrimenti, appena peschi una carta dal mazzo, la sua magia ha effetto. Devi pescare ciascuna carta entro 1 ora dalla pescata precedente. Se non peschi il numero scelto di carte, il numero di carte rimanenti uscirà fuori dal mazzo spontaneamente e avrà effetto in contemporanea.Una volta estratta una carta, questa svanirà dall’esistenza. A meno che la carta non sia il Matto o il Buffone, la carta ricompare nel mazzo, rendendo possibile pescare due volte la stessa carta. * Solo in mazzi da 22 carte Artigli Ogni oggetto magico che indossi o trasporti viene disintegrato. Gli artefatti in tuo possesso non vengono disintegrati, ma svaniscono. Bilancia La tua mente è sconvolta, e cambi allineamento. Il legale diventa caotico, il buono diventa malvagio e viceversa. Se sei neutrale puro o disallineato, questa carta non avrà alcun effetto su di te. Cavaliere Ottieni i servigi di un guerriero di 4° livello che compare in uno spazio a tua scelta entro 9 metri da te. Il guerriero è della tua stessa razza e ti servirà lealmente fino alla morte, credendo che sia stato il fato a portarlo al tuo servizio. Il personaggio è controllato da te. Chiave Un’arma magica rara, molto rara o Leggendaria con la quale sei competente compare tra le tue mani. Il GM determina di che tipo di arma si tratta. Cometa Se sconfiggi da solo il prossimo mostro o gruppo ostile che incontrerai, otterrai abbastanza punti esperienza da guadagnare un livello. Altrimenti, questa carta non avrà effetto. Destino La struttura della realtà si dissolve e riforma, permettendoti di evitare o cancellare un evento come se non fosse mai accaduto. Puoi usare la magia di questa carta non appena l’hai pescata o aspettare un qualsiasi altro momento fino alla tua morte. Eurialo Sei maledetto dalla carta e subisci una penalità di -2 a tutti i tiri salvezza finché resterai maledetto a questo modo. Solo un dio o la magia della carta del Fato può porre fine a questa maledizione. Fiamme Un potente diavolo diventa tuo nemico. Il diavolo cercherà di rovinare e infestare la tua esistenza, assaporando le tue sofferenze fino al momento in cui cercherà di ucciderti. Questa inimicizia durerà fino alla morte tua o del diavolo. Davanti ai tuoi piedi compaiono venticinque gioielli del valore di 2.000 mo ciascuno o cinquanta gemme del valore di 1.000 mo ciascuna. Giullare Ottieni 10.000 PE o puoi pescare due carte aggiuntive oltre alle tue pescate dichiarate. Idiota Riduci permanentemente il tuo punteggio di Intelligenza di 1d4 + 1 (fino a un punteggio minimo di 1). Puoi pescare un’ulteriore carta prima delle tue altre pescate dichiarate. Un personaggio non dei giocatori a scelta del GM diventa ostile nei tuoi confronti. L’identità del nuovo nemico è ignota fino a quando il PNG o qualcun altro la rivelerà. Nulla a meno di un desiderio o intervento divino potrà porre fine all’ostilità del PNG nei tuoi confronti confronti. Ricevi la capacità di lanciare l’incantesimo desiderio 1d3 volte. Perdi 10.000 PE, scarti questa carta, e peschi di nuovo dal mazzo, contando entrambe le pescate come solo una delle tue pescate. Se perdere quel numero di PE ti farebbe perdere un livello, rimarrai invece con il numero di PE appena sufficienti per mantenere il tuo livello. Prigione Scompari e vienisepolto in uno stato d i animazione sospesa all’interno di una sfera extra dimensionale. Tutto ciò che stavi indossando o trasportando rimane nello spazio da te occupato quando sei scomparso. Rimarrai imprigionato finché non sarai ritrovato e rimosso dalla sfera. Non puoi essere localizzato tramite nessuna magia di divinazione, ma l’incantesimo desiderio può rivelare la posizione della tua prigione. Non si pescano ulteriori carte. Rovina Perdi tutte le ricchezze che hai con te, a parte gli altri oggetti magici. Attività, edifici e le terre che possiedi vengono perse nel modo che altera di meno la realtà. Qualsiasi documento che provi che tu sia il proprietario di qualcosa che hai perso a causa di questa carta, scompare. Ottieni 50.000 PE, e un oggetto meraviglioso (determinato dal GM) compare tra le tue mani. Stella Aumenta un tuo punteggio di caratteristica di 2. Il punteggio può superare il 20, ma non può superare 24. Teschio Evochi un avatar della morte (uno spettrale scheletro umanoide avvolto in una vestaglia nera e sbrindellata, il quale impugna una falce spettrale). Esso compare in uno spazio a scelta del GM entro 3 metri da te e ti attacca, avvisando tutti gli altri che devi vincere la bat..."
     ],
     "requires_attunement": true,
     "url": "/api/2014/magic-items/mazzo-delle-meraviglie",
@@ -4883,7 +4889,7 @@ export const magicItemsDatabase = [
       "url": "/api/2014/equipment-categories/potion"
     },
     "rarity": {
-      "name": "Molto rara"
+      "name": "Molto Rara"
     },
     "variants": [],
     "variant": false,
@@ -4903,7 +4909,7 @@ export const magicItemsDatabase = [
       "url": "/api/2014/equipment-categories/potion"
     },
     "rarity": {
-      "name": "Molto rara"
+      "name": "Molto Rara"
     },
     "variants": [],
     "variant": false,

@@ -147,6 +147,86 @@ const MagicItemList = {
             counterElement.textContent = `${foundCount} oggetti trovati`;
         }
         
+        /**
+         * Converte un blocco di righe in formato tabella markdown in una tabella HTML.
+         * @param {string[]} lines - Le righe del blocco tabella (header, separator, rows)
+         * @returns {string} HTML della tabella
+         */
+        function parseMarkdownTable(lines) {
+            const rows = lines
+                .map(l => l.trim())
+                .filter(l => l.startsWith('|') && l.endsWith('|'));
+
+            if (rows.length < 2) {
+                return rows.map(r => escapeHtml(r)).join('<br>');
+            }
+
+            const parseRow = (row) => row
+                .replace(/^\||\|$/g, '')
+                .split('|')
+                .map(cell => cell.trim());
+
+            const headerCells = parseRow(rows[0]);
+            const bodyRows = rows.slice(2); // skip separator row
+
+            let html = '<table class="magic-item-table"><thead><tr>';
+            headerCells.forEach(cell => {
+                html += `<th>${escapeHtml(cell)}</th>`;
+            });
+            html += '</tr></thead><tbody>';
+
+            bodyRows.forEach(row => {
+                const cells = parseRow(row);
+                html += '<tr>';
+                cells.forEach(cell => {
+                    html += `<td>${escapeHtml(cell)}</td>`;
+                });
+                html += '</tr>';
+            });
+
+            html += '</tbody></table>';
+            return html;
+        }
+
+        /**
+         * Processa le righe della descrizione: rileva blocchi tabella markdown
+         * e li converte in HTML, mentre le altre righe vengono escapeHtml normalmente.
+         * @param {string[]} descLines - Array di righe della descrizione
+         * @returns {string} HTML delle descrizioni
+         */
+        function renderDescription(descLines) {
+            const validLines = descLines.filter(line => typeof line === 'string');
+            const outputParts = [];
+            let tableBuffer = [];
+            let inTable = false;
+
+            for (const line of validLines) {
+                const trimmed = line.trim();
+                const isTableRow = trimmed.startsWith('|') && trimmed.endsWith('|');
+                const isSeparator = /^\|[\s\-:|]+\|$/.test(trimmed);
+
+                if (isTableRow) {
+                    tableBuffer.push(line);
+                    inTable = true;
+                } else {
+                    if (inTable) {
+                        // Fine del blocco tabella
+                        outputParts.push(parseMarkdownTable(tableBuffer));
+                        tableBuffer = [];
+                        inTable = false;
+                    }
+                    outputParts.push(escapeHtml(line));
+                }
+            }
+
+            // Flush remaining table buffer
+            if (inTable && tableBuffer.length > 0) {
+                outputParts.push(parseMarkdownTable(tableBuffer));
+            }
+
+            return outputParts.join('<br>');
+        }
+
         function showDetails(itemIndex) {
             const item = magicItemsDatabase.find(i => i.index === itemIndex);
             if (!item) {
@@ -168,13 +248,10 @@ const MagicItemList = {
             `;
 
             if (item.desc && Array.isArray(item.desc) && item.desc.length > 0) {
-                const safeLines = item.desc
-                    .filter(line => typeof line === 'string')
-                    .map(line => escapeHtml(line))
-                    .join('<br>');
-                detailsHTML += `<hr><p>${safeLines}</p>`;
+                const renderedDesc = renderDescription(item.desc);
+                detailsHTML += `<hr><div class="item-description">${renderedDesc}</div>`;
             }
-            
+
             detailsElement.innerHTML = `<div id="details-content">${detailsHTML}</div>`;
         }
 

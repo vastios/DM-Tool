@@ -15,10 +15,10 @@ export const nobile = {
     },
     
     equipaggiamento: [
-        "Un abito pregiato",
-        "Un anello sigillo",
-        "Un certificato di nobiltà",
-        "Una scarsella contenente 25 mo"
+        { nome: "Abito pregiato", quantita: 1 },
+        { nome: "Anello sigillo", quantita: 1 },
+        { nome: "Certificato di nobiltà", quantita: 1 },
+        { nome: "Scarsella con 25 mo", quantita: 1 }
     ],
     
     privilegio: {
