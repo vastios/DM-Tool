@@ -73,3 +73,35 @@ Stage Summary:
 - Lista compendio ora mostra 264 item (vs 279) di default, toggle per mostrare varianti
 - QuickBuilder genera PNG con nomi oggetti magici coerenti con il database
 - Tutti i nomi armi verificati contro items.js
+---
+Task ID: 4
+Agent: Main Agent
+Task: Audit completo QuickBuilder — 11 bug risolti
+
+Work Log:
+- Audit sistematico di quickBuilder.js (creazione rapida PNG)
+- Cross-referencing di tutti i nomi hardcoded contro DB (items.js, races.js, classDatabase)
+- Verificato competenze armature per tutte le 12 classi (case sensitivity: "Armature leggere" vs "armature")
+- Verificato struttura ability_bonuses delle 9 razze (indici EN: str/dex/con vs IT: for/des/cos)
+
+Bug trovati e fixati (11 totali, 3 critici):
+Q1 (Critico): applyRacialBonuses() usava indici EN direttamente come chiavi IT → bonus mai applicati. Aggiunta mappa EN→IT.
+Q2 (Critico): calculateAC() usava includes('armature') minuscolo su stringhe con A maiuscola → CA errata per 4 classi. Riscritta con toLowerCase().
+Q3 (Critico): asiLevels = [4,6,8,12,14,16,19] usati per tutte le classi → livelli 6/14 sono Fighter-only. Separati standard vs fighter.
+Q4 (Alto): Cantrip Stregone: Math.min(4,...) dava max 4 invece di 6 al livello 10. Formula riscritta.
+Q5 (Alto): Cantrip Warlock: formula dava 2 al livello 4 invece di 3. Formula riscritta.
+Q6 (Alto): Warlock trattato come full-caster per slot → aggiunta tabella Pact Magic (2 slot per livello).
+Q7 (Alto): 8 nomi CLASS_EQUIPMENT non corrispondevano al DB (Spada Lunga→lunga, Armatura Completa→a piastre, ecc.).
+Q8 (Alto): Difesa senza armatura Barbaro/Monaco mai raggiunta per bug Q2 → ora confronto max(armatura, unarmored).
+Q11 (Medio): focusMod variabile inutilizzata rimossa.
+Q12 (Medio): Codice morto rimosso (rollDice, rollDiceMultiple, ABILITY_NAMES, ABILITY_FULL_NAMES).
+Q13 (Medio): Giavellotto corretto da type:'ranged' a type:'melee' + thrown:true.
+Q15 (Basso): Scudo +2 CA ora applicato per classi con scudo (Paladino, Chierico, Druido).
+Q17 (Basso): Cap a 20 aggiunto anche in applyRacialBonuses.
+
+Commit: cff46e4 - push completato
+
+Stage Summary:
+- 11 fix in 1 file (93 insertions, 84 deletions)
+- QuickBuilder ora genera PNG con: bonus razziali corretti, CA accurate per tutte le 12 classi, ASI corretti, slot Warlock Pact Magic, nomi coerenti col DB
+- Codice pulito da variabili/functions inutilizzate
