@@ -279,7 +279,18 @@ function parseFixedItems(text) {
  * Include sia forme singolari che plurali
  */
 const DYNAMIC_CATEGORY_MAP = {
-    // Armi (singolare e plurale)
+    // Armi - categorie composte (singolare e plurale)
+    // Es: "arma da guerra da mischia" → Marziale + Mischia
+    'arma da guerra da mischia': { filter: { type: 'weapon', weapon_category: 'Marziale', weapon_range: 'Mischia' }, icon: '⚔️' },
+    'armi da guerra da mischia': { filter: { type: 'weapon', weapon_category: 'Marziale', weapon_range: 'Mischia' }, icon: '⚔️' },
+    'arma semplice da mischia': { filter: { type: 'weapon', weapon_category: 'Semplice', weapon_range: 'Mischia' }, icon: '🗡️' },
+    'armi semplici da mischia': { filter: { type: 'weapon', weapon_category: 'Semplice', weapon_range: 'Mischia' }, icon: '🗡️' },
+    'arma da guerra a distanza': { filter: { type: 'weapon', weapon_category: 'Marziale', weapon_range: 'A Distanza' }, icon: '🏹' },
+    'armi da guerra a distanza': { filter: { type: 'weapon', weapon_category: 'Marziale', weapon_range: 'A Distanza' }, icon: '🏹' },
+    'arma semplice a distanza': { filter: { type: 'weapon', weapon_category: 'Semplice', weapon_range: 'A Distanza' }, icon: '🏹' },
+    'armi semplici a distanza': { filter: { type: 'weapon', weapon_category: 'Semplice', weapon_range: 'A Distanza' }, icon: '🏹' },
+    
+    // Armi - categorie singole (singolare e plurale)
     'arma semplice': { filter: { type: 'weapon', weapon_category: 'Semplice' }, icon: '⚔️' },
     'armi semplici': { filter: { type: 'weapon', weapon_category: 'Semplice' }, icon: '⚔️' },
     'arma da guerra': { filter: { type: 'weapon', weapon_category: 'Marziale' }, icon: '⚔️' },
@@ -450,6 +461,39 @@ function parseDynamicChoice(text) {
     }
     
     return null;
+}
+
+/**
+ * Analizza una lista di item parsati per separare quelli dinamici (categorie)
+ * da quelli fissi (oggetti specifici).
+ * Serve per gestire scelte composte come "arma da guerra e scudo" dove
+ * "arma da guerra" è una categoria dinamica e "scudo" è un oggetto fisso.
+ *
+ * @param {Array<{name: string, quantity: number}>} items - Item parsati da parseFixedItems
+ * @returns {{fixed: Array, dynamic: Array}} - {fixed: [...], dynamic: [...]}
+ */
+function analyzeMixedItems(items) {
+    const fixed = [];
+    const dynamic = [];
+
+    items.forEach(item => {
+        // Ricrea il testo completo dell'item per il display (con quantità se > 1)
+        const displayText = item.quantity > 1 ? `${item.quantity} ${item.name}` : item.name;
+
+        // Controlla se questo item individuale è una scelta dinamica
+        const dynamicInfo = parseDynamicChoice(displayText);
+        if (dynamicInfo) {
+            dynamic.push({
+                ...item,
+                dynamicInfo,
+                displayText
+            });
+        } else {
+            fixed.push(item);
+        }
+    });
+
+    return { fixed, dynamic };
 }
 
 /**
@@ -720,6 +764,60 @@ function renderEquipmentLine(eq, idx, source, acceptedSuggestions, selectedChoic
             // Scelta normale - mostra pulsante conferma
             // Parsa il testo con parseFixedItems per gestire oggetti composti e quantità
             const parsedItems = parseFixedItems(selected.text);
+            
+            // Verifica se alcuni item sono categorie dinamiche (es. "arma da guerra" in "arma da guerra e scudo")
+            const { fixed, dynamic } = analyzeMixedItems(parsedItems);
+            
+            if (dynamic.length > 0) {
+                // ── BLOCK MISTO: alcuni item sono categorie dinamiche, altri fissi ──
+                // Es: "arma da guerra e scudo" → dynamic=[arma da guerra] + fixed=[scudo]
+                // Il pulsante Scegli apre il selettore per le categorie dinamiche;
+                // gli item fissi (companion) vengono aggiunti automaticamente alla conferma.
+                const companionJson = fixed.length > 0
+                    ? encodeURIComponent(JSON.stringify(fixed))
+                    : '';
+                
+                const mixedDisplayParts = [];
+                dynamic.forEach(d => {
+                    mixedDisplayParts.push(
+                        `<span class="mixed-dynamic-item"><span class="dynamic-icon">${d.dynamicInfo.icon}</span> ${escapeHtml(d.displayText)} <span class="dynamic-hint" title="Scegli dal database">🎯</span></span>`
+                    );
+                });
+                fixed.forEach(f => {
+                    const fText = f.quantity > 1 ? `${f.quantity} ${f.name}` : f.name;
+                    mixedDisplayParts.push(
+                        `<span class="mixed-fixed-item">${escapeHtml(fText)}</span>`
+                    );
+                });
+                
+                return `
+                    <li class="suggested-item choice-selected dynamic-choice mixed-items">
+                        <div class="mixed-items-list">
+                            ${mixedDisplayParts.join('')}
+                        </div>
+                        <div class="choice-actions">
+                            ${dynamic.map(d => {
+                                const filterJson = encodeURIComponent(JSON.stringify(d.dynamicInfo.filter));
+                                return `
+                                    <button type="button" class="btn btn-sm btn-open-dynamic-selector"
+                                            data-suggestion-key="${lineKey}"
+                                            data-suggestion-text="${escapeHtml(d.dynamicInfo.displayText)}"
+                                            data-filter="${filterJson}"
+                                            data-quantity="${d.dynamicInfo.quantity}"
+                                            data-category="${d.dynamicInfo.category}"
+                                            data-source="${source}"
+                                            data-companion-items="${companionJson}"
+                                            title="Scegli dal database">🎯 Scegli</button>
+                                `;
+                            }).join('')}
+                            <button type="button" class="btn btn-sm btn-reset-choice"
+                                    data-choice-key="${lineKey}"
+                                    title="Cambia scelta">↩</button>
+                        </div>
+                    </li>`;
+            }
+            
+            // ── TUTTI FISSI: nessuna categoria dinamica ──
             const displayText = parsedItems.map(item => 
                 item.quantity > 1 ? `${item.quantity} ${item.name}` : item.name
             ).join(', ');

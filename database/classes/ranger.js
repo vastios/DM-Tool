@@ -28,7 +28,7 @@ export const ranger = {
         "(a) armatura di scaglie o (b) armatura di cuoio",
         "(a) due spade corte o (b) due armi semplici da mischia",
         "(a) arco lungo e faretra con 20 frecce o (b) qualsiasi arma semplice",
-        "Uno zaino da esploratore contenente: sacco a pelo, kit da cuisino, botte da viaggio, munizioni, fionde, cibo per 10 giorni",
+        "Uno zaino da esploratore",
         "Un bastone da passeggio"
     ],
     

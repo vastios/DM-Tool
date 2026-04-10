@@ -656,8 +656,9 @@ export class PgController {
             const quantity = parseInt(button.dataset.quantity) || 1;
             const category = button.dataset.category;
             const source = button.dataset.source;
+            const companionItemsJson = button.dataset.companionItems || '';
             if (suggestionKey && filterJson) {
-                this.openDynamicSelector(suggestionKey, suggestionText, filterJson, quantity, category, source);
+                this.openDynamicSelector(suggestionKey, suggestionText, filterJson, quantity, category, source, companionItemsJson);
             }
             return;
         }
@@ -2605,13 +2606,14 @@ export class PgController {
         selectedItems: [],
         maxQuantity: 1,
         suggestionKey: null,
-        source: null
+        source: null,
+        companionItems: []  // item fissi da aggiungere automaticamente alla conferma
     };
     
     /**
      * Apre il modal per selezionare oggetti dal database
      */
-    openDynamicSelector(suggestionKey, suggestionText, filterJson, quantity, category, source) {
+    openDynamicSelector(suggestionKey, suggestionText, filterJson, quantity, category, source, companionItemsJson = '') {
         let filter;
         try {
             filter = JSON.parse(decodeURIComponent(filterJson));
@@ -2620,12 +2622,23 @@ export class PgController {
             return;
         }
         
+        // Parse companion items (oggetti fissi da aggiungere automaticamente)
+        let companionItems = [];
+        if (companionItemsJson) {
+            try {
+                companionItems = JSON.parse(decodeURIComponent(companionItemsJson));
+            } catch (e) {
+                console.warn('Errore parsing companion items:', e);
+            }
+        }
+        
         // Reset stato
         this._dynamicSelection = {
             selectedItems: [],
             maxQuantity: quantity,
             suggestionKey: suggestionKey,
-            source: source
+            source: source,
+            companionItems: companionItems
         };
         
         // Filtra oggetti dal database
@@ -2881,14 +2894,14 @@ export class PgController {
      * Conferma la selezione dinamica
      */
     confirmDynamicSelection(suggestionKey, source) {
-        const { selectedItems } = this._dynamicSelection;
+        const { selectedItems, companionItems } = this._dynamicSelection;
         
         if (selectedItems.length === 0) {
             showToast('Seleziona almeno un oggetto', 'warning');
             return;
         }
         
-        // Aggiungi gli oggetti all'inventario
+        // Aggiungi gli oggetti dinamici selezionati all'inventario
         selectedItems.forEach(item => {
             // Cerca nel database per ottenere dati completi
             const dbItem = this.findItemInDatabase(item.name);
@@ -2910,6 +2923,32 @@ export class PgController {
             }
         });
         
+        // Aggiungi gli item fissi companion (es. "scudo" quando si sceglie "arma da guerra e scudo")
+        if (companionItems && companionItems.length > 0) {
+            companionItems.forEach(itemData => {
+                const dbItem = this.findItemInDatabase(itemData.name);
+                if (dbItem) {
+                    if (dbItem.contents && dbItem.contents.length > 0) {
+                        this.expandPackContents(dbItem, itemData.quantity || 1);
+                    } else {
+                        this.addItemToInventoryDirect(dbItem, itemData.quantity || 1, true);
+                    }
+                } else {
+                    if (!this.wizardData.inventory) this.wizardData.inventory = [];
+                    this.wizardData.inventory.push({
+                        index: `companion-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
+                        name: itemData.name,
+                        quantity: itemData.quantity || 1,
+                        weight: 0,
+                        cost: { quantity: 0, unit: 'mo' },
+                        custom: true,
+                        fromSuggestion: true,
+                        equipment_category: { name: 'Testo', index: 'text' }
+                    });
+                }
+            });
+        }
+        
         // Marca il suggerimento come accettato
         if (!this.wizardData._acceptedSuggestions) this.wizardData._acceptedSuggestions = [];
         if (!this.wizardData._acceptedSuggestions.includes(suggestionKey)) {
@@ -2921,7 +2960,10 @@ export class PgController {
         
         // Re-render
         this.render();
-        showToast(`${selectedItems.length} oggetto/i aggiunto/i all'inventario!`, 'success');
+        
+        // Messaggio di feedback con conteggio completo (dinamici + companion)
+        const totalAdded = selectedItems.length + (companionItems ? companionItems.length : 0);
+        showToast(`${totalAdded} oggetto/i aggiunto/i all'inventario!`, 'success');
     }
     
     /**
@@ -2936,7 +2978,8 @@ export class PgController {
             selectedItems: [],
             maxQuantity: 1,
             suggestionKey: null,
-            source: null
+            source: null,
+            companionItems: []
         };
     }
     

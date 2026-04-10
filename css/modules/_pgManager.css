@@ -4354,6 +4354,49 @@ label.spell-cb input {
     background: rgba(33, 150, 243, 0.1);
 }
 
+/* Mixed items block: dynamic categories + fixed items together */
+.suggested-item.mixed-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.mixed-items-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.mixed-dynamic-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: rgba(33, 150, 243, 0.12);
+    border: 1px solid rgba(33, 150, 243, 0.3);
+    border-radius: 4px;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-primary, #e0e0e0);
+}
+
+.mixed-fixed-item {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(76, 175, 80, 0.12);
+    border: 1px solid rgba(76, 175, 80, 0.3);
+    border-radius: 4px;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-primary, #e0e0e0);
+}
+
+.suggested-item.mixed-items .choice-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
 /* Hidden state */
 .hidden {
     display: none !important;
