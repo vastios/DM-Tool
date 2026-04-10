@@ -53,25 +53,21 @@ function formatSpellcasting(incantazione, classIndex) {
     const nonCasterClasses = ['barbarian', 'fighter', 'monk', 'rogue'];
     if (nonCasterClasses.includes(classIndex)) return '';
     
-    // Mappatura nomi campi -> etichette italiane (con varianti)
+    // B1 FIX: Mappatura nomi campi -> etichette italiane (senza duplicati)
     const fieldMappings = {
-        'caratteristica_da_incantatore': { label: 'Caratteristica da Incantatore', variants: ['caratteristica_da_incantatore', 'caratteristica_da_incantatore', 'caratteristica_da_incantatore'] },
-        'caratteristica_da_incantatore': { label: 'Caratteristica da Incantatore', variants: ['caratteristica_da_incantatore', 'caratteristica_da_incantatore', 'caratteristica_da_incantatore'] },
-        'cd_tiro_salvezza': { label: 'CD Tiro Salvezza', variants: ['cd_tiro_salvezza', 'cd_tiro_salvezza', 'cd_tiro_salvezza', 'cd_tiro_salvezza'] },
-        'modificatore_attacco': { label: 'Modificatore Attacco', variants: ['modificatore_attacco', 'modificatore_attacco', 'modificatore_attacco'] },
-        'focus_incantamento': { label: 'Focus Incantamento', variants: ['focus_incantamento', 'focus_incantamento', 'focus_incantamento', 'focus_incantamento'] },
-        'focus_da_incantatore': { label: 'Focus Incantamento', variants: ['focus_da_incantatore', 'focus_da_incantatore'] },
-        'preparazione_incantesimi': { label: 'Preparazione Incantesimi', variants: ['preparazione_incantesimi', 'preparazione_incantesimi'] },
-        'rituali': { label: 'Incantesimi Rituali', variants: ['rituali', 'rituali'] }
+        'caratteristica_da_incantatore': { label: 'Caratteristica da Incantatore', variants: ['caratteristica_da_incantatore'] },
+        'cd_tiro_salvezza': { label: 'CD Tiro Salvezza', variants: ['cd_tiro_salvezza'] },
+        'modificatore_attacco': { label: 'Modificatore Attacco', variants: ['modificatore_attacco'] },
+        'focus_incantamento': { label: 'Focus Incantamento', variants: ['focus_incantamento'] },
+        'focus_da_incantatore': { label: 'Focus Incantamento', variants: ['focus_da_incantatore'] },
+        'preparazione_incantesimi': { label: 'Preparazione Incantesimi', variants: ['preparazione_incantesimi'] },
+        'rituali': { label: 'Incantesimi Rituali', variants: ['rituali'] }
     };
     
-    // Ordine preferito dei campi
+    // Ordine preferito dei campi (senza duplicati)
     const fieldOrder = [
         'caratteristica_da_incantatore',
-        'caratteristica_da_incantatore',
         'cd_tiro_salvezza',
-        'cd_tiro_salvezza',
-        'modificatore_attacco',
         'modificatore_attacco',
         'focus_incantamento',
         'focus_da_incantatore',
@@ -660,40 +656,26 @@ const ClassList = {
                 return;
             }
             
-            if (!cls.subclasses || cls.subclasses.length === 0) {
+            // B2 FIX: Usa cls.sottoclasse (campo corretto in italiano)
+            const defaultSubclass = cls.sottoclasse;
+            
+            if (!defaultSubclass) {
                 subclassListElement.innerHTML = `<p class="subclass-card-empty">Nessuna sottoclasse definita.</p>`;
                 return;
             }
 
-            const defaultSubclass = cls.sottoclasse;
-            
-            let html = '';
-            
-            if (defaultSubclass) {
-                html += `
-                    <div class="subclass-card featured">
-                        <div class="subclass-badge">Predefinita</div>
-                        <h4>${defaultSubclass.nome}</h4>
-                        <p class="subclass-card-desc">${escapeHtml(String(defaultSubclass.descrizione || ''))}</p>
-                        <div class="subclass-levels">
-                            ${Object.keys(defaultSubclass.privilegi || {}).map(liv => 
-                                `<span class="level-dot" title="Livello ${liv}">${liv}</span>`
-                            ).join('')}
-                        </div>
+            subclassListElement.innerHTML = `
+                <div class="subclass-card featured">
+                    <div class="subclass-badge">Predefinita</div>
+                    <h4>${escapeHtml(String(defaultSubclass.nome || ''))}</h4>
+                    <p class="subclass-card-desc">${escapeHtml(String(defaultSubclass.descrizione || ''))}</p>
+                    <div class="subclass-levels">
+                        ${Object.keys(defaultSubclass.privilegi || {}).map(liv => 
+                            `<span class="level-dot" title="Livello ${liv}">${liv}</span>`
+                        ).join('')}
                     </div>
-                `;
-            }
-            
-            html += cls.subclasses
-                .filter(sub => !defaultSubclass || sub.name !== defaultSubclass.nome)
-                .map(sub => `
-                    <div class="subclass-card">
-                        <h4>${sub.name}</h4>
-                        <p>Archetipo per ${cls.classe}</p>
-                    </div>
-                `).join('');
-
-            subclassListElement.innerHTML = html;
+                </div>
+            `;
         };
 
         listElement.addEventListener('click', (e) => {

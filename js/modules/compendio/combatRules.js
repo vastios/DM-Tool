@@ -1,14 +1,8 @@
 // js/modules/compendio/combatRules.js
 // Regole di Combattimento D&D 5e — SRD 5.1 Italiano (pp. 102-113)
 
-function escapeHtml(str) {
-    if (!str) return '';
-    return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
-}
+// L3 FIX: Importa escapeHtml condiviso invece della versione locale
+import { escapeHtml } from '../../../utils/htmlHelpers.js';
 
 const RULES_SECTIONS = [
     {

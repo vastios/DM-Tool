@@ -7,7 +7,7 @@
 
 import { classDatabase } from '../../../database/classes/index.js';
 import { raceDatabase } from '../../../database/races.js';
-import { getSpellsByLevel, getMaxSpellLevel, spellsKnownByLevel } from '../../../database/classSpells.js';
+import { getSpellsByLevel, getMaxSpellLevel, spellsKnownByLevel, getMaxCantripsKnown } from '../../../database/classSpells.js';
 import { itemDatabase } from '../../../database/items.js';
 import { magicItemsDatabase } from '../../../database/magicItems.js';
 import { escapeHtml } from '../../../utils/htmlHelpers.js';
@@ -33,14 +33,6 @@ const CLASS_ABILITY_PRIORITY = {
     'Monaco': ['des', 'sag', 'cos', 'for', 'int', 'car'],
     'Stregone': ['car', 'cos', 'des', 'sag', 'int', 'for'],
     'Warlock': ['car', 'cos', 'des', 'sag', 'int', 'for']
-};
-
-// Focus per variazione statistiche
-const FOCUS_MODIFIERS = {
-    'balanced': { primary: 0, secondary: 0 },
-    'offensive': { primary: 1, secondary: -1 },
-    'defensive': { primary: -1, secondary: 1 },
-    'random': { primary: 0, secondary: 0 }
 };
 
 // Nomi casuali per NPC
@@ -102,6 +94,15 @@ function isHalfCasterClass(className) {
 function generateAbilityScores(className, focus = 'balanced', variability = 'medium') {
     const priority = CLASS_ABILITY_PRIORITY[className] || CLASS_ABILITY_PRIORITY['Guerriero'];
     
+    // M3 FIX: Implementa focus 'random' con variazione reale sulle priorità
+    let actualPriority = [...priority];
+    if (focus === 'random') {
+        for (let i = actualPriority.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [actualPriority[i], actualPriority[j]] = [actualPriority[j], actualPriority[i]];
+        }
+    }
+    
     // Copia e ordina lo standard array
     let scores = [...STANDARD_ARRAY];
     
@@ -119,7 +120,7 @@ function generateAbilityScores(className, focus = 'balanced', variability = 'med
     // Ordina discendente per assegnare alle priorità
     scores.sort((a, b) => b - a);
     
-    // Applica modificatori focus
+    // Applica modificatori focus (solo offensive/defensive)
     if (focus === 'offensive' || focus === 'defensive') {
         if (focus === 'offensive') {
             scores[0] = Math.min(18, scores[0] + 1);
@@ -130,9 +131,9 @@ function generateAbilityScores(className, focus = 'balanced', variability = 'med
         }
     }
     
-    // Assegna in base alla priorità della classe
+    // Assegna in base alla priorità della classe (o mescolata se random)
     const abilities = {};
-    priority.forEach((abil, index) => {
+    actualPriority.forEach((abil, index) => {
         abilities[abil] = scores[index];
     });
     
@@ -351,18 +352,9 @@ function generateSpells(className, level, abilities) {
     return result;
 }
 
+// H5/H6 FIX: Delega a getMaxCantripsKnown da classSpells.js (SRD-accurate)
 function getCantripCount(className, level) {
-    const cantripCounts = {
-        'Mago': level >= 10 ? 5 : level >= 4 ? 4 : 3,
-        'Chierico': level >= 10 ? 5 : level >= 4 ? 4 : 3,
-        'Druido': level >= 10 ? 5 : level >= 4 ? 4 : 3,
-        'Bardo': level >= 10 ? 4 : level >= 4 ? 3 : 2,
-        'Stregone': level >= 10 ? 6 : level >= 4 ? 5 : 4, // FIX Q4
-        'Warlock': level >= 10 ? 4 : level >= 4 ? 3 : 2, // FIX Q5
-        'Paladino': 0,
-        'Ranger': 0
-    };
-    return cantripCounts[className] || 0;
+    return getMaxCantripsKnown(className, level) || 0;
 }
 
 function getSpellsCountForLevel(className, pgLevel, spellLevel) {

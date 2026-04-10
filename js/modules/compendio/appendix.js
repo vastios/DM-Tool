@@ -27,9 +27,6 @@ function formatDescription(description) {
 
 const Appendix = {
     render(containerElement) {
-        // --- DEBUG: Verifica che il database sia caricato ---
-        console.log('📖 [Appendix] Rendering appendice condizioni. Condizioni trovate:', Object.keys(conditionsDatabase).length);
-        
         // --- STEP 1: Prepara i dati prima del template literal ---
         const conditionCards = Object.entries(conditionsDatabase).map(([name, data]) => {
             // Gestisce la nuova struttura {description, summary}
@@ -57,8 +54,6 @@ const Appendix = {
                 </div>
             </div>
         `;
-        
-        console.log('✅ [Appendix] Rendering completato.');
     }
 };
 

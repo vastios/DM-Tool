@@ -270,6 +270,8 @@ const MagicItemList = {
             activeRarityFilter = 'Tutti';
             searchInput.value = '';
             listContainer.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            // H4 FIX: Ripristina stato attivo ai pulsanti "Tutti"
+            listContainer.querySelectorAll('.filter-btn[data-filter="Tutti"]').forEach(b => b.classList.add('active'));
             renderList();
         }
 

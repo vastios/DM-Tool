@@ -37,29 +37,23 @@ const RaceList = {
                 return "Dati del tratto non validi.";
             }
 
-            console.log(`[DEBUG] Ricerca del tratto con indice: "${traitRef.index}"`);
-
             // 1. Ricerca per INDICE (metodo più affidabile)
             let found = traitsDatabase.find(t => t && t.index === traitRef.index);
             
             if (found) {
-                console.log(`[DEBUG] Trovato per indice: ${found.name}`);
                 return Array.isArray(found.desc) ? found.desc.join(' ') : found.desc;
             }
-
-            console.warn(`[DEBUG] Non trovato per indice. Tentativo con nome: "${traitRef.name}"`);
 
             // 2. Ricerca per NOME ESATTO (fallback)
             if (traitRef.name) {
                 found = traitsDatabase.find(t => t && t.name && t.name.toLowerCase() === traitRef.name.toLowerCase());
                 if (found) {
-                    console.warn(`[DEBUG] Trovato per nome: ${found.name}`);
                     return Array.isArray(found.desc) ? found.desc.join(' ') : found.desc;
                 }
             }
             
             // 3. Se non viene trovato in nessun caso, restituisce un errore dettagliato
-            console.error(`[DEBUG] Tratto non trovato in nessun caso. Indice: ${traitRef.index}, Nome: ${traitRef.name}`);
+            console.error(`Tratto non trovato. Indice: ${traitRef.index}, Nome: ${traitRef.name}`);
             return `Descrizione non trovata per il tratto "${traitRef.name}" (indice: ${traitRef.index}). Controlla il file traits.js.`;
         };
 
