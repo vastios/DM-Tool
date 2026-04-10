@@ -48,3 +48,28 @@ Stage Summary:
 - Fix principale: "arma da guerra e scudo" ora apre correttamente selettore armi marziali + aggiunge scudo
 - Fix secondari: 3 categorie composte aggiunte (barbarian, paladin, ranger), dato ranger corretto
 - Classi interessate: Fighter, Paladin (arma da guerra + scudo), Barbarian (arma da guerra da mischia), Ranger (armi semplici da mischia)
+---
+Task ID: 3
+Agent: Main Agent
+Task: Audit e fix sistema oggetti magici
+
+Work Log:
+- Analizzato magicItemList.js (compendio viewer): 279 item totali, 15 variant:true, 5 parent con "Varia" rarity
+- Analizzato quickBuilder.js: MAGIC_ITEMS_BY_RARITY con 24 nomi hardcoded, 12 non corrispondenti al DB
+- Analizzato itemLoader.js: sistema di loading unificato per item/armor/magic
+- Identificato M1: Variant items mostrati come duplicati nella lista compendio (es. "Armatura, +1, +2, o +3" + "Armatura, +1" + "Armatura, +2" + "Armatura, +3")
+- Identificato M2: 12 nomi su 24 in MAGIC_ITEMS_BY_RARITY non esistono nel DB (es. "Frecce +1", "Spada +1", "Pozione di Guarigione Maggiore")
+- Identificato M3: Nome arma Barbaro in inglese ("Greataxe") e Druido ("Falcetto") non corrispondono al DB
+
+Fix applicati:
+1. magicItemList.js: Aggiunto checkbox toggle "Nascondi varianti (+1, +2, +3)" predefinito attivo
+2. quickBuilder.js: Riscritto MAGIC_ITEMS_BY_RARITY con 37 nomi verificati dal DB
+3. quickBuilder.js: "Greataxe" -> "Ascia bipenne", "Falcetto" -> "Falce"
+
+Commit: 4157580 - push completato
+
+Stage Summary:
+- 3 fix applicati a 2 file (11 insertions, 7 deletions + WORKLOG)
+- Lista compendio ora mostra 264 item (vs 279) di default, toggle per mostrare varianti
+- QuickBuilder genera PNG con nomi oggetti magici coerenti con il database
+- Tutti i nomi armi verificati contro items.js
