@@ -172,23 +172,40 @@ function _processParsedItem(part, items, placeholders) {
     part = part.trim();
     if (!part) return;
 
-    // Rimuovi articoli determinativi/indeterminativi all'inizio, ma solo se
-    // la parola che segue ha >= 3 caratteri (evita di troncare nomi corti come "Stendardo")
-    part = part.replace(/^(un['a]?|una|uno|il|la|lo|le|i|gli)\s+(?=\w{3,})/i, '');
+    // Rimuovi articoli determinativi/indeterminativi all'inizio, inclusa elisione (un', l', d')
+    // ma solo se la parola che segue ha >= 3 caratteri
+    part = part.replace(/^(l'|un['a]?|una|uno|il|la|lo|le|i|gli|d')\s+(?=\w{3,})/i, '');
+    // Gestisci elisione senza spazio: "un'arma" → "arma", "d'incenso" → "incenso"
+    part = part.replace(/^(un|uno|il|lo|la)'(?=\w{3,})/i, '');
 
-    // Controlla se c'è una quantità all'inizio (es. "20 frecce")
-    const qtyMatch = part.match(/^(\d+)\s+(.+)$/);
-    if (qtyMatch) {
+    // Controlla se c'è una quantità all'inizio — prima numeri, poi parole italiane
+    // Es: "20 frecce" → qty 20, "due asce" → qty 2, "cinque giavellotti" → qty 5
+    const digitQtyMatch = part.match(/^(\d+)\s+(.+)$/);
+    if (digitQtyMatch) {
         items.push({
-            name: qtyMatch[2].trim(),
-            quantity: parseInt(qtyMatch[1])
+            name: digitQtyMatch[2].trim(),
+            quantity: parseInt(digitQtyMatch[1])
         });
-    } else {
-        items.push({
-            name: part,
-            quantity: 1
-        });
+        return;
     }
+
+    // Controlla numeri in lettere italiani
+    const wordQtyMatch = part.match(/^(due|tre|quattro|cinque|sei|sette|otto|nove|dieci)\s+(.+)$/i);
+    if (wordQtyMatch) {
+        const qty = parseQuantityWord(wordQtyMatch[1]);
+        if (qty !== null) {
+            items.push({
+                name: wordQtyMatch[2].trim(),
+                quantity: qty
+            });
+            return;
+        }
+    }
+
+    items.push({
+        name: part,
+        quantity: 1
+    });
 }
 
 /**
@@ -330,15 +347,31 @@ function parseDynamicChoice(text) {
     
     const lowerText = text.toLowerCase().trim();
     
+    // GUARDIA: rifiuta testi con virgola (indicano lista di oggetti, non scelta di categoria)
+    // Es: "armatura di cuoio, arco lungo e 20 frecce" → lista fissa, non scelta dinamica
+    if (lowerText.includes(',')) return null;
+    
+    // GUARDIA: rifiuta testi con " contenente:" (descrizione contenuto zaino)
+    if (/\s+contenente\s*:/i.test(text)) return null;
+    
+    // GUARDIA: rifiuta testi con " e un/una/uno/il/la" che indicano un secondo oggetto distinto
+    // Es: "un'arma da guerra e uno scudo" → 2 oggetti, non 1 scelta dinamica
+    // Es: "una balestra leggera e 20 quadrelli" → 2 oggetti (ma "e 20" non ha articolo, gestito dopo)
+    if (/\s+e\s+(un['a]?|una|uno|il|la|lo|le|i|gli)\s+/i.test(lowerText)) return null;
+    
+    // GUARDIA: rifiuta testi con "e N " dove N è un numero (indica secondo oggetto con quantità)
+    // Es: "una balestra leggera e 20 quadrelli" → 2 oggetti, non 1 scelta dinamica
+    if (/\s+e\s+\d+\s+/i.test(lowerText)) return null;
+    
     // Pattern per riconoscere scelte dinamiche
     // Es: "una qualsiasi arma semplice", "qualsiasi arma semplice", "tre strumenti musicali"
     const patterns = [
         // "una qualsiasi arma semplice", "un qualsiasi strumento musicale"
-        /(?:una?|un)\s+(?:qualsiasi|altra?|altro)\s+(.+)/i,
+        /(?:una?|un)(?:['']\s*|\s+)(?:qualsiasi|altra?|altro)\s+(.+)/i,
         // "qualsiasi arma semplice", "qualsiasi altro strumento musicale"
         /qualsiasi\s+(?:altro|altra)?\s*(.+)/i,
-        // "tre strumenti musicali di tua scelta", "due armi da guerra" (numeri in lettere o cifre)
-        /^(un|uno|una|due|tre|quattro|cinque|sei|sette|otto|nove|dieci|\d+)\s+(.+?)(?:\s+di\s+tua\s+scelta)?$/i,
+        // "due armi da guerra", "un'arma da guerra" (numeri in lettere, cifre, elisione)
+        /^(un|uno|una|due|tre|quattro|cinque|sei|sette|otto|nove|dieci|\d+)(?:['']\s*|\s+)(.+?)(?:\s+di\s+tua\s+scelta)?$/i,
         // "arma semplice a tua scelta"
         /(.+?)\s+(?:a|di)\s+tua\s+scelta$/i,
     ];
@@ -368,14 +401,15 @@ function parseDynamicChoice(text) {
                 .replace(/^(altra?|altro)\s+/i, '')
                 .trim();
             
-            // Cerca la categoria nel mapping
-            for (const [key, value] of Object.entries(DYNAMIC_CATEGORY_MAP)) {
+            // Cerca la categoria nel mapping (chiavi piu lunghe prima)
+            const sortedKeys = Object.keys(DYNAMIC_CATEGORY_MAP).sort((a, b) => b.length - a.length);
+            for (const key of sortedKeys) {
                 if (categoryText.includes(key)) {
                     return {
                         category: key,
                         quantity: quantity,
-                        filter: value.filter,
-                        icon: value.icon,
+                        filter: DYNAMIC_CATEGORY_MAP[key].filter,
+                        icon: DYNAMIC_CATEGORY_MAP[key].icon,
                         displayText: text
                     };
                 }
@@ -383,18 +417,33 @@ function parseDynamicChoice(text) {
         }
     }
     
-    // Prova con ricerca diretta nel mapping
-    for (const [key, value] of Object.entries(DYNAMIC_CATEGORY_MAP)) {
+    // Prova con ricerca diretta nel mapping — con validazione prefisso/suffisso
+    // Questa sezione gestisce: "un'arma da guerra", "armatura leggera a tua scelta", ecc.
+    // Ma RIFIUTA testi composti come "armatura di cuoio e arco lungo" (contenuto extra)
+    const sortedKeys = Object.keys(DYNAMIC_CATEGORY_MAP).sort((a, b) => b.length - a.length);
+    for (const key of sortedKeys) {
         if (lowerText.includes(key)) {
-            // Cerca un numero all'inizio (lettere o cifre)
-            const numMatch = lowerText.match(/^(un|uno|una|due|tre|quattro|cinque|sei|sette|otto|nove|dieci|\d+)\s+/i);
+            const keyIndex = lowerText.indexOf(key);
+            const keyEnd = keyIndex + key.length;
+            
+            // Valida prefisso: permette solo vuoto, articoli o numeri
+            const prefix = lowerText.substring(0, keyIndex).trim();
+            const allowedPrefix = /^(un['a']?|uno|una|due|tre|quattro|cinque|sei|sette|otto|nove|dieci|\d+|qualsiasi)?\s*$/;
+            if (prefix && !allowedPrefix.test(prefix)) continue;
+            
+            // Valida suffisso: permette solo "a/di tua scelta" o vuoto
+            const suffix = lowerText.substring(keyEnd).trim();
+            if (suffix && !/^(a|di)\s+tua\s+scelta/.test(suffix)) continue;
+            
+            // Estrai quantita dal prefisso
+            const numMatch = prefix.match(/^(un['a']?|uno|una|due|tre|quattro|cinque|sei|sette|otto|nove|dieci|\d+)/);
             const quantity = numMatch ? (parseQuantityWord(numMatch[1]) || 1) : 1;
             
             return {
                 category: key,
                 quantity: quantity,
-                filter: value.filter,
-                icon: value.icon,
+                filter: DYNAMIC_CATEGORY_MAP[key].filter,
+                icon: DYNAMIC_CATEGORY_MAP[key].icon,
                 displayText: text
             };
         }
@@ -669,13 +718,21 @@ function renderEquipmentLine(eq, idx, source, acceptedSuggestions, selectedChoic
             }
             
             // Scelta normale - mostra pulsante conferma
+            // Parsa il testo con parseFixedItems per gestire oggetti composti e quantità
+            const parsedItems = parseFixedItems(selected.text);
+            const displayText = parsedItems.map(item => 
+                item.quantity > 1 ? `${item.quantity} ${item.name}` : item.name
+            ).join(', ');
+            const itemsJson = encodeURIComponent(JSON.stringify(parsedItems));
+            
             return `
                 <li class="suggested-item choice-selected">
-                    <span class="suggested-text">${escapeHtml(selected.text)}</span>
+                    <span class="suggested-text">${escapeHtml(displayText)}</span>
                     <div class="choice-actions">
                         <button type="button" class="btn btn-sm btn-add-suggested" 
                                 data-suggestion-key="${lineKey}"
-                                data-suggestion-text="${escapeHtml(selected.text)}"
+                                data-suggestion-text="${escapeHtml(displayText)}"
+                                data-suggestion-items="${itemsJson}"
                                 data-source="${source}"
                                 title="Conferma">✓</button>
                         <button type="button" class="btn btn-sm btn-reset-choice" 

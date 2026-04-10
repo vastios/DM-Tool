@@ -2137,6 +2137,14 @@ export class PgController {
         // Step 2: Dividi per virgola (con eventuale "e" dopo) e per " e "
         const parts = processed.split(/,\s*(?:e\s+)?|\s+e\s+/i);
 
+        // Mapping numeri in lettere italiane
+        const numberWords = {
+            'un': 1, 'uno': 1, 'una': 1,
+            'due': 2, 'tre': 3, 'quattro': 4,
+            'cinque': 5, 'sei': 6, 'sette': 7,
+            'otto': 8, 'nove': 9, 'dieci': 10
+        };
+
         // Helper locale per processare un singolo componente
         const processPart = (part) => {
             // Ripristina placeholder parentetici
@@ -2146,22 +2154,38 @@ export class PgController {
             part = part.trim();
             if (!part) return;
 
-            // Rimuovi articoli iniziali (solo se parola seguente >= 3 caratteri)
-            part = part.replace(/^(un['a]?|una|uno|il|la|lo|le|i|gli)\s+(?=\w{3,})/i, '');
+            // Rimuovi articoli iniziali, inclusa elisione (un', l', d')
+            // ma solo se la parola seguente >= 3 caratteri
+            part = part.replace(/^(l'|un['a]?|una|uno|il|la|lo|le|i|gli|d')\s+(?=\w{3,})/i, '');
+            // Gestisci elisione senza spazio: "un'arma" → "arma"
+            part = part.replace(/^(un|uno|il|lo|la)'(?=\w{3,})/i, '');
 
-            // Estrai quantità all'inizio: "20 frecce" → qty 20, name "frecce"
-            const qtyMatch = part.match(/^(\d+)\s+(.+)$/);
-            if (qtyMatch) {
+            // Estrai quantità all'inizio: prima cifre, poi parole italiane
+            const digitQtyMatch = part.match(/^(\d+)\s+(.+)$/);
+            if (digitQtyMatch) {
                 items.push({
-                    name: qtyMatch[2].trim(),
-                    quantity: parseInt(qtyMatch[1])
+                    name: digitQtyMatch[2].trim(),
+                    quantity: parseInt(digitQtyMatch[1])
                 });
-            } else {
-                items.push({
-                    name: part,
-                    quantity: 1
-                });
+                return;
             }
+
+            const wordQtyMatch = part.match(/^(due|tre|quattro|cinque|sei|sette|otto|nove|dieci)\s+(.+)$/i);
+            if (wordQtyMatch) {
+                const qty = numberWords[wordQtyMatch[1].toLowerCase()];
+                if (qty !== undefined) {
+                    items.push({
+                        name: wordQtyMatch[2].trim(),
+                        quantity: qty
+                    });
+                    return;
+                }
+            }
+
+            items.push({
+                name: part,
+                quantity: 1
+            });
         };
 
         // Step 3: Processa ogni parte
@@ -2177,7 +2201,9 @@ export class PgController {
                     subName = subName.replace(`__PH${i}__`, ph);
                 });
                 subName = subName.trim();
-                subName = subName.replace(/^(un['a]?|una|uno|il|la|lo|le|i|gli)\s+(?=\w{3,})/i, '');
+                // Rimuovi articoli dal sub-item (inclusa elisione)
+                subName = subName.replace(/^(l'|un['a]?|una|uno|il|la|lo|le|i|gli|d')\s+(?=\w{3,})/i, '');
+                subName = subName.replace(/^(un|uno|il|lo|la)'(?=\w{3,})/i, '');
                 items.push({
                     name: subName,
                     quantity: parseInt(conMatch[2])
@@ -2214,9 +2240,37 @@ export class PgController {
             'zaino del bardo': 'dotazione del bardo'
         };
         
-        // Controlla se è un alias di dotazione
-        const aliasedName = packAliases[nameLower];
-        const searchName = aliasedName || nameLower;
+        // Alias per oggetti con nomi italiani diversi tra equipaggiamento e database
+        // Copre: plurali → singolari, terminologia D&D italiana, varianti comuni
+        const itemAliases = {
+            // Armi - plurali → singolari / nomi alternativi
+            'asce': 'accetta',                  // handaxe in SRD italiano = accetta
+            'ascia': 'accetta',                 // ascia generica → accetta (handaxe)
+            'accette': 'accetta',               // plurale di accetta
+            'frecce': 'freccia',
+            'pugnali': 'pugnale',
+            'giavellotti': 'giavellotto',
+            'dardi': 'dardo',
+            'quadrelli': 'quadrelli da balestra',
+            'scudi': 'scudo',
+            'martelli da guerra': 'martello da guerra',
+            'mazze': 'mazza',
+            
+            // Equipaggiamento - nomi diversi nel DB
+            'attrezzi da ladro': 'arnesi da scasso',
+            'faretra': 'farcastra',
+            'simbolo sacro': 'amuleto',         // default holy symbol
+            
+            // Armature - varianti di denominazione
+            'armatura a scaglie': 'corazza di scaglie',
+            
+            // Componenti e focus
+            'borsa dei componenti': 'borsa delle componenti',
+        };
+        
+        // Controlla se è un alias di oggetto (prima delle dotazioni)
+        const itemAlias = itemAliases[nameLower];
+        const searchName = itemAlias || packAliases[nameLower] || nameLower;
         
         // Prima prova match esatto
         let found = this.databases.items?.find(item => 
@@ -2231,17 +2285,19 @@ export class PgController {
             searchName.includes(item.name?.toLowerCase())
         );
         
+        if (found) return found;
+        
         // Gestisci casi speciali
-        if (!found) {
-            // Arco lungo -> arco-lungo
-            const normalized = searchName.replace(/\s+/g, '-');
-            found = this.databases.items?.find(item => 
-                item.index === normalized || item.index?.includes(normalized)
-            );
-        }
+        // Arco lungo -> arco-lungo
+        const normalized = searchName.replace(/\s+/g, '-');
+        found = this.databases.items?.find(item => 
+            item.index === normalized || item.index?.includes(normalized)
+        );
+        
+        if (found) return found;
         
         // Se ancora non trovato e contiene parole chiave di dotazioni, cerca per tipo
-        if (!found && (searchName.includes('zaino') || searchName.includes('dotazione'))) {
+        if (searchName.includes('zaino') || searchName.includes('dotazione')) {
             // Estrai la parola chiave (es. "diplomatico" da "zaino da diplomatico")
             const keywords = searchName.replace(/zaino|dotazione|da|del|dello/gi, '').trim();
             if (keywords) {

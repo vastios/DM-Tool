@@ -31,7 +31,7 @@ export const fighter = {
   "equipaggiamento": [
     "(a) cotta di maglia o (b) armatura di cuoio, arco lungo e 20 frecce",
     "(a) un'arma da guerra e uno scudo o (b) due armi da guerra",
-    "(a) una balestra leggera e 20 quadrelli o (b) due asce",
+    "(a) una balestra leggera e 20 quadrelli o (b) due accette",
     "(a) uno zaino da speleologo o (b) uno zaino da esploratore"
   ],
   "tabella_progressione": [
