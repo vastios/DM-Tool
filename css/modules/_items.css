@@ -62,6 +62,7 @@
 .rarity-rara { background-color: #007bff; }
 .rarity-molto-rara { background-color: #6610f2; }
 .rarity-leggendaria { background-color: #e83e8c; }
+.rarity-varia { background-color: #fd7e14; }
 
 /* --- Colonne Lista e Dettagli --- */
 .item-list-cell {

@@ -136,6 +136,7 @@ export const magicItemsDatabase = [
     },
     "variants": [],
     "variant": false,
+    "requires_attunement": true,
     "desc": [
       "Oggetto meraviglioso, Rara (richiede sintonizzazione)",
       "Il tuo punteggio di Costituzione è 19 mentre indossi questo amuleto. Non ha alcun effetto su di te se la tua Costituzione è già 19 o superiore."
@@ -157,6 +158,7 @@ export const magicItemsDatabase = [
     },
     "variants": [],
     "variant": false,
+    "requires_attunement": true,
     "desc": [
       "Oggetto meraviglioso, non comune (richiede sintonizzazione)",
       "Mentre indossi questo amuleto, sei nascosto dalla magia di divinazione. Non puoi essere bersagliato da tale magia o percepito attraverso sensori di scrutamento magici."
@@ -178,6 +180,7 @@ export const magicItemsDatabase = [
     },
     "variants": [],
     "variant": false,
+    "requires_attunement": true,
     "desc": [
       "Oggetto meraviglioso, Molto rara (richiede sintonizzazione)",
       "Mentre indossi questo amuleto, puoi usare un'azione per nominare un luogo che ti è familiare su un altro piano di esistenza. Poi effettua una prova di Intelligenza con CD 15. Se la prova ha successo, lanci l'incantesimo spostamento planare. In caso di fallimento, tu e ogni creatura e oggetto entro 4,5 metri da te viaggiate verso una destinazione casuale. Tira un d100. Con 1-60, viaggi verso un luogo casuale sul piano che hai nominato. Con 61-100, viaggi verso un piano di esistenza determinato casualmente."
@@ -199,6 +202,7 @@ export const magicItemsDatabase = [
     },
     "variants": [],
     "variant": false,
+    "requires_attunement": true,
     "desc": [
       "Armatura (scudo), Molto rara (richiede sintonizzazione)",
       "Mentre impugni questo scudo, puoi pronunciare la sua parola di comando come azione bonus per farlo animare. Lo scudo balza in aria e fluttua nel tuo spazio per proteggerti come se lo stessi impugnando, lasciandoti le mani libere. Lo scudo rimane animato per 1 minuto, finché non usi un'azione bonus per terminare questo effetto, o finché non sei inabile o muori, momento in cui lo scudo cade a terra o nella tua mano se ne hai una libera."
@@ -362,6 +366,7 @@ export const magicItemsDatabase = [
     },
     "variants": [],
     "variant": false,
+    "requires_attunement": true,
     "desc": [
       "Armatura (a piastre), leggendaria (richiede sintonizzazione)",
       "Hai resistenza ai danni non magici mentre indossi questa armatura. Inoltre, puoi usare un'azione per renderti immune ai danni non magici per 10 minuti o finché non indossi più l'armatura. Una volta utilizzata questa azione speciale, non può essere utilizzata di nuovo fino all'alba successiva."
@@ -383,6 +388,7 @@ export const magicItemsDatabase = [
     },
     "variants": [],
     "variant": false,
+    "requires_attunement": true,
     "desc": [
       "Armatura (leggera, media o pesante), Rara (richiede sintonizzazione)",
       "Hai resistenza a un tipo di danno mentre indossi questa armatura. Il GM sceglie il tipo o lo determina casualmente dalle opzioni seguenti.",
@@ -416,6 +422,7 @@ export const magicItemsDatabase = [
     },
     "variants": [],
     "variant": false,
+    "requires_attunement": true,
     "desc": [
       "Armatura (a piastre), Rara (richiede sintonizzazione)",
       "Mentre indossi questa armatura, hai resistenza a uno dei seguenti tipi di danno: contundente, perforante o tagliente. Il GM sceglie il tipo o lo determina casualmente.",
@@ -438,6 +445,7 @@ export const magicItemsDatabase = [
     },
     "variants": [],
     "variant": false,
+    "requires_attunement": true,
     "desc": [
       "Armatura (scudo), Rara (richiede sintonizzazione)",
       "Ottieni un bonus di +2 alla CA contro gli attacchi a distanza mentre maneggi questo scudo. Questo bonus si aggiunge al normale bonus alla CA dello scudo. Inoltre, ogni volta che un attaccante effettua un attacco a distanza contro un bersaglio entro 1,5 metri da te, puoi usare la tua reazione per diventare il bersaglio dell'attacco al suo posto."
@@ -767,6 +775,7 @@ export const magicItemsDatabase = [
     },
     "variants": [],
     "variant": false,
+    "requires_attunement": true,
     "desc": [
       "Oggetto Meraviglioso, Rara (richiede sintonizzazione)",
       "Mentre indossi questa cintura, ottieni i seguenti benefici:",
@@ -825,6 +834,7 @@ export const magicItemsDatabase = [
       }
     ],
     "variant": false,
+    "requires_attunement": true,
     "desc": [
       "Oggetto meraviglioso, rarità varia (richiede sintonizzazione)",
       "Mentre indossi questa cintura, il tuo punteggio di Forza cambia in un punteggio concesso dalla cintura. Se la tua Forza è già uguale o superiore al punteggio della cintura, l'oggetto non ha Effetto su di te.",
@@ -980,6 +990,7 @@ export const magicItemsDatabase = [
     },
     "variants": [],
     "variant": false,
+    "requires_attunement": true,
     "desc": [
       "Arma (qualsiasi ascia), Rara (richiede sintonizzazione)",
       "Ottieni un bonus di +1 ai Tiri per Colpire e per i Danni effettuati con questa Arma Magica. Inoltre, mentre sei sintonizzato con questa arma, il tuo massimo dei Punti Ferita aumenta di 1 per ogni livello che hai raggiunto.",
@@ -1024,6 +1035,7 @@ export const magicItemsDatabase = [
     },
     "variants": [],
     "variant": false,
+    "requires_attunement": true,
     "desc": [
       "Oggetto meraviglioso, Rara (richiede sintonizzazione)",
       "Mentre indossi questi stivali, puoi usare un'azione per lanciare l'incantesimo levitazione su te stesso a volontà."
@@ -1045,6 +1057,7 @@ export const magicItemsDatabase = [
     },
     "variants": [],
     "variant": false,
+    "requires_attunement": true,
     "desc": [
       "Oggetto meraviglioso, Rara (richiede sintonizzazione)",
       "Mentre indossi questi stivali, puoi usare un'azione bonus e sbattere i tacchi degli stivali insieme. Se lo fai, gli stivali raddoppiano la tua velocità di camminata e qualsiasi creatura che effettua un attacco di opportunità contro di te ha svantaggio sul tiro per colpire. Se sbatti di nuovo i tacchi insieme, termini l'effetto.",
@@ -1067,6 +1080,7 @@ export const magicItemsDatabase = [
     },
     "variants": [],
     "variant": false,
+    "requires_attunement": true,
     "desc": [
       "Oggetto meraviglioso, non comune (richiede sintonizzazione)",
       "Mentre indossi questi stivali, la tua velocità di camminata diventa 9 metri, a meno che la tua velocità di camminata non sia superiore, e la tua velocità non è ridotta se sei ingombrato o indossi un'armatura pesante. Inoltre, puoi saltare tre volte la distanza normale, sebbene tu non possa saltare più lontano di quanto il tuo movimento rimanente consentirebbe."
@@ -1088,6 +1102,7 @@ export const magicItemsDatabase = [
     },
     "variants": [],
     "variant": false,
+    "requires_attunement": true,
     "desc": [
       "Oggetto meraviglioso, non comune (richiede sintonizzazione)",
       "Questi stivali di pelliccia sono comodi e sembrano piuttosto caldi. Mentre li indossi, ottieni i seguenti benefici:",
@@ -1133,6 +1148,7 @@ export const magicItemsDatabase = [
     },
     "variants": [],
     "variant": false,
+    "requires_attunement": true,
     "desc": [
       "Oggetto meraviglioso, non comune (richiede sintonizzazione)",
       "Mentre indossi questi bracciali, hai competenza con l'arco lungo e l'arco corto, e ottieni un bonus di +2 ai tiri per i danni sugli attacchi a distanza effettuati con tali armi."
@@ -1154,6 +1170,7 @@ export const magicItemsDatabase = [
     },
     "variants": [],
     "variant": false,
+    "requires_attunement": true,
     "desc": [
       "Oggetto meraviglioso, Rara (richiede sintonizzazione)",
       "Mentre indossi questi bracciali, ottieni un bonus di +2 alla CA se non indossi alcuna armatura e non usi alcuno scudo."
@@ -1197,6 +1214,7 @@ export const magicItemsDatabase = [
     },
     "variants": [],
     "variant": false,
+    "requires_attunement": true,
     "desc": [
       "Oggetto meraviglioso, non comune (richiede sintonizzazione)",
       "Mentre indossi questa spilla, hai resistenza ai danni da forza e hai immunità ai danni dall'incantesimo dardo incantato."
@@ -1240,6 +1258,7 @@ export const magicItemsDatabase = [
     },
     "variants": [],
     "variant": false,
+    "requires_attunement": true,
     "desc": [
       "Oggetto meraviglioso, Molto rara (richiede sintonizzazione)",
       "Questa sottile candela è dedicata a una divinità e condivide l'allineamento di quella divinità. L'allineamento della candela può essere rilevato con l'incantesimo individuazione del bene e del male. Il GM sceglie il dio e l'allineamento associato o determina l'allineamento casualmente.",
@@ -1364,10 +1383,11 @@ export const magicItemsDatabase = [
       "url": "/api/2014/equipment-categories/wondrous-item"
     },
     "rarity": {
-      "name": "Rara (richiede sintonia)"
+      "name": "Rara"
     },
     "variants": [],
     "variant": false,
+    "requires_attunement": true,
     "desc": [
       "Il mantello proietta un'illusione che ti fa apparire vicino alla tua posizione reale, conferendo svantaggio ai tiri per colpire contro di te.",
       "Se subisci danni, la proprietà smette di funzionare fino all'inizio del tuo turno successivo.",
@@ -1385,10 +1405,11 @@ export const magicItemsDatabase = [
       "url": "/api/2014/equipment-categories/wondrous-item"
     },
     "rarity": {
-      "name": "Non Comune (richiede sintonia)"
+      "name": "Non Comune"
     },
     "variants": [],
     "variant": false,
+    "requires_attunement": true,
     "desc": [
       "Ottieni un bonus di +1 alla CA e ai tiri salvezza mentre indossi questo mantello."
     ],
@@ -1404,10 +1425,11 @@ export const magicItemsDatabase = [
       "url": "/api/2014/equipment-categories/wondrous-item"
     },
     "rarity": {
-      "name": "Leggendaria (richiede sintonia)"
+      "name": "Leggendaria"
     },
     "variants": [],
     "variant": false,
+    "requires_attunement": true,
     "desc": [
       "Mentre la tocchi, puoi lanciare l'incantesimo Scrutare (CD del tiro salvezza 17).",
       "Esistono varianti: Lettura del Pensiero, Telepatia o Visione del Vero (conferisce Visione del Vero entro 120 piedi dal sensore)."
@@ -1465,10 +1487,11 @@ export const magicItemsDatabase = [
       "url": "/api/2014/equipment-categories/weapon"
     },
     "rarity": {
-      "name": "Molto rara (richiede sintonia)"
+      "name": "Molto rara"
     },
     "variants": [],
     "variant": false,
+    "requires_attunement": true,
     "desc": [
       "Con un'azione bonus puoi far fluttuare la spada fino a 30 piedi per attaccare un bersaglio.",
       "Dopo quattro attacchi, la spada torna nella tua mano o cade ai tuoi piedi se non hai mani libere."
@@ -1485,10 +1508,11 @@ export const magicItemsDatabase = [
       "url": "/api/2014/equipment-categories/armor"
     },
     "rarity": {
-      "name": "Molto rara (richiede sintonia)"
+      "name": "Molto rara"
     },
     "variants": [],
     "variant": false,
+    "requires_attunement": true,
     "desc": [
       "Bonus +1 alla CA e puoi parlare l'Abissale. I guanti d'arme infliggono 1d8 danni taglienti come armi magiche.",
       "Maledizione: Non puoi toglierla senza Rimuovi Maledizione. Hai svantaggio ai tiri per colpire contro i demoni e ai TS contro le loro capacità."
@@ -1505,10 +1529,11 @@ export const magicItemsDatabase = [
       "url": "/api/2014/equipment-categories/armor"
     },
     "rarity": {
-      "name": "Molto rara (richiede sintonia)"
+      "name": "Molto rara"
     },
     "variants": [],
     "variant": false,
+    "requires_attunement": true,
     "desc": [
       "Bonus +1 alla CA, vantaggio contro Presenza Terrificante e armi a soffio dei draghi, e resistenza a un tipo di danno basato sul colore del drago.",
       "Una volta al giorno puoi individuare la direzione e la distanza del drago più vicino dello stesso tipo entro 30 miglia."
@@ -1563,10 +1588,11 @@ export const magicItemsDatabase = [
       "url": "/api/2014/equipment-categories/wondrous-item"
     },
     "rarity": {
-      "name": "Non Comune (richiede sintonia)"
+      "name": "Non Comune"
     },
     "variants": [],
     "variant": false,
+    "requires_attunement": true,
     "desc": [
       "Queste lenti di cristallo hanno 3 cariche. Mentre le indossi, puoi usare un'azione e 1 carica per lanciare Charme su Persone (CD 13) su un umanoide entro 30 piedi che puoi vedere. Le lenti recuperano tutte le cariche all'alba."
     ],
@@ -1639,10 +1665,11 @@ export const magicItemsDatabase = [
       "url": "/api/2014/equipment-categories/weapon"
     },
     "rarity": {
-      "name": "Molto rara (richiede sintonia)"
+      "name": "Molto rara"
     },
     "variants": [],
     "variant": false,
+    "requires_attunement": true,
     "desc": [
       "Infligge 1d6 danni da freddo extra. Fornisce resistenza al fuoco. Può estinguere fiamme non magiche entro 30 piedi quando viene sguainata."
     ],
@@ -1658,10 +1685,11 @@ export const magicItemsDatabase = [
       "url": "/api/2014/equipment-categories/wondrous-item"
     },
     "rarity": {
-      "name": "Non Comune (richiede sintonia)"
+      "name": "Non Comune"
     },
     "variants": [],
     "variant": false,
+    "requires_attunement": true,
     "desc": [
       "Il tuo punteggio di Forza diventa 19 mentre indossi questi guanti. Non hanno effetto se la tua Forza è già 19 o superiore."
     ],
@@ -1677,10 +1705,11 @@ export const magicItemsDatabase = [
       "url": "/api/2014/equipment-categories/wondrous-item"
     },
     "rarity": {
-      "name": "Rara (richiede sintonia)"
+      "name": "Rara"
     },
     "variants": [],
     "variant": false,
+    "requires_attunement": true,
     "desc": [
       "Ha 3 cariche. Usando un'azione e 1 carica, ottieni Visione del Vero (Truesight) fino a 120 piedi per 10 minuti guardando attraverso la gemma."
     ],
@@ -4854,7 +4883,7 @@ export const magicItemsDatabase = [
       "url": "/api/2014/equipment-categories/potion"
     },
     "rarity": {
-      "name": "Molto Rara"
+      "name": "Molto rara"
     },
     "variants": [],
     "variant": false,
@@ -4874,7 +4903,7 @@ export const magicItemsDatabase = [
       "url": "/api/2014/equipment-categories/potion"
     },
     "rarity": {
-      "name": "Molto Rara"
+      "name": "Molto rara"
     },
     "variants": [],
     "variant": false,
