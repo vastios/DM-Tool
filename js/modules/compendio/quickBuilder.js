@@ -16,17 +16,6 @@ import { escapeHtml } from '../../../utils/htmlHelpers.js';
 // CONFIGURAZIONE
 // ─────────────────────────────────────────────────────────────
 
-const ABILITY_NAMES = ['for', 'des', 'cos', 'int', 'sag', 'car'];
-const ABILITY_NAMES_IT = {
-    'for': 'FOR', 'des': 'DES', 'cos': 'COS',
-    'int': 'INT', 'sag': 'SAG', 'car': 'CAR'
-};
-
-const ABILITY_FULL_NAMES = {
-    'for': 'Forza', 'des': 'Destrezza', 'cos': 'Costituzione',
-    'int': 'Intelligenza', 'sag': 'Saggezza', 'car': 'Carisma'
-};
-
 // Standard Array per distribuzione statistiche
 const STANDARD_ARRAY = [15, 14, 13, 12, 10, 8];
 
@@ -65,18 +54,6 @@ const SURNAMES = ['Stoneheart', 'Nightshade', 'Ironforge', 'Stormwind', 'Shadowm
 
 function getModifier(score) {
     return Math.floor((score - 10) / 2);
-}
-
-function rollDice(sides) {
-    return Math.floor(Math.random() * sides) + 1;
-}
-
-function rollDiceMultiple(count, sides) {
-    let total = 0;
-    for (let i = 0; i < count; i++) {
-        total += rollDice(sides);
-    }
-    return total;
 }
 
 function pickRandom(arr) {
@@ -124,7 +101,6 @@ function isHalfCasterClass(className) {
 
 function generateAbilityScores(className, focus = 'balanced', variability = 'medium') {
     const priority = CLASS_ABILITY_PRIORITY[className] || CLASS_ABILITY_PRIORITY['Guerriero'];
-    const focusMod = FOCUS_MODIFIERS[focus] || FOCUS_MODIFIERS['balanced'];
     
     // Copia e ordina lo standard array
     let scores = [...STANDARD_ARRAY];
@@ -163,14 +139,22 @@ function generateAbilityScores(className, focus = 'balanced', variability = 'med
     return abilities;
 }
 
+// FIX Q1: Mappatura indici EN → IT per bonus razziali
+const ABILITY_INDEX_MAP = {
+    'str': 'for', 'dex': 'des', 'con': 'cos',
+    'int': 'int', 'wis': 'sag', 'cha': 'car'
+};
+
 function applyRacialBonuses(abilities, race) {
     const result = { ...abilities };
     
     if (race.ability_bonuses) {
         race.ability_bonuses.forEach(bonus => {
-            const abilityIndex = bonus.ability_score?.index?.toLowerCase();
+            const enIndex = bonus.ability_score?.index?.toLowerCase();
+            const abilityIndex = ABILITY_INDEX_MAP[enIndex];
             if (abilityIndex && result[abilityIndex] !== undefined) {
-                result[abilityIndex] += bonus.bonus;
+                // FIX Q17: Cap a 20 anche nei bonus razziali
+                result[abilityIndex] = Math.min(20, result[abilityIndex] + bonus.bonus);
             }
         });
     }
@@ -182,8 +166,10 @@ function applyASI(abilities, level, className) {
     const result = { ...abilities };
     const classData = getClassByName(className);
     
-    // Trova i livelli con ASI
-    const asiLevels = [4, 6, 8, 12, 14, 16, 19]; // Standard per la maggior parte delle classi
+    // FIX Q3: Livelli ASI — il Guerriero ha extra a livello 6 e 14
+    const standardASI = [4, 8, 12, 16, 19];
+    const fighterASI = [4, 6, 8, 12, 14, 16, 19];
+    const asiLevels = className === 'Guerriero' ? fighterASI : standardASI;
     const asiCount = asiLevels.filter(l => l <= level).length;
     
     // Applica ASI alle statistiche principali
@@ -223,48 +209,59 @@ function calculateHP(classData, level, conMod) {
 
 function calculateAC(abilities, classData, equipment = null) {
     const dexMod = getModifier(abilities['des']);
+    const className = classData.classe;
     
-    // Determina armatura in base alla classe
-    let armorType = 'none';
-    const armorProf = classData.competenze?.armature || [];
+    // FIX Q2: Case-insensitive match per competenze armature
+    const armorProf = (classData.competenze?.armature || []).map(a => a.toLowerCase());
     
-    if (armorProf.includes('Tutte le armature') || armorProf.some(a => a.includes('armature'))) {
-        // Classe con armatura pesante
-        if (['Guerriero', 'Paladino', 'Chierico'].includes(classData.classe)) {
-            armorType = 'heavy';
-        } else if (['Barbaro'].includes(classData.classe)) {
-            armorType = 'medium'; // Barbaro spesso usa armatura media
-        } else {
-            armorType = 'medium';
+    // Determina il tipo di armatura in base alla classe
+    let armorAC = null;
+    const hasAllArmor = armorProf.includes('tutte le armature');
+    const hasMedium = armorProf.some(a => a.includes('armature medie'));
+    const hasLight = armorProf.some(a => a.includes('armature leggere'));
+    
+    if (hasAllArmor) {
+        // Classe con armatura pesante (Guerriero, Paladino)
+        if (['Guerriero', 'Paladino'].includes(className)) {
+            armorAC = 18; // Armatura a piastre
+        } else if (className === 'Chierico') {
+            armorAC = 16; // Cotta di maglia (no dex)
         }
-    } else if (armorProf.includes('Armature leggere')) {
-        armorType = 'light';
+    } else if (hasMedium) {
+        // Barbaro, Druido, Ranger — usano armatura media
+        if (className === 'Barbaro') {
+            armorAC = 14 + Math.min(dexMod, 2); // Armatura di pelli
+        } else if (className === 'Druido') {
+            armorAC = 14 + Math.min(dexMod, 2); // Armatura di pelli (non metallica)
+        } else if (className === 'Ranger') {
+            armorAC = 14 + Math.min(dexMod, 2); // Armatura di pelli
+        }
+    } else if (hasLight) {
+        // Ladro, Bardo, Warlock — armatura leggera
+        armorAC = 12 + dexMod; // Cuoio borchiato
     }
     
-    // Calcola CA base
-    let ac = 10;
+    // FIX Q8: Calcola anche difese senza armatura (Barbaro, Monaco)
+    let unarmoredAC = null;
+    if (className === 'Barbaro') {
+        unarmoredAC = 10 + dexMod + getModifier(abilities['cos']);
+    } else if (className === 'Monaco') {
+        unarmoredAC = 10 + dexMod + getModifier(abilities['sag']);
+    } else if (!armorAC) {
+        unarmoredAC = 10 + dexMod;
+    }
     
-    switch (armorType) {
-        case 'heavy':
-            ac = 18; // Armatura completa
-            break;
-        case 'medium':
-            ac = 14 + Math.min(dexMod, 2); // Cotta di maglia
-            break;
-        case 'light':
-            ac = 12 + dexMod; // Armatura di cuoio
-            break;
-        default:
-            // Nessuna armatura
-            if (classData.classe === 'Barbaro') {
-                // Barbaro senza armatura: 10 + DES + COS
-                ac = 10 + dexMod + getModifier(abilities['cos']);
-            } else if (classData.classe === 'Monaco') {
-                // Monaco: 10 + DES + SAG
-                ac = 10 + dexMod + getModifier(abilities['sag']);
-            } else {
-                ac = 10 + dexMod;
-            }
+    // FIX Q8: Usa la migliore tra armatura e difesa senza armatura
+    let ac = armorAC !== null ? armorAC : unarmoredAC;
+    if (armorAC !== null && unarmoredAC !== null) {
+        ac = Math.max(armorAC, unarmoredAC);
+    }
+    
+    // FIX Q15: Aggiungi +2 se la classe ha scudo
+    const hasShield = armorProf.includes('scudi') || armorProf.some(a => a.includes('scudi'));
+    if (hasShield && className !== 'Monaco') {
+        // Il Druido ha scudi non metallici — lo gestiamo dal prof
+        ac += 2;
     }
     
     return ac;
@@ -360,8 +357,8 @@ function getCantripCount(className, level) {
         'Chierico': level >= 10 ? 5 : level >= 4 ? 4 : 3,
         'Druido': level >= 10 ? 5 : level >= 4 ? 4 : 3,
         'Bardo': level >= 10 ? 4 : level >= 4 ? 3 : 2,
-        'Stregone': Math.min(4, Math.ceil(level / 4) + 2),
-        'Warlock': Math.min(4, Math.ceil(level / 4) + 1),
+        'Stregone': level >= 10 ? 6 : level >= 4 ? 5 : 4, // FIX Q4
+        'Warlock': level >= 10 ? 4 : level >= 4 ? 3 : 2, // FIX Q5
         'Paladino': 0,
         'Ranger': 0
     };
@@ -450,6 +447,18 @@ function calculateSpellSlots(className, level) {
         20: { 1: 4, 2: 3, 3: 3, 4: 2, 5: 1 }
     };
     
+    // FIX Q6: Slot Pact Magic per Warlock
+    const warlockSlots = {
+        1: { 1: 1 }, 2: { 1: 2 }, 3: { 1: 2 }, 4: { 1: 2 },
+        5: { 2: 2 }, 6: { 2: 2 }, 7: { 2: 2 }, 8: { 2: 2 },
+        9: { 3: 2 }, 10: { 3: 2 }, 11: { 3: 2 }, 12: { 3: 2 },
+        13: { 4: 2 }, 14: { 4: 2 }, 15: { 4: 2 }, 16: { 4: 2 },
+        17: { 5: 2 }, 18: { 5: 2 }, 19: { 5: 2 }, 20: { 5: 2 }
+    };
+    
+    if (className === 'Warlock') {
+        return warlockSlots[level] || {};
+    }
     if (isHalfCasterClass(className)) {
         return halfCasterSlots[level] || {};
     }
@@ -523,38 +532,38 @@ const CLASS_PACK_SUGGESTIONS = {
 const CLASS_EQUIPMENT = {
     'Guerriero': {
         weapons: [{ name: 'Spadone', damage: '2d6', type: 'melee', twoHanded: true }],
-        backupWeapons: [{ name: 'Spada Lunga', damage: '1d8', type: 'melee' }, { name: 'Ascia da Battaglia', damage: '1d8', type: 'melee' }],
-        armor: 'Armatura Completa',
+        backupWeapons: [{ name: 'Spada lunga', damage: '1d8', type: 'melee' }, { name: 'Ascia da Battaglia', damage: '1d8', type: 'melee' }],
+        armor: 'Armatura a piastre',
         shield: false,
         other: ['Zaino da Esploratore', 'Torcia (5)', 'Corda (15m)']
     },
     'Paladino': {
-        weapons: [{ name: 'Spada Lunga', damage: '1d8', type: 'melee' }],
+        weapons: [{ name: 'Spada lunga', damage: '1d8', type: 'melee' }],
         backupWeapons: [{ name: 'Lancia', damage: '1d6', type: 'melee' }],
-        armor: 'Armatura Completa',
+        armor: 'Armatura a piastre',
         shield: true,
         other: ['Simbolo Sacro', 'Zaino da Esploratore']
     },
     'Barbaro': {
         weapons: [{ name: 'Ascia bipenne', damage: '1d12', type: 'melee', twoHanded: true }],
-        backupWeapons: [{ name: 'Ascia da Battaglia', damage: '1d8', type: 'melee' }, { name: 'Giavellotto', damage: '1d6', type: 'ranged' }],
-        armor: 'Armatura di Pelle',
+        backupWeapons: [{ name: 'Ascia da Battaglia', damage: '1d8', type: 'melee' }, { name: 'Giavellotto', damage: '1d6', type: 'melee', thrown: true }],
+        armor: 'Armatura di pelli',
         shield: false,
         other: ['Zaino da Esploratore', 'Caccia (5 giorni)']
     },
     'Ladro': {
-        weapons: [{ name: 'Spada Corta', damage: '1d6', type: 'melee', finesse: true }],
+        weapons: [{ name: 'Spada corta', damage: '1d6', type: 'melee', finesse: true }],
         backupWeapons: [{ name: 'Pugnale', damage: '1d4', type: 'melee', finesse: true }],
-        ranged: { name: 'Arco Corto', damage: '1d6', type: 'ranged', ammo: 20 },
-        armor: 'Armatura di Cuoio',
+        ranged: { name: 'Arco corto', damage: '1d6', type: 'ranged', ammo: 20 },
+        armor: 'Armatura di cuoio',
         shield: false,
         other: ['Grimorio del Ladro', 'Corda (15m)', 'Torcia (5)']
     },
     'Ranger': {
-        weapons: [{ name: 'Spada Corta', damage: '1d6', type: 'melee', finesse: true }],
+        weapons: [{ name: 'Spada corta', damage: '1d6', type: 'melee', finesse: true }],
         backupWeapons: [{ name: 'Pugnale', damage: '1d4', type: 'melee', finesse: true }],
-        ranged: { name: 'Arco Lungo', damage: '1d8', type: 'ranged', ammo: 20 },
-        armor: 'Armatura di Cuoio',
+        ranged: { name: 'Arco lungo', damage: '1d8', type: 'ranged', ammo: 20 },
+        armor: 'Armatura di cuoio',
         shield: false,
         other: ['Zaino da Esploratore', 'Caccia (5 giorni)', 'Corda (15m)']
     },
@@ -582,14 +591,14 @@ const CLASS_EQUIPMENT = {
     'Druido': {
         weapons: [{ name: 'Bastone', damage: '1d6', type: 'melee', versatile: '1d8' }],
         backupWeapons: [{ name: 'Falce', damage: '1d4', type: 'melee' }],
-        armor: 'Armatura di Pelle',
+        armor: 'Armatura di pelli',
         shield: true,
         other: ['Focus Druidico', 'Zaino da Esploratore', 'Erbe Mediche']
     },
     'Bardo': {
-        weapons: [{ name: 'Spada Corta', damage: '1d6', type: 'melee', finesse: true }],
+        weapons: [{ name: 'Spada corta', damage: '1d6', type: 'melee', finesse: true }],
         backupWeapons: [{ name: 'Pugnale', damage: '1d4', type: 'melee', finesse: true }],
-        armor: 'Armatura di Cuoio',
+        armor: 'Armatura di cuoio',
         shield: false,
         other: ['Strumento Musicale', 'Zaino da Intrattenitore', 'Costume']
     },
@@ -734,7 +743,7 @@ function generateEquipment(classData, abilities, level, selectedPackIndex = null
             equipment.other.push('Kit da Riparazione');
         }
         if (level >= 5) {
-            equipment.weapons.push({ name: pickRandom(['Spada Lunga', 'Ascia da Battaglia', 'Martello da Guerra']), damage: '1d8', type: 'melee' });
+            equipment.weapons.push({ name: pickRandom(['Spada lunga', 'Ascia da Battaglia', 'Martello da guerra']), damage: '1d8', type: 'melee' });
         }
     }
     
