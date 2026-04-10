@@ -619,13 +619,82 @@ const CLASS_EQUIPMENT = {
 };
 
 // Oggetti magici per rarità e livello appropriato
-// Nomi corrispondenti al database magicItems.js
+// Nomi corrispondenti al database magicItems.js (SRD + varianti +N)
 const MAGIC_ITEMS_BY_RARITY = {
-    common: ['Pozione Di Scalare', 'Armatura Di Cuoio Borchiato Incantata', 'Anello Della Vista Ai Raggi X', 'Pozione Di Resistenza', 'Perla Del Potere'],
-    uncommon: ['Borsa Conservante', 'Mantello Elfico', 'Stivali Elfici', 'Armatura in Adamantio', 'Munizioni, +1', 'Pozione Del Respirare Sottacqua', 'Pozione Di Crescita', 'Guanti del Potere d\'Ogre'],
-    rare: ['Armatura della Resistenza', 'Armatura, +1', 'Scudo Acchiappa-Frecce', 'Amuleto della Salute', 'Cintura della Forza dei Giganti delle Colline', 'Spada Affilata', 'Stivali della Velocità', 'Munizioni, +2', 'Pozione Di Eroismo'],
-    veryRare: ['Armatura, +2', 'Spada Danzante', 'Munizioni, +3', 'Cintura della Forza dei Giganti del Fuoco', 'Cintura della Forza dei Giganti del Gelo', 'Cintura della Forza dei Giganti delle Pietre', 'Tappeto Volante', 'Pozione Di Invisibilita'],
-    legendary: ['Armatura, +3', 'Armatura dell\'Invulnerabilità', 'Martello dei Fulmini', 'Cintura della Forza dei Giganti delle Tempeste', 'Cintura della Forza dei Giganti delle Nuvole', 'Spada Vorpal', 'Mazzo Delle Meraviglie']
+    common: [
+        'Pozione Di Scalare',
+        'Armatura Di Cuoio Borchiato Incantata',
+        'Anello Della Vista Ai Raggi X'
+    ],
+    uncommon: [
+        'Borsa Conservante',
+        'Mantello Elfico',
+        'Stivali Elfici',
+        'Armatura in Adamantio',
+        'Armatura In Mithral',
+        'Mantello della Protezione',
+        'Stivali Molleggiati',
+        'Stivali delle Terre Invernali',
+        'Stivali Alati',
+        'Spilla di Protezione',
+        'Cappello Del Camuffamento',
+        'Unguento Di Keoghtom',
+        'Perla Del Potere',
+        'Pantofole Del Ragno',
+        'Corda Per Scalare',
+        'Lanterna Della Rivelazione',
+        'Fascia Dellintelletto',
+        'Pozione Di Resistenza',
+        'Pozione Del Respirare Sottacqua',
+        'Pozione Di Crescita',
+        'Guanti Catturaproiettili',
+        'Faretra Di Ehlonna',
+        'Scopa Volante',
+        'Munizioni, +1'
+    ],
+    rare: [
+        'Armatura della Resistenza',
+        'Armatura, +1',
+        'Scudo Acchiappa-Frecce',
+        'Amuleto della Salute',
+        'Cintura della Forza dei Giganti delle Colline',
+        'Stivali della Velocità',
+        'Stivali della Levitazione',
+        'Cintura della Stirpe Nanica',
+        'Grano di Forza',
+        'Mantello dello Spostamento',
+        'Cotta Elfica',
+        'Barca Pieghevole',
+        'Ascia del Berserker',
+        'Pugnale del Veleno',
+        'Sacco dei Fagioli',
+        'Munizioni, +2'
+    ],
+    veryRare: [
+        'Armatura, +2',
+        'Spada Danzante',
+        'Munizioni, +3',
+        'Cintura della Forza dei Giganti del Fuoco',
+        'Cintura della Forza dei Giganti del Gelo',
+        'Cintura della Forza dei Giganti delle Pietre',
+        'Amuleto dei Piani',
+        'Freccia dell\'Uccisione',
+        'Sacco del Divoratore',
+        'Scudo Animato',
+        'Tappeto Volante',
+        'Armatura di Scaglie di Drago'
+    ],
+    legendary: [
+        'Armatura, +3',
+        'Armatura dell\'Invulnerabilità',
+        'Martello dei Fulmini',
+        'Cintura della Forza dei Giganti delle Tempeste',
+        'Cintura della Forza dei Giganti delle Nuvole',
+        'Spada Vorpal',
+        'Mazzo Delle Meraviglie',
+        'Apparato del Granchio',
+        'Cubo dei Portali'
+    ]
 };
 
 function getRarityForLevel(level) {

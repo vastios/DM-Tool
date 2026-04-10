@@ -261,7 +261,7 @@ const MagicItemList = {
                 const renderedDesc = renderDescription(item.desc);
                 detailsHTML += `<hr><div class="item-description">${renderedDesc}</div>`;
             }
-
+            
             detailsElement.innerHTML = `<div id="details-content">${detailsHTML}</div>`;
         }
 
