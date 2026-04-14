@@ -546,6 +546,11 @@
     color: #000;
 }
 
+.item-action-btn.delete-btn:hover {
+    background: #dc3545;
+    color: #fff;
+}
+
 /* Empty Inventory */
 .inventory-empty {
     display: flex;

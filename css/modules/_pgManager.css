@@ -5043,6 +5043,19 @@ label.spell-cb input {
     flex: 1;
 }
 
+.sheet-header-split .header-name-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.sheet-header-split .header-name-row .btn-level-up-sheet {
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+    align-self: center;
+}
+
 .sheet-header-split .char-name {
     font-family: 'Cinzel Decorative', 'Cinzel', serif;
     font-size: 1.6rem;

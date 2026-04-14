@@ -154,12 +154,14 @@ function renderSheetHeader(pg) {
     return `
         <div class="sheet-header-split">
             <div class="header-left">
-                <h2 class="char-name">${escapeHtml(pg.name || 'Senza Nome')}</h2>
+                <div class="header-name-row">
+                    <h2 class="char-name">${escapeHtml(pg.name || 'Senza Nome')}</h2>
+                    <button class="btn btn-sm btn-level-up-sheet" data-action="level-up" data-pg-id="${pg.id}" title="Aumenta Livello">⬆️ Livello Su</button>
+                </div>
             </div>
             <div class="header-right">
                 <p class="char-class-info">${escapeHtml(pg.raceName || pg.race || '')} ${escapeHtml(pg.className || pg.class || '')} Liv.${pg.level || 1}</p>
                 <p class="char-player">Giocato da: ${escapeHtml(pg.playerName || 'Nessun giocatore')}</p>
-                <button class="btn btn-sm btn-level-up-sheet" data-action="level-up" data-pg-id="${pg.id}" title="Aumenta Livello">⬆️ Livello Su</button>
             </div>
         </div>
     `;
@@ -209,17 +211,24 @@ function renderCard1Front(pg, databases) {
     
     const renderSkill = (skill) => {
         const ability = SKILL_ABILITY_MAP[skill];
-        const prop = ABILITY_KEY_TO_PROPERTY[ability];
-        const score = effectiveAbilities[prop] || 10;
-        let mod = calculateModifier(score);
+        // effectiveAbilities usa chiavi piene ('strength', 'dexterity', ...)
+        const score = effectiveAbilities[ability] || 10;
+        const rawMod = calculateModifier(score);
         const hasProf = skills.includes(skill);
-        if (hasProf) mod += profBonus;
-        mod += totalCheckBonus; // Bonus da Pietrafortuna ecc.
+        const profAmount = hasProf ? profBonus : 0;
+        let mod = rawMod + profAmount + totalCheckBonus;
         const abbr = ABILITY_IT_ABBR[ability] || '';
         
         const hasAdv = advantageSkills.has(skill);
+        // Tooltip con dettaglio calcolo
+        let tooltip = `${abbr} ${rawMod >= 0 ? '+' : ''}${rawMod}`;
+        if (hasProf) tooltip += ` + Competenza +${profBonus}`;
+        if (totalCheckBonus) tooltip += ` + Oggetti +${totalCheckBonus}`;
+        tooltip += ` = ${mod >= 0 ? '+' : ''}${mod}`;
+        if (hasAdv) tooltip += ' (Vantaggio)';
+        
         return `
-            <div class="skill-item ${hasProf ? 'prof' : ''} ${hasAdv ? 'has-advantage' : ''}" ${hasAdv ? 'title="Vantaggio su questa abilità (oggetto magico)"' : ''}>
+            <div class="skill-item ${hasProf ? 'prof' : ''} ${hasAdv ? 'has-advantage' : ''}" title="${tooltip}">
                 <span class="sk-icon">${hasProf ? '●' : '○'}</span>
                 <span class="sk-name">${skill}</span>
                 <span class="sk-abbr">${abbr}</span>

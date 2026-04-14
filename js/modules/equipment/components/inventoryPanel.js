@@ -196,6 +196,12 @@ function renderInventoryItem(item, index, selectedItem, editable) {
                             title="Dettagli">
                         ℹ️
                     </button>
+                    <button class="item-action-btn delete-btn" 
+                            data-action="remove-item" 
+                            data-item-index="${index}"
+                            title="Rimuovi dall'inventario">
+                        🗑️
+                    </button>
                 ` : ''}
             </div>
         </div>

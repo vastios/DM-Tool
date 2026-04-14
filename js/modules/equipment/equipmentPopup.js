@@ -552,6 +552,9 @@ export class EquipmentPopup {
             case 'toggle-attunement':
                 this._toggleAttunement(parseInt(target.dataset.itemIndex));
                 break;
+            case 'remove-item':
+                this._removeItem(parseInt(target.dataset.itemIndex));
+                break;
         }
     }
 
@@ -628,6 +631,40 @@ export class EquipmentPopup {
         this._updateCharacterStats();
         this._refreshDetailPanel();
         this._refresh();
+    }
+
+    /**
+     * Rimuove un oggetto dall'inventario.
+     * Se l'oggetto è equipaggiato, lo disequipaggia prima.
+     */
+    _removeItem(itemIndex) {
+        if (itemIndex < 0 || itemIndex >= this.inventory.length) return;
+        const item = this.inventory[itemIndex];
+        if (!item) return;
+
+        const itemName = item.customName || item.name;
+
+        // Se equipaggiato, disequipaggia prima
+        if (item.equipped) {
+            for (const [slotId, slotItem] of Object.entries(this.equippedSlots)) {
+                if (slotItem && (slotItem.index === item.index || slotItem.name === item.name)) {
+                    delete this.equippedSlots[slotId];
+                    break;
+                }
+            }
+        }
+
+        // Rimuovi dall'inventario
+        this.inventory.splice(itemIndex, 1);
+
+        // Ricostruisci equippedSlots dall'inventario aggiornato
+        this._buildEquippedSlotsFromInventory();
+
+        // Aggiorna stats
+        this._updateCharacterStats();
+        this.selectedItem = null;
+        this._refresh();
+        showToast(`🗑️ ${itemName} rimosso dall'inventario`, 'info');
     }
 
     /**
