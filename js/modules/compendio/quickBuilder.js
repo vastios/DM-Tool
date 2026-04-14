@@ -16,6 +16,16 @@ import { escapeHtml } from '../../../utils/htmlHelpers.js';
 // CONFIGURAZIONE
 // ─────────────────────────────────────────────────────────────
 
+// Nomi italiani per le caratteristiche (chiavi abbreviate usate nel quickBuilder)
+const ABILITY_NAMES_IT = {
+    'for': 'Forza',
+    'des': 'Destrezza',
+    'cos': 'Costituzione',
+    'int': 'Intelligenza',
+    'sag': 'Saggezza',
+    'car': 'Carisma'
+};
+
 // Standard Array per distribuzione statistiche
 const STANDARD_ARRAY = [15, 14, 13, 12, 10, 8];
 
