@@ -1,0 +1,273 @@
+/* ==========================================================================
+   DEFINIZIONE VARIABILI CSS (per evitare errori)
+   ========================================================================== */
+
+:root {
+    --primary-color: #822000;
+    --background-color: #fdf5e6;
+    --border-color: #d4af37;
+    --hover-background-color: #f9f0d2;
+    --code-background-color: #e9e2c3;
+    --danger-color: #a52a2a;
+    --text-muted-color: #888;
+}
+
+/* ==========================================================================
+   STILI PER IL FORM DI CREAZIONE/MODIFICA PG
+   ========================================================================== */
+
+/* Contenitore principale del form che imita una scheda */
+.editor-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Due colonne principali */
+    gap: 2rem;
+    padding: 1.5rem;
+    background: #fdf5e6; /* Colore pergamena chiaro */
+    border: 2px solid #d4af37;
+    border-radius: 8px;
+    font-family: 'Lora', serif;
+    color: #3d2817;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    height: 100%;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+/* Sezioni collassabili */
+.form-section {
+    border: 1px solid #c9a961;
+    border-radius: 5px;
+    background-color: #f9f0d2;
+    margin-bottom: 1rem;
+}
+
+.form-section-header {
+    background-color: #e8d9a0;
+    border-bottom: 1px solid #c9a961;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+    transition: background-color 0.2s;
+}
+
+.form-section-header:hover {
+    background-color: #dcc896;
+}
+
+.form-section-header h4 {
+    margin: 0;
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    color: #5a3a1a;
+}
+
+.form-section-content {
+    padding: 1rem;
+    display: grid; /* Usa grid per allineare i campi interni */
+    gap: 1rem;
+}
+
+/* Icona per collassare/espandere */
+.form-section-header::after {
+    content: '▼'; /* Freccia giù */
+    font-size: 0.8rem;
+    color: #5a3a1a;
+    transition: transform 0.2s ease-in-out;
+}
+
+.form-section.collapsed .form-section-header::after {
+    transform: rotate(-90deg); /* Freccia a destra */
+}
+
+.form-section.collapsed .form-section-content {
+    display: none; /* Nascondi il contenuto */
+}
+
+/* Stile per i campi del form */
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: bold;
+    margin-bottom: 0.3rem;
+    font-size: 0.9rem;
+    color: #5a3a1a;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 0.5rem;
+    border: 1px solid #b08d57;
+    border-radius: 4px;
+    background-color: #fffef9;
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: #3d2817;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #822000;
+    box-shadow: 0 0 5px rgba(130, 32, 0, 0.3);
+}
+
+/* Griglia per le caratteristiche */
+.stats-editor-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+/* Stile per i blocchi di classe multiclasse */
+.class-block {
+    border: 1px solid #a0522d;
+    border-radius: 4px;
+    padding: 1rem;
+    background-color: #f4e4c1;
+    position: relative;
+}
+.class-block .remove-class-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: #a0522d;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    font-size: 12px;
+    line-height: 24px;
+    text-align: center;
+}
+.class-block .remove-class-btn:hover {
+    background: #8b4513;
+}
+
+/* Area per i campi auto-popolati (sola lettura) */
+.auto-populated-field {
+    background-color: #e9e2c3;
+    border-color: #b08d57;
+    font-style: italic;
+    color: #5a3a1a;
+}
+/* Per la modale di selezione incantesimi */
+.spell-selection-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.spell-selection-modal .modal-content {
+    background: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.spell-selection-modal .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.spell-selection-modal .modal-header h3 {
+    margin: 0;
+}
+
+.spell-selection-modal .modal-close {
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-muted-color);
+}
+
+.spell-selection-modal .modal-body {
+    padding: 1rem;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.spell-selection-modal #spell-selection-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.spell-selection-modal #spell-selection-list li {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.spell-selection-modal #spell-selection-list li:hover {
+    background-color: var(--hover-background-color);
+}
+
+/* Per la lista degli incantesimi selezionati nell'editor */
+.selected-spells-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.selected-spell-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    background: var(--code-background-color);
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+}
+
+.selected-spell-item .remove-spell-btn {
+    background: none;
+    border: none;
+    color: var(--danger-color);
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0 0.5rem;
+}
+
+/* Per la lista delle competenze nel visualizzatore */
+.pc-skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.pc-skill-tag {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}

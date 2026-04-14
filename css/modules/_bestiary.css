@@ -1,0 +1,231 @@
+/* ==========================================================================
+   BESTIARY.CSS - Stili per il Modulo Lista Mostri
+   ========================================================================== */
+
+/* --- Layout Principale a 3 Colonne per i Mostri --- */
+.monster-list-container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #1a1a1a;
+    height: 100%;
+}
+
+/* --- Colonna dei Filtri (Layout a Scheda) --- */
+.monster-search-cell {
+    flex: 0 0 15%;
+    border-right: 2px solid #444;
+    cursor: default;
+    padding: 1rem;
+    overflow-y: hidden;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.monster-search-cell > h2 {
+    text-align: center;
+    font-size: 1.1rem;
+    color: #f0ad4e;
+    margin: 0 0 0.5rem 0;
+    border-bottom: 1px solid #555;
+    padding-bottom: 0.5rem;
+}
+
+.monster-search-cell > .list-search {
+    width: 100%;
+    padding: 0.5rem;
+    background-color: #333;
+    border: 1px solid #555;
+    color: #ffffff;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-family: 'Lora', serif;
+    font-size: 0.9rem;
+}
+
+/* --- Stile per le schede dei filtri (CR, Tipo) --- */
+.monster-search-cell > .monster-filters-card {
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 5px;
+    padding: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.monster-search-cell > .monster-filters-card > .filter-group-title {
+    text-align: center;
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    color: #f0ad4e;
+    margin: 0 0 0.5rem 0;
+    border-bottom: 1px solid #555;
+    padding-bottom: 0.3rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.monster-search-cell > .monster-filters-card > .filter-buttons-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.monster-search-cell > .monster-filters-card > .filter-buttons-container > .filter-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.75rem;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    flex-grow: 1;
+    box-sizing: border-box;
+}
+
+/* --- Pulsante di Reset --- */
+.monster-search-cell > .reset-filters-btn {
+    background-color: #8b0000;
+    border: 1px solid #a52a2a;
+    color: #ffffff;
+    padding: 0.6rem 1rem;
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 5px;
+    text-transform: uppercase;
+    text-align: center;
+    margin-top: auto;
+}
+
+.monster-search-cell > .reset-filters-btn:hover {
+    background-color: #a52a2a;
+    border-color: #cd5c5c;
+}
+
+/* --- Colonne Lista e Dettagli --- */
+.monster-list-cell {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    cursor: default;
+    padding: 1rem;
+    overflow-y: auto;
+    border-radius: 8px;
+    background-color: #2a2a2a;
+}
+
+.monster-details-cell {
+    flex: 3;
+    background: linear-gradient(to right, #f5e8b0, #e8d9a0, #f5e8b0);
+    box-shadow: inset 0 0 40px rgba(139, 69, 19, 0.3);
+    border: 1px solid #d4af37;
+    color: #3d2817;
+    font-family: 'Lora', serif;
+    line-height: 1.7;
+    position: relative;
+    padding: 2.5rem;
+    overflow-y: auto;
+}
+
+.monster-details-cell h3 {
+    font-size: 2.5rem;
+    color: #5a3a1a;
+    margin-top: 0;
+    border-bottom: none;
+}
+
+.monster-details-cell p {
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 1rem;
+}
+
+/* --- Stile Lista a Schede --- */
+.monster-full-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 15px;
+}
+
+.monster-full-list > li {
+    background-color: #333;
+    border: 1px solid #555;
+    border-radius: 8px;
+    padding: 15px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+}
+
+.monster-full-list > li:hover {
+    background-color: #3a3a3a;
+    border-color: #777;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.monster-card-name {
+    font-family: 'Cinzel', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #f0ad4e;
+    margin: 0;
+    border-bottom: 1px solid #555;
+    padding-bottom: 5px;
+}
+
+.monster-card-meta {
+    font-family: 'Lora', serif;
+    font-size: 0.9rem;
+    color: #cccccc;
+    font-style: italic;
+    margin: 0;
+}
+
+.monster-card-stats {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Lora', serif;
+    font-size: 0.9rem;
+    color: #ffffff;
+    margin: 0;
+}
+
+.monster-card-stats strong {
+    color: #f0ad4e;
+}
+
+/* --- Stile Caratteristiche a Riga --- */
+.monster-abilities-grid {
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    font-family: 'Lora', serif;
+    border-top: 1px solid #555;
+    border-bottom: 1px solid #555;
+    padding: 10px 0;
+    margin-top: 10px;
+}
+
+.monster-abilities-grid div {
+    flex: 1;
+}
+
+.monster-abilities-grid strong {
+    display: block;
+    font-size: 0.8rem;
+    color: #888;
+}

@@ -1,0 +1,306 @@
+/* ==========================================================================
+   COMPONENTS.CSS - Stili per Componenti Riutilizzabili
+   ========================================================================== */
+
+/* --- Stili per i Pulsanti di Azione --- */
+.action-btn {
+    background-color: #28a745;
+    border: 1px solid #1e7e34;
+    color: #ffffff;
+    padding: 8px 16px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 5px;
+    text-transform: uppercase;
+    text-align: center;
+    margin-top: 15px;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.action-btn:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.action-btn.danger {
+    background-color: #dc3545;
+    border-color: #c82333;
+    color: #ffffff;
+}
+
+.action-btn.danger:hover:not(:disabled) {
+    background-color: #c82333;
+    border-color: #bd2130;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+}
+
+/* --- Stile per il pulsante disabilitato --- */
+#delete-campaign-btn:disabled {
+    background-color: #555;
+    border-color: #666;
+    color: #888;
+    cursor: not-allowed;
+    opacity: 0.6;
+    transform: none;
+    box-shadow: none;
+}
+
+/* --- Stili per i Link delle Condizioni (globali) --- */
+.condition-link {
+    color: #87CEFA;
+    text-decoration: underline;
+    cursor: help;
+    font-weight: bold;
+    transition: color 0.2s ease;
+}
+
+.condition-link:hover {
+    color: #ADD8E6;
+}
+
+/* --- Stili per i Tooltip delle Abilità --- */
+.special-action-link {
+    color: #87CEFA;
+    text-decoration: underline;
+    cursor: help;
+    font-weight: bold;
+    transition: color 0.2s ease;
+}
+
+.special-action-link:hover {
+    color: #ADD8E6;
+}
+
+.ability-tooltip {
+    position: absolute;
+    z-index: 1000;
+    background-color: #f5f3e9;
+    border: 1px solid #d1c7b7;
+    border-radius: 5px;
+    padding: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    max-width: 350px;
+    font-family: 'Lora', serif;
+    color: #333;
+    line-height: 1.5;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.ability-tooltip h4 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    color: #5a3a1a;
+    margin: 0 0 8px 0;
+    border-bottom: 1px solid #c9a868;
+    padding-bottom: 5px;
+}
+
+.ability-tooltip p {
+    font-size: 0.9rem;
+    margin: 0;
+    white-space: pre-line;
+}
+
+/* --- Stili per il Sistema di Notifiche Toast --- */
+#toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+}
+
+.toast {
+    background-color: #333;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 250px;
+    max-width: 400px;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.3s ease-in-out;
+    pointer-events: auto;
+}
+
+.toast-icon {
+    font-size: 1.2em;
+}
+
+.toast-message {
+    font-family: 'Lora', serif;
+    font-size: 0.9em;
+}
+
+.toast-success { background-color: #28a745; }
+.toast-error { background-color: #dc3545; }
+.toast-warning { background-color: #ffc107; color: #212529; }
+.toast-info { background-color: #17a2b8; }
+
+.toast-show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.toast-hide {
+    opacity: 0;
+    transform: translateX(100%);
+}
+
+/* --- Stili per i Link della Campagna --- */
+.campaign-link {
+    color: #ffffff !important;
+    border-radius: 4px;
+    padding: 2px 8px;
+    margin: 0 2px;
+    text-decoration: none !important;
+    font-size: 0.9em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-block;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.3);
+}
+
+/* Colori per tipo di entità */
+.campaign-link[data-section="npcs"] {
+    background-color: #3b82f6; /* Blu - PNG */
+    border: 1px solid #2563eb;
+}
+
+.campaign-link[data-section="pgs"] {
+    background-color: #8b5cf6; /* Viola - PG */
+    border: 1px solid #7c3aed;
+}
+
+.campaign-link[data-section="locations"] {
+    background-color: #10b981; /* Verde - Luoghi */
+    border: 1px solid #059669;
+}
+
+.campaign-link[data-section="factions"] {
+    background-color: #f97316; /* Arancione - Fazioni */
+    border: 1px solid #ea580c;
+}
+
+.campaign-link[data-section="uniqueItems"] {
+    background-color: #eab308; /* Giallo oro - Oggetti Unici */
+    border: 1px solid #ca8a04;
+}
+
+.campaign-link[data-section="secrets"] {
+    background-color: #6b7280; /* Grigio - Segreti */
+    border: 1px solid #4b5563;
+}
+
+.campaign-link[data-section="sessions"] {
+    background-color: #14b8a6; /* Turchese - Sessioni */
+    border: 1px solid #0d9488;
+}
+
+.campaign-link[data-section="chapters"] {
+    background-color: #a16207; /* Marrone - Capitoli */
+    border: 1px solid #854d0e;
+}
+
+.campaign-link[data-section="sidequests"] {
+    background-color: #6366f1; /* Indaco - Side Quest */
+    border: 1px solid #4f46e5;
+}
+
+.campaign-link[data-section="encounters"] {
+    background-color: #ef4444; /* Rosso - Encounter */
+    border: 1px solid #dc2626;
+}
+
+/* Hover effect comune - scurisce leggermente */
+.campaign-link:hover {
+    filter: brightness(0.85);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* --- Stili per i Link della Wiki --- */
+.wiki-link {
+    display: inline-block;
+    background-color: #e8e6d9;
+    border: 1px solid #742307;
+    border-radius: 4px;
+    padding: 0 6px;
+    margin: 0 2px;
+    color: #521a01 !important;
+    text-decoration: none !important;
+    font-size: 0.9em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.wiki-link:hover {
+    background-color: #742307;
+    color: #ffffff !important;
+}
+
+.wiki-link::before {
+    content: "🔗 ";
+    font-size: 0.7em;
+}
+
+.wiki-link-broken {
+    color: #e74c3c;
+    text-decoration: underline dotted;
+    font-style: italic;
+    cursor: help;
+}
+
+/* --- Stili per Autocomplete --- */
+.autocomplete-box {
+    position: absolute;
+    background: #f6f5ee;
+    border: 1px solid #742307;
+    border-radius: 4px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    z-index: 9999;
+    min-width: 200px;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.autocomplete-box li {
+    padding: 8px 12px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.autocomplete-box li.selected {
+    background-color: #742307;
+    color: white;
+}
+
+.autocomplete-box li .type-icon {
+    font-size: 0.9rem;
+    opacity: 0.7;
+}

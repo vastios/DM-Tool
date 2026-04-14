@@ -1,0 +1,357 @@
+/* ==========================================================================
+   ENCOUNTER-BUILDER.CSS - Stili per il Modulo Generatore e Costruttore di Incontri
+   ========================================================================== */
+
+/* --- Generatore di Combattimenti --- */
+.combat-generator-container {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.generator-inputs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    width: 100%;
+    max-width: 800px;
+    background-color: #2a2a2a;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #444;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.input-group label {
+    font-family: 'Lora', serif;
+    color: #cccccc;
+    font-size: 0.9rem;
+}
+
+.input-group input,
+.input-group select {
+    padding: 8px;
+    border: 1px solid #555;
+    background-color: #333;
+    color: #ffffff;
+    border-radius: 4px;
+    font-family: 'Lora', serif;
+}
+
+.generate-btn-large {
+    background-color: #f0ad4e;
+    border: 2px solid #d58512;
+    color: #000000;
+    padding: 15px 30px;
+    font-family: 'Cinzel', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    text-transform: uppercase;
+}
+
+.generate-btn-large:hover {
+    background-color: #ec971f;
+    border-color: #d58512;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+#encounter-output-container {
+    width: 100%;
+    max-width: 1200px;
+}
+
+#encounters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    width: 100%;
+}
+
+.encounter-card {
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.encounter-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.encounter-card h4 {
+    font-family: 'Cinzel', serif;
+    color: #f0ad4e;
+    margin-top: 0;
+    border-bottom: 1px solid #555;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.encounter-card ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.encounter-card li {
+    padding: 4px 0;
+    color: #f0e6d2;
+    font-family: 'Lora', serif;
+}
+
+.encounter-card p {
+    margin-top: 15px;
+    text-align: center;
+    font-weight: bold;
+    color: #f0ad4e;
+    font-family: 'Cinzel', serif;
+}
+
+/* --- Costruttore di Incontri --- */
+.encounter-builder-container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.encounter-list-panel,
+.encounter-editor-panel {
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 15px;
+    overflow-y: auto;
+}
+
+.encounter-list-panel {
+    flex: 0 0 350px;
+}
+
+.encounter-editor-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #444;
+}
+
+.panel-header h2 {
+    margin: 0;
+    color: #f0ad4e;
+}
+
+.saved-encounters-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.encounter-list-item {
+    background-color: #333;
+    border: 1px solid #555;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.encounter-item-info h3 {
+    margin: 0 0 5px 0;
+    color: #ffffff;
+    font-size: 1rem;
+}
+
+.encounter-item-info p {
+    margin: 0 0 5px 0;
+    color: #cccccc;
+    font-size: 0.8rem;
+    font-style: italic;
+}
+
+.encounter-item-info small {
+    color: #888;
+}
+
+.encounter-item-actions button {
+    display: block;
+    width: 100%;
+    margin-bottom: 5px;
+    padding: 4px 8px;
+    border: 1px solid #555;
+    background-color: #444;
+    color: #fff;
+    border-radius: 3px;
+    font-size: 0.7rem;
+    cursor: pointer;
+}
+
+.encounter-item-actions button:hover {
+    background-color: #555;
+}
+
+.encounter-item-actions button:last-child {
+    margin-bottom: 0;
+    background-color: #8b0000;
+    border-color: #a52a2a;
+}
+
+.encounter-item-actions button:last-child:hover {
+    background-color: #a52a2a;
+}
+
+.empty-list {
+    color: #888;
+    font-style: italic;
+    text-align: center;
+    padding: 20px;
+}
+
+.editor-form {
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-family: 'Cinzel', serif;
+    color: #f0ad4e;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #555;
+    background-color: #333;
+    color: #ffffff;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-family: 'Lora', serif;
+}
+
+.monster-selector-panel,
+.selected-monsters-panel {
+    background-color: rgba(0,0,0,0.1);
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.monster-selector-panel h3,
+.selected-monsters-panel h3 {
+    margin-top: 0;
+    color: #87CEFA;
+    border-bottom: 1px solid #555;
+    padding-bottom: 5px;
+}
+
+.monster-selection-list,
+.selected-monsters-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 10px 0 0 0;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: #333;
+    border-radius: 4px;
+}
+
+.monster-selection-list li {
+    padding: 8px 12px;
+    border-bottom: 1px solid #444;
+    color: #f0e6d2;
+    transition: background-color 0.2s;
+}
+
+.monster-selection-list li:hover {
+    background-color: #4a4a4a;
+}
+
+.monster-selection-list li:last-child {
+    border-bottom: none;
+}
+
+.selected-monsters-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    border-bottom: 1px solid #444;
+    color: #f0e6d2;
+}
+
+.selected-monsters-list li:last-child {
+    border-bottom: none;
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.quantity-btn {
+    background-color: #555;
+    border: 1px solid #666;
+    color: #fff;
+    width: 24px;
+    height: 24px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.quantity-btn:hover {
+    background-color: #666;
+}
+
+.remove-monster-btn {
+    background-color: #8b0000;
+    border: 1px solid #a52a2a;
+    color: #fff;
+    padding: 2px 6px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 0.7rem;
+}
+
+.remove-monster-btn:hover {
+    background-color: #a52a2a;
+}
+
+.editor-actions {
+    text-align: right;
+    margin-top: auto;
+    padding-top: 20px;
+}

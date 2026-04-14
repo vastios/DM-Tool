@@ -1,0 +1,143 @@
+/* ==========================================================================
+   TRAVEL-MANAGER.CSS - Stili per il Modulo Travel Manager
+   ========================================================================== */
+
+.travel-manager-layout {
+    padding: 30px;
+    background: #121212;
+    color: #e0e0e0;
+    height: 100vh;
+    overflow-y: auto;
+    font-family: 'Lora', serif;
+}
+
+.travel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #58180d;
+    padding-bottom: 15px;
+    margin-bottom: 30px;
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.travel-header h1 {
+    font-family: 'Cinzel', serif;
+    color: #f0ad4e;
+    margin: 0;
+}
+
+.day-counter {
+    background: #252525;
+    color: #f0ad4e;
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-family: 'Cinzel', serif;
+    border: 1px solid #a0783a;
+}
+
+.btn-rest {
+    background: #58180d;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Cinzel', serif;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-rest:hover {
+    background: #8e2313;
+    box-shadow: 0 0 10px rgba(142, 35, 19, 0.5);
+}
+
+.travel-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.travel-card {
+    background: #1e1e1e;
+    border: 1px solid #333;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.travel-card.full-width {
+    grid-column: span 2;
+}
+
+.travel-card h2 {
+    font-family: 'Cinzel', serif;
+    color: #a0783a;
+    font-size: 1.1rem;
+    margin-top: 0;
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+/* Meteo */
+.weather-info {
+    text-align: center;
+}
+
+.weather-main {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #fff;
+}
+
+.weather-details {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    color: #888;
+    font-size: 0.9rem;
+}
+
+/* Selettore */
+.travel-select {
+    width: 100%;
+    padding: 10px;
+    background: #000;
+    color: #f0ad4e;
+    border: 1px solid #58180d;
+}
+
+.terrain-status {
+    margin-top: 10px;
+    font-style: italic;
+    color: #aaa;
+}
+
+/* Eventi */
+.event-box {
+    background: #000;
+    border-left: 5px solid #58180d;
+    padding: 20px;
+    min-height: 120px;
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    line-height: 1.5;
+}
+
+.btn-primary { background: #a0783a; color: #000; width: 100%; padding: 10px; cursor: pointer; border: none; font-family: 'Cinzel', serif; font-weight: bold; }
+.btn-secondary { background: #58180d; color: #fff; width: 100%; padding: 15px; cursor: pointer; border: none; font-family: 'Cinzel', serif; font-weight: bold; font-size: 1rem; }
+
+@keyframes pulse {
+    0% { background: #58180d; }
+    100% { background: #000; }
+}
+
+.new-event {
+    animation: pulse 0.6s ease-out;
+}

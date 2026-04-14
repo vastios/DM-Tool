@@ -1,0 +1,77 @@
+/* ==========================================================================
+   HOMEPAGE.CSS - Stili per la Homepage e Selettore Campagna
+   ========================================================================== */
+
+/* --- Contenitore Homepage --- */
+#home-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    text-align: center;
+    gap: 20px;
+}
+
+.home-logo {
+    max-width: 250px;
+    width: 80%;
+    height: auto;
+}
+
+.home-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 0;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+/* --- Selettore di Campagna --- */
+.campaign-selector-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+    font-family: 'Lora', serif;
+}
+
+.campaign-selector-container label {
+    font-size: 1.2rem;
+    color: #f0ad4e;
+    font-weight: 700;
+}
+
+#campaign-selector {
+    padding: 10px 15px;
+    border: 2px solid #444;
+    background-color: #333;
+    color: #ffffff;
+    border-radius: 5px;
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    min-width: 250px;
+    text-align: center;
+}
+
+#campaign-selector:focus {
+    outline: none;
+    border-color: #f0ad4e;
+    box-shadow: 0 0 5px rgba(240, 173, 78, 0.5);
+}
+
+.campaign-actions {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+#new-campaign-btn, #delete-campaign-btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}

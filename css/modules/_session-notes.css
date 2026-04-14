@@ -1,0 +1,349 @@
+/* ==========================================================================
+   SESSION-NOTES.CSS - Stili per le Note di Sessione e Chapter Planner
+   ========================================================================== */
+
+.session-notes-container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.notes-list-panel,
+.note-editor-panel {
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 15px;
+    overflow-y: auto;
+}
+
+.notes-list-panel {
+    flex: 0 0 350px;
+}
+
+.note-editor-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #444;
+}
+
+.panel-header h2 {
+    margin: 0;
+    color: #f0ad4e;
+}
+
+.saved-notes-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.note-list-item {
+    background-color: #333;
+    border: 1px solid #555;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border-left: 5px solid transparent;
+}
+
+.note-list-item:hover {
+    background-color: #3a3a3a;
+}
+
+.note-item-info {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.note-item-info h3 {
+    margin: 0 0 5px 0;
+    color: #ffffff;
+    font-size: 1rem;
+}
+
+.note-item-info p {
+    margin: 0 0 5px 0;
+    color: #cccccc;
+    font-size: 0.8rem;
+    font-style: italic;
+    line-height: 1.4;
+}
+
+.note-item-info small {
+    color: #888;
+    font-size: 0.7rem;
+}
+
+.note-item-actions button {
+    display: block;
+    width: 100%;
+    margin-bottom: 5px;
+    padding: 4px 8px;
+    border: 1px solid #555;
+    background-color: #444;
+    color: #fff;
+    border-radius: 3px;
+    font-size: 0.7rem;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.note-item-actions button:hover {
+    background-color: #555;
+}
+
+.note-item-actions button:last-child {
+    margin-bottom: 0;
+    background-color: #8b0000;
+    border-color: #a52a2a;
+}
+
+.note-item-actions button:last-child:hover {
+    background-color: #a52a2a;
+}
+
+/* --- Stili per il Visualizzatore di Note --- */
+.note-viewer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 20px;
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 8px;
+}
+
+.note-viewer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #444;
+}
+
+.note-viewer h2 {
+    margin: 0;
+    color: #f0ad4e;
+    font-family: 'Cinzel', serif;
+    font-size: 2rem;
+}
+
+.note-viewer-content {
+    flex-grow: 1;
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #f0e6d2;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.note-viewer-date {
+    margin-top: 1rem;
+    color: #888;
+    font-size: 0.8rem;
+    text-align: right;
+}
+
+/* --- Stili per i Segreti --- */
+.note-list-item.unrevealed {
+    border-left: 4px solid #f0ad4e;
+}
+
+.note-list-item.revealed {
+    border-left: 4px solid #6c757d;
+    opacity: 0.8;
+}
+
+.revealed-status {
+    color: #6c757d;
+    font-style: italic;
+}
+
+.unrevealed-status {
+    color: #f0ad4e;
+    font-weight: bold;
+}
+
+/* --- Stili per il Chapter Planner --- */
+.list-separator {
+    text-align: center;
+    margin: 20px 0 10px 0;
+    padding-top: 10px;
+    border-top: 1px solid #ddd;
+}
+
+.list-separator h4 {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #777;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* --- Stili per gli Stati delle Note --- */
+.note-list-item {
+    transition: background-color 0.3s ease, border-left-color 0.3s ease;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 8px;
+}
+
+.note-list-item.status-planning {
+    background: rgba(158, 158, 158, 0.05);
+    border-left-color: #9e9e9e;
+}
+.note-list-item.status-active {
+    background: rgba(40, 167, 69, 0.05);
+    border-left-color: #28a745;
+}
+.note-list-item.status-completed {
+    background: rgba(0, 123, 255, 0.05);
+    border-left-color: #007bff;
+}
+.note-list-item.status-on-hold {
+    background: rgba(255, 193, 7, 0.05);
+    border-left-color: #ffc107;
+}
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #333;
+    background-color: #e0e0e0;
+}
+
+.status-badge.status-active {
+    background-color: #28a745;
+    color: white;
+    box-shadow: 0 0 8px rgba(40, 167, 69, 0.4);
+}
+.status-badge.status-completed {
+    background-color: #007bff;
+    color: white;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.4);
+}
+.status-badge.status-on-hold {
+    background-color: #ffc107;
+    color: #333;
+    box-shadow: 0 0 8px rgba(255, 193, 7, 0.4);
+}
+
+.status-controls-group {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.status-btn {
+    background-color: #e0e0e0;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+    padding: 5px 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.status-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.status-btn.active {
+    background-color: #742307;
+    color: white;
+    border-color: #5a1b05;
+}
+
+/* --- Gerarchia Visiva degli Obiettivi --- */
+.objectives-list .objective-item span.priority-main {
+    font-weight: bold;
+    color: #333;
+}
+.objectives-list .objective-item span.priority-main::before {
+    content: '⭐ ';
+    color: #f0ad4e;
+}
+
+.objectives-list .objective-item span.priority-secondary {
+    font-weight: normal;
+    color: #666;
+    font-size: 0.9em;
+}
+.objectives-list .objective-item span.priority-secondary::before {
+    content: '○ ';
+    color: #999;
+}
+
+/* --- "Nebbia di Guerra" per le Note del DM --- */
+.unrevealed-status {
+    border: 1px dashed #f0ad4e;
+    background-color: #1a1a1a !important;
+    position: relative;
+    padding: 20px !important;
+    margin-top: 20px;
+    border-radius: 5px;
+}
+
+.unrevealed-status::before {
+    content: "SOLO DM";
+    position: absolute;
+    top: -10px;
+    right: 10px;
+    background: #f0ad4e;
+    color: #000;
+    padding: 2px 6px;
+    font-size: 0.6rem;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+/* --- Animazione per la barra di progresso --- */
+.progress-bar {
+    transition: width 0.5s ease-in-out;
+}
+.progress-bar.progress-updated {
+    animation: pulse 0.5s ease-in-out;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(116, 35, 7, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(116, 35, 7, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(116, 35, 7, 0); }
+}
+
+/* --- Stili per le liste annidate --- */
+.nested-list {
+    list-style-type: none;
+    padding-left: 25px;
+    margin-top: 5px;
+    border-left: 2px solid #ccc;
+}
+
+.nested-item {
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    margin-bottom: 5px;
+}
