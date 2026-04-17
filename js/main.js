@@ -36,10 +36,11 @@ document.addEventListener('DOMContentLoaded', () => {
             { id: 'ChapterPlanner', name: 'PIANIFICATORE DI CAMPAGNA', modulePath: './modules/campagna/chapterPlanner.js', requiresCampaign: true },
             { id: 'session-notes', name: 'Note di Sessione', modulePath: './modules/campagna/sessionNotes.js', requiresCampaign: true }, 
         ],
-        // SEZIONE: PERSONAGGI (NUOVA)
+        // SEZIONE: PERSONAGGI
         characters: [
-            { id: 'pgManager', name: 'PERSONAGGI GIOCANTI', modulePath: './modules/campagna/pg/index.js', requiresCampaign: true },
-            { id: 'npcManager', name: 'PERSONAGGI NON GIOCANTI', modulePath: './modules/campagna/npcManager.js', requiresCampaign: true },
+            { id: 'quickBuilder', name: 'Creazione rapida', modulePath: './modules/compendio/quickBuilder.js', requiresCampaign: false },
+            { id: 'pgManager', name: 'Personaggi Giocanti', modulePath: './modules/campagna/pg/index.js', requiresCampaign: true },
+            { id: 'npcManager', name: 'Personaggi Non Giocanti', modulePath: './modules/campagna/npcManager.js', requiresCampaign: true },
         ],
         // SEZIONE: IL MONDO (NUOVA)
         world: [
@@ -68,7 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
             { id: 'magicItemList', name: 'OGGETTI MAGICI', modulePath: './modules/compendio/magicItemList.js', requiresCampaign: false },
             { id: 'classList', name: 'CLASSI', modulePath: './modules/compendio/classList.js' }, 
             { id: 'backgroundList', name: 'BACKGROUND', modulePath: './modules/compendio/backgroundList.js', requiresCampaign: false },
-            { id: 'quickBuilder', name: 'CREAZIONE RAPIDA PG', modulePath: './modules/compendio/quickBuilder.js', requiresCampaign: false },
             { id: 'appendix', name: 'APPENDICE CONDIZIONI', modulePath: './modules/compendio/appendix.js' },
             { id: 'races', name: 'Razze', modulePath: './modules/compendio/raceList.js', requiresCampaign: false },
             { id: 'Alignment', name: 'Allineamento', modulePath: './modules/compendio/AlignmentGuide.js', requiresCampaign: false },
