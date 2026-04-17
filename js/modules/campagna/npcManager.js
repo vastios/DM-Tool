@@ -1024,10 +1024,12 @@ ${this.getStyles()}
             const isSelected = npc.id === this.currentNpcId;
             
             return `
-                <div class="npc-list-item ${isSelected ? 'selected' : ''}" data-npc-id="${npc.id}">
+                <div class="npc-list-item ${isSelected ? 'selected' : ''}" 
+                     data-npc-id="${npc.id}" 
+                     data-tag="${tag.value}" 
+                     data-tag-label="${tag.label}">
                     <div class="npc-list-item-name">
                         ${escapeHtml(npc.name || 'Senza Nome')}
-                        <span class="npc-list-item-tag" style="background: ${tag.color}; color: #fff;">${tag.label}</span>
                     </div>
                     <div class="npc-list-item-info">
                         ${npc.race || ''} ${npc.className ? `(${npc.className} ${npc.classLevel || 1})` : ''} - ${npc.role || ''}
