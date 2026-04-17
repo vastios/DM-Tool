@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,20 +10,186 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+// Campaign - the main campaign container
+model Campaign {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  locations   Location[]
+  npcs        NPC[]
+  factions    Faction[]
+  characters  Character[]
+  tags        Tag[]
 }
 
-model Post {
-  id        String   @id @default(cuid())
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  authorId  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+// Location (Luoghi) - places in the campaign world
+model Location {
+  id          String   @id @default(cuid())
+  campaignId  String
+  name        String
+  description String?
+  type        String?  // city, village, dungeon, forest, mountain, etc.
+  parentName  String?  // parent location name (for hierarchy)
+  imageUrl    String?
+  notes       String?
+  isVisited   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  campaign    Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  tags        TaggedLocation[]
+  factions    FactionLocation[]
+}
+
+// NPC - Non-Player Characters
+model NPC {
+  id          String   @id @default(cuid())
+  campaignId  String
+  name        String
+  race        String?
+  class       String?
+  level       Int?
+  description String?
+  background  String?
+  personality String?
+  imageUrl    String?
+  notes       String?
+  isAlive     Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  campaign    Campaign    @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  faction     FactionNPC? 
+  tags        TaggedNPC[]
+}
+
+// Faction - Organizations and groups
+model Faction {
+  id          String   @id @default(cuid())
+  campaignId  String
+  name        String
+  type        String?  // guild, kingdom, cult, etc.
+  description String?
+  goals       String?
+  reputation  String?
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  campaign    Campaign     @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  members     FactionNPC[]
+  locations   FactionLocation[]
+  tags        TaggedFaction[]
+}
+
+// Character - Player Characters (PG)
+model Character {
+  id          String   @id @default(cuid())
+  campaignId  String
+  name        String
+  race        String?
+  class       String?
+  level       Int?
+  background  String?
+  player      String?  // player name
+  imageUrl    String?
+  notes       String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  campaign    Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  tags        TaggedCharacter[]
+}
+
+// Tag - Unified tagging system for linking entities
+model Tag {
+  id          String   @id @default(cuid())
+  campaignId  String
+  name        String
+  color       String   @default("#6b7280") // default gray
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  campaign      Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  locations     TaggedLocation[]
+  npcs          TaggedNPC[]
+  factions      TaggedFaction[]
+  characters    TaggedCharacter[]
+  
+  @@unique([campaignId, name])
+}
+
+// Junction tables for many-to-many tag relationships
+model TaggedLocation {
+  locationId  String
+  tagId       String
+  createdAt   DateTime @default(now())
+  
+  location    Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  tag         Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  
+  @@id([locationId, tagId])
+}
+
+model TaggedNPC {
+  npcId       String
+  tagId       String
+  createdAt   DateTime @default(now())
+  
+  npc         NPC      @relation(fields: [npcId], references: [id], onDelete: Cascade)
+  tag         Tag       @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  
+  @@id([npcId, tagId])
+}
+
+model TaggedFaction {
+  factionId   String
+  tagId       String
+  createdAt   DateTime @default(now())
+  
+  faction     Faction  @relation(fields: [factionId], references: [id], onDelete: Cascade)
+  tag         Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  
+  @@id([factionId, tagId])
+}
+
+model TaggedCharacter {
+  characterId String
+  tagId       String
+  createdAt   DateTime @default(now())
+  
+  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  tag         Tag       @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  
+  @@id([characterId, tagId])
+}
+
+// Faction-NPC relationship (one NPC can belong to one faction)
+model FactionNPC {
+  factionId   String
+  npcId       String  @unique
+  role        String?  // leader, member, etc.
+  joinedAt    DateTime @default(now())
+  
+  faction     Faction  @relation(fields: [factionId], references: [id], onDelete: Cascade)
+  npc         NPC      @relation(fields: [npcId], references: [id], onDelete: Cascade)
+  
+  @@id([factionId, npcId])
+}
+
+// Faction-Location relationship
+model FactionLocation {
+  factionId   String
+  locationId  String
+  description String?  // HQ, outpost, territory, etc.
+  
+  faction     Faction   @relation(fields: [factionId], references: [id], onDelete: Cascade)
+  location    Location  @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  
+  @@id([factionId, locationId])
 }
