@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
-import { MapPin, Users, Shield, Castle, Sword, Compass, BookOpen, Plus, Edit, Trash2, Search, Tag, ChevronRight, X, Check, Map, Building, Trees, Mountain, Landmark, Home } from 'lucide-react'
+import { useState } from 'react'
+import { MapPin, Users, Shield, Castle, Sword, Compass, BookOpen, Plus, Edit, Trash2, Search, ChevronRight, Map, Building, Trees, Mountain, Landmark, Home } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -11,9 +11,6 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Separator } from '@/components/ui/separator'
 
 // Types
 interface Tag {
@@ -118,16 +115,6 @@ export default function DMTool() {
       console.error('Error fetching locations:', error)
     }
   }
-
-  // Initial data fetch
-  const [initialized, setInitialized] = useState(false)
-  
-  useEffect(() => {
-    if (!initialized) {
-      setInitialized(true)
-      fetchLocations()
-    }
-  }, [initialized])
 
   // Filter locations by search
   const filteredLocations = locations.filter(loc => 
