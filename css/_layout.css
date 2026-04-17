@@ -105,6 +105,7 @@ header {
     top: 0;
     z-index: 100;
     gap: 5px;
+    transition: background-color 0.4s ease, border-bottom-color 0.4s ease;
 }
 
 .sub-tab {
@@ -122,11 +123,105 @@ header {
 
 .sub-tab:hover {
     color: #ffffff;
-    background-color: #3a3a3a;
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .sub-tab.active {
     color: #ffffff;
-    background-color: #444444;
+    background-color: rgba(255, 255, 255, 0.2);
     font-weight: 700;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   COLORI SUB-NAV PER SEZIONE (Raccoglitore a Etichette)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Campagna - Marrone/Pergamena */
+.sub-nav.sub-nav-campaign {
+    background: linear-gradient(180deg, #5c4033 0%, #4a3428 100%);
+    border-bottom-color: #8b7355;
+}
+
+.sub-nav.sub-nav-campaign .sub-tab:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.sub-nav.sub-nav-campaign .sub-tab.active {
+    background-color: rgba(255, 255, 255, 0.25);
+    color: #f5e6d3;
+}
+
+/* Personaggi - Blu */
+.sub-nav.sub-nav-characters {
+    background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+    border-bottom-color: #3b82f6;
+}
+
+.sub-nav.sub-nav-characters .sub-tab:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.sub-nav.sub-nav-characters .sub-tab.active {
+    background-color: rgba(255, 255, 255, 0.25);
+    color: #dbeafe;
+}
+
+/* Mondo - Verde */
+.sub-nav.sub-nav-world {
+    background: linear-gradient(180deg, #059669 0%, #047857 100%);
+    border-bottom-color: #10b981;
+}
+
+.sub-nav.sub-nav-world .sub-tab:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.sub-nav.sub-nav-world .sub-tab.active {
+    background-color: rgba(255, 255, 255, 0.25);
+    color: #d1fae5;
+}
+
+/* Combattimento - Rosso */
+.sub-nav.sub-nav-combat {
+    background: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);
+    border-bottom-color: #ef4444;
+}
+
+.sub-nav.sub-nav-combat .sub-tab:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.sub-nav.sub-nav-combat .sub-tab.active {
+    background-color: rgba(255, 255, 255, 0.25);
+    color: #fee2e2;
+}
+
+/* Esplorazione - Turchese/Teal */
+.sub-nav.sub-nav-exploration {
+    background: linear-gradient(180deg, #0d9488 0%, #0f766e 100%);
+    border-bottom-color: #14b8a6;
+}
+
+.sub-nav.sub-nav-exploration .sub-tab:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.sub-nav.sub-nav-exploration .sub-tab.active {
+    background-color: rgba(255, 255, 255, 0.25);
+    color: #ccfbf1;
+}
+
+/* Compendio - Viola */
+.sub-nav.sub-nav-compendium {
+    background: linear-gradient(180deg, #7c3aed 0%, #6d28d9 100%);
+    border-bottom-color: #8b5cf6;
+}
+
+.sub-nav.sub-nav-compendium .sub-tab:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.sub-nav.sub-nav-compendium .sub-tab.active {
+    background-color: rgba(255, 255, 255, 0.25);
+    color: #ede9fe;
 }

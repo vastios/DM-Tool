@@ -189,7 +189,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showSubTabs(mainTabId) {
         subNavContainer.innerHTML = '';
+        
+        // Rimuovi tutte le classi di colore precedenti
+        subNavContainer.classList.remove('sub-nav-campaign', 'sub-nav-characters', 'sub-nav-world', 'sub-nav-combat', 'sub-nav-exploration', 'sub-nav-compendium');
+        
         if (mainTabId === 'home') return;
+        
+        // Aggiungi la classe di colore per la sezione corrente
+        subNavContainer.classList.add(`sub-nav-${mainTabId}`);
+        
         const tools = toolConfig[mainTabId];
         if (!tools) return;
         tools.forEach(tool => {
