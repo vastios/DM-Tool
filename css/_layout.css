@@ -105,7 +105,6 @@ header {
     top: 0;
     z-index: 100;
     gap: 5px;
-    transition: background-color 0.4s ease, border-bottom-color 0.4s ease;
 }
 
 .sub-tab {
@@ -123,105 +122,74 @@ header {
 
 .sub-tab:hover {
     color: #ffffff;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: #3a3a3a;
 }
 
 .sub-tab.active {
     color: #ffffff;
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: #444444;
     font-weight: 700;
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   COLORI SUB-NAV PER SEZIONE (Raccoglitore a Etichette)
+   SUB-TAB COME ETICHETTE COLORATE (Raccoglitore)
+   Solo per le entità con tag: PG, PNG, Luoghi, Fazioni, Segreti, Oggetti
    ═══════════════════════════════════════════════════════════════ */
 
-/* Campagna - Marrone/Pergamena */
-.sub-nav.sub-nav-campaign {
-    background: linear-gradient(180deg, #5c4033 0%, #4a3428 100%);
-    border-bottom-color: #8b7355;
+.sub-tab[data-entity-type] {
+    position: relative;
+    padding: 8px 20px 8px 28px;
+    border-radius: 4px;
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
 }
 
-.sub-nav.sub-nav-campaign .sub-tab:hover {
-    background-color: rgba(255, 255, 255, 0.15);
+/* Piccola linguetta sul lato sinistro */
+.sub-tab[data-entity-type]::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.4);
 }
 
-.sub-nav.sub-nav-campaign .sub-tab.active {
-    background-color: rgba(255, 255, 255, 0.25);
-    color: #f5e6d3;
+.sub-tab[data-entity-type]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
 }
 
-/* Personaggi - Blu */
-.sub-nav.sub-nav-characters {
-    background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
-    border-bottom-color: #3b82f6;
+.sub-tab[data-entity-type].active {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
-.sub-nav.sub-nav-characters .sub-tab:hover {
-    background-color: rgba(255, 255, 255, 0.15);
+/* Colori per tipo di entità */
+.sub-tab[data-entity-type="pg"] {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
 }
 
-.sub-nav.sub-nav-characters .sub-tab.active {
-    background-color: rgba(255, 255, 255, 0.25);
-    color: #dbeafe;
+.sub-tab[data-entity-type="npc"] {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
 }
 
-/* Mondo - Verde */
-.sub-nav.sub-nav-world {
-    background: linear-gradient(180deg, #059669 0%, #047857 100%);
-    border-bottom-color: #10b981;
+.sub-tab[data-entity-type="location"] {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
 }
 
-.sub-nav.sub-nav-world .sub-tab:hover {
-    background-color: rgba(255, 255, 255, 0.15);
+.sub-tab[data-entity-type="faction"] {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
 }
 
-.sub-nav.sub-nav-world .sub-tab.active {
-    background-color: rgba(255, 255, 255, 0.25);
-    color: #d1fae5;
+.sub-tab[data-entity-type="secret"] {
+    background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
 }
 
-/* Combattimento - Rosso */
-.sub-nav.sub-nav-combat {
-    background: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);
-    border-bottom-color: #ef4444;
-}
-
-.sub-nav.sub-nav-combat .sub-tab:hover {
-    background-color: rgba(255, 255, 255, 0.15);
-}
-
-.sub-nav.sub-nav-combat .sub-tab.active {
-    background-color: rgba(255, 255, 255, 0.25);
-    color: #fee2e2;
-}
-
-/* Esplorazione - Turchese/Teal */
-.sub-nav.sub-nav-exploration {
-    background: linear-gradient(180deg, #0d9488 0%, #0f766e 100%);
-    border-bottom-color: #14b8a6;
-}
-
-.sub-nav.sub-nav-exploration .sub-tab:hover {
-    background-color: rgba(255, 255, 255, 0.15);
-}
-
-.sub-nav.sub-nav-exploration .sub-tab.active {
-    background-color: rgba(255, 255, 255, 0.25);
-    color: #ccfbf1;
-}
-
-/* Compendio - Viola */
-.sub-nav.sub-nav-compendium {
-    background: linear-gradient(180deg, #7c3aed 0%, #6d28d9 100%);
-    border-bottom-color: #8b5cf6;
-}
-
-.sub-nav.sub-nav-compendium .sub-tab:hover {
-    background-color: rgba(255, 255, 255, 0.15);
-}
-
-.sub-nav.sub-nav-compendium .sub-tab.active {
-    background-color: rgba(255, 255, 255, 0.25);
-    color: #ede9fe;
+.sub-tab[data-entity-type="uniqueItem"] {
+    background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%);
 }

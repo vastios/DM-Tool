@@ -88,25 +88,21 @@ const LocationManager = {
 
             sortedLocations.forEach(location => {
                 const li = document.createElement('li');
-                li.className = 'binder-list-item';
+                li.className = 'note-list-item';
                 li.dataset.id = location.id;
-                li.dataset.tag = location.type || 'Altro';
-                li.dataset.tagLabel = location.type || 'Altro';
 
                 const date = new Date(location.lastModified).toLocaleString('it-IT');
                 
                 li.innerHTML = `
-                    <div class="binder-content">
-                        <div class="note-item-info">
-                            <h3>${escapeHtml(location.name)}</h3>
-                            <p><em>Posizione: ${escapeHtml(location.position || 'Sconosciuta')}</em></p>
-                            <p>${escapeHtml(location.description.substring(0, 100))}${location.description.length > 100 ? '...' : ''}</p>
-                            <small>Ultima modifica: ${date}</small>
-                        </div>
-                        <div class="note-item-actions">
-                            <button class="edit-location-btn">Modifica</button>
-                            <button class="delete-location-btn">Elimina</button>
-                        </div>
+                    <div class="note-item-info">
+                        <h3>${escapeHtml(location.name)}</h3>
+                        <p><em>Tipo: ${escapeHtml(location.type)} | Posizione: ${escapeHtml(location.position || 'Sconosciuta')}</em></p>
+                        <p>${escapeHtml(location.description.substring(0, 100))}${location.description.length > 100 ? '...' : ''}</p>
+                        <small>Ultima modifica: ${date}</small>
+                    </div>
+                    <div class="note-item-actions">
+                        <button class="edit-location-btn">Modifica</button>
+                        <button class="delete-location-btn">Elimina</button>
                     </div>
                 `;
                 savedList.appendChild(li);

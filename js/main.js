@@ -39,15 +39,15 @@ document.addEventListener('DOMContentLoaded', () => {
         // SEZIONE: PERSONAGGI
         characters: [
             { id: 'quickBuilder', name: 'Creazione Rapida', modulePath: './modules/compendio/quickBuilder.js', requiresCampaign: false },
-            { id: 'pgManager', name: 'Personaggi Giocanti', modulePath: './modules/campagna/pg/index.js', requiresCampaign: true },
-            { id: 'npcManager', name: 'Personaggi Non Giocanti', modulePath: './modules/campagna/npcManager.js', requiresCampaign: true },
+            { id: 'pgManager', name: 'Personaggi Giocanti', modulePath: './modules/campagna/pg/index.js', requiresCampaign: true, entityType: 'pg' },
+            { id: 'npcManager', name: 'Personaggi Non Giocanti', modulePath: './modules/campagna/npcManager.js', requiresCampaign: true, entityType: 'npc' },
         ],
         // SEZIONE: IL MONDO
         world: [
-            { id: 'locationManager', name: 'Luoghi', modulePath: './modules/campagna/locationManager.js', requiresCampaign: true },
-            { id: 'factionManager', name: 'Fazioni', modulePath: './modules/campagna/factionManager.js', requiresCampaign: true },
-            { id: 'secretManager', name: 'Segreti', modulePath: './modules/campagna/secretManager.js', requiresCampaign: true },
-            { id: 'uniqueItemManager', name: 'Oggetti Unici', modulePath: './modules/campagna/uniqueItemManager.js', requiresCampaign: true },
+            { id: 'locationManager', name: 'Luoghi', modulePath: './modules/campagna/locationManager.js', requiresCampaign: true, entityType: 'location' },
+            { id: 'factionManager', name: 'Fazioni', modulePath: './modules/campagna/factionManager.js', requiresCampaign: true, entityType: 'faction' },
+            { id: 'secretManager', name: 'Segreti', modulePath: './modules/campagna/secretManager.js', requiresCampaign: true, entityType: 'secret' },
+            { id: 'uniqueItemManager', name: 'Oggetti Unici', modulePath: './modules/campagna/uniqueItemManager.js', requiresCampaign: true, entityType: 'uniqueItem' },
         ],
         // SEZIONE: COMBATTIMENTO
         combat: [
@@ -189,15 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showSubTabs(mainTabId) {
         subNavContainer.innerHTML = '';
-        
-        // Rimuovi tutte le classi di colore precedenti
-        subNavContainer.classList.remove('sub-nav-campaign', 'sub-nav-characters', 'sub-nav-world', 'sub-nav-combat', 'sub-nav-exploration', 'sub-nav-compendium');
-        
         if (mainTabId === 'home') return;
-        
-        // Aggiungi la classe di colore per la sezione corrente
-        subNavContainer.classList.add(`sub-nav-${mainTabId}`);
-        
         const tools = toolConfig[mainTabId];
         if (!tools) return;
         tools.forEach(tool => {
@@ -205,6 +197,10 @@ document.addEventListener('DOMContentLoaded', () => {
             button.className = 'sub-tab';
             button.textContent = tool.name;
             button.dataset.subTab = tool.id;
+            // Aggiungi data-entity-type se il tool ha un tipo di entità associato
+            if (tool.entityType) {
+                button.dataset.entityType = tool.entityType;
+            }
             if (tool.id === activeSubTab) button.classList.add('active');
             subNavContainer.appendChild(button);
         });

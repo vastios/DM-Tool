@@ -73,22 +73,17 @@ const FactionManager = {
 
             [...filteredFactions].sort((a, b) => b.lastModified - a.lastModified).forEach(faction => {
                 const li = document.createElement('li');
-                const displayStatus = statusLabels[faction.status] || faction.status;
-                li.className = `binder-list-item ${faction.status === 'Defunct' ? 'defunct-faction' : ''}`;
+                li.className = `note-list-item ${faction.status === 'Defunct' ? 'defunct-faction' : ''}`;
                 li.dataset.id = faction.id;
-                li.dataset.tag = faction.status ? faction.status.toLowerCase() : 'active';
-                li.dataset.tagLabel = displayStatus;
                 
                 li.innerHTML = `
-                    <div class="binder-content">
-                        <div class="note-item-info">
-                            <h3>${escapeHtml(faction.name)} ${faction.status === 'Hidden' ? '🕵️' : ''}</h3>
-                            <p><em>Leader: ${escapeHtml(faction.leader || 'Sconosciuto')}</em></p>
-                        </div>
-                        <div class="note-item-actions">
-                            <button class="edit-faction-btn">Modifica</button>
-                            <button class="delete-faction-btn">Elimina</button>
-                        </div>
+                    <div class="note-item-info">
+                        <h3>${escapeHtml(faction.name)} ${faction.status === 'Hidden' ? '🕵️' : ''}</h3>
+                        <p><em>Leader: ${escapeHtml(faction.leader || 'Sconosciuto')}</em></p>
+                    </div>
+                    <div class="note-item-actions">
+                        <button class="edit-faction-btn">Modifica</button>
+                        <button class="delete-faction-btn">Elimina</button>
                     </div>
                 `;
                 savedList.appendChild(li);
