@@ -32,47 +32,47 @@ document.addEventListener('DOMContentLoaded', () => {
     const toolConfig = {
         // SEZIONE: CAMPAGNA
         campaign: [
-            { id: 'campaignWiki', name: 'WIKI DELLA CAMPAGNA', modulePath: './modules/campagna/campaignWiki.js', requiresCampaign: true },
-            { id: 'ChapterPlanner', name: 'PIANIFICATORE DI CAMPAGNA', modulePath: './modules/campagna/chapterPlanner.js', requiresCampaign: true },
+            { id: 'campaignWiki', name: 'Wiki della Campagna', modulePath: './modules/campagna/campaignWiki.js', requiresCampaign: true },
+            { id: 'ChapterPlanner', name: 'Pianificatore di Campagna', modulePath: './modules/campagna/chapterPlanner.js', requiresCampaign: true },
             { id: 'session-notes', name: 'Note di Sessione', modulePath: './modules/campagna/sessionNotes.js', requiresCampaign: true }, 
         ],
         // SEZIONE: PERSONAGGI
         characters: [
-            { id: 'quickBuilder', name: 'Creazione rapida', modulePath: './modules/compendio/quickBuilder.js', requiresCampaign: false },
+            { id: 'quickBuilder', name: 'Creazione Rapida', modulePath: './modules/compendio/quickBuilder.js', requiresCampaign: false },
             { id: 'pgManager', name: 'Personaggi Giocanti', modulePath: './modules/campagna/pg/index.js', requiresCampaign: true },
             { id: 'npcManager', name: 'Personaggi Non Giocanti', modulePath: './modules/campagna/npcManager.js', requiresCampaign: true },
         ],
-        // SEZIONE: IL MONDO (NUOVA)
+        // SEZIONE: IL MONDO
         world: [
-            { id: 'locationManager', name: 'LUOGHI', modulePath: './modules/campagna/locationManager.js', requiresCampaign: true },
-            { id: 'factionManager', name: 'FAZIONI', modulePath: './modules/campagna/factionManager.js', requiresCampaign: true },
-            { id: 'secretManager', name: 'SEGRETI', modulePath: './modules/campagna/secretManager.js', requiresCampaign: true },
-            { id: 'uniqueItemManager', name: 'OGGETTI UNICI', modulePath: './modules/campagna/uniqueItemManager.js', requiresCampaign: true },
+            { id: 'locationManager', name: 'Luoghi', modulePath: './modules/campagna/locationManager.js', requiresCampaign: true },
+            { id: 'factionManager', name: 'Fazioni', modulePath: './modules/campagna/factionManager.js', requiresCampaign: true },
+            { id: 'secretManager', name: 'Segreti', modulePath: './modules/campagna/secretManager.js', requiresCampaign: true },
+            { id: 'uniqueItemManager', name: 'Oggetti Unici', modulePath: './modules/campagna/uniqueItemManager.js', requiresCampaign: true },
         ],
-        // SEZIONE: STRUMENTI
-        tools: [
-            { id: 'encounterBuilder', name: 'COSTRUISCI INCONTRO', modulePath: './modules/campagna/encounterBuilder.js', requiresCampaign: true }, 
-            { id: 'TravelManager', name: 'Gestione dei viaggi', modulePath: './modules/campagna/travelManager.js', requiresCampaign: true },
-            { id: 'DungeonGenerator', name: 'Gestore dei dungeon', modulePath: './modules/campagna/dungeonGenerator.js', requiresCampaign: true },
+        // SEZIONE: COMBATTIMENTO
+        combat: [
+            { id: 'encounterBuilder', name: 'Costruisci Incontro', modulePath: './modules/campagna/encounterBuilder.js', requiresCampaign: true }, 
+            { id: 'combatGenerator', name: 'Generatore di Combattimenti', modulePath: './modules/campagna/combatGenerator.js', requiresCampaign: true },
+            { id: 'combatTracker', name: 'Combat Tracker', modulePath: './modules/campagna/combatTracker.js', requiresCampaign: true },
+            { id: 'diceRoller', name: 'Lancia i Dadi', modulePath: './modules/compendio/diceRoller.js', requiresCampaign: false },
         ],
-        // SEZIONE: COMBATTI
-        play: [
-            { id: 'diceRoller', name: 'Lancia i dadi', modulePath: './modules/compendio/diceRoller.js', requiresCampaign: true },
-            { id: 'combatGenerator', name: 'Generatore di combattimenti', modulePath: './modules/campagna/combatGenerator.js', requiresCampaign: true },
-            { id: 'combatTracker', name: 'COMBAT TRACKER', modulePath: './modules/campagna/combatTracker.js', requiresCampaign: true },
+        // SEZIONE: ESPLORAZIONE
+        exploration: [
+            { id: 'TravelManager', name: 'Viaggi', modulePath: './modules/campagna/travelManager.js', requiresCampaign: true },
+            { id: 'DungeonGenerator', name: 'Generatore Dungeon', modulePath: './modules/campagna/dungeonGenerator.js', requiresCampaign: true },
         ],
         // SEZIONE: COMPENDIO
         compendium: [
-            { id: 'monsterList', name: 'MOSTRI', modulePath: './modules/compendio/monsterList.js' }, 
-            { id: 'spellList', name: 'INCANTESIMI', modulePath: './modules/compendio/spellList.js' },
-            { id: 'itemList', name: 'OGGETTI', modulePath: './modules/compendio/itemList.js' }, 
-            { id: 'magicItemList', name: 'OGGETTI MAGICI', modulePath: './modules/compendio/magicItemList.js', requiresCampaign: false },
-            { id: 'classList', name: 'CLASSI', modulePath: './modules/compendio/classList.js' }, 
-            { id: 'backgroundList', name: 'BACKGROUND', modulePath: './modules/compendio/backgroundList.js', requiresCampaign: false },
-            { id: 'appendix', name: 'APPENDICE CONDIZIONI', modulePath: './modules/compendio/appendix.js' },
             { id: 'races', name: 'Razze', modulePath: './modules/compendio/raceList.js', requiresCampaign: false },
+            { id: 'classList', name: 'Classi', modulePath: './modules/compendio/classList.js' }, 
+            { id: 'backgroundList', name: 'Background', modulePath: './modules/compendio/backgroundList.js', requiresCampaign: false },
+            { id: 'monsterList', name: 'Mostri', modulePath: './modules/compendio/monsterList.js' }, 
+            { id: 'spellList', name: 'Incantesimi', modulePath: './modules/compendio/spellList.js' },
+            { id: 'itemList', name: 'Oggetti', modulePath: './modules/compendio/itemList.js' }, 
+            { id: 'magicItemList', name: 'Oggetti Magici', modulePath: './modules/compendio/magicItemList.js', requiresCampaign: false },
+            { id: 'appendix', name: 'Condizioni', modulePath: './modules/compendio/appendix.js' },
             { id: 'Alignment', name: 'Allineamento', modulePath: './modules/compendio/AlignmentGuide.js', requiresCampaign: false },
-            { id: 'combatRules', name: 'REGOLE COMBATTIMENTO', modulePath: './modules/compendio/combatRules.js', requiresCampaign: false },
+            { id: 'combatRules', name: 'Regole di Combattimento', modulePath: './modules/compendio/combatRules.js', requiresCampaign: false },
         ]
     };
 
@@ -85,8 +85,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const campaignTab = document.querySelector('.nav-tab[data-tab="campaign"]');
         const charactersTab = document.querySelector('.nav-tab[data-tab="characters"]');
         const worldTab = document.querySelector('.nav-tab[data-tab="world"]');
-        const toolsTab = document.querySelector('.nav-tab[data-tab="tools"]'); 
-        const playTab = document.querySelector('.nav-tab[data-tab="play"]');
+        const combatTab = document.querySelector('.nav-tab[data-tab="combat"]'); 
+        const explorationTab = document.querySelector('.nav-tab[data-tab="exploration"]');
 
         if (selectedCampaign) {
             if (campaignTab) {
@@ -95,8 +95,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (charactersTab) charactersTab.classList.remove('disabled');
             if (worldTab) worldTab.classList.remove('disabled');
-            if (toolsTab) toolsTab.classList.remove('disabled');
-            if (playTab) playTab.classList.remove('disabled');
+            if (combatTab) combatTab.classList.remove('disabled');
+            if (explorationTab) explorationTab.classList.remove('disabled');
         } else {
             if (campaignTab) {
                 campaignTab.textContent = 'Campagna';
@@ -104,8 +104,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (charactersTab) charactersTab.classList.add('disabled');
             if (worldTab) worldTab.classList.add('disabled');
-            if (toolsTab) toolsTab.classList.add('disabled');
-            if (playTab) playTab.classList.add('disabled');
+            if (combatTab) combatTab.classList.add('disabled');
+            if (explorationTab) explorationTab.classList.add('disabled');
         }
     }
 
@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('lastSelectedCampaignId', selectedId);
             const campaignName = campaignSelector.options[campaignSelector.selectedIndex].text;
             showToast(`Campagna "${campaignName}" selezionata.`, 'info');
-            if (['campaign', 'characters', 'world', 'tools', 'play'].includes(activeMainTab)) {
+            if (['campaign', 'characters', 'world', 'combat', 'exploration'].includes(activeMainTab)) {
                 updateContent();
             }
         } else {
@@ -476,7 +476,7 @@ document.body.addEventListener('click', (e) => {
 });
 
 function updateDisabledTabs() {
-    const campaignTabs = document.querySelectorAll('.nav-tab[data-tab="campaign"], .nav-tab[data-tab="characters"], .nav-tab[data-tab="world"], .nav-tab[data-tab="tools"], .nav-tab[data-tab="play"]');
+    const campaignTabs = document.querySelectorAll('.nav-tab[data-tab="campaign"], .nav-tab[data-tab="characters"], .nav-tab[data-tab="world"], .nav-tab[data-tab="combat"], .nav-tab[data-tab="exploration"]');
     const isCampaignSelected = !!getCurrentCampaignId();
     campaignTabs.forEach(tab => {
         isCampaignSelected ? tab.classList.remove('disabled') : tab.classList.add('disabled');
