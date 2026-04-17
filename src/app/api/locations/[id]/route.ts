@@ -16,7 +16,19 @@ export async function GET(
           include: {
             tag: true
           }
-        }
+        },
+        npcs: {
+          include: {
+            npc: true
+          }
+        },
+        factions: {
+          include: {
+            faction: true
+          }
+        },
+        parent: true,
+        children: true
       }
     })
 
@@ -27,7 +39,20 @@ export async function GET(
     return NextResponse.json({ 
       location: {
         ...location,
-        tags: location.tags.map(t => t.tag)
+        tags: location.tags.map(t => t.tag),
+        linkedNPCs: location.npcs.map(n => ({
+          id: n.npc.id,
+          name: n.npc.name,
+          role: n.role,
+          npcId: n.npcId
+        })),
+        linkedFactions: location.factions.map(f => ({
+          id: f.faction.id,
+          name: f.faction.name,
+          description: f.description,
+          factionId: f.factionId
+        })),
+        parentName: location.parent?.name || null
       }
     })
   } catch (error) {
@@ -44,36 +69,28 @@ export async function PUT(
   try {
     const { id } = await params
     const body = await request.json()
-    const { name, description, type, parentName, notes, isVisited, tagIds } = body
+    const { name, description, type, parentId, imageUrl, notes, isVisited, tagIds, linkedNPCs, linkedFactions } = body
 
-    // Update location
+    // Update location basic data
     const location = await db.location.update({
       where: { id },
       data: {
         name: name?.trim(),
         description: description?.trim() || null,
         type: type || null,
-        parentName: parentName?.trim() || null,
+        parentId: parentId || null,
+        imageUrl: imageUrl?.trim() || null,
         notes: notes?.trim() || null,
         isVisited: isVisited || false,
-      },
-      include: {
-        tags: {
-          include: {
-            tag: true
-          }
-        }
       }
     })
 
     // Update tags if provided
     if (tagIds !== undefined) {
-      // Remove existing tags
       await db.taggedLocation.deleteMany({
         where: { locationId: id }
       })
 
-      // Add new tags
       if (tagIds.length > 0) {
         await db.taggedLocation.createMany({
           data: tagIds.map((tagId: string) => ({
@@ -82,31 +99,82 @@ export async function PUT(
           }))
         })
       }
-
-      // Refetch with updated tags
-      const updatedLocation = await db.location.findUnique({
-        where: { id },
-        include: {
-          tags: {
-            include: {
-              tag: true
-            }
-          }
-        }
-      })
-
-      return NextResponse.json({ 
-        location: {
-          ...updatedLocation,
-          tags: updatedLocation?.tags.map(t => t.tag) || []
-        }
-      })
     }
+
+    // Update NPCs if provided
+    if (linkedNPCs !== undefined) {
+      await db.locationNPC.deleteMany({
+        where: { locationId: id }
+      })
+
+      if (linkedNPCs.length > 0) {
+        await db.locationNPC.createMany({
+          data: linkedNPCs.map((link: { npcId: string; role: string }) => ({
+            locationId: id,
+            npcId: link.npcId,
+            role: link.role || null
+          }))
+        })
+      }
+    }
+
+    // Update Factions if provided
+    if (linkedFactions !== undefined) {
+      await db.factionLocation.deleteMany({
+        where: { locationId: id }
+      })
+
+      if (linkedFactions.length > 0) {
+        await db.factionLocation.createMany({
+          data: linkedFactions.map((link: { factionId: string; description: string }) => ({
+            locationId: id,
+            factionId: link.factionId,
+            description: link.description || null
+          }))
+        })
+      }
+    }
+
+    // Refetch with all relations
+    const updatedLocation = await db.location.findUnique({
+      where: { id },
+      include: {
+        tags: {
+          include: {
+            tag: true
+          }
+        },
+        npcs: {
+          include: {
+            npc: true
+          }
+        },
+        factions: {
+          include: {
+            faction: true
+          }
+        },
+        parent: true
+      }
+    })
 
     return NextResponse.json({ 
       location: {
-        ...location,
-        tags: location.tags.map(t => t.tag)
+        ...updatedLocation,
+        tags: updatedLocation?.tags.map(t => t.tag) || [],
+        linkedNPCs: updatedLocation?.npcs.map(n => ({
+          id: n.npc.id,
+          name: n.npc.name,
+          role: n.role,
+          npcId: n.npcId
+        })) || [],
+        linkedFactions: updatedLocation?.factions.map(f => ({
+          id: f.faction.id,
+          name: f.faction.name,
+          description: f.description,
+          factionId: f.factionId
+        })) || [],
+        parentName: updatedLocation?.parent?.name || null
       }
     })
   } catch (error) {
@@ -123,6 +191,26 @@ export async function DELETE(
   try {
     const { id } = await params
 
+    // First delete all relations
+    await db.taggedLocation.deleteMany({
+      where: { locationId: id }
+    })
+    
+    await db.locationNPC.deleteMany({
+      where: { locationId: id }
+    })
+    
+    await db.factionLocation.deleteMany({
+      where: { locationId: id }
+    })
+
+    // Update children to have no parent
+    await db.location.updateMany({
+      where: { parentId: id },
+      data: { parentId: null }
+    })
+
+    // Then delete the location
     await db.location.delete({
       where: { id }
     })

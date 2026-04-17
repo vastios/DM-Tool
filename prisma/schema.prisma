@@ -32,16 +32,19 @@ model Location {
   name        String
   description String?
   type        String?  // city, village, dungeon, forest, mountain, etc.
-  parentName  String?  // parent location name (for hierarchy)
+  parentId    String?  // parent location for hierarchy
   imageUrl    String?
   notes       String?
   isVisited   Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   
-  campaign    Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  campaign    Campaign    @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  parent      Location?   @relation("LocationHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children    Location[]  @relation("LocationHierarchy")
   tags        TaggedLocation[]
   factions    FactionLocation[]
+  npcs        LocationNPC[]
 }
 
 // NPC - Non-Player Characters
@@ -61,8 +64,9 @@ model NPC {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   
-  campaign    Campaign    @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  campaign    Campaign      @relation(fields: [campaignId], references: [id], onDelete: Cascade)
   faction     FactionNPC? 
+  locations   LocationNPC[]
   tags        TaggedNPC[]
 }
 
@@ -192,4 +196,17 @@ model FactionLocation {
   location    Location  @relation(fields: [locationId], references: [id], onDelete: Cascade)
   
   @@id([factionId, locationId])
+}
+
+// Location-NPC relationship (NPCs can be in multiple locations)
+model LocationNPC {
+  locationId  String
+  npcId       String
+  role        String?  // resident, visitor, ruler, etc.
+  notes       String?
+  
+  location    Location  @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  npc         NPC       @relation(fields: [npcId], references: [id], onDelete: Cascade)
+  
+  @@id([locationId, npcId])
 }
