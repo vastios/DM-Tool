@@ -6,60 +6,162 @@
  * Layout: 2 Pannelli (Lista + Editor/Viewer)
  * 
  * Features:
- * - Tipi di luogo espansi (25 tipi in 6 categorie)
- * - Gerarchia luoghi (luogo padre selezionabile)
+ * - Gerarchia a 7 livelli (Mondo → Regione → Dominio → Insediamento → Area → Edificio → Stanza)
+ * - Popup con accordion per selezione tipo
+ * - Luoghi padre filtrati per livello compatibile
+ * - Tipi personalizzabili per ogni livello
  * - Sistema tag con colori personalizzati
  * - URL immagine con preview
  * - Collegamenti NPC e Fazioni
  * - Toast notifications
  * 
- * @version 2.0.0 - Refactoring con nuovi miglioramenti
+ * @version 3.0.0 - Sistema gerarchico completo
  */
 
 import { getCurrentCampaignId } from '../../../stateManager.js';
 import { showToast } from '../../../utils/toast.js';
 import { escapeHtml } from '../../../utils/htmlHelpers.js';
-import { linkifyCampaignReferences, getAllCampaignElements } from '../../../utils/campaignLinker.js';
-import { initAutocomplete } from '../../../utils/autocomplete.js';
+import { linkifyCampaignReferences } from '../../../utils/campaignLinker.js';
 
 // ═══════════════════════════════════════════════════════════════
-// COSTANTI E CONFIGURAZIONE
+// GERARCHIA DEI LUOGHI - 7 LIVELLI
 // ═══════════════════════════════════════════════════════════════
 
-// Tipi di luogo espansi (25 tipi in 6 categorie)
-const LOCATION_TYPES = [
-    // Insediamenti
-    { value: 'regno', label: 'Regno', category: 'Insediamenti' },
-    { value: 'città', label: 'Città', category: 'Insediamenti' },
-    { value: 'villaggio', label: 'Villaggio', category: 'Insediamenti' },
-    { value: 'accampamento', label: 'Accampamento', category: 'Insediamenti' },
-    { value: 'avamposto', label: 'Avamposto', category: 'Insediamenti' },
-    // Luoghi di Interesse
-    { value: 'dungeon', label: 'Dungeon', category: 'Luoghi di Interesse' },
-    { value: 'rovine', label: 'Rovine', category: 'Luoghi di Interesse' },
-    { value: 'tempio', label: 'Tempio', category: 'Luoghi di Interesse' },
-    { value: 'torre', label: 'Torre', category: 'Luoghi di Interesse' },
-    { value: 'nascondiglio', label: 'Nascondiglio', category: 'Luoghi di Interesse' },
-    // Natura
-    { value: 'foresta', label: 'Foresta', category: 'Natura' },
-    { value: 'montagna', label: 'Montagna', category: 'Natura' },
-    { value: 'deserto', label: 'Deserto', category: 'Natura' },
-    { value: 'pianura', label: 'Pianura', category: 'Natura' },
-    { value: 'palude', label: 'Palude', category: 'Natura' },
-    // Acqua
-    { value: 'mare', label: 'Mare', category: 'Acqua' },
-    { value: 'lago', label: 'Lago', category: 'Acqua' },
-    { value: 'fiume', label: 'Fiume', category: 'Acqua' },
-    { value: 'porto', label: 'Porto', category: 'Acqua' },
-    // Piani dimensionali
-    { value: 'piano_materiale', label: 'Piano Materiale', category: 'Piani' },
-    { value: 'piano_etereo', label: 'Piano Etereo', category: 'Piani' },
-    { value: 'piano_ombre', label: 'Piano delle Ombre', category: 'Piani' },
-    { value: 'piano_elementale', label: 'Piano Elementale', category: 'Piani' },
-    // Altro
-    { value: 'edificio', label: 'Edificio', category: 'Altro' },
-    { value: 'altro', label: 'Altro', category: 'Altro' },
-];
+const LOCATION_HIERARCHY = {
+    // LIVELLO 1 - MONDO (padre: nessuno)
+    1: {
+        name: 'Mondo',
+        icon: '🌍',
+        description: 'Continenti e Piani Dimensionali',
+        allowedParentLevels: [],
+        types: [
+            { value: 'continente', label: 'Continente', description: 'Grande massa terrestre' },
+            { value: 'piano_materiale', label: 'Piano Materiale', description: 'Il piano primario dell\'esistenza' },
+            { value: 'piano_etereo', label: 'Piano Etereo', description: 'Dimensione eterea' },
+            { value: 'piano_ombre', label: 'Piano delle Ombre', description: 'Dimensione oscura speculare' },
+            { value: 'piano_elementale', label: 'Piano Elementale', description: 'Piano degli elementi' },
+            { value: 'piano_feywild', label: 'Feywild', description: 'Regno delle Fate' },
+            { value: 'piano_inferi', label: 'Inferi', description: 'Regno dei demoni' },
+            { value: 'piano_celestiale', label: 'Piano Celestiale', description: 'Regno degli dei buoni' },
+        ]
+    },
+    // LIVELLO 2 - REGIONE (padre: L1)
+    2: {
+        name: 'Regione',
+        icon: '🗺️',
+        description: 'Macro-aree geografiche',
+        allowedParentLevels: [1],
+        types: [
+            { value: 'regione', label: 'Regione', description: 'Area geografica definita' },
+            { value: 'mare', label: 'Mare / Oceano', description: 'Grande specchio d\'acqua' },
+            { value: 'arcipelago', label: 'Arcipelago', description: 'Gruppo di isole' },
+            { value: 'catena_montuosa', label: 'Catena Montuosa', description: 'Sistema montuoso esteso' },
+            { value: 'grande_foresta', label: 'Grande Foresta', description: 'Foresta primordiale vasta' },
+            { value: 'deserto', label: 'Deserto', description: 'Area desertica estesa' },
+        ]
+    },
+    // LIVELLO 3 - DOMINIO (padre: L1-L2)
+    3: {
+        name: 'Dominio',
+        icon: '👑',
+        description: 'Entità politico-territoriali',
+        allowedParentLevels: [1, 2],
+        types: [
+            { value: 'regno', label: 'Regno', description: 'Dominio monarchico' },
+            { value: 'nazione', label: 'Nazione', description: 'Entità politica' },
+            { value: 'provincia', label: 'Provincia', description: 'Suddivisione amministrativa' },
+            { value: 'territorio', label: 'Territorio', description: 'Area sotto controllo' },
+            { value: 'marchesato', label: 'Marchesato', description: 'Dominio di un marchese' },
+            { value: 'ducato', label: 'Ducato', description: 'Dominio di un duca' },
+            { value: 'confederazione', label: 'Confederazione', description: 'Alleanza di stati' },
+        ]
+    },
+    // LIVELLO 4 - INSEDIAMENTO (padre: L2-L3)
+    4: {
+        name: 'Insediamento',
+        icon: '🏘️',
+        description: 'Centri abitati e costruzioni isolate',
+        allowedParentLevels: [2, 3],
+        types: [
+            { value: 'capitale', label: 'Capitale', description: 'Città principale di un regno' },
+            { value: 'citta', label: 'Città', description: 'Centro urbano importante' },
+            { value: 'villaggio', label: 'Villaggio', description: 'Piccolo centro abitato' },
+            { value: 'borgo', label: 'Borgo', description: 'Frazione o piccolo insediamento' },
+            { value: 'fortezza', label: 'Fortezza', description: 'Costruzione militare' },
+            { value: 'porto', label: 'Porto', description: 'Approdo navale' },
+            { value: 'accampamento', label: 'Accampamento', description: 'Insediamento temporaneo' },
+            { value: 'avamposto', label: 'Avamposto', description: 'Posizione avanzata' },
+            { value: 'dungeon', label: 'Dungeon', description: 'Complesso sotterraneo o struttura isolata' },
+            { value: 'rovine', label: 'Rovine', description: 'Resti di un insediamento' },
+        ]
+    },
+    // LIVELLO 5 - AREA (padre: L2-L4)
+    5: {
+        name: 'Area',
+        icon: '🏞️',
+        description: 'Zone geografiche e luoghi di interesse',
+        allowedParentLevels: [2, 3, 4],
+        types: [
+            { value: 'foresta', label: 'Foresta', description: 'Area boschiva' },
+            { value: 'lago', label: 'Lago', description: 'Specchio d\'acqua interno' },
+            { value: 'fiume', label: 'Fiume', description: 'Corso d\'acqua' },
+            { value: 'montagna', label: 'Montagna', description: 'Elevazione rocciosa' },
+            { value: 'palude', label: 'Palude', description: 'Area paludosa' },
+            { value: 'valle', label: 'Valle', description: 'Depressione tra montagne' },
+            { value: 'pianura', label: 'Pianura', description: 'Area pianeggiante' },
+            { value: 'grotta', label: 'Grotta', description: 'Cavità naturale' },
+            { value: 'canyon', label: 'Canyon', description: 'Profonda gola' },
+            { value: 'isola', label: 'Isola', description: 'Territorio circondato dall\'acqua' },
+            { value: 'tempio_isolato', label: 'Tempio Isolato', description: 'Luogo di culto isolato' },
+            { value: 'torre', label: 'Torre', description: 'Costruzione alta e isolata' },
+            { value: 'nascondiglio', label: 'Nascondiglio', description: 'Luogo segreto' },
+        ]
+    },
+    // LIVELLO 6 - EDIFICIO (padre: L4-L5)
+    6: {
+        name: 'Edificio',
+        icon: '🏠',
+        description: 'Costruzioni specifiche',
+        allowedParentLevels: [4, 5],
+        types: [
+            { value: 'locanda', label: 'Locanda', description: 'Luogo di ristoro e pernottamento' },
+            { value: 'taverna', label: 'Taverna', description: 'Luogo di ritrovo' },
+            { value: 'negozio', label: 'Negozio', description: 'Bottega commerciale' },
+            { value: 'tempio', label: 'Tempio', description: 'Luogo di culto' },
+            { value: 'castello', label: 'Castello', description: 'Residenza fortificata' },
+            { value: 'palazzo', label: 'Palazzo', description: 'Residenza nobiliare' },
+            { value: 'magazzino', label: 'Magazzino', description: 'Deposito merci' },
+            { value: 'casa', label: 'Casa', description: 'Abitazione privata' },
+            { value: 'cripta', label: 'Cripta', description: 'Camera sepolcrale' },
+            { value: 'gilda', label: 'Sede di Gilda', description: 'Quartiere generale' },
+            { value: 'prigione', label: 'Prigione', description: 'Luogo di detenzione' },
+            { value: 'biblioteca', label: 'Biblioteca', description: 'Raccolta di testi' },
+            { value: 'forgia', label: 'Forgia', description: 'Laboratorio di fabbro' },
+            { value: 'laboratorio', label: 'Laboratorio', description: 'Spazio di lavoro' },
+            { value: 'caserma', label: 'Caserma', description: 'Alloggio militare' },
+        ]
+    },
+    // LIVELLO 7 - STANZA (padre: L6)
+    7: {
+        name: 'Stanza',
+        icon: '🚪',
+        description: 'Ambienti interni',
+        allowedParentLevels: [6],
+        types: [
+            { value: 'sala', label: 'Sala', description: 'Ampio ambiente' },
+            { value: 'camera', label: 'Camera', description: 'Stanza privata' },
+            { value: 'corridoio', label: 'Corridoio', description: 'Passaggio di collegamento' },
+            { value: 'cantina', label: 'Cantina', description: 'Ambiente sotterraneo' },
+            { value: 'sotterraneo', label: 'Sotterraneo', description: 'Livello interrato' },
+            { value: 'passaggio', label: 'Passaggio Segreto', description: 'Collegamento nascosto' },
+            { value: 'atrio', label: 'Atrio', description: 'Ingresso' },
+            { value: 'cucina', label: 'Cucina', description: 'Ambiente di preparazione cibo' },
+            { value: 'scriptorium', label: 'Scriptorium', description: 'Stanza per copiare testi' },
+            { value: 'armeria', label: 'Armeria', description: 'Deposito armi' },
+            { value: 'tesoreria', label: 'Tesoreria', description: 'Stanza del tesoro' },
+        ]
+    }
+};
 
 // Colori predefiniti per i tag
 const PREDEFINED_TAG_COLORS = [
@@ -85,7 +187,7 @@ const DEFAULT_LOCATION_TAGS = [
 function getStorageKey() {
     const campaignId = getCurrentCampaignId();
     if (!campaignId) {
-        console.warn("⚠️ [LocationManager] Tentativo di accedere al localStorage senza una campagna selezionata.");
+        console.warn("⚠️ [LocationManager] Nessuna campagna selezionata.");
         return null;
     }
     return `dungeonMasterToolLocations_${campaignId}`;
@@ -97,14 +199,20 @@ function getTagsStorageKey() {
     return `dungeonMasterToolLocationTags_${campaignId}`;
 }
 
+function getCustomTypesStorageKey() {
+    const campaignId = getCurrentCampaignId();
+    if (!campaignId) return null;
+    return `dungeonMasterToolLocationCustomTypes_${campaignId}`;
+}
+
 function saveLocations(locations) {
     const storageKey = getStorageKey();
     if (!storageKey) return;
     try {
         localStorage.setItem(storageKey, JSON.stringify(locations));
-        console.log(`💾 [LocationManager] Luoghi salvati per la campagna ${getCurrentCampaignId()}.`);
+        console.log(`💾 [LocationManager] Luoghi salvati.`);
     } catch (error) {
-        console.error("❌ [LocationManager] Impossibile salvare i luoghi:", error);
+        console.error("❌ [LocationManager] Errore salvataggio:", error);
     }
 }
 
@@ -112,10 +220,10 @@ function loadLocations() {
     const storageKey = getStorageKey();
     if (!storageKey) return [];
     try {
-        const savedLocationsJSON = localStorage.getItem(storageKey);
-        return savedLocationsJSON ? JSON.parse(savedLocationsJSON) : [];
+        const saved = localStorage.getItem(storageKey);
+        return saved ? JSON.parse(saved) : [];
     } catch (error) {
-        console.error("❌ [LocationManager] Impossibile caricare i luoghi:", error);
+        console.error("❌ [LocationManager] Errore caricamento:", error);
         return [];
     }
 }
@@ -126,7 +234,7 @@ function saveTags(tags) {
     try {
         localStorage.setItem(storageKey, JSON.stringify(tags));
     } catch (error) {
-        console.error("❌ [LocationManager] Impossibile salvare i tag:", error);
+        console.error("❌ [LocationManager] Errore salvataggio tag:", error);
     }
 }
 
@@ -136,12 +244,32 @@ function loadTags() {
     try {
         const saved = localStorage.getItem(storageKey);
         return saved ? JSON.parse(saved) : [...DEFAULT_LOCATION_TAGS];
-    } catch (error) {
+    } catch {
         return [...DEFAULT_LOCATION_TAGS];
     }
 }
 
-// Carica NPC per i collegamenti
+function saveCustomTypes(customTypes) {
+    const storageKey = getCustomTypesStorageKey();
+    if (!storageKey) return;
+    try {
+        localStorage.setItem(storageKey, JSON.stringify(customTypes));
+    } catch (error) {
+        console.error("❌ [LocationManager] Errore salvataggio tipi custom:", error);
+    }
+}
+
+function loadCustomTypes() {
+    const storageKey = getCustomTypesStorageKey();
+    if (!storageKey) return {};
+    try {
+        const saved = localStorage.getItem(storageKey);
+        return saved ? JSON.parse(saved) : {};
+    } catch {
+        return {};
+    }
+}
+
 function loadNpcs() {
     const campaignId = getCurrentCampaignId();
     if (!campaignId) return [];
@@ -153,7 +281,6 @@ function loadNpcs() {
     }
 }
 
-// Carica Fazioni per i collegamenti
 function loadFactions() {
     const campaignId = getCurrentCampaignId();
     if (!campaignId) return [];
@@ -166,6 +293,39 @@ function loadFactions() {
 }
 
 // ═══════════════════════════════════════════════════════════════
+// UTILITÀ
+// ═══════════════════════════════════════════════════════════════
+
+function getTypeInfo(typeValue, customTypes = {}) {
+    // Cerca nei tipi standard
+    for (const [level, data] of Object.entries(LOCATION_HIERARCHY)) {
+        const type = data.types.find(t => t.value === typeValue);
+        if (type) {
+            return { ...type, level: parseInt(level), levelData: data };
+        }
+    }
+    // Cerca nei tipi custom
+    for (const [level, types] of Object.entries(customTypes)) {
+        const type = types.find(t => t.value === typeValue);
+        if (type) {
+            return { ...type, level: parseInt(level), levelData: LOCATION_HIERARCHY[level] };
+        }
+    }
+    return null;
+}
+
+function getLevelForType(typeValue, customTypes = {}) {
+    const info = getTypeInfo(typeValue, customTypes);
+    return info ? info.level : null;
+}
+
+function getCompatibleParentLevels(typeValue, customTypes = {}) {
+    const level = getLevelForType(typeValue, customTypes);
+    if (!level) return [];
+    return LOCATION_HIERARCHY[level]?.allowedParentLevels || [];
+}
+
+// ═══════════════════════════════════════════════════════════════
 // MODULO PRINCIPALE
 // ═══════════════════════════════════════════════════════════════
 
@@ -174,18 +334,20 @@ const LocationManager = {
         this.container = containerElement;
         this.locations = loadLocations();
         this.tags = loadTags();
+        this.customTypes = loadCustomTypes();
         this.npcs = loadNpcs();
         this.factions = loadFactions();
         this.currentEditingId = null;
         this.selectedTags = [];
         this.linkedNpcs = [];
         this.linkedFactions = [];
+        this.selectedTypeLevel = null;
+        this.typePopupOpen = false;
         
         this.container.innerHTML = this.getMainLayout();
         this.bindEvents();
         this.renderLocationsList();
         
-        // Carica luogo specifico se richiesto
         if (itemIdToLoad) {
             const location = this.locations.find(l => l.id === itemIdToLoad);
             if (location) {
@@ -193,12 +355,11 @@ const LocationManager = {
                 this.renderLocationEditor(location);
             }
         } else if (this.locations.length > 0) {
-            // Mostra il luogo più recente
             const recent = [...this.locations].sort((a, b) => (b.lastModified || 0) - (a.lastModified || 0))[0];
             this.renderLocationViewer(recent);
         }
         
-        console.log('📍 [LocationManager] Modulo inizializzato v2.0');
+        console.log('📍 [LocationManager] Modulo inizializzato v3.0 - Sistema Gerarchico');
     },
     
     getMainLayout() {
@@ -207,7 +368,6 @@ const LocationManager = {
 ${this.getStyles()}
 </style>
 <div class="location-manager-layout">
-    <!-- Pannello di Sinistra: Lista dei Luoghi -->
     <div class="location-sidebar">
         <div class="location-sidebar-header">
             <h2>📍 Luoghi della Campagna</h2>
@@ -229,11 +389,22 @@ ${this.getStyles()}
         <div class="location-list" id="saved-locations-list"></div>
     </div>
 
-    <!-- Pannello di Destra: Visualizzatore/Editor del Luogo -->
     <div class="location-main" id="location-main">
         <div class="location-empty-state">
             <div class="location-empty-icon">📍</div>
             <p>Seleziona un luogo esistente o creane uno nuovo</p>
+        </div>
+    </div>
+    
+    <!-- Type Selection Popup -->
+    <div class="location-type-popup-overlay" id="type-popup-overlay"></div>
+    <div class="location-type-popup" id="type-popup">
+        <div class="location-type-popup-header">
+            <h3>📍 Seleziona il tipo di luogo</h3>
+            <button class="location-type-popup-close" id="close-type-popup">✕</button>
+        </div>
+        <div class="location-type-popup-content" id="type-popup-content">
+            ${this.renderTypePopupContent()}
         </div>
     </div>
 </div>
@@ -293,9 +464,7 @@ ${this.getStyles()}
     box-shadow: 0 2px 8px rgba(8, 145, 178, 0.3);
 }
 
-.location-search-box {
-    margin-bottom: 0.5rem;
-}
+.location-search-box { margin-bottom: 0.5rem; }
 
 .location-search-input {
     width: 100%;
@@ -332,10 +501,7 @@ ${this.getStyles()}
     color: #fff !important;
 }
 
-.location-list {
-    flex: 1;
-    overflow-y: auto;
-}
+.location-list { flex: 1; overflow-y: auto; }
 
 .location-list-item {
     background: var(--bg-tertiary, #333);
@@ -371,11 +537,20 @@ ${this.getStyles()}
 }
 
 .location-list-item-type {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     padding: 0.15rem 0.4rem;
     background: rgba(8, 145, 178, 0.2);
     border-radius: 3px;
     color: #0891b2;
+    white-space: nowrap;
+}
+
+.location-list-item-level {
+    font-size: 0.6rem;
+    padding: 0.1rem 0.3rem;
+    background: rgba(124, 58, 237, 0.2);
+    border-radius: 3px;
+    color: #a78bfa;
 }
 
 .location-list-item-parent {
@@ -423,7 +598,7 @@ ${this.getStyles()}
     transition: all 0.2s;
 }
 
-/* Area principale */
+/* Main area */
 .location-main {
     flex: 1;
     padding: 1rem;
@@ -489,9 +664,7 @@ ${this.getStyles()}
     margin-bottom: 1rem;
 }
 
-.location-viewer-section {
-    margin-bottom: 1rem;
-}
+.location-viewer-section { margin-bottom: 1rem; }
 
 .location-viewer-section h4 {
     font-family: 'Cinzel', serif;
@@ -529,7 +702,10 @@ ${this.getStyles()}
     background: var(--bg-tertiary, #333);
     border-radius: 4px;
     font-size: 0.85rem;
+    cursor: pointer;
 }
+
+.location-link-item:hover { background: var(--hover-bg, #444); }
 
 .location-link-item .role {
     font-size: 0.7rem;
@@ -580,22 +756,16 @@ ${this.getStyles()}
     transition: all 0.2s;
 }
 
-.location-tab:hover {
-    color: var(--text-primary, #fff);
-}
+.location-tab:hover { color: var(--text-primary, #fff); }
 
 .location-tab.active {
     color: #0891b2;
     border-bottom-color: #0891b2;
 }
 
-.location-tab-content {
-    display: none;
-}
+.location-tab-content { display: none; }
 
-.location-tab-content.active {
-    display: block;
-}
+.location-tab-content.active { display: block; }
 
 /* Form */
 .location-form-row {
@@ -635,123 +805,243 @@ ${this.getStyles()}
     resize: vertical;
 }
 
-/* Image preview */
-.location-image-preview {
-    margin-top: 0.5rem;
-    border-radius: 6px;
-    overflow: hidden;
-    max-height: 200px;
-}
-
-.location-image-preview img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-/* Tags editor */
-.location-tags-editor {
+/* Type selector button */
+.location-type-selector {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-}
-
-.location-tag-badge {
-    display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
-    padding: 0.3rem 0.6rem;
+    gap: 0.5rem;
+    padding: 0.6rem;
+    background: var(--input-bg, #333);
+    border: 1px solid var(--border-color, #444);
     border-radius: 4px;
-    font-size: 0.8rem;
     cursor: pointer;
     transition: all 0.2s;
 }
 
-.location-tag-badge.selected {
-    color: #fff;
+.location-type-selector:hover {
+    border-color: #0891b2;
 }
 
-.location-tag-badge:not(.selected) {
-    background: transparent !important;
-    border: 1px solid;
+.location-type-selector-icon {
+    font-size: 1.2rem;
 }
 
-.location-tag-badge .remove {
-    font-size: 0.7rem;
-    opacity: 0.7;
+.location-type-selector-text {
+    flex: 1;
+    color: var(--text-primary, #fff);
 }
 
-.location-tag-badge .remove:hover {
-    opacity: 1;
+.location-type-selector-placeholder {
+    color: var(--text-muted, #666);
 }
 
-/* New tag form */
-.location-new-tag-form {
+.location-type-selector-arrow {
+    color: var(--text-muted, #888);
+}
+
+/* Type Popup */
+.location-type-popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 999;
+    display: none;
+}
+
+.location-type-popup-overlay.active { display: block; }
+
+.location-type-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    background: var(--card-bg, #252525);
+    border-radius: 12px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.location-type-popup.active { display: flex; }
+
+.location-type-popup-header {
     display: flex;
-    gap: 0.5rem;
-    margin-top: 0.5rem;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-color, #333);
 }
 
-.location-color-picker {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.3rem;
-    padding: 0.5rem;
-    background: var(--bg-tertiary, #333);
-    border-radius: 4px;
-    margin-top: 0.5rem;
+.location-type-popup-header h3 {
+    margin: 0;
+    font-family: 'Cinzel', serif;
+    color: var(--text-primary, #fff);
 }
 
-.location-color-option {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
+.location-type-popup-close {
+    background: none;
+    border: none;
+    color: var(--text-muted, #888);
+    font-size: 1.5rem;
     cursor: pointer;
-    border: 2px solid transparent;
+    padding: 0.25rem;
+    line-height: 1;
+}
+
+.location-type-popup-close:hover { color: var(--text-primary, #fff); }
+
+.location-type-popup-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.5rem;
+}
+
+/* Accordion levels */
+.location-level-accordion {
+    margin-bottom: 0.5rem;
+    border: 1px solid var(--border-color, #333);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.location-level-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: var(--bg-tertiary, #2a2a2a);
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+}
+
+.location-level-header:hover {
+    background: var(--hover-bg, #333);
+}
+
+.location-level-header.active {
+    background: rgba(8, 145, 178, 0.1);
+    border-bottom: 1px solid var(--border-color, #333);
+}
+
+.location-level-icon {
+    font-size: 1.25rem;
+}
+
+.location-level-info { flex: 1; }
+
+.location-level-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.95rem;
+    color: var(--text-primary, #fff);
+}
+
+.location-level-desc {
+    font-size: 0.7rem;
+    color: var(--text-muted, #888);
+}
+
+.location-level-chevron {
+    color: var(--text-muted, #888);
     transition: transform 0.2s;
 }
 
-.location-color-option:hover {
-    transform: scale(1.1);
+.location-level-header.active .location-level-chevron {
+    transform: rotate(180deg);
 }
 
-.location-color-option.selected {
-    border-color: #fff;
+.location-level-content {
+    display: none;
+    padding: 0.5rem;
+    background: var(--bg-secondary, #1a1a1a);
 }
 
-/* Links editor */
-.location-links-editor {
+.location-level-content.active { display: block; }
+
+.location-type-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.5rem;
+}
+
+.location-type-option {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    padding: 0.5rem;
+    background: var(--bg-tertiary, #2a2a2a);
+    border: 1px solid var(--border-color, #444);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
 }
 
-.location-link-row {
+.location-type-option:hover {
+    border-color: #0891b2;
+    background: rgba(8, 145, 178, 0.1);
+}
+
+.location-type-option.selected {
+    border-color: #0891b2;
+    background: rgba(8, 145, 178, 0.2);
+}
+
+.location-type-option-name {
+    font-size: 0.85rem;
+    color: var(--text-primary, #fff);
+    margin-bottom: 0.15rem;
+}
+
+.location-type-option-desc {
+    font-size: 0.65rem;
+    color: var(--text-muted, #888);
+}
+
+/* Add custom type */
+.location-add-custom-type {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
     padding: 0.5rem;
-    background: var(--bg-tertiary, #333);
-    border-radius: 4px;
+    background: transparent;
+    border: 1px dashed var(--border-color, #555);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text-muted, #888);
+    font-size: 0.8rem;
 }
 
-.location-link-row select {
-    flex: 1;
-    padding: 0.4rem;
-    background: var(--input-bg, #444);
-    border: 1px solid var(--border-color, #555);
-    border-radius: 4px;
-    color: var(--text-primary, #fff);
+.location-add-custom-type:hover {
+    border-color: #0891b2;
+    color: #0891b2;
 }
 
-.location-link-row input {
+/* Custom type input */
+.location-custom-type-input {
+    display: none;
+    padding: 0.5rem;
+    background: var(--bg-tertiary, #2a2a2a);
+    border-radius: 6px;
+    margin-top: 0.5rem;
+}
+
+.location-custom-type-input.active { display: flex; }
+
+.location-custom-type-input input {
     flex: 1;
     padding: 0.4rem;
-    background: var(--input-bg, #444);
-    border: 1px solid var(--border-color, #555);
+    background: var(--input-bg, #333);
+    border: 1px solid var(--border-color, #444);
     border-radius: 4px;
     color: var(--text-primary, #fff);
+    font-size: 0.85rem;
+    margin-right: 0.5rem;
 }
 
 /* Buttons */
@@ -811,23 +1101,102 @@ ${this.getStyles()}
     color: #6b7280;
 }
 
+/* Tags editor */
+.location-tags-editor {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.location-tag-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.location-tag-badge.selected { color: #fff; }
+
+.location-tag-badge:not(.selected) {
+    background: transparent !important;
+    border: 1px solid;
+}
+
+/* Links editor */
+.location-links-editor {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.location-link-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background: var(--bg-tertiary, #333);
+    border-radius: 4px;
+}
+
+.location-link-row select,
+.location-link-row input {
+    flex: 1;
+    padding: 0.4rem;
+    background: var(--input-bg, #444);
+    border: 1px solid var(--border-color, #555);
+    border-radius: 4px;
+    color: var(--text-primary, #fff);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
-    .location-manager-layout {
-        flex-direction: column;
-    }
-    
-    .location-sidebar {
-        flex: 0 0 auto;
-        max-height: 250px;
-    }
+    .location-manager-layout { flex-direction: column; }
+    .location-sidebar { flex: 0 0 auto; max-height: 250px; }
 }
         `;
     },
     
-    // ─────────────────────────────────────────────────────────────
-    // RENDERING LISTA
-    // ─────────────────────────────────────────────────────────────
+    renderTypePopupContent() {
+        return Object.entries(LOCATION_HIERARCHY).map(([level, data]) => {
+            const customTypes = this.customTypes[level] || [];
+            const allTypes = [...data.types, ...customTypes];
+            
+            return `
+                <div class="location-level-accordion" data-level="${level}">
+                    <div class="location-level-header" data-level="${level}">
+                        <span class="location-level-icon">${data.icon}</span>
+                        <div class="location-level-info">
+                            <div class="location-level-name">LIVELLO ${level} - ${data.name}</div>
+                            <div class="location-level-desc">${data.description}</div>
+                        </div>
+                        <span class="location-level-chevron">▼</span>
+                    </div>
+                    <div class="location-level-content" data-level="${level}">
+                        <div class="location-type-grid">
+                            ${allTypes.map(type => `
+                                <div class="location-type-option" data-value="${type.value}" data-level="${level}">
+                                    <span class="location-type-option-name">${escapeHtml(type.label)}</span>
+                                    <span class="location-type-option-desc">${escapeHtml(type.description || '')}</span>
+                                </div>
+                            `).join('')}
+                            <div class="location-add-custom-type" data-level="${level}">
+                                + Aggiungi tipo personalizzato
+                            </div>
+                        </div>
+                        <div class="location-custom-type-input" data-level="${level}">
+                            <input type="text" placeholder="Nome nuovo tipo..." class="custom-type-name">
+                            <button class="location-btn location-btn-primary location-btn-sm btn-add-custom">Aggiungi</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    },
     
     renderLocationsList(searchTerm = '', filterTagId = null) {
         const list = this.container.querySelector('#saved-locations-list');
@@ -845,9 +1214,7 @@ ${this.getStyles()}
         }
         
         if (filterTagId) {
-            filtered = filtered.filter(loc => 
-                (loc.tags || []).includes(filterTagId)
-            );
+            filtered = filtered.filter(loc => (loc.tags || []).includes(filterTagId));
         }
         
         if (filtered.length === 0) {
@@ -859,6 +1226,7 @@ ${this.getStyles()}
         
         list.innerHTML = sorted.map(loc => {
             const parentLocation = loc.parentId ? this.locations.find(l => l.id === loc.parentId) : null;
+            const typeInfo = getTypeInfo(loc.type, this.customTypes);
             const tags = (loc.tags || []).map(tagId => this.tags.find(t => t.id === tagId)).filter(Boolean);
             const isSelected = loc.id === this.currentEditingId;
             
@@ -866,7 +1234,10 @@ ${this.getStyles()}
                 <div class="location-list-item ${isSelected ? 'selected' : ''}" data-location-id="${loc.id}">
                     <div class="location-list-item-header">
                         <span class="location-list-item-name">${escapeHtml(loc.name || 'Senza Nome')}</span>
-                        ${loc.type ? `<span class="location-list-item-type">${escapeHtml(this.getTypeLabel(loc.type))}</span>` : ''}
+                        <div style="display: flex; gap: 0.3rem;">
+                            ${typeInfo ? `<span class="location-list-item-level">L${typeInfo.level}</span>` : ''}
+                            ${loc.type ? `<span class="location-list-item-type">${escapeHtml(typeInfo?.label || loc.type)}</span>` : ''}
+                        </div>
                     </div>
                     ${parentLocation ? `
                         <div class="location-list-item-parent">
@@ -886,8 +1257,8 @@ ${this.getStyles()}
                         </div>
                     ` : ''}
                     <div class="location-list-item-actions">
-                        <button class="location-btn location-btn-secondary location-btn-sm btn-view" data-location-id="${loc.id}">👁️ Vedi</button>
-                        <button class="location-btn location-btn-secondary location-btn-sm btn-edit" data-location-id="${loc.id}">✏️ Modifica</button>
+                        <button class="location-btn location-btn-secondary location-btn-sm btn-view" data-location-id="${loc.id}">👁️</button>
+                        <button class="location-btn location-btn-secondary location-btn-sm btn-edit" data-location-id="${loc.id}">✏️</button>
                         <button class="location-btn location-btn-danger location-btn-sm btn-delete" data-location-id="${loc.id}">🗑️</button>
                     </div>
                 </div>
@@ -895,20 +1266,27 @@ ${this.getStyles()}
         }).join('');
     },
     
-    getTypeLabel(typeValue) {
-        const type = LOCATION_TYPES.find(t => t.value === typeValue);
-        return type ? type.label : typeValue;
+    getAvailableParents(selectedTypeId) {
+        if (!selectedTypeId) return this.locations.filter(l => !this.currentEditingId || l.id !== this.currentEditingId);
+        
+        const level = getLevelForType(selectedTypeId, this.customTypes);
+        if (!level) return [];
+        
+        const allowedParentLevels = LOCATION_HIERARCHY[level]?.allowedParentLevels || [];
+        
+        return this.locations.filter(loc => {
+            if (this.currentEditingId && loc.id === this.currentEditingId) return false;
+            const locLevel = getLevelForType(loc.type, this.customTypes);
+            return allowedParentLevels.includes(locLevel);
+        });
     },
-    
-    // ─────────────────────────────────────────────────────────────
-    // VIEWER
-    // ─────────────────────────────────────────────────────────────
     
     renderLocationViewer(location) {
         const main = this.container.querySelector('#location-main');
         if (!main) return;
         
         const parentLocation = location.parentId ? this.locations.find(l => l.id === location.parentId) : null;
+        const typeInfo = getTypeInfo(location.type, this.customTypes);
         const tags = (location.tags || []).map(tagId => this.tags.find(t => t.id === tagId)).filter(Boolean);
         const linkedNpcs = (location.linkedNpcs || []).map(link => ({
             ...link,
@@ -927,7 +1305,7 @@ ${this.getStyles()}
                     <div>
                         <h3 class="location-viewer-title">${escapeHtml(location.name)}</h3>
                         <div class="location-viewer-subtitle">
-                            ${location.type ? this.getTypeLabel(location.type) : ''}
+                            ${typeInfo ? `<span style="color: #a78bfa;">L${typeInfo.level}</span> ${typeInfo.levelData.icon} ${escapeHtml(typeInfo.label)}` : ''}
                             ${parentLocation ? ` → 📍 ${escapeHtml(parentLocation.name)}` : ''}
                         </div>
                     </div>
@@ -1026,22 +1404,19 @@ ${this.getStyles()}
         this.renderLocationsList();
     },
     
-    // ─────────────────────────────────────────────────────────────
-    // EDITOR
-    // ─────────────────────────────────────────────────────────────
-    
     renderLocationEditor(location = null) {
         const main = this.container.querySelector('#location-main');
         if (!main) return;
         
         const isNew = !location;
         
-        // Reset state
         this.selectedTags = location ? [...(location.tags || [])] : [];
         this.linkedNpcs = location ? [...(location.linkedNpcs || [])] : [];
         this.linkedFactions = location ? [...(location.linkedFactions || [])] : [];
+        this.selectedTypeLevel = location?.type ? getLevelForType(location.type, this.customTypes) : null;
         
-        const availableParents = this.locations.filter(l => !location || l.id !== location.id);
+        const typeInfo = location?.type ? getTypeInfo(location.type, this.customTypes) : null;
+        const availableParents = this.getAvailableParents(location?.type);
         
         main.innerHTML = `
             <div class="location-editor">
@@ -1065,22 +1440,29 @@ ${this.getStyles()}
                     
                     <div class="location-form-row">
                         <div class="location-form-group">
-                            <label for="loc-type">Tipo</label>
-                            <select id="loc-type">
-                                <option value="">Seleziona tipo...</option>
-                                ${this.renderTypeOptions(location?.type)}
-                            </select>
+                            <label>Tipo</label>
+                            <div class="location-type-selector" id="open-type-popup">
+                                <span class="location-type-selector-icon">${typeInfo?.levelData?.icon || '📍'}</span>
+                                <span class="location-type-selector-text ${typeInfo ? '' : 'location-type-selector-placeholder'}">
+                                    ${typeInfo ? escapeHtml(typeInfo.label) : 'Seleziona tipo...'}
+                                </span>
+                                <input type="hidden" id="loc-type" value="${escapeHtml(location?.type || '')}">
+                                <span class="location-type-selector-arrow">▼</span>
+                            </div>
                         </div>
                         
                         <div class="location-form-group">
                             <label for="loc-parent">Luogo Padre</label>
                             <select id="loc-parent">
                                 <option value="">Nessun padre</option>
-                                ${availableParents.map(loc => `
-                                    <option value="${loc.id}" ${location?.parentId === loc.id ? 'selected' : ''}>
-                                        ${escapeHtml(loc.name)} ${loc.type ? `(${this.getTypeLabel(loc.type)})` : ''}
-                                    </option>
-                                `).join('')}
+                                ${availableParents.map(loc => {
+                                    const locInfo = getTypeInfo(loc.type, this.customTypes);
+                                    return `
+                                        <option value="${loc.id}" ${location?.parentId === loc.id ? 'selected' : ''}>
+                                            ${locInfo ? `L${locInfo.level} ` : ''}${escapeHtml(loc.name)}
+                                        </option>
+                                    `;
+                                }).join('')}
                             </select>
                         </div>
                     </div>
@@ -1097,8 +1479,8 @@ ${this.getStyles()}
                         <label for="loc-image">🖼️ URL Immagine</label>
                         <input type="url" id="loc-image" value="${escapeHtml(location?.imageUrl || '')}" placeholder="https://esempio.com/immagine.jpg">
                         ${location?.imageUrl ? `
-                            <div class="location-image-preview">
-                                <img src="${escapeHtml(location.imageUrl)}" alt="Preview" onerror="this.parentElement.style.display='none'">
+                            <div class="location-image-preview" style="margin-top: 0.5rem; border-radius: 6px; overflow: hidden; max-height: 200px;">
+                                <img src="${escapeHtml(location.imageUrl)}" alt="Preview" style="width: 100%; object-fit: cover;" onerror="this.parentElement.style.display='none'">
                             </div>
                         ` : ''}
                     </div>
@@ -1119,7 +1501,7 @@ ${this.getStyles()}
                     </div>
                     
                     <div class="location-form-group">
-                        <label>
+                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
                             <input type="checkbox" id="loc-visited" ${location?.isVisited ? 'checked' : ''}>
                             Già visitato dal party
                         </label>
@@ -1149,7 +1531,7 @@ ${this.getStyles()}
                     </div>
                     
                     <div class="location-form-group">
-                        <label>🚩 Fazioni Collegati</label>
+                        <label>🚩 Fazioni Collegate</label>
                         <div class="location-links-editor" id="faction-links-editor">
                             ${this.linkedFactions.map((link, idx) => `
                                 <div class="location-link-row" data-link-idx="${idx}">
@@ -1160,7 +1542,7 @@ ${this.getStyles()}
                                             </option>
                                         `).join('')}
                                     </select>
-                                    <input type="text" class="faction-desc" placeholder="Descrizione (es: QG)" value="${escapeHtml(link.description || '')}">
+                                    <input type="text" class="faction-desc" placeholder="Descrizione" value="${escapeHtml(link.description || '')}">
                                     <button class="location-btn location-btn-danger location-btn-sm btn-remove-faction">✕</button>
                                 </div>
                             `).join('')}
@@ -1186,15 +1568,10 @@ ${this.getStyles()}
                     
                     <div class="location-form-group">
                         <label>➕ Nuovo Tag</label>
-                        <div class="location-new-tag-form">
-                            <input type="text" id="new-tag-name" placeholder="Nome tag">
-                            <input type="color" id="new-tag-color" value="#0891b2" style="width: 40px; height: 36px; padding: 2px; cursor: pointer;">
-                            <button class="location-btn location-btn-primary" id="create-tag-btn">Crea</button>
-                        </div>
-                        <div class="location-color-picker" id="color-picker">
-                            ${PREDEFINED_TAG_COLORS.map(color => `
-                                <div class="location-color-option" style="background: ${color};" data-color="${color}"></div>
-                            `).join('')}
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" id="new-tag-name" placeholder="Nome tag" style="flex: 1; padding: 0.4rem; background: var(--input-bg, #333); border: 1px solid var(--border-color, #444); border-radius: 4px; color: var(--text-primary, #fff);">
+                            <input type="color" id="new-tag-color" value="#0891b2" style="width: 40px; height: 32px; padding: 2px; cursor: pointer;">
+                            <button class="location-btn location-btn-primary location-btn-sm" id="create-tag-btn">Crea</button>
                         </div>
                     </div>
                 </div>
@@ -1207,19 +1584,6 @@ ${this.getStyles()}
         `;
         
         this.bindEditorEvents();
-    },
-    
-    renderTypeOptions(selectedType) {
-        const categories = [...new Set(LOCATION_TYPES.map(t => t.category))];
-        return categories.map(cat => `
-            <optgroup label="${cat}">
-                ${LOCATION_TYPES.filter(t => t.category === cat).map(t => `
-                    <option value="${t.value}" ${selectedType === t.value ? 'selected' : ''}>
-                        ${t.label}
-                    </option>
-                `).join('')}
-            </optgroup>
-        `).join('');
     },
     
     // ─────────────────────────────────────────────────────────────
@@ -1285,6 +1649,10 @@ ${this.getStyles()}
                 this.deleteLocation(btn.dataset.locationId);
             }
         });
+        
+        // Type popup
+        this.container.querySelector('#type-popup-overlay')?.addEventListener('click', () => this.closeTypePopup());
+        this.container.querySelector('#close-type-popup')?.addEventListener('click', () => this.closeTypePopup());
     },
     
     bindEditorEvents() {
@@ -1298,7 +1666,65 @@ ${this.getStyles()}
             });
         });
         
-        // Tags selection
+        // Open type popup
+        this.container.querySelector('#open-type-popup')?.addEventListener('click', () => this.openTypePopup());
+        
+        // Accordion headers
+        this.container.querySelectorAll('.location-level-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const level = header.dataset.level;
+                const isActive = header.classList.contains('active');
+                
+                // Close all
+                this.container.querySelectorAll('.location-level-header').forEach(h => h.classList.remove('active'));
+                this.container.querySelectorAll('.location-level-content').forEach(c => c.classList.remove('active'));
+                
+                // Open clicked
+                if (!isActive) {
+                    header.classList.add('active');
+                    this.container.querySelector(`.location-level-content[data-level="${level}"]`)?.classList.add('active');
+                }
+            });
+        });
+        
+        // Type selection
+        this.container.querySelector('#type-popup-content')?.addEventListener('click', (e) => {
+            const typeOption = e.target.closest('.location-type-option');
+            if (typeOption) {
+                this.selectType(typeOption.dataset.value, parseInt(typeOption.dataset.level));
+                return;
+            }
+            
+            // Add custom type button
+            const addBtn = e.target.closest('.location-add-custom-type');
+            if (addBtn) {
+                const level = addBtn.dataset.level;
+                const inputDiv = this.container.querySelector(`.location-custom-type-input[data-level="${level}"]`);
+                if (inputDiv) {
+                    inputDiv.classList.add('active');
+                    inputDiv.querySelector('input')?.focus();
+                }
+                return;
+            }
+            
+            // Confirm add custom type
+            const confirmBtn = e.target.closest('.btn-add-custom');
+            if (confirmBtn) {
+                const inputDiv = confirmBtn.closest('.location-custom-type-input');
+                const level = inputDiv?.dataset.level;
+                const input = inputDiv?.querySelector('input');
+                const value = input?.value.trim();
+                
+                if (value && level) {
+                    this.addCustomType(level, value);
+                    input.value = '';
+                    inputDiv.classList.remove('active');
+                }
+                return;
+            }
+        });
+        
+        // Tags
         this.container.querySelector('#tags-editor')?.addEventListener('click', (e) => {
             const badge = e.target.closest('.location-tag-badge');
             if (!badge) return;
@@ -1310,26 +1736,12 @@ ${this.getStyles()}
                 this.selectedTags.push(tagId);
             }
             
-            // Update visual
             const tag = this.tags.find(t => t.id === tagId);
             if (tag) {
                 badge.classList.toggle('selected');
                 badge.style.background = this.selectedTags.includes(tagId) ? tag.color : 'transparent';
                 badge.style.color = this.selectedTags.includes(tagId) ? '#fff' : tag.color;
             }
-        });
-        
-        // Color picker
-        this.container.querySelector('#color-picker')?.addEventListener('click', (e) => {
-            const option = e.target.closest('.location-color-option');
-            if (!option) return;
-            
-            const color = option.dataset.color;
-            const colorInput = this.container.querySelector('#new-tag-color');
-            if (colorInput) colorInput.value = color;
-            
-            this.container.querySelectorAll('.location-color-option').forEach(o => o.classList.remove('selected'));
-            option.classList.add('selected');
         });
         
         // Create tag
@@ -1345,12 +1757,6 @@ ${this.getStyles()}
                 return;
             }
             
-            // Check if tag already exists
-            if (this.tags.some(t => t.name.toLowerCase() === name.toLowerCase())) {
-                showToast('Tag già esistente', 'warning');
-                return;
-            }
-            
             const newTag = {
                 id: Date.now().toString(),
                 name,
@@ -1361,12 +1767,11 @@ ${this.getStyles()}
             saveTags(this.tags);
             this.selectedTags.push(newTag.id);
             
-            // Re-render tags section
             this.renderLocationEditor(this.locations.find(l => l.id === this.currentEditingId));
             showToast(`Tag "${name}" creato`, 'success');
         });
         
-        // Add NPC link
+        // Add NPC/Faction links
         this.container.querySelector('#add-npc-link')?.addEventListener('click', () => {
             if (this.npcs.length === 0) {
                 showToast('Nessun PNG disponibile', 'warning');
@@ -1376,7 +1781,6 @@ ${this.getStyles()}
             this.renderLinksEditor();
         });
         
-        // Add Faction link
         this.container.querySelector('#add-faction-link')?.addEventListener('click', () => {
             if (this.factions.length === 0) {
                 showToast('Nessuna fazione disponibile', 'warning');
@@ -1386,7 +1790,7 @@ ${this.getStyles()}
             this.renderLinksEditor();
         });
         
-        // Remove NPC/Faction links
+        // Remove links
         this.container.querySelector('#npc-links-editor')?.addEventListener('click', (e) => {
             if (e.target.classList.contains('btn-remove-npc')) {
                 const row = e.target.closest('.location-link-row');
@@ -1428,9 +1832,7 @@ ${this.getStyles()}
         });
         
         // Save
-        this.container.querySelector('#save-location-btn')?.addEventListener('click', () => {
-            this.saveLocation();
-        });
+        this.container.querySelector('#save-location-btn')?.addEventListener('click', () => this.saveLocation());
         
         // Image preview
         this.container.querySelector('#loc-image')?.addEventListener('input', (e) => {
@@ -1441,15 +1843,16 @@ ${this.getStyles()}
                 if (!preview) {
                     preview = document.createElement('div');
                     preview.className = 'location-image-preview';
+                    preview.style.cssText = 'margin-top: 0.5rem; border-radius: 6px; overflow: hidden; max-height: 200px;';
                     e.target.parentElement.appendChild(preview);
                 }
-                preview.innerHTML = `<img src="${escapeHtml(url)}" alt="Preview" onerror="this.parentElement.style.display='none'">`;
+                preview.innerHTML = `<img src="${escapeHtml(url)}" alt="Preview" style="width: 100%; object-fit: cover;" onerror="this.parentElement.style.display='none'">`;
             } else if (preview) {
                 preview.remove();
             }
         });
         
-        // Update linked NPCs/Factions when changing selects
+        // Update links from UI
         this.container.querySelector('#npc-links-editor')?.addEventListener('change', (e) => {
             if (e.target.classList.contains('npc-select') || e.target.classList.contains('npc-role')) {
                 this.updateLinkedNpcsFromUI();
@@ -1493,7 +1896,7 @@ ${this.getStyles()}
                             </option>
                         `).join('')}
                     </select>
-                    <input type="text" class="faction-desc" placeholder="Descrizione (es: QG)" value="${escapeHtml(link.description || '')}">
+                    <input type="text" class="faction-desc" placeholder="Descrizione" value="${escapeHtml(link.description || '')}">
                     <button class="location-btn location-btn-danger location-btn-sm btn-remove-faction">✕</button>
                 </div>
             `).join('');
@@ -1516,6 +1919,130 @@ ${this.getStyles()}
         })).filter(link => link.factionId);
     },
     
+    openTypePopup() {
+        const overlay = this.container.querySelector('#type-popup-overlay');
+        const popup = this.container.querySelector('#type-popup');
+        
+        if (overlay && popup) {
+            overlay.classList.add('active');
+            popup.classList.add('active');
+            
+            // Re-render popup content to have fresh state
+            const content = this.container.querySelector('#type-popup-content');
+            if (content) {
+                content.innerHTML = this.renderTypePopupContent();
+            }
+            
+            // If there's a selected type, open that accordion
+            const hiddenInput = this.container.querySelector('#loc-type');
+            if (hiddenInput?.value) {
+                const level = getLevelForType(hiddenInput.value, this.customTypes);
+                if (level) {
+                    const header = this.container.querySelector(`.location-level-header[data-level="${level}"]`);
+                    const contentDiv = this.container.querySelector(`.location-level-content[data-level="${level}"]`);
+                    if (header && contentDiv) {
+                        header.classList.add('active');
+                        contentDiv.classList.add('active');
+                    }
+                    
+                    // Mark selected type
+                    const option = this.container.querySelector(`.location-type-option[data-value="${hiddenInput.value}"]`);
+                    if (option) option.classList.add('selected');
+                }
+            }
+        }
+    },
+    
+    closeTypePopup() {
+        const overlay = this.container.querySelector('#type-popup-overlay');
+        const popup = this.container.querySelector('#type-popup');
+        
+        if (overlay) overlay.classList.remove('active');
+        if (popup) popup.classList.remove('active');
+    },
+    
+    selectType(typeValue, level) {
+        const typeInfo = getTypeInfo(typeValue, this.customTypes);
+        if (!typeInfo) return;
+        
+        // Update hidden input
+        const hiddenInput = this.container.querySelector('#loc-type');
+        if (hiddenInput) hiddenInput.value = typeValue;
+        
+        // Update selector display
+        const selector = this.container.querySelector('#open-type-popup');
+        if (selector) {
+            const icon = selector.querySelector('.location-type-selector-icon');
+            const text = selector.querySelector('.location-type-selector-text');
+            
+            if (icon) icon.textContent = typeInfo.levelData.icon;
+            if (text) {
+                text.textContent = `L${level} - ${typeInfo.label}`;
+                text.classList.remove('location-type-selector-placeholder');
+            }
+        }
+        
+        this.selectedTypeLevel = level;
+        
+        // Update parent dropdown with compatible parents
+        this.updateParentDropdown(typeValue);
+        
+        this.closeTypePopup();
+        showToast(`Tipo selezionato: ${typeInfo.label} (Livello ${level})`, 'success');
+    },
+    
+    updateParentDropdown(typeValue) {
+        const parentSelect = this.container.querySelector('#loc-parent');
+        if (!parentSelect) return;
+        
+        const availableParents = this.getAvailableParents(typeValue);
+        const currentParentId = parentSelect.value;
+        
+        parentSelect.innerHTML = `
+            <option value="">Nessun padre</option>
+            ${availableParents.map(loc => {
+                const locInfo = getTypeInfo(loc.type, this.customTypes);
+                return `
+                    <option value="${loc.id}" ${loc.id === currentParentId ? 'selected' : ''}>
+                        ${locInfo ? `L${locInfo.level} ` : ''}${escapeHtml(loc.name)}
+                    </option>
+                `;
+            }).join('')}
+        `;
+    },
+    
+    addCustomType(level, name) {
+        if (!this.customTypes[level]) {
+            this.customTypes[level] = [];
+        }
+        
+        const value = `custom_${level}_${Date.now()}`;
+        const newType = {
+            value,
+            label: name,
+            description: 'Tipo personalizzato'
+        };
+        
+        this.customTypes[level].push(newType);
+        saveCustomTypes(this.customTypes);
+        
+        // Re-render popup content
+        const content = this.container.querySelector('#type-popup-content');
+        if (content) {
+            content.innerHTML = this.renderTypePopupContent();
+            
+            // Open the accordion for this level
+            const header = content.querySelector(`.location-level-header[data-level="${level}"]`);
+            const contentDiv = content.querySelector(`.location-level-content[data-level="${level}"]`);
+            if (header && contentDiv) {
+                header.classList.add('active');
+                contentDiv.classList.add('active');
+            }
+        }
+        
+        showToast(`Tipo "${name}" aggiunto al Livello ${level}`, 'success');
+    },
+    
     saveLocation() {
         const name = this.container.querySelector('#loc-name')?.value.trim();
         const type = this.container.querySelector('#loc-type')?.value;
@@ -1532,7 +2059,6 @@ ${this.getStyles()}
             return;
         }
         
-        // Update linked from UI
         this.updateLinkedNpcsFromUI();
         this.updateLinkedFactionsFromUI();
         
