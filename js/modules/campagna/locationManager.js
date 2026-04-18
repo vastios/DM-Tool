@@ -1654,27 +1654,28 @@ ${this.getStyles()}
         this.container.querySelector('#type-popup-overlay')?.addEventListener('click', () => this.closeTypePopup());
         this.container.querySelector('#close-type-popup')?.addEventListener('click', () => this.closeTypePopup());
         
-        // Accordion headers - Level collapse/expand
-        this.container.querySelectorAll('.location-level-header').forEach(header => {
-            header.addEventListener('click', (e) => {
+        // Type popup content - using event delegation for all popup interactions
+        this.container.querySelector('#type-popup-content')?.addEventListener('click', (e) => {
+            // Accordion header click - toggle level expand/collapse
+            const accordionHeader = e.target.closest('.location-level-header');
+            if (accordionHeader) {
                 e.stopPropagation();
-                const level = header.dataset.level;
-                const isActive = header.classList.contains('active');
+                const level = accordionHeader.dataset.level;
+                const isActive = accordionHeader.classList.contains('active');
                 
                 // Close all
                 this.container.querySelectorAll('.location-level-header').forEach(h => h.classList.remove('active'));
                 this.container.querySelectorAll('.location-level-content').forEach(c => c.classList.remove('active'));
                 
-                // Open clicked
+                // Open clicked (if wasn't already open)
                 if (!isActive) {
-                    header.classList.add('active');
+                    accordionHeader.classList.add('active');
                     this.container.querySelector(`.location-level-content[data-level="${level}"]`)?.classList.add('active');
                 }
-            });
-        });
-        
-        // Type selection in popup
-        this.container.querySelector('#type-popup-content')?.addEventListener('click', (e) => {
+                return;
+            }
+            
+            // Type option selection
             const typeOption = e.target.closest('.location-type-option');
             if (typeOption) {
                 this.selectType(typeOption.dataset.value, parseInt(typeOption.dataset.level));
