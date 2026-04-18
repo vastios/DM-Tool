@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { MapPin, Users, Shield, Castle, Sword, Compass, BookOpen, Plus, Edit, Trash2, Search, ChevronRight, Map, Building, Trees, Mountain, Landmark, Home, Image as ImageIcon, X, Palette, Globe, Waves, Sun, Moon, Cloud, Castle as CastleIcon, Tent, Store, Church, Ship, Anchor } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { MapPin, Users, Shield, Castle, Sword, Compass, BookOpen, Plus, Edit, Trash2, Search, ChevronRight, Map, Building, Trees, Mountain, Landmark, Home, Image as ImageIcon, X, Palette, Globe, Waves, Sun, Moon, Cloud, Castle as CastleIcon, Tent, Store, Church, Ship, Anchor, ChevronDown, ChevronUp, DoorOpen, Warehouse, House, Hexagon } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -107,40 +107,122 @@ const subSections: Record<string, { id: string; label: string; hasTag?: boolean;
   ],
 }
 
-// Expanded location types with categories
-const locationTypes = [
-  // Insediamenti
-  { value: 'regno', label: 'Regno', icon: CastleIcon, category: 'Insediamenti' },
-  { value: 'citta', label: 'Città', icon: Building, category: 'Insediamenti' },
-  { value: 'villaggio', label: 'Villaggio', icon: Home, category: 'Insediamenti' },
-  { value: 'accampamento', label: 'Accampamento', icon: Tent, category: 'Insediamenti' },
-  { value: 'avamposto', label: 'Avamposto', icon: Store, category: 'Insediamenti' },
-  // Luoghi di interesse
-  { value: 'dungeon', label: 'Dungeon', icon: Landmark, category: 'Luoghi di Interesse' },
-  { value: 'rovine', label: 'Rovine', icon: Landmark, category: 'Luoghi di Interesse' },
-  { value: 'tempio', label: 'Tempio', icon: Church, category: 'Luoghi di Interesse' },
-  { value: 'torre', label: 'Torre', icon: Castle, category: 'Luoghi di Interesse' },
-  { value: 'nascondiglio', label: 'Nascondiglio', icon: Landmark, category: 'Luoghi di Interesse' },
-  // Natura
-  { value: 'foresta', label: 'Foresta', icon: Trees, category: 'Natura' },
-  { value: 'montagna', label: 'Montagna', icon: Mountain, category: 'Natura' },
-  { value: 'deserto', label: 'Deserto', icon: Sun, category: 'Natura' },
-  { value: 'pianura', label: 'Pianura', icon: Globe, category: 'Natura' },
-  { value: 'palude', label: 'Palude', icon: Waves, category: 'Natura' },
-  // Acqua
-  { value: 'mare', label: 'Mare', icon: Waves, category: 'Acqua' },
-  { value: 'lago', label: 'Lago', icon: Waves, category: 'Acqua' },
-  { value: 'fiume', label: 'Fiume', icon: Waves, category: 'Acqua' },
-  { value: 'porto', label: 'Porto', icon: Anchor, category: 'Acqua' },
-  { value: 'nave', label: 'Nave', icon: Ship, category: 'Acqua' },
-  // Piani dimensionali
-  { value: 'piano_materiale', label: 'Piano Materiale', icon: Globe, category: 'Piani' },
-  { value: 'piano_etereo', label: 'Piano Etereo', icon: Cloud, category: 'Piani' },
-  { value: 'piano_ombre', label: 'Piano delle Ombre', icon: Moon, category: 'Piani' },
-  { value: 'piano_elementale', label: 'Piano Elementale', icon: Waves, category: 'Piani' },
-  // Altro
-  { value: 'altro', label: 'Altro', icon: MapPin, category: 'Altro' },
+// ============================================
+// SISTEMA GERARCHICO A 7 LIVELLI
+// ============================================
+// Livello 1: Mondo (piani, mondi)
+// Livello 2: Regione (continenti, grandi aree)
+// Livello 3: Dominio (regni, nazioni)
+// Livello 4: Area (foreste, montagne, deserti)
+// Livello 5: Insediamento (città, villaggi)
+// Livello 6: Edificio (taverne, templi)
+// Livello 7: Stanza (camere, sotterranei)
+// ============================================
+
+const HIERARCHY_LEVELS = [
+  { level: 1, id: 'mondo', label: 'Mondo', description: 'Piani dimensionali, mondi interi', icon: Globe },
+  { level: 2, id: 'regione', label: 'Regione', description: 'Continenti, grandi aree geografiche', icon: Map },
+  { level: 3, id: 'dominio', label: 'Dominio', description: 'Regni, nazioni, territori', icon: Castle },
+  { level: 4, id: 'area', label: 'Area', description: 'Foreste, montagne, deserti, pianure', icon: Trees },
+  { level: 5, id: 'insediamento', label: 'Insediamento', description: 'Città, villaggi, accampamenti', icon: Building },
+  { level: 6, id: 'edificio', label: 'Edificio', description: 'Taverne, templi, palazzi', icon: Building },
+  { level: 7, id: 'stanza', label: 'Stanza', description: 'Camere, sotterranei, stanze', icon: DoorOpen },
 ]
+
+// Location types mapped to hierarchy levels
+const locationTypes = [
+  // Livello 1: Mondo
+  { value: 'piano_materiale', label: 'Piano Materiale', icon: Globe, level: 1 },
+  { value: 'piano_etereo', label: 'Piano Etereo', icon: Cloud, level: 1 },
+  { value: 'piano_ombre', label: 'Piano delle Ombre', icon: Moon, level: 1 },
+  { value: 'piano_elementale', label: 'Piano Elementale', icon: Waves, level: 1 },
+  { value: 'piano_astral', label: 'Piano Astrale', icon: Moon, level: 1 },
+  { value: 'mondo', label: 'Mondo', icon: Globe, level: 1 },
+  
+  // Livello 2: Regione
+  { value: 'continente', label: 'Continente', icon: Globe, level: 2 },
+  { value: 'regione', label: 'Regione', icon: Map, level: 2 },
+  { value: 'arcipelago', label: 'Arcipelago', icon: Globe, level: 2 },
+  { value: 'isola', label: 'Isola', icon: Globe, level: 2 },
+  
+  // Livello 3: Dominio
+  { value: 'regno', label: 'Regno', icon: Castle, level: 3 },
+  { value: 'nazione', label: 'Nazione', icon: Castle, level: 3 },
+  { value: 'provincia', label: 'Provincia', icon: Landmark, level: 3 },
+  { value: 'territorio', label: 'Territorio', icon: Map, level: 3 },
+  { value: 'dominio', label: 'Dominio', icon: Castle, level: 3 },
+  
+  // Livello 4: Area (geografica - dove si trovano gli insediamenti)
+  { value: 'foresta', label: 'Foresta', icon: Trees, level: 4 },
+  { value: 'montagna', label: 'Montagna', icon: Mountain, level: 4 },
+  { value: 'deserto', label: 'Deserto', icon: Sun, level: 4 },
+  { value: 'pianura', label: 'Pianura', icon: Globe, level: 4 },
+  { value: 'palude', label: 'Palude', icon: Waves, level: 4 },
+  { value: 'valle', label: 'Valle', icon: Mountain, level: 4 },
+  { value: 'collina', label: 'Collina', icon: Mountain, level: 4 },
+  { value: 'mare', label: 'Mare', icon: Waves, level: 4 },
+  { value: 'lago', label: 'Lago', icon: Waves, level: 4 },
+  { value: 'fiume', label: 'Fiume', icon: Waves, level: 4 },
+  { value: 'costa', label: 'Costa', icon: Waves, level: 4 },
+  { value: 'grotta', label: 'Grotta/Sistema di caverne', icon: Mountain, level: 4 },
+  
+  // Livello 5: Insediamento (città dentro aree geografiche)
+  { value: 'citta', label: 'Città', icon: Building, level: 5 },
+  { value: 'villaggio', label: 'Villaggio', icon: Home, level: 5 },
+  { value: 'paese', label: 'Paese', icon: Home, level: 5 },
+  { value: 'accampamento', label: 'Accampamento', icon: Tent, level: 5 },
+  { value: 'avamposto', label: 'Avamposto', icon: Tent, level: 5 },
+  { value: 'fortezza', label: 'Fortezza', icon: Castle, level: 5 },
+  { value: 'porto', label: 'Porto', icon: Anchor, level: 5 },
+  { value: 'nave', label: 'Nave', icon: Ship, level: 5 },
+  
+  // Livello 6: Edificio
+  { value: 'taverna', label: 'Taverna', icon: Warehouse, level: 6 },
+  { value: 'tempio', label: 'Tempio', icon: Church, level: 6 },
+  { value: 'palazzo', label: 'Palazzo', icon: Castle, level: 6 },
+  { value: 'torre', label: 'Torre', icon: Castle, level: 6 },
+  { value: 'castello', label: 'Castello', icon: Castle, level: 6 },
+  { value: 'negozio', label: 'Negozio', icon: Store, level: 6 },
+  { value: 'bottega', label: 'Bottega', icon: Store, level: 6 },
+  { value: 'caserma', label: 'Caserma', icon: Building, level: 6 },
+  { value: 'prigione', label: 'Prigione', icon: Building, level: 6 },
+  { value: 'biblioteca', label: 'Biblioteca', icon: BookOpen, level: 6 },
+  { value: 'magazzino', label: 'Magazzino', icon: Warehouse, level: 6 },
+  { value: 'casa', label: 'Casa', icon: House, level: 6 },
+  { value: 'municipio', label: 'Municipio', icon: Landmark, level: 6 },
+  { value: 'dungeon', label: 'Dungeon', icon: Landmark, level: 6 },
+  { value: 'rovine', label: 'Rovine', icon: Landmark, level: 6 },
+  { value: 'nascondiglio', label: 'Nascondiglio', icon: Warehouse, level: 6 },
+  { value: 'cimitero', label: 'Cimitero', icon: Landmark, level: 6 },
+  
+  // Livello 7: Stanza
+  { value: 'camera', label: 'Camera', icon: DoorOpen, level: 7 },
+  { value: 'cantina', label: 'Cantina', icon: Warehouse, level: 7 },
+  { value: 'sotterraneo', label: 'Sotterraneo', icon: Warehouse, level: 7 },
+  { value: 'prigione_stanza', label: 'Cella', icon: DoorOpen, level: 7 },
+  { value: 'salone', label: 'Salone', icon: DoorOpen, level: 7 },
+  { value: 'cucina', label: 'Cucina', icon: Home, level: 7 },
+  { value: 'cripta', label: 'Cripta', icon: Warehouse, level: 7 },
+  { value: 'laboratorio', label: 'Laboratorio', icon: BookOpen, level: 7 },
+  { value: 'stanza_tesoro', label: 'Stanza del Tesoro', icon: DoorOpen, level: 7 },
+  { value: 'altare', label: 'Altare', icon: Church, level: 7 },
+  
+  // Altro (senza livello specifico)
+  { value: 'altro', label: 'Altro', icon: MapPin, level: 0 },
+]
+
+// Helper: get hierarchy info for a location type
+const getHierarchyInfo = (typeValue: string | undefined) => {
+  const type = locationTypes.find(t => t.value === typeValue)
+  if (!type) return { level: 0, levelInfo: null }
+  const levelInfo = HIERARCHY_LEVELS.find(l => l.level === type.level)
+  return { level: type.level, levelInfo }
+}
+
+// Helper: get types by level
+const getTypesByLevel = (level: number) => {
+  return locationTypes.filter(t => t.level === level)
+}
 
 // Predefined tag colors
 const predefinedTagColors = [
@@ -374,7 +456,31 @@ export default function DMTool() {
 
   // Get location type info
   const getLocationTypeInfo = (type?: string) => {
-    return locationTypes.find(t => t.value === type) || { label: type, icon: MapPin, category: '' }
+    const found = locationTypes.find(t => t.value === type)
+    if (found) return found
+    return { value: type, label: type, icon: MapPin, level: 0 }
+  }
+  
+  // Get hierarchy level info
+  const getLevelInfo = (level: number) => {
+    return HIERARCHY_LEVELS.find(l => l.level === level) || null
+  }
+  
+  // Get valid parent levels (lower than current)
+  const getValidParentLevels = (currentLevel: number) => {
+    if (currentLevel === 0) return HIERARCHY_LEVELS // Se non ha livello, qualsiasi padre è valido
+    return HIERARCHY_LEVELS.filter(l => l.level < currentLevel)
+  }
+  
+  // Filter available parents based on hierarchy
+  const getValidParents = (currentType?: string) => {
+    const { level: currentLevel } = getHierarchyInfo(currentType)
+    if (currentLevel === 0) return availableParents
+    
+    return availableParents.filter(loc => {
+      const { level: parentLevel } = getHierarchyInfo(loc.type)
+      return parentLevel < currentLevel || parentLevel === 0
+    })
   }
 
   return (
@@ -524,7 +630,7 @@ export default function DMTool() {
                           />
                         </div>
                         
-                        {/* Tipo */}
+                        {/* Tipo con gerarchia */}
                         <div className="grid gap-2">
                           <Label htmlFor="type">Tipo</Label>
                           <Select
@@ -532,29 +638,61 @@ export default function DMTool() {
                             onValueChange={(value) => setFormData(prev => ({ ...prev, type: value }))}
                           >
                             <SelectTrigger>
-                              <SelectValue placeholder="Seleziona tipo" />
+                              <SelectValue placeholder="Seleziona tipo (livello gerarchico)" />
                             </SelectTrigger>
                             <SelectContent className="max-h-80">
-                              {Array.from(new Set(locationTypes.map(t => t.category))).map(category => (
-                                <div key={category}>
-                                  <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground bg-muted/50">
-                                    {category}
+                              {HIERARCHY_LEVELS.map(levelInfo => {
+                                const typesAtLevel = getTypesByLevel(levelInfo.level)
+                                if (typesAtLevel.length === 0) return null
+                                const LevelIcon = levelInfo.icon
+                                return (
+                                  <div key={levelInfo.level}>
+                                    <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground bg-muted/50 flex items-center gap-2">
+                                      <LevelIcon className="h-3 w-3" />
+                                      <span>Liv. {levelInfo.level}: {levelInfo.label}</span>
+                                      <span className="text-[10px] opacity-60">({levelInfo.description})</span>
+                                    </div>
+                                    {typesAtLevel.map(type => (
+                                      <SelectItem key={type.value} value={type.value}>
+                                        <div className="flex items-center gap-2">
+                                          <type.icon className="h-4 w-4" />
+                                          {type.label}
+                                        </div>
+                                      </SelectItem>
+                                    ))}
                                   </div>
-                                  {locationTypes.filter(t => t.category === category).map(type => (
-                                    <SelectItem key={type.value} value={type.value}>
-                                      <div className="flex items-center gap-2">
-                                        <type.icon className="h-4 w-4" />
-                                        {type.label}
-                                      </div>
-                                    </SelectItem>
-                                  ))}
+                                )
+                              })}
+                              {/* Altro */}
+                              <div>
+                                <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground bg-muted/50">
+                                  Altro
                                 </div>
-                              ))}
+                                {locationTypes.filter(t => t.level === 0).map(type => (
+                                  <SelectItem key={type.value} value={type.value}>
+                                    <div className="flex items-center gap-2">
+                                      <type.icon className="h-4 w-4" />
+                                      {type.label}
+                                    </div>
+                                  </SelectItem>
+                                ))}
+                              </div>
                             </SelectContent>
                           </Select>
+                          {formData.type && (
+                            <p className="text-xs text-muted-foreground">
+                              {(() => {
+                                const { level, levelInfo } = getHierarchyInfo(formData.type)
+                                if (levelInfo) {
+                                  return `Livello ${level}: ${levelInfo.label} - ${levelInfo.description}`
+                                }
+                                return 'Tipo senza livello gerarchico'
+                              })()}
+                            </p>
+                          )}
                         </div>
 
-                        {/* Luogo Padre */}
+                        {/* Luogo Padre - filtrato per gerarchia */}
                         <div className="grid gap-2">
                           <Label htmlFor="parentId">Luogo Padre</Label>
                           <Select
@@ -562,29 +700,48 @@ export default function DMTool() {
                             onValueChange={(value) => setFormData(prev => ({ ...prev, parentId: value === 'none' ? '' : value }))}
                           >
                             <SelectTrigger>
-                              <SelectValue placeholder="Seleziona luogo padre (opzionale)" />
+                              <SelectValue placeholder="Seleziona luogo padre (livello superiore)" />
                             </SelectTrigger>
                             <SelectContent>
                               <SelectItem value="none">
-                                <span className="text-muted-foreground">Nessun padre</span>
+                                <span className="text-muted-foreground">Nessun padre (livello radice)</span>
                               </SelectItem>
-                              {availableParents.map(loc => (
-                                <SelectItem key={loc.id} value={loc.id}>
-                                  <div className="flex items-center gap-2">
-                                    <MapPin className="h-4 w-4" />
-                                    {loc.name}
-                                    {loc.type && (
-                                      <Badge variant="outline" className="text-xs">
-                                        {locationTypes.find(t => t.value === loc.type)?.label || loc.type}
-                                      </Badge>
-                                    )}
+                              {(() => {
+                                const validParents = getValidParents(formData.type)
+                                const parentsByLevel = HIERARCHY_LEVELS.map(level => ({
+                                  level,
+                                  parents: validParents.filter(loc => {
+                                    const { level: locLevel } = getHierarchyInfo(loc.type)
+                                    return locLevel === level.level
+                                  })
+                                })).filter(g => g.parents.length > 0)
+                                
+                                return parentsByLevel.map(({ level, parents }) => (
+                                  <div key={level.level}>
+                                    <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground bg-muted/50 flex items-center gap-1">
+                                      <level.icon className="h-3 w-3" />
+                                      Liv. {level.level}: {level.label}
+                                    </div>
+                                    {parents.map(loc => (
+                                      <SelectItem key={loc.id} value={loc.id}>
+                                        <div className="flex items-center gap-2">
+                                          <MapPin className="h-4 w-4" />
+                                          {loc.name}
+                                          {loc.type && (
+                                            <Badge variant="outline" className="text-xs">
+                                              {locationTypes.find(t => t.value === loc.type)?.label || loc.type}
+                                            </Badge>
+                                          )}
+                                        </div>
+                                      </SelectItem>
+                                    ))}
                                   </div>
-                                </SelectItem>
-                              ))}
+                                ))
+                              })()}
                             </SelectContent>
                           </Select>
                           <p className="text-xs text-muted-foreground">
-                            Es: una città dentro un regno, una foresta dentro una regione
+                            Un luogo può avere come padre solo luoghi di livello superiore
                           </p>
                         </div>
 
@@ -906,9 +1063,24 @@ export default function DMTool() {
                             </div>
                             <div>
                               <CardTitle className="text-lg">{location.name}</CardTitle>
-                              {location.type && (
-                                <CardDescription>{typeInfo.label}</CardDescription>
-                              )}
+                              <div className="flex items-center gap-2 flex-wrap">
+                                {location.type && (
+                                  <CardDescription>{typeInfo.label}</CardDescription>
+                                )}
+                                {(() => {
+                                  const { level, levelInfo } = getHierarchyInfo(location.type)
+                                  if (level > 0 && levelInfo) {
+                                    const LevelIcon = levelInfo.icon
+                                    return (
+                                      <Badge variant="outline" className="text-[10px] px-1 py-0 h-4">
+                                        <LevelIcon className="h-2.5 w-2.5 mr-1" />
+                                        Liv. {level}
+                                      </Badge>
+                                    )
+                                  }
+                                  return null
+                                })()}
+                              </div>
                             </div>
                           </div>
                           <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
