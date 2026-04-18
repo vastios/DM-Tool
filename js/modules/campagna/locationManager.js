@@ -164,22 +164,179 @@ const LOCATION_HIERARCHY = {
     }
 };
 
-// Colori predefiniti per i tag
-const PREDEFINED_TAG_COLORS = [
-    '#dc2626', '#ea580c', '#d97706', '#ca8a04', '#65a30d', 
-    '#16a34a', '#059669', '#0d9488', '#0891b2', '#0284c7',
-    '#2563eb', '#4f46e5', '#7c3aed', '#9333ea', '#c026d3',
-    '#db2777', '#e11d48', '#78716c', '#57534e', '#1f2937'
-];
+// ═══════════════════════════════════════════════════════════════
+// SISTEMA TAG CATEGORIZZATO
+// ═══════════════════════════════════════════════════════════════
 
-// Tag predefiniti per i luoghi
-const DEFAULT_LOCATION_TAGS = [
-    { id: 'visitato', name: 'Visitato', color: '#16a34a' },
-    { id: 'segreto', name: 'Segreto', color: '#7c3aed' },
-    { id: 'pericoloso', name: 'Pericoloso', color: '#dc2626' },
-    { id: 'sicuro', name: 'Zona Sicura', color: '#059669' },
-    { id: 'merce', name: 'Mercanzia', color: '#ca8a04' },
-];
+// Categorie di tag con icone e colori
+const TAG_CATEGORIES = {
+    status: {
+        name: 'Status',
+        icon: '📍',
+        color: '#3b82f6', // blu
+        tags: [
+            { id: 'visitato', name: 'Visitato' },
+            { id: 'da_esplorare', name: 'Da Esplorare' },
+            { id: 'abbandonato', name: 'Abbandonato' },
+            { id: 'attivo', name: 'Attivo' }
+        ]
+    },
+    pericolo: {
+        name: 'Pericolo',
+        icon: '⚠️',
+        color: '#ef4444', // rosso
+        tags: [
+            { id: 'sicuro', name: 'Sicuro' },
+            { id: 'neutrale', name: 'Neutrale' },
+            { id: 'pericoloso', name: 'Pericoloso' },
+            { id: 'ostile', name: 'Ostile' },
+            { id: 'letale', name: 'Letale' }
+        ]
+    },
+    proprieta: {
+        name: 'Proprietà',
+        icon: '🏷️',
+        color: '#f59e0b', // arancione
+        tags: [
+            { id: 'segreto', name: 'Segreto' },
+            { id: 'mercanzia', name: 'Mercanzia' },
+            { id: 'risorse', name: 'Risorse' },
+            { id: 'informazioni', name: 'Informazioni' },
+            { id: 'quest', name: 'Quest' }
+        ]
+    },
+    atmosfera: {
+        name: 'Atmosfera',
+        icon: '🎭',
+        color: '#8b5cf6', // viola
+        tags: [
+            { id: 'mistico', name: 'Mistico' },
+            { id: 'tetro', name: 'Tetro' },
+            { id: 'accogliente', name: 'Accogliente' },
+            { id: 'caotico', name: 'Caotico' },
+            { id: 'pacifico', name: 'Pacifico' }
+        ]
+    }
+};
+
+// Colori per livelli di pericolo (usati per calcolo automatico)
+const PERICOLO_COLORS = {
+    'sicuro': '#22c55e',      // verde
+    'neutrale': '#6b7280',    // grigio
+    'pericoloso': '#f97316',  // arancione
+    'ostile': '#ef4444',      // rosso
+    'letale': '#7f1d1d'       // rosso scuro
+};
+
+// Mapping automatico tipo → tag suggeriti
+const AUTO_TAG_MAPPING = {
+    // LIVELLO 1 - Mondo
+    'continente': ['neutrale', 'pacifico'],
+    'piano_materiale': ['neutrale'],
+    'piano_etereo': ['mistico', 'pericoloso'],
+    'piano_ombre': ['tetro', 'pericoloso', 'mistico'],
+    'piano_elementale': ['pericoloso', 'mistico'],
+    'piano_feywild': ['mistico', 'accogliente'],
+    'piano_inferi': ['ostile', 'tetro', 'letale'],
+    'piano_celestiale': ['sicuro', 'mistico', 'pacifico'],
+    
+    // LIVELLO 2 - Regione
+    'regione': ['neutrale'],
+    'mare': ['pericoloso', 'pacifico'],
+    'arcipelago': ['neutrale'],
+    'catena_montuosa': ['pericoloso', 'tetro'],
+    'grande_foresta': ['neutrale', 'pacifico'],
+    'deserto': ['pericoloso'],
+    
+    // LIVELLO 3 - Dominio
+    'regno': ['neutrale', 'risorse'],
+    'nazione': ['neutrale'],
+    'provincia': ['neutrale'],
+    'territorio': ['neutrale'],
+    'marchesato': ['neutrale'],
+    'ducato': ['neutrale'],
+    'confederazione': ['neutrale', 'mercanzia'],
+    
+    // LIVELLO 4 - Insediamento
+    'capitale': ['sicuro', 'mercanzia', 'quest', 'accogliente'],
+    'citta': ['sicuro', 'mercanzia', 'informazioni'],
+    'villaggio': ['sicuro', 'accogliente'],
+    'borgo': ['neutrale', 'accogliente'],
+    'fortezza': ['sicuro', 'risorse'],
+    'porto': ['neutrale', 'mercanzia'],
+    'accampamento': ['neutrale', 'attivo'],
+    'avamposto': ['neutrale', 'attivo'],
+    'dungeon': ['pericoloso', 'da_esplorare', 'tetro'],
+    'rovine': ['pericoloso', 'abbandonato', 'da_esplorare'],
+    
+    // LIVELLO 5 - Area
+    'foresta': ['neutrale', 'pacifico'],
+    'lago': ['neutrale', 'pacifico'],
+    'fiume': ['neutrale'],
+    'montagna': ['pericoloso'],
+    'palude': ['pericoloso', 'tetro'],
+    'valle': ['neutrale', 'pacifico'],
+    'pianura': ['neutrale', 'pacifico'],
+    'grotta': ['pericoloso', 'tetro', 'da_esplorare'],
+    'canyon': ['pericoloso'],
+    'isola': ['neutrale'],
+    'tempio_isolato': ['mistico', 'neutrale'],
+    'torre': ['mistico', 'neutrale'],
+    'nascondiglio': ['segreto', 'neutrale'],
+    
+    // LIVELLO 6 - Edificio
+    'locanda': ['sicuro', 'accogliente', 'informazioni'],
+    'taverna': ['sicuro', 'accogliente', 'informazioni'],
+    'negozio': ['sicuro', 'mercanzia'],
+    'tempio': ['neutrale', 'mistico'],
+    'castello': ['sicuro', 'risorse'],
+    'palazzo': ['sicuro', 'accogliente'],
+    'magazzino': ['neutrale', 'mercanzia'],
+    'casa': ['sicuro'],
+    'cripta': ['pericoloso', 'tetro', 'segreto'],
+    'gilda': ['neutrale', 'informazioni', 'quest'],
+    'prigione': ['ostile', 'segreto'],
+    'biblioteca': ['sicuro', 'informazioni', 'mistico'],
+    'forgia': ['neutrale', 'mercanzia'],
+    'laboratorio': ['neutrale', 'mistico'],
+    'caserma': ['sicuro'],
+    
+    // LIVELLO 7 - Stanza
+    'sala': ['neutrale'],
+    'camera': ['neutrale'],
+    'corridoio': ['neutrale'],
+    'cantina': ['neutrale', 'tetro'],
+    'sotterraneo': ['pericoloso', 'tetro'],
+    'passaggio': ['segreto', 'neutrale'],
+    'atrio': ['sicuro'],
+    'cucina': ['neutrale'],
+    'scriptorium': ['mistico', 'informazioni'],
+    'armeria': ['neutrale', 'risorse'],
+    'tesoreria': ['segreto', 'risorse']
+};
+
+// Genera la lista piatta di tutti i tag con categorie
+function generateAllTags() {
+    const allTags = [];
+    for (const [catId, catData] of Object.entries(TAG_CATEGORIES)) {
+        catData.tags.forEach(tag => {
+            allTags.push({
+                id: tag.id,
+                name: tag.name,
+                category: catId,
+                categoryName: catData.name,
+                categoryIcon: catData.icon,
+                color: catId === 'pericolo' ? (PERICOLO_COLORS[tag.id] || catData.color) : catData.color
+            });
+        });
+    }
+    return allTags;
+}
+
+// Ottiene i tag suggeriti per un tipo di luogo
+function getSuggestedTagsForType(typeValue) {
+    return AUTO_TAG_MAPPING[typeValue] || [];
+}
 
 // ═══════════════════════════════════════════════════════════════
 // STORAGE
@@ -240,14 +397,29 @@ function saveTags(tags) {
 }
 
 function loadTags() {
+    // I tag base sono sempre generati dal sistema
+    const baseTags = generateAllTags();
     const storageKey = getTagsStorageKey();
-    if (!storageKey) return [...DEFAULT_LOCATION_TAGS];
+    
+    if (!storageKey) return baseTags;
+    
     try {
         const saved = localStorage.getItem(storageKey);
-        return saved ? JSON.parse(saved) : [...DEFAULT_LOCATION_TAGS];
+        if (saved) {
+            const customTags = JSON.parse(saved);
+            // Merge: base tags + custom tags (senza duplicati)
+            const allTags = [...baseTags];
+            customTags.forEach(ct => {
+                if (!allTags.find(t => t.id === ct.id)) {
+                    allTags.push(ct);
+                }
+            });
+            return allTags;
+        }
     } catch {
-        return [...DEFAULT_LOCATION_TAGS];
+        // ignore
     }
+    return baseTags;
 }
 
 function saveCustomTypes(customTypes) {
@@ -1092,14 +1264,45 @@ ${this.getStyles()}
     font-size: 0.75rem;
 }
 
-.location-status.visited {
-    background: rgba(22, 163, 74, 0.2);
-    color: #16a34a;
+/* Tags categories */
+.location-tags-categories {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
-.location-status.not-visited {
-    background: rgba(107, 114, 128, 0.2);
-    color: #6b7280;
+.tag-category {
+    background: var(--bg-tertiary, #2a2a2a);
+    border-radius: 8px;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color, #333);
+}
+
+.tag-category-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color, #444);
+}
+
+.tag-category-icon {
+    font-size: 1rem;
+}
+
+.tag-category-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    color: var(--text-primary, #fff);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.tag-category-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
 }
 
 /* Tags editor */
@@ -1119,9 +1322,17 @@ ${this.getStyles()}
     font-size: 0.8rem;
     cursor: pointer;
     transition: all 0.2s;
+    border: 1px solid transparent;
 }
 
-.location-tag-badge.selected { color: #fff; }
+.location-tag-badge:hover {
+    transform: scale(1.05);
+}
+
+.location-tag-badge.selected { 
+    color: #fff; 
+    border-color: transparent;
+}
 
 .location-tag-badge:not(.selected) {
     background: transparent !important;
@@ -1423,10 +1634,6 @@ ${this.getStyles()}
                     <img src="${escapeHtml(location.imageUrl)}" alt="${escapeHtml(location.name)}" class="location-viewer-image" onerror="this.style.display='none'">
                 ` : ''}
                 
-                <div class="location-status ${location.isVisited ? 'visited' : 'not-visited'}">
-                    ${location.isVisited ? '✅ Visitato' : '❓ Non ancora visitato'}
-                </div>
-                
                 ${tags.length > 0 ? `
                     <div class="location-viewer-section">
                         <h4>🏷️ Tag</h4>
@@ -1605,13 +1812,6 @@ ${this.getStyles()}
                         <textarea id="loc-secrets" rows="4" placeholder="Informazioni nascoste...">${escapeHtml(location?.secrets || '')}</textarea>
                         <small class="link-hint">💡 Scrivi <code>@Nome</code> per linkare PNG, luoghi, fazioni, ecc.</small>
                     </div>
-                    
-                    <div class="location-form-group">
-                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-                            <input type="checkbox" id="loc-visited" ${location?.isVisited ? 'checked' : ''}>
-                            Già visitato dal party
-                        </label>
-                    </div>
                 </div>
                 
                 <!-- TAB COLLEGAMENTI -->
@@ -1659,21 +1859,12 @@ ${this.getStyles()}
                 
                 <!-- TAB TAG -->
                 <div class="location-tab-content" id="tab-tags">
-                    <div class="location-form-group">
-                        <label>🏷️ Tag Esistenti</label>
-                        <div class="location-tags-editor" id="tags-editor">
-                            ${this.tags.map(tag => `
-                                <span class="location-tag-badge ${this.selectedTags.includes(tag.id) ? 'selected' : ''}" 
-                                      data-tag-id="${tag.id}"
-                                      style="background: ${this.selectedTags.includes(tag.id) ? tag.color : 'transparent'}; border-color: ${tag.color}; color: ${this.selectedTags.includes(tag.id) ? '#fff' : tag.color};">
-                                    ${escapeHtml(tag.name)}
-                                </span>
-                            `).join('')}
-                        </div>
+                    <div class="location-tags-categories" id="tags-editor">
+                        ${this.renderTagsByCategory()}
                     </div>
                     
-                    <div class="location-form-group">
-                        <label>➕ Nuovo Tag</label>
+                    <div class="location-form-group" style="margin-top: 1rem;">
+                        <label>➕ Nuovo Tag Personalizzato</label>
                         <div style="display: flex; gap: 0.5rem;">
                             <input type="text" id="new-tag-name" placeholder="Nome tag" style="flex: 1; padding: 0.4rem; background: var(--input-bg, #333); border: 1px solid var(--border-color, #444); border-radius: 4px; color: var(--text-primary, #fff);">
                             <input type="color" id="new-tag-color" value="#0891b2" style="width: 40px; height: 32px; padding: 2px; cursor: pointer;">
@@ -2033,6 +2224,61 @@ ${this.getStyles()}
         });
     },
     
+    renderTagsByCategory() {
+        // Raggruppa i tag per categoria
+        const customTags = this.tags.filter(t => !t.category); // Tag personalizzati senza categoria
+        
+        let html = '';
+        
+        // Renderizza ogni categoria
+        for (const [catId, catData] of Object.entries(TAG_CATEGORIES)) {
+            const catTags = this.tags.filter(t => t.category === catId);
+            if (catTags.length === 0) continue;
+            
+            html += `
+                <div class="tag-category">
+                    <div class="tag-category-header">
+                        <span class="tag-category-icon">${catData.icon}</span>
+                        <span class="tag-category-name">${catData.name}</span>
+                    </div>
+                    <div class="tag-category-tags">
+                        ${catTags.map(tag => `
+                            <span class="location-tag-badge ${this.selectedTags.includes(tag.id) ? 'selected' : ''}" 
+                                  data-tag-id="${tag.id}"
+                                  data-category="${catId}"
+                                  style="background: ${this.selectedTags.includes(tag.id) ? tag.color : 'transparent'}; border-color: ${tag.color}; color: ${this.selectedTags.includes(tag.id) ? '#fff' : tag.color};">
+                                ${escapeHtml(tag.name)}
+                            </span>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Tag personalizzati
+        if (customTags.length > 0) {
+            html += `
+                <div class="tag-category">
+                    <div class="tag-category-header">
+                        <span class="tag-category-icon">⭐</span>
+                        <span class="tag-category-name">Personalizzati</span>
+                    </div>
+                    <div class="tag-category-tags">
+                        ${customTags.map(tag => `
+                            <span class="location-tag-badge ${this.selectedTags.includes(tag.id) ? 'selected' : ''}" 
+                                  data-tag-id="${tag.id}"
+                                  style="background: ${this.selectedTags.includes(tag.id) ? tag.color : 'transparent'}; border-color: ${tag.color}; color: ${this.selectedTags.includes(tag.id) ? '#fff' : tag.color};">
+                                ${escapeHtml(tag.name)}
+                            </span>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+        
+        return html;
+    },
+    
     renderLinksEditor() {
         const npcEditor = this.container.querySelector('#npc-links-editor');
         const factionEditor = this.container.querySelector('#faction-links-editor');
@@ -2154,8 +2400,39 @@ ${this.getStyles()}
         // Update parent dropdown with compatible parents
         this.updateParentDropdown(typeValue);
         
+        // Auto-assign suggested tags for this type
+        this.autoAssignTagsForType(typeValue);
+        
         this.closeTypePopup();
         showToast(`Tipo selezionato: ${typeInfo.label} (Livello ${level})`, 'success');
+    },
+    
+    autoAssignTagsForType(typeValue) {
+        const suggestedTagIds = getSuggestedTagsForType(typeValue);
+        if (suggestedTagIds.length === 0) return;
+        
+        // Aggiungi i tag suggeriti se non già presenti
+        let addedCount = 0;
+        suggestedTagIds.forEach(tagId => {
+            if (!this.selectedTags.includes(tagId)) {
+                // Verifica che il tag esista
+                const tag = this.tags.find(t => t.id === tagId);
+                if (tag) {
+                    this.selectedTags.push(tagId);
+                    addedCount++;
+                }
+            }
+        });
+        
+        // Aggiorna la UI dei tag
+        const tagsEditor = this.container.querySelector('#tags-editor');
+        if (tagsEditor) {
+            tagsEditor.innerHTML = this.renderTagsByCategory();
+        }
+        
+        if (addedCount > 0) {
+            showToast(`Tag suggeriti assegnati: ${addedCount}`, 'info');
+        }
     },
     
     updateParentDropdown(typeValue) {
@@ -2219,7 +2496,6 @@ ${this.getStyles()}
         const inhabitants = this.container.querySelector('#loc-inhabitants')?.value.trim();
         const poi = this.container.querySelector('#loc-poi')?.value.trim();
         const secrets = this.container.querySelector('#loc-secrets')?.value.trim();
-        const isVisited = this.container.querySelector('#loc-visited')?.checked || false;
         
         if (!name) {
             showToast('Il nome del luogo è obbligatorio', 'error');
@@ -2239,7 +2515,6 @@ ${this.getStyles()}
             inhabitants,
             pointsofinterest: poi,
             secrets,
-            isVisited,
             tags: [...this.selectedTags],
             linkedNpcs: [...this.linkedNpcs],
             linkedFactions: [...this.linkedFactions],
