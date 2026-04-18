@@ -1653,25 +1653,11 @@ ${this.getStyles()}
         // Type popup
         this.container.querySelector('#type-popup-overlay')?.addEventListener('click', () => this.closeTypePopup());
         this.container.querySelector('#close-type-popup')?.addEventListener('click', () => this.closeTypePopup());
-    },
-    
-    bindEditorEvents() {
-        // Tabs
-        this.container.querySelectorAll('.location-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                this.container.querySelectorAll('.location-tab').forEach(t => t.classList.remove('active'));
-                this.container.querySelectorAll('.location-tab-content').forEach(c => c.classList.remove('active'));
-                tab.classList.add('active');
-                this.container.querySelector(`#tab-${tab.dataset.tab}`)?.classList.add('active');
-            });
-        });
         
-        // Open type popup
-        this.container.querySelector('#open-type-popup')?.addEventListener('click', () => this.openTypePopup());
-        
-        // Accordion headers
+        // Accordion headers - Level collapse/expand
         this.container.querySelectorAll('.location-level-header').forEach(header => {
-            header.addEventListener('click', () => {
+            header.addEventListener('click', (e) => {
+                e.stopPropagation();
                 const level = header.dataset.level;
                 const isActive = header.classList.contains('active');
                 
@@ -1687,7 +1673,7 @@ ${this.getStyles()}
             });
         });
         
-        // Type selection
+        // Type selection in popup
         this.container.querySelector('#type-popup-content')?.addEventListener('click', (e) => {
             const typeOption = e.target.closest('.location-type-option');
             if (typeOption) {
@@ -1723,6 +1709,21 @@ ${this.getStyles()}
                 return;
             }
         });
+    },
+    
+    bindEditorEvents() {
+        // Tabs
+        this.container.querySelectorAll('.location-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                this.container.querySelectorAll('.location-tab').forEach(t => t.classList.remove('active'));
+                this.container.querySelectorAll('.location-tab-content').forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                this.container.querySelector(`#tab-${tab.dataset.tab}`)?.classList.add('active');
+            });
+        });
+        
+        // Open type popup
+        this.container.querySelector('#open-type-popup')?.addEventListener('click', () => this.openTypePopup());
         
         // Tags
         this.container.querySelector('#tags-editor')?.addEventListener('click', (e) => {
