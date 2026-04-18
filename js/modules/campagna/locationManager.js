@@ -22,6 +22,7 @@ import { getCurrentCampaignId } from '../../../stateManager.js';
 import { showToast } from '../../../utils/toast.js';
 import { escapeHtml } from '../../../utils/htmlHelpers.js';
 import { linkifyCampaignReferences } from '../../../utils/campaignLinker.js';
+import { initAutocomplete } from '../../../utils/autocomplete.js';
 
 // ═══════════════════════════════════════════════════════════════
 // GERARCHIA DEI LUOGHI - 7 LIVELLI
@@ -1168,8 +1169,14 @@ ${this.getStyles()}
     color: var(--text-primary, #fff);
 }
 
-.tree-toggle.expanded {
-    transform: rotate(90deg);
+.tree-toggle:not(.expanded) {
+    transform: rotate(-90deg);
+}
+
+.tree-spacer {
+    display: inline-block;
+    width: 14px;
+    margin-right: 0.25rem;
 }
 
 /* Tree node */
@@ -1327,11 +1334,11 @@ ${this.getStyles()}
             const hasChildren = node.children && node.children.length > 0;
             
             return `
-                <div class="location-tree-node" data-level="${node.typeInfo?.level || 0}">
+                <div class="location-tree-node" data-level="${node.typeInfo?.level || 0}" data-node-id="${node.id}">
                     <div class="location-list-item ${isSelected ? 'selected' : ''}" data-location-id="${node.id}" style="margin-left: ${indent}px;">
                         <div class="location-list-item-header">
                             <span class="location-list-item-name">
-                                ${hasChildren ? '<span class="tree-toggle" data-location-id="' + node.id + '">▶</span>' : ''}
+                                ${hasChildren ? '<span class="tree-toggle expanded" data-location-id="' + node.id + '">▼</span>' : '<span class="tree-spacer"></span>'}
                                 ${escapeHtml(node.name || 'Senza Nome')}
                             </span>
                             <div style="display: flex; gap: 0.3rem;">
@@ -1720,23 +1727,43 @@ ${this.getStyles()}
             const treeToggle = e.target.closest('.tree-toggle');
             if (treeToggle && !e.target.closest('button')) {
                 e.stopPropagation();
-                const toggleId = treeToggle.dataset.locationId;
-                const treeNode = treeToggle.closest('.location-tree-node');
-                const childNodes = treeNode?.querySelectorAll(':scope > .location-tree-node');
                 
-                treeToggle.classList.toggle('expanded');
-                childNodes?.forEach(child => {
-                    const childItem = child.querySelector('.location-list-item');
-                    if (childItem) {
-                        childItem.style.display = treeToggle.classList.contains('expanded') ? '' : 'none';
+                const treeNode = treeToggle.closest('.location-tree-node');
+                if (!treeNode) return;
+                
+                const isExpanded = treeToggle.classList.contains('expanded');
+                treeToggle.classList.toggle('expanded', !isExpanded);
+                treeToggle.textContent = isExpanded ? '▶' : '▼';
+                
+                // Trova tutti i nodi figli diretti
+                const childTreeNodes = [];
+                const allChildren = treeNode.querySelectorAll('.location-tree-node');
+                allChildren.forEach(child => {
+                    if (child.parentElement === treeNode) {
+                        childTreeNodes.push(child);
                     }
-                    // Hide nested children too
-                    const nestedNodes = child.querySelectorAll('.location-tree-node');
-                    nestedNodes.forEach(nested => {
-                        const nestedItem = nested.querySelector('.location-list-item');
-                        if (nestedItem) nestedItem.style.display = treeToggle.classList.contains('expanded') ? '' : 'none';
-                    });
                 });
+                
+                // Toggle visibility
+                function toggleNodeVisibility(node, hide) {
+                    const item = node.querySelector(':scope > .location-list-item');
+                    if (item) {
+                        item.style.display = hide ? 'none' : '';
+                    }
+                    // Ricorsivamente nascondi tutti i discendenti
+                    const descendants = node.querySelectorAll('.location-tree-node');
+                    descendants.forEach(desc => {
+                        const descItem = desc.querySelector(':scope > .location-list-item');
+                        if (descItem) {
+                            descItem.style.display = hide ? 'none' : '';
+                        }
+                    });
+                }
+                
+                childTreeNodes.forEach(child => {
+                    toggleNodeVisibility(child, isExpanded);
+                });
+                
                 return;
             }
             
@@ -1987,6 +2014,21 @@ ${this.getStyles()}
         this.container.querySelector('#faction-links-editor')?.addEventListener('change', (e) => {
             if (e.target.classList.contains('faction-select') || e.target.classList.contains('faction-desc')) {
                 this.updateLinkedFactionsFromUI();
+            }
+        });
+        
+        // Initialize autocomplete on text fields
+        const textFields = [
+            '#loc-description',
+            '#loc-inhabitants', 
+            '#loc-poi',
+            '#loc-secrets'
+        ];
+        
+        textFields.forEach(selector => {
+            const field = this.container.querySelector(selector);
+            if (field) {
+                initAutocomplete(field);
             }
         });
     },
