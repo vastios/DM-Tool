@@ -1153,6 +1153,70 @@ ${this.getStyles()}
     color: var(--text-primary, #fff);
 }
 
+/* Tree toggle */
+.tree-toggle {
+    display: inline-block;
+    width: 14px;
+    font-size: 0.6rem;
+    color: var(--text-muted, #888);
+    cursor: pointer;
+    transition: transform 0.2s;
+    margin-right: 0.25rem;
+}
+
+.tree-toggle:hover {
+    color: var(--text-primary, #fff);
+}
+
+.tree-toggle.expanded {
+    transform: rotate(90deg);
+}
+
+/* Tree node */
+.location-tree-node {
+    position: relative;
+}
+
+.location-tree-node .location-list-item {
+    border-left: 2px solid transparent;
+    transition: border-color 0.2s;
+}
+
+.location-tree-node .location-list-item:hover {
+    border-left-color: #0891b2;
+}
+
+/* Campaign links */
+.campaign-link {
+    color: #0891b2;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    transition: all 0.2s;
+}
+
+.campaign-link:hover {
+    color: #22d3ee;
+    text-decoration-style: solid;
+}
+
+/* Link hint */
+.link-hint {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-muted, #888);
+    margin-top: 0.25rem;
+    font-family: 'Lora', serif;
+}
+
+.link-hint code {
+    background: var(--bg-tertiary, #333);
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+    color: #0891b2;
+    font-family: monospace;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .location-manager-layout { flex-direction: column; }
@@ -1222,45 +1286,78 @@ ${this.getStyles()}
             return;
         }
         
-        const sorted = [...filtered].sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+        // Costruisci struttura gerarchica
+        const tree = this.buildLocationTree(filtered);
+        list.innerHTML = this.renderLocationTree(tree, 0);
+    },
+    
+    // Costruisce l'albero dei luoghi
+    buildLocationTree(locations, parentId = null) {
+        const children = locations.filter(loc => 
+            (parentId === null && !loc.parentId) || 
+            loc.parentId === parentId
+        );
         
-        list.innerHTML = sorted.map(loc => {
-            const parentLocation = loc.parentId ? this.locations.find(l => l.id === loc.parentId) : null;
+        return children.map(loc => {
             const typeInfo = getTypeInfo(loc.type, this.customTypes);
-            const tags = (loc.tags || []).map(tagId => this.tags.find(t => t.id === tagId)).filter(Boolean);
-            const isSelected = loc.id === this.currentEditingId;
+            const childLocations = this.buildLocationTree(locations, loc.id);
+            
+            return {
+                ...loc,
+                typeInfo,
+                children: childLocations
+            };
+        }).sort((a, b) => {
+            // Ordina per livello prima, poi per nome
+            const levelA = a.typeInfo?.level || 99;
+            const levelB = b.typeInfo?.level || 99;
+            if (levelA !== levelB) return levelA - levelB;
+            return (a.name || '').localeCompare(b.name || '');
+        });
+    },
+    
+    // Renderizza l'albero con indentazione
+    renderLocationTree(nodes, depth = 0) {
+        if (nodes.length === 0) return '';
+        
+        return nodes.map(node => {
+            const tags = (node.tags || []).map(tagId => this.tags.find(t => t.id === tagId)).filter(Boolean);
+            const isSelected = node.id === this.currentEditingId;
+            const indent = depth * 16; // 16px per livello
+            const hasChildren = node.children && node.children.length > 0;
             
             return `
-                <div class="location-list-item ${isSelected ? 'selected' : ''}" data-location-id="${loc.id}">
-                    <div class="location-list-item-header">
-                        <span class="location-list-item-name">${escapeHtml(loc.name || 'Senza Nome')}</span>
-                        <div style="display: flex; gap: 0.3rem;">
-                            ${typeInfo ? `<span class="location-list-item-level">L${typeInfo.level}</span>` : ''}
-                            ${loc.type ? `<span class="location-list-item-type">${escapeHtml(typeInfo?.label || loc.type)}</span>` : ''}
+                <div class="location-tree-node" data-level="${node.typeInfo?.level || 0}">
+                    <div class="location-list-item ${isSelected ? 'selected' : ''}" data-location-id="${node.id}" style="margin-left: ${indent}px;">
+                        <div class="location-list-item-header">
+                            <span class="location-list-item-name">
+                                ${hasChildren ? '<span class="tree-toggle" data-location-id="' + node.id + '">▶</span>' : ''}
+                                ${escapeHtml(node.name || 'Senza Nome')}
+                            </span>
+                            <div style="display: flex; gap: 0.3rem;">
+                                ${node.typeInfo ? `<span class="location-list-item-level">L${node.typeInfo.level}</span>` : ''}
+                                ${node.type ? `<span class="location-list-item-type">${escapeHtml(node.typeInfo?.label || node.type)}</span>` : ''}
+                            </div>
+                        </div>
+                        ${node.description ? `
+                            <div class="location-list-item-desc">${escapeHtml(node.description.substring(0, 60))}${node.description.length > 60 ? '...' : ''}</div>
+                        ` : ''}
+                        ${tags.length > 0 ? `
+                            <div class="location-list-item-tags">
+                                ${tags.slice(0, 3).map(tag => `
+                                    <span class="location-list-item-tag" style="background: ${tag.color}; color: #fff;">
+                                        ${escapeHtml(tag.name)}
+                                    </span>
+                                `).join('')}${tags.length > 3 ? `<span class="location-list-item-tag">+${tags.length - 3}</span>` : ''}
+                            </div>
+                        ` : ''}
+                        <div class="location-list-item-actions">
+                            <button class="location-btn location-btn-secondary location-btn-sm btn-view" data-location-id="${node.id}">👁️</button>
+                            <button class="location-btn location-btn-secondary location-btn-sm btn-edit" data-location-id="${node.id}">✏️</button>
+                            <button class="location-btn location-btn-danger location-btn-sm btn-delete" data-location-id="${node.id}">🗑️</button>
                         </div>
                     </div>
-                    ${parentLocation ? `
-                        <div class="location-list-item-parent">
-                            📍 ${escapeHtml(parentLocation.name)}
-                        </div>
-                    ` : ''}
-                    ${loc.description ? `
-                        <div class="location-list-item-desc">${escapeHtml(loc.description.substring(0, 80))}${loc.description.length > 80 ? '...' : ''}</div>
-                    ` : ''}
-                    ${tags.length > 0 ? `
-                        <div class="location-list-item-tags">
-                            ${tags.map(tag => `
-                                <span class="location-list-item-tag" style="background: ${tag.color}; color: #fff;">
-                                    ${escapeHtml(tag.name)}
-                                </span>
-                            `).join('')}
-                        </div>
-                    ` : ''}
-                    <div class="location-list-item-actions">
-                        <button class="location-btn location-btn-secondary location-btn-sm btn-view" data-location-id="${loc.id}">👁️</button>
-                        <button class="location-btn location-btn-secondary location-btn-sm btn-edit" data-location-id="${loc.id}">✏️</button>
-                        <button class="location-btn location-btn-danger location-btn-sm btn-delete" data-location-id="${loc.id}">🗑️</button>
-                    </div>
+                    ${hasChildren ? this.renderLocationTree(node.children, depth + 1) : ''}
                 </div>
             `;
         }).join('');
@@ -1470,6 +1567,7 @@ ${this.getStyles()}
                     <div class="location-form-group">
                         <label for="loc-description">Descrizione</label>
                         <textarea id="loc-description" rows="5" placeholder="Descrivi il luogo...">${escapeHtml(location?.description || '')}</textarea>
+                        <small class="link-hint">💡 Scrivi <code>@Nome</code> per linkare PNG, luoghi, fazioni, ecc.</small>
                     </div>
                 </div>
                 
@@ -1498,6 +1596,7 @@ ${this.getStyles()}
                     <div class="location-form-group">
                         <label for="loc-secrets">🔒 Segreti del DM</label>
                         <textarea id="loc-secrets" rows="4" placeholder="Informazioni nascoste...">${escapeHtml(location?.secrets || '')}</textarea>
+                        <small class="link-hint">💡 Scrivi <code>@Nome</code> per linkare PNG, luoghi, fazioni, ecc.</small>
                     </div>
                     
                     <div class="location-form-group">
@@ -1617,6 +1716,30 @@ ${this.getStyles()}
         
         // List actions
         this.container.querySelector('#saved-locations-list')?.addEventListener('click', (e) => {
+            // Tree toggle - collapse/expand children
+            const treeToggle = e.target.closest('.tree-toggle');
+            if (treeToggle && !e.target.closest('button')) {
+                e.stopPropagation();
+                const toggleId = treeToggle.dataset.locationId;
+                const treeNode = treeToggle.closest('.location-tree-node');
+                const childNodes = treeNode?.querySelectorAll(':scope > .location-tree-node');
+                
+                treeToggle.classList.toggle('expanded');
+                childNodes?.forEach(child => {
+                    const childItem = child.querySelector('.location-list-item');
+                    if (childItem) {
+                        childItem.style.display = treeToggle.classList.contains('expanded') ? '' : 'none';
+                    }
+                    // Hide nested children too
+                    const nestedNodes = child.querySelectorAll('.location-tree-node');
+                    nestedNodes.forEach(nested => {
+                        const nestedItem = nested.querySelector('.location-list-item');
+                        if (nestedItem) nestedItem.style.display = treeToggle.classList.contains('expanded') ? '' : 'none';
+                    });
+                });
+                return;
+            }
+            
             const btn = e.target.closest('button');
             const item = e.target.closest('.location-list-item');
             if (!item) return;
