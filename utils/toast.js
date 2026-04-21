@@ -1,5 +1,7 @@
 // utils/toast.js
 
+import { escapeHtml } from './htmlHelpers.js';
+
 /**
  * Mostra una notifica "toast" sullo schermo.
  * @param {string} message Il messaggio da visualizzare.
@@ -37,7 +39,9 @@ export function showToast(message, type = 'info', duration = 3000) {
             break;
     }
     
-    toast.innerHTML = `<span class="toast-icon">${icon}</span><span class="toast-message">${message}</span>`;
+    // SECURITY FIX: Escape il messaggio per prevenire HTML injection
+    const safeMessage = escapeHtml(message);
+    toast.innerHTML = `<span class="toast-icon">${icon}</span><span class="toast-message">${safeMessage}</span>`;
     
     // Aggiungi la toast al container
     toastContainer.appendChild(toast);

@@ -1742,6 +1742,9 @@ ${this.getStyles()}
             faction: this.factions.find(f => f.id === link.factionId)
         })).filter(l => l.faction);
         
+        // SECURITY: Sanitizza l'URL dell'immagine per il viewer
+        const safeImageUrl = this.sanitizeImageUrl(location.imageUrl);
+        
         const date = new Date(location.lastModified).toLocaleString('it-IT');
         
         main.innerHTML = `
@@ -1760,8 +1763,8 @@ ${this.getStyles()}
                     </div>
                 </div>
                 
-                ${location.imageUrl ? `
-                    <img src="${escapeHtml(location.imageUrl)}" alt="${escapeHtml(location.name)}" class="location-viewer-image" onerror="this.style.display='none'">
+                ${safeImageUrl ? `
+                    <img src="${escapeHtml(safeImageUrl)}" alt="${escapeHtml(location.name)}" class="location-viewer-image" onerror="this.style.display='none'">
                 ` : ''}
                 
                 ${tags.length > 0 ? `
@@ -1886,10 +1889,51 @@ ${this.getStyles()}
     },
     
     /**
+     * SECURITY: Sanitizza un URL immagine per prevenire XSS
+     * Permette solo:
+     * - URL relativi che iniziano con assets/
+     * - URL data:image/ (immagini base64)
+     * - URL http:// e https://
+     * @param {string} url - L'URL da sanitizzare
+     * @returns {string} - L'URL sanitizzato o stringa vuota se non valido
+     */
+    sanitizeImageUrl(url) {
+        if (!url || typeof url !== 'string') return '';
+        
+        const trimmedUrl = url.trim();
+        
+        // URL relativi permessi (assets/)
+        if (trimmedUrl.startsWith('assets/')) {
+            return trimmedUrl;
+        }
+        
+        // Data URI permessi solo per immagini
+        if (trimmedUrl.startsWith('data:image/')) {
+            return trimmedUrl;
+        }
+        
+        // URL HTTP/HTTPS permessi
+        if (/^https?:\/\//i.test(trimmedUrl)) {
+            return trimmedUrl;
+        }
+        
+        // Qualsiasi altro protocollo è bloccato (javascript:, vbscript:, etc.)
+        console.warn('⚠️ [LocationManager] URL immagine non sicuro bloccato:', trimmedUrl.substring(0, 50));
+        return '';
+    },
+    
+    /**
      * Mostra il modal con l'immagine del luogo
      */
     showImageModal(location) {
         if (!location?.imageUrl) return;
+        
+        // SECURITY: Sanitizza l'URL dell'immagine
+        const safeImageUrl = this.sanitizeImageUrl(location.imageUrl);
+        if (!safeImageUrl) {
+            showToast('URL immagine non valido', 'warning');
+            return;
+        }
         
         const overlay = this.container.querySelector('#image-modal-overlay');
         const modal = this.container.querySelector('#image-modal');
@@ -1902,7 +1946,7 @@ ${this.getStyles()}
         // Imposta titolo e immagine
         const typeInfo = getTypeInfo(location.type, this.customTypes);
         title.textContent = `🖼️ ${location.name}`;
-        img.src = location.imageUrl;
+        img.src = safeImageUrl;
         img.alt = location.name;
         
         // Info aggiuntive
@@ -2417,15 +2461,20 @@ ${this.getStyles()}
                 previewContainer.style.display = 'none';
                 if (customUrlInput) customUrlInput.value = '';
             } else {
-                // Immagine pre-caricata selezionata
+                // Immagine pre-caricata selezionata (già sicura, ma validiamo per sicurezza)
+                const safeUrl = this.sanitizeImageUrl(select.value);
+                if (!safeUrl) {
+                    showToast('URL immagine non valido', 'warning');
+                    return;
+                }
                 customUrlContainer?.classList.add('hidden');
                 previewContainer.style.display = 'block';
                 if (previewImg) {
-                    previewImg.src = select.value;
+                    previewImg.src = safeUrl;
                     previewImg.onerror = () => previewContainer.style.display = 'none';
                 }
                 if (customUrlInput) {
-                    customUrlInput.value = select.value;
+                    customUrlInput.value = safeUrl;
                 }
             }
         });
@@ -2436,13 +2485,19 @@ ${this.getStyles()}
             let preview = this.container.querySelector('.location-image-preview');
             
             if (url) {
+                // SECURITY: Sanitizza l'URL prima di mostrarlo nella preview
+                const safeUrl = this.sanitizeImageUrl(url);
+                if (!safeUrl) {
+                    if (preview) preview.remove();
+                    return;
+                }
                 if (!preview) {
                     preview = document.createElement('div');
                     preview.className = 'location-image-preview';
                     preview.style.cssText = 'margin-top: 0.5rem; border-radius: 6px; overflow: hidden; max-height: 200px;';
                     e.target.parentElement.appendChild(preview);
                 }
-                preview.innerHTML = `<img src="${escapeHtml(url)}" alt="Preview" style="width: 100%; object-fit: cover;" onerror="this.parentElement.style.display='none'">`;
+                preview.innerHTML = `<img src="${escapeHtml(safeUrl)}" alt="Preview" style="width: 100%; object-fit: cover;" onerror="this.parentElement.style.display='none'">`;
             } else if (preview) {
                 preview.remove();
             }
@@ -2762,7 +2817,9 @@ ${this.getStyles()}
         const type = this.container.querySelector('#loc-type')?.value;
         const parentId = this.container.querySelector('#loc-parent')?.value || null;
         const description = this.container.querySelector('#loc-description')?.value.trim();
-        const imageUrl = this.container.querySelector('#loc-image')?.value.trim() || '';
+        // SECURITY: Sanitizza l'URL dell'immagine prima di salvarlo
+        const rawImageUrl = this.container.querySelector('#loc-image')?.value.trim() || '';
+        const imageUrl = this.sanitizeImageUrl(rawImageUrl);
         const inhabitants = this.container.querySelector('#loc-inhabitants')?.value.trim();
         const poi = this.container.querySelector('#loc-poi')?.value.trim();
         const secrets = this.container.querySelector('#loc-secrets')?.value.trim();

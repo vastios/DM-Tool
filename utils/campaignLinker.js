@@ -4,8 +4,10 @@
  * Utility per il linking dei riferimenti alla campagna.
  * Trasforma i @Tag in link HTML cliccabili.
  * 
- * @version 2.0.0 - Supporto completo per tutte le entità
+ * @version 2.1.0 - Fix sicurezza XSS
  */
+
+import { escapeHtml } from './htmlHelpers.js';
 
 /**
  * Recupera l'ID della campagna corrente.
@@ -205,7 +207,13 @@ export function linkifyCampaignReferences(text) {
         const regex = new RegExp(`@${escapedName}`, 'gi');
         
         linkedText = linkedText.replace(regex, (match) => {
-            return `<span class="campaign-link" data-section="${el.section}" data-id="${el.id}" title="${el.categoryLabel}">${match.substring(1)}</span>`;
+            // SECURITY FIX: Escape tutti i dati dinamici per prevenire XSS
+            const safeSection = escapeHtml(el.section);
+            const safeId = escapeHtml(el.id);
+            const safeCategoryLabel = escapeHtml(el.categoryLabel);
+            const safeName = escapeHtml(match.substring(1));
+            
+            return `<span class="campaign-link" data-section="${safeSection}" data-id="${safeId}" title="${safeCategoryLabel}">${safeName}</span>`;
         });
     });
     
@@ -311,4 +319,4 @@ export function getCategoryIcon(section) {
     return icons[section] || '📝';
 }
 
-console.log('🔗 [CampaignLinker] Modulo caricato (v2.0 - Supporto completo entità).');
+console.log('🔗 [CampaignLinker] Modulo caricato (v2.1 - Fix sicurezza XSS).');
