@@ -2126,50 +2126,6 @@ ${this.getStyles()}
             this.renderLocationsList(e.target.value);
         });
         
-        // Image selector
-        this.container.querySelector('#loc-image-select')?.addEventListener('change', (e) => {
-            const select = e.target;
-            const customUrlContainer = this.container.querySelector('#custom-url-container');
-            const previewContainer = this.container.querySelector('#image-preview-container');
-            const previewImg = this.container.querySelector('#loc-image-preview');
-            const customUrlInput = this.container.querySelector('#loc-image');
-            
-            if (select.value === '__custom__') {
-                // Mostra campo URL personalizzato
-                customUrlContainer?.classList.remove('hidden');
-                previewContainer.style.display = 'none';
-            } else if (select.value === '') {
-                // Nessuna immagine selezionata
-                customUrlContainer?.classList.add('hidden');
-                previewContainer.style.display = 'none';
-                if (customUrlInput) customUrlInput.value = '';
-            } else {
-                // Immagine pre-caricata selezionata
-                customUrlContainer?.classList.add('hidden');
-                previewContainer.style.display = 'block';
-                if (previewImg) {
-                    previewImg.src = select.value;
-                    previewImg.onerror = () => previewContainer.style.display = 'none';
-                }
-                if (customUrlInput) customUrlInput.value = select.value;
-            }
-        });
-        
-        // Custom URL input - update preview
-        this.container.querySelector('#loc-image')?.addEventListener('input', (e) => {
-            const url = e.target.value.trim();
-            const previewContainer = this.container.querySelector('#image-preview-container');
-            const previewImg = this.container.querySelector('#loc-image-preview');
-            
-            if (url) {
-                previewContainer.style.display = 'block';
-                previewImg.src = url;
-                previewImg.onerror = () => previewContainer.style.display = 'none';
-            } else {
-                previewContainer.style.display = 'none';
-            }
-        });
-        
         // List actions
         this.container.querySelector('#saved-locations-list')?.addEventListener('click', (e) => {
             // Tree toggle - collapse/expand children
@@ -2442,6 +2398,37 @@ ${this.getStyles()}
         
         // Save
         this.container.querySelector('#save-location-btn')?.addEventListener('click', () => this.saveLocation());
+        
+        // Image selector dropdown
+        this.container.querySelector('#loc-image-select')?.addEventListener('change', (e) => {
+            const select = e.target;
+            const customUrlContainer = this.container.querySelector('#custom-url-container');
+            const previewContainer = this.container.querySelector('#image-preview-container');
+            const previewImg = this.container.querySelector('#loc-image-preview');
+            const customUrlInput = this.container.querySelector('#loc-image');
+            
+            if (select.value === '__custom__') {
+                // Mostra campo URL personalizzato
+                customUrlContainer?.classList.remove('hidden');
+                previewContainer.style.display = 'none';
+            } else if (select.value === '') {
+                // Nessuna immagine selezionata
+                customUrlContainer?.classList.add('hidden');
+                previewContainer.style.display = 'none';
+                if (customUrlInput) customUrlInput.value = '';
+            } else {
+                // Immagine pre-caricata selezionata
+                customUrlContainer?.classList.add('hidden');
+                previewContainer.style.display = 'block';
+                if (previewImg) {
+                    previewImg.src = select.value;
+                    previewImg.onerror = () => previewContainer.style.display = 'none';
+                }
+                if (customUrlInput) {
+                    customUrlInput.value = select.value;
+                }
+            }
+        });
         
         // Image preview
         this.container.querySelector('#loc-image')?.addEventListener('input', (e) => {
@@ -2775,7 +2762,7 @@ ${this.getStyles()}
         const type = this.container.querySelector('#loc-type')?.value;
         const parentId = this.container.querySelector('#loc-parent')?.value || null;
         const description = this.container.querySelector('#loc-description')?.value.trim();
-        const imageUrl = this.container.querySelector('#loc-image')?.value.trim();
+        const imageUrl = this.container.querySelector('#loc-image')?.value.trim() || '';
         const inhabitants = this.container.querySelector('#loc-inhabitants')?.value.trim();
         const poi = this.container.querySelector('#loc-poi')?.value.trim();
         const secrets = this.container.querySelector('#loc-secrets')?.value.trim();
