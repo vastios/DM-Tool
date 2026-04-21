@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ],
         // SEZIONE: IL MONDO
         world: [
+            { id: 'mapManager', name: 'Mappe', modulePath: './modules/campagna/mapManager.js', requiresCampaign: true },
             { id: 'locationManager', name: 'Luoghi', modulePath: './modules/campagna/locationManager.js', requiresCampaign: true, entityType: 'location' },
             { id: 'factionManager', name: 'Fazioni', modulePath: './modules/campagna/factionManager.js', requiresCampaign: true, entityType: 'faction' },
             { id: 'secretManager', name: 'Segreti', modulePath: './modules/campagna/secretManager.js', requiresCampaign: true, entityType: 'secret' },
