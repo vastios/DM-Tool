@@ -573,6 +573,19 @@ ${this.getStyles()}
             ${this.renderTypePopupContent()}
         </div>
     </div>
+    
+    <!-- Image Preview Modal -->
+    <div class="location-image-modal-overlay" id="image-modal-overlay"></div>
+    <div class="location-image-modal" id="image-modal">
+        <div class="location-image-modal-header">
+            <h3 id="image-modal-title">🖼️ Immagine Luogo</h3>
+            <button class="location-image-modal-close" id="close-image-modal">✕</button>
+        </div>
+        <div class="location-image-modal-content">
+            <img id="image-modal-img" src="" alt="Immagine luogo">
+            <div class="location-image-modal-info" id="image-modal-info"></div>
+        </div>
+    </div>
 </div>
         `;
     },
@@ -1208,6 +1221,89 @@ ${this.getStyles()}
     color: var(--text-muted, #888);
 }
 
+/* Image Preview Modal */
+.location-image-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 1099;
+    display: none;
+    cursor: zoom-out;
+}
+
+.location-image-modal-overlay.active { display: block; }
+
+.location-image-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 90vw;
+    max-height: 90vh;
+    background: var(--card-bg, #252525);
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+    z-index: 1100;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.location-image-modal.active { display: flex; }
+
+.location-image-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid var(--border-color, #333);
+    background: var(--bg-tertiary, #2a2a2a);
+}
+
+.location-image-modal-header h3 {
+    margin: 0;
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    color: var(--text-primary, #fff);
+}
+
+.location-image-modal-close {
+    background: none;
+    border: none;
+    color: var(--text-muted, #888);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.location-image-modal-close:hover { color: var(--text-primary, #fff); }
+
+.location-image-modal-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    overflow: hidden;
+}
+
+.location-image-modal-content img {
+    max-width: 100%;
+    max-height: 70vh;
+    object-fit: contain;
+    border-radius: 6px;
+}
+
+.location-image-modal-info {
+    margin-top: 0.75rem;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-muted, #888);
+}
+
 /* Add custom type */
 .location-add-custom-type {
     display: flex;
@@ -1789,6 +1885,56 @@ ${this.getStyles()}
         return url.startsWith('assets/luoghi/');
     },
     
+    /**
+     * Mostra il modal con l'immagine del luogo
+     */
+    showImageModal(location) {
+        if (!location?.imageUrl) return;
+        
+        const overlay = this.container.querySelector('#image-modal-overlay');
+        const modal = this.container.querySelector('#image-modal');
+        const title = this.container.querySelector('#image-modal-title');
+        const img = this.container.querySelector('#image-modal-img');
+        const info = this.container.querySelector('#image-modal-info');
+        
+        if (!overlay || !modal) return;
+        
+        // Imposta titolo e immagine
+        const typeInfo = getTypeInfo(location.type, this.customTypes);
+        title.textContent = `🖼️ ${location.name}`;
+        img.src = location.imageUrl;
+        img.alt = location.name;
+        
+        // Info aggiuntive
+        let infoText = typeInfo ? typeInfo.label : '';
+        if (location.parentId) {
+            const parent = this.locations.find(l => l.id === location.parentId);
+            if (parent) {
+                infoText += infoText ? ` • ${parent.name}` : parent.name;
+            }
+        }
+        info.textContent = infoText;
+        
+        // Mostra modal
+        overlay.classList.add('active');
+        modal.classList.add('active');
+        
+        // Focus sulla close button per accessibilità
+        const closeBtn = modal.querySelector('.location-image-modal-close');
+        if (closeBtn) closeBtn.focus();
+    },
+    
+    /**
+     * Chiude il modal immagine
+     */
+    closeImageModal() {
+        const overlay = this.container.querySelector('#image-modal-overlay');
+        const modal = this.container.querySelector('#image-modal');
+        
+        if (overlay) overlay.classList.remove('active');
+        if (modal) modal.classList.remove('active');
+    },
+    
     renderLocationEditor(location = null) {
         const main = this.container.querySelector('#location-main');
         if (!main) return;
@@ -2077,13 +2223,21 @@ ${this.getStyles()}
             const locationId = item.dataset.locationId;
             const location = this.locations.find(l => l.id === locationId);
             
-            if (btn?.classList.contains('btn-view') || (!btn && item)) {
-                this.renderLocationViewer(location);
+            if (btn?.classList.contains('btn-view')) {
+                // Se c'è un'immagine, mostra il modal immagine
+                if (location?.imageUrl) {
+                    this.showImageModal(location);
+                } else {
+                    this.renderLocationViewer(location);
+                }
             } else if (btn?.classList.contains('btn-edit')) {
                 this.currentEditingId = locationId;
                 this.renderLocationEditor(location);
             } else if (btn?.classList.contains('btn-delete')) {
                 this.deleteLocation(locationId);
+            } else if (!btn && item) {
+                // Click sulla card senza bottone - apri viewer
+                this.renderLocationViewer(location);
             }
         });
         
@@ -2334,6 +2488,23 @@ ${this.getStyles()}
                 initAutocomplete(field);
             }
         });
+        
+        // Image modal close handlers
+        this.container.querySelector('#close-image-modal')?.addEventListener('click', () => {
+            this.closeImageModal();
+        });
+        
+        this.container.querySelector('#image-modal-overlay')?.addEventListener('click', () => {
+            this.closeImageModal();
+        });
+        
+        // ESC key to close image modal
+        this.handleImageModalKeydown = (e) => {
+            if (e.key === 'Escape') {
+                this.closeImageModal();
+            }
+        };
+        document.addEventListener('keydown', this.handleImageModalKeydown);
     },
     
     renderTagsByCategory() {
