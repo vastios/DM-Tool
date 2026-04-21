@@ -77,31 +77,12 @@ const LOCATION_HIERARCHY = {
             { value: 'confederazione', label: 'Confederazione', description: 'Alleanza di stati' },
         ]
     },
-    // LIVELLO 4 - INSEDIAMENTO (padre: L2-L3)
+    // LIVELLO 4 - AREA (padre: L2-L3)
     4: {
-        name: 'Insediamento',
-        icon: '🏘️',
-        description: 'Centri abitati e costruzioni isolate',
-        allowedParentLevels: [2, 3],
-        types: [
-            { value: 'capitale', label: 'Capitale', description: 'Città principale di un regno' },
-            { value: 'citta', label: 'Città', description: 'Centro urbano importante' },
-            { value: 'villaggio', label: 'Villaggio', description: 'Piccolo centro abitato' },
-            { value: 'borgo', label: 'Borgo', description: 'Frazione o piccolo insediamento' },
-            { value: 'fortezza', label: 'Fortezza', description: 'Costruzione militare' },
-            { value: 'porto', label: 'Porto', description: 'Approdo navale' },
-            { value: 'accampamento', label: 'Accampamento', description: 'Insediamento temporaneo' },
-            { value: 'avamposto', label: 'Avamposto', description: 'Posizione avanzata' },
-            { value: 'dungeon', label: 'Dungeon', description: 'Complesso sotterraneo o struttura isolata' },
-            { value: 'rovine', label: 'Rovine', description: 'Resti di un insediamento' },
-        ]
-    },
-    // LIVELLO 5 - AREA (padre: L2-L4)
-    5: {
         name: 'Area',
         icon: '🏞️',
         description: 'Zone geografiche e luoghi di interesse',
-        allowedParentLevels: [2, 3, 4],
+        allowedParentLevels: [2, 3],
         types: [
             { value: 'foresta', label: 'Foresta', description: 'Area boschiva' },
             { value: 'lago', label: 'Lago', description: 'Specchio d\'acqua interno' },
@@ -116,6 +97,25 @@ const LOCATION_HIERARCHY = {
             { value: 'tempio_isolato', label: 'Tempio Isolato', description: 'Luogo di culto isolato' },
             { value: 'torre', label: 'Torre', description: 'Costruzione alta e isolata' },
             { value: 'nascondiglio', label: 'Nascondiglio', description: 'Luogo segreto' },
+        ]
+    },
+    // LIVELLO 5 - INSEDIAMENTO (padre: L2-L4)
+    5: {
+        name: 'Insediamento',
+        icon: '🏘️',
+        description: 'Centri abitati e costruzioni isolate',
+        allowedParentLevels: [2, 3, 4],
+        types: [
+            { value: 'capitale', label: 'Capitale', description: 'Città principale di un regno' },
+            { value: 'citta', label: 'Città', description: 'Centro urbano importante' },
+            { value: 'villaggio', label: 'Villaggio', description: 'Piccolo centro abitato' },
+            { value: 'borgo', label: 'Borgo', description: 'Frazione o piccolo insediamento' },
+            { value: 'fortezza', label: 'Fortezza', description: 'Costruzione militare' },
+            { value: 'porto', label: 'Porto', description: 'Approdo navale' },
+            { value: 'accampamento', label: 'Accampamento', description: 'Insediamento temporaneo' },
+            { value: 'avamposto', label: 'Avamposto', description: 'Posizione avanzata' },
+            { value: 'dungeon', label: 'Dungeon', description: 'Complesso sotterraneo o struttura isolata' },
+            { value: 'rovine', label: 'Rovine', description: 'Resti di un insediamento' },
         ]
     },
     // LIVELLO 6 - EDIFICIO (padre: L4-L5)
@@ -257,19 +257,7 @@ const AUTO_TAG_MAPPING = {
     'ducato': ['neutrale'],
     'confederazione': ['neutrale', 'mercanzia'],
     
-    // LIVELLO 4 - Insediamento
-    'capitale': ['sicuro', 'mercanzia', 'quest', 'accogliente'],
-    'citta': ['sicuro', 'mercanzia', 'informazioni'],
-    'villaggio': ['sicuro', 'accogliente'],
-    'borgo': ['neutrale', 'accogliente'],
-    'fortezza': ['sicuro', 'risorse'],
-    'porto': ['neutrale', 'mercanzia'],
-    'accampamento': ['neutrale', 'attivo'],
-    'avamposto': ['neutrale', 'attivo'],
-    'dungeon': ['pericoloso', 'da_esplorare', 'tetro'],
-    'rovine': ['pericoloso', 'abbandonato', 'da_esplorare'],
-    
-    // LIVELLO 5 - Area
+    // LIVELLO 4 - Area
     'foresta': ['neutrale', 'pacifico'],
     'lago': ['neutrale', 'pacifico'],
     'fiume': ['neutrale'],
@@ -283,6 +271,18 @@ const AUTO_TAG_MAPPING = {
     'tempio_isolato': ['mistico', 'neutrale'],
     'torre': ['mistico', 'neutrale'],
     'nascondiglio': ['segreto', 'neutrale'],
+    
+    // LIVELLO 5 - Insediamento
+    'capitale': ['sicuro', 'mercanzia', 'quest', 'accogliente'],
+    'citta': ['sicuro', 'mercanzia', 'informazioni'],
+    'villaggio': ['sicuro', 'accogliente'],
+    'borgo': ['neutrale', 'accogliente'],
+    'fortezza': ['sicuro', 'risorse'],
+    'porto': ['neutrale', 'mercanzia'],
+    'accampamento': ['neutrale', 'attivo'],
+    'avamposto': ['neutrale', 'attivo'],
+    'dungeon': ['pericoloso', 'da_esplorare', 'tetro'],
+    'rovine': ['pericoloso', 'abbandonato', 'da_esplorare'],
     
     // LIVELLO 6 - Edificio
     'locanda': ['sicuro', 'accogliente', 'informazioni'],
@@ -551,14 +551,6 @@ ${this.getStyles()}
             <input type="text" id="location-search" class="location-search-input" placeholder="Cerca un luogo...">
         </div>
         
-        <div class="location-filter-tags" id="location-filter-tags">
-            ${this.tags.map(tag => `
-                <span class="location-filter-tag" data-tag-id="${tag.id}" style="border-color: ${tag.color}; color: ${tag.color}">
-                    ${escapeHtml(tag.name)}
-                </span>
-            `).join('')}
-        </div>
-        
         <div class="location-list" id="saved-locations-list"></div>
     </div>
 
@@ -648,30 +640,6 @@ ${this.getStyles()}
     color: var(--text-primary, #fff);
     font-family: 'Lora', serif;
     font-size: 0.85rem;
-}
-
-.location-filter-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.3rem;
-    margin-bottom: 0.5rem;
-}
-
-.location-filter-tag {
-    padding: 0.15rem 0.4rem;
-    border: 1px solid;
-    border-radius: 3px;
-    font-size: 0.65rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    opacity: 0.7;
-}
-
-.location-filter-tag:hover,
-.location-filter-tag.active {
-    opacity: 1;
-    background: currentColor;
-    color: #fff !important;
 }
 
 .location-list { flex: 1; overflow-y: auto; }
@@ -1897,19 +1865,6 @@ ${this.getStyles()}
         // Search
         this.container.querySelector('#location-search')?.addEventListener('input', (e) => {
             this.renderLocationsList(e.target.value);
-        });
-        
-        // Filter tags
-        this.container.querySelector('#location-filter-tags')?.addEventListener('click', (e) => {
-            const tag = e.target.closest('.location-filter-tag');
-            if (!tag) return;
-            
-            document.querySelectorAll('.location-filter-tag').forEach(t => t.classList.remove('active'));
-            tag.classList.toggle('active');
-            
-            const tagId = tag.classList.contains('active') ? tag.dataset.tagId : null;
-            const searchTerm = this.container.querySelector('#location-search')?.value || '';
-            this.renderLocationsList(searchTerm, tagId);
         });
         
         // List actions
