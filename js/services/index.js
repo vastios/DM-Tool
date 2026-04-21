@@ -143,6 +143,24 @@ export { showToast, showSuccess, showError, showWarning, showInfo, showConfirm, 
 export { validators, validateObject, createFormValidator, getModifier, formatModifier, DND_CONSTANTS } from '../utils/validators.js';
 
 // ═══════════════════════════════════════════════════════════════
+// RE-EXPORT UTILITIES (v2.2 - Priority Improvements)
+// ═══════════════════════════════════════════════════════════════
+// Lazy Loading
+export { lazyLoader, createLazyImage, createPlaceholder, loadModule, preloadModules, initializeLazyLoading } from '../utils/lazyLoader.js';
+
+// Keyboard Shortcuts
+export { keyboardManager, registerShortcut, unregisterShortcut, setKeyboardScope, resetKeyboardScope, showShortcutsHelp, hideShortcutsHelp, registerDefaultShortcuts } from '../utils/keyboardShortcuts.js';
+
+// Theme Manager
+export { themeManager, setTheme, toggleTheme, getTheme, isDarkTheme, onThemeChange, createThemeToggle, THEMES } from '../utils/themeManager.js';
+
+// Accessibility
+export { createFocusTrap, announce, setAria, createAccessibleElement, createScreenReaderText, saveFocus, restoreFocus, moveFocus, focusFirst, createSkipLinks, createAccessibleModal, enableKeyboardNavigation } from '../utils/accessibility.js';
+
+// Performance Monitor
+export { perfMonitor, perfMark, perfMeasure, perfTime, perfTimeEnd, perfWrap, getPerfReport, showPerfDebug } from '../utils/performanceMonitor.js';
+
+// ═══════════════════════════════════════════════════════════════
 // INIZIALIZZAZIONE
 // ═══════════════════════════════════════════════════════════════
 
