@@ -135,6 +135,14 @@ export { historyManager } from './historyManager.js';
 export { searchIndex } from './searchIndex.js';
 
 // ═══════════════════════════════════════════════════════════════
+// RE-EXPORT UTILITIES (v2.1)
+// ═══════════════════════════════════════════════════════════════
+export { BaseModule } from '../utils/BaseModule.js';
+export { debounce, throttle, rafThrottle, memoize, createBatcher, lazy, once, createRateLimiter } from '../utils/performance.js';
+export { showToast, showSuccess, showError, showWarning, showInfo, showConfirm, showWithUndo, dismissAllToasts } from '../utils/toast.js';
+export { validators, validateObject, createFormValidator, getModifier, formatModifier, DND_CONSTANTS } from '../utils/validators.js';
+
+// ═══════════════════════════════════════════════════════════════
 // INIZIALIZZAZIONE
 // ═══════════════════════════════════════════════════════════════
 
