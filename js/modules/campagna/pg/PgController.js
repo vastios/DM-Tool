@@ -1791,7 +1791,7 @@ export class PgController {
         
         const popup = document.createElement('div');
         popup.className = 'spell-limit-popup';
-        popup.innerHTML = message.replace(/\n/g, '<br>');
+        popup.innerHTML = escapeHtml(message).replace(/\n/g, '<br>');
         document.body.appendChild(popup);
         
         // Rimuovi dopo 3 secondi (traccia il timeout per cleanup)

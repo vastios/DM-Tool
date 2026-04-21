@@ -7,6 +7,7 @@
 import { getCampaignsList, createCampaign, deleteCampaign, selectCampaign, getCurrentCampaignId, getState } from '../stateManager.js';
 import {setLastViewedWikiElement, getLastViewedWikiElement} from '../stateManager.js';
 import { showToast } from '../utils/toast.js';
+import { escapeHtml } from '../utils/htmlHelpers.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log("🟢 DEBUG: Applicazione avviata.");
@@ -262,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
         } catch (error) {
             console.error(`❌ ERRORE GENERICO nel caricamento del modulo ${modulePath}:`, error);
-            containerElement.innerHTML = `<div class="error-msg"><strong>Errore Critico:</strong> ${error.message}</div>`;
+            containerElement.innerHTML = `<div class="error-msg"><strong>Errore Critico:</strong> ${escapeHtml(error.message)}</div>`;
         }
     }
 
@@ -424,7 +425,7 @@ document.body.addEventListener('mouseover', (e) => {
 
         const tooltip = document.createElement('div');
         tooltip.className = 'ability-tooltip condition-tooltip';
-        tooltip.innerHTML = `<h4>${name}</h4><p>${desc}</p>`;
+        tooltip.innerHTML = `<h4>${escapeHtml(name)}</h4><p>${escapeHtml(desc)}</p>`;
         document.body.appendChild(tooltip);
 
         const rect = e.target.getBoundingClientRect();

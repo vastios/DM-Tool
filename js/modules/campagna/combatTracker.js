@@ -52,6 +52,7 @@ import { conditionsDatabase, getConditionDescription } from '../../../database/c
 import { rollDice } from '../../../utils/dice.js';
 import { showToast } from '../../../utils/toast.js';
 import { getCurrentCampaignId } from '../../../js/services/campaignManager.js';
+import { escapeHtml } from '../../../utils/htmlHelpers.js';
 
 // --- COSTANTI ---
 const SOURCE_COLORS = {
@@ -2868,7 +2869,7 @@ const CombatTracker = {
             const { name, desc } = e.target.dataset;
             const tip = document.createElement('div');
             tip.className = 'ability-tooltip';
-            tip.innerHTML = `<h4>${name}</h4><p>${desc}</p>`;
+            tip.innerHTML = `<h4>${escapeHtml(name)}</h4><p>${escapeHtml(desc)}</p>`;
             document.body.appendChild(tip);
             const rect = e.target.getBoundingClientRect();
             tip.style.left = `${rect.left + window.scrollX}px`;
