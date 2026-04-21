@@ -128,12 +128,23 @@ export function getLastViewedWikiElement() {
 }
 
 // ═══════════════════════════════════════════════════════════════
+// IMPORTAZIONI SERVIZI AVANZATI (v2.0)
+// ═══════════════════════════════════════════════════════════════
+export { advancedStorage } from './advancedStorage.js';
+export { historyManager } from './historyManager.js';
+export { searchIndex } from './searchIndex.js';
+
+// ═══════════════════════════════════════════════════════════════
 // INIZIALIZZAZIONE
 // ═══════════════════════════════════════════════════════════════
 
 import { loadState } from './combatStateManager.js';
 import { loadPcs } from './pcManager.js';
 import { onCampaignChange } from './campaignManager.js';
+import { advancedStorage } from './advancedStorage.js';
+import { historyManager } from './historyManager.js';
+import { searchIndex } from './searchIndex.js';
+import { safeLocalStorageGet, CAMPAIGNS_LIST_KEY } from './storageHelper.js';
 
 // Registra listener per ricaricare lo stato quando cambia la campagna
 onCampaignChange((campaignId) => {
@@ -141,7 +152,127 @@ onCampaignChange((campaignId) => {
         console.log('🔄 [StateManagerFacade] Cambio campagna, ricaricamento stato...');
         loadState();
         loadPcs();
+        
+        // Ricostruisci indice di ricerca per la nuova campagna
+        rebuildSearchIndex(campaignId);
     }
 });
+
+/**
+ * Ricostruisce l'indice di ricerca per una campagna
+ */
+function rebuildSearchIndex(campaignId) {
+    searchIndex.clear();
+    
+    // Indicizza NPC
+    const npcs = safeLocalStorageGet(`dungeonMasterToolNpcs_${campaignId}`, []);
+    npcs.forEach(npc => {
+        if (npc.id && npc.name) {
+            searchIndex.indexDocument({
+                id: npc.id,
+                type: 'npc',
+                name: npc.name,
+                content: `${npc.description || ''} ${npc.background || ''} ${npc.role || ''}`.trim(),
+                metadata: { campaignId }
+            });
+        }
+    });
+    
+    // Indicizza PG
+    const pgs = safeLocalStorageGet(`dungeonMasterToolPgs_${campaignId}`, []);
+    pgs.forEach(pg => {
+        if (pg.id && (pg.name || pg.nome)) {
+            searchIndex.indexDocument({
+                id: pg.id,
+                type: 'pg',
+                name: pg.name || pg.nome,
+                content: `${pg.class || pg.classe || ''} ${pg.race || pg.razza || ''} ${pg.background || ''}`.trim(),
+                metadata: { campaignId }
+            });
+        }
+    });
+    
+    // Indicizza Luoghi
+    const locations = safeLocalStorageGet(`dungeonMasterToolLocations_${campaignId}`, []);
+    locations.forEach(loc => {
+        if (loc.id && loc.name) {
+            searchIndex.indexDocument({
+                id: loc.id,
+                type: 'location',
+                name: loc.name,
+                content: `${loc.description || ''} ${loc.inhabitants || ''} ${loc.type || ''}`.trim(),
+                metadata: { campaignId, parentId: loc.parentId }
+            });
+        }
+    });
+    
+    // Indicizza Fazioni
+    const factions = safeLocalStorageGet(`dungeonMasterToolFactions_${campaignId}`, []);
+    factions.forEach(faction => {
+        if (faction.id && faction.name) {
+            searchIndex.indexDocument({
+                id: faction.id,
+                type: 'faction',
+                name: faction.name,
+                content: `${faction.description || ''} ${faction.goals || ''}`.trim(),
+                metadata: { campaignId }
+            });
+        }
+    });
+    
+    // Indicizza Segreti
+    const secrets = safeLocalStorageGet(`dungeonMasterToolSecrets_${campaignId}`, []);
+    secrets.forEach(secret => {
+        if (secret.id && (secret.name || secret.title)) {
+            searchIndex.indexDocument({
+                id: secret.id,
+                type: 'secret',
+                name: secret.name || secret.title,
+                content: secret.description || '',
+                metadata: { campaignId }
+            });
+        }
+    });
+    
+    // Indicizza Oggetti Unici
+    const items = safeLocalStorageGet(`dungeonMasterToolUniqueItems_${campaignId}`, []);
+    items.forEach(item => {
+        if (item.id && (item.name || item.title)) {
+            searchIndex.indexDocument({
+                id: item.id,
+                type: 'uniqueItem',
+                name: item.name || item.title,
+                content: `${item.description || ''} ${item.type || ''}`.trim(),
+                metadata: { campaignId }
+            });
+        }
+    });
+    
+    console.log(`🔍 [StateManagerFacade] Indice ricerca ricostruito: ${searchIndex.getStats().totalDocuments} documenti`);
+}
+
+/**
+ * Inizializza tutti i servizi avanzati
+ */
+export function initializeAdvancedServices() {
+    const campaignId = safeLocalStorageGet('dungeonMasterToolSelectedCampaign', null);
+    
+    if (campaignId) {
+        rebuildSearchIndex(campaignId);
+    }
+    
+    // Verifica se suggerire backup
+    if (advancedStorage.shouldSuggestBackup(7)) {
+        console.log('💡 [StateManagerFacade] Backup consigliato: più di 7 giorni dall\'ultimo backup');
+    }
+    
+    // Verifica spazio storage
+    const usage = advancedStorage.getStorageUsage();
+    if (usage.percentage > 80) {
+        console.warn(`⚠️ [StateManagerFacade] Storage quasi pieno: ${usage.percentage.toFixed(1)}%`);
+    }
+    
+    console.log('✅ [StateManagerFacade] Servizi avanzati inizializzati');
+}
 
 console.log('🔗 [StateManagerFacade] Modulo facade caricato. Tutte le esportazioni pronte.');

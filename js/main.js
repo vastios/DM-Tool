@@ -74,6 +74,10 @@ document.addEventListener('DOMContentLoaded', () => {
             { id: 'appendix', name: 'Condizioni', modulePath: './modules/compendio/appendix.js' },
             { id: 'Alignment', name: 'Allineamento', modulePath: './modules/compendio/AlignmentGuide.js', requiresCampaign: false },
             { id: 'combatRules', name: 'Regole di Combattimento', modulePath: './modules/compendio/combatRules.js', requiresCampaign: false },
+        ],
+        // SEZIONE: IMPOSTAZIONI
+        settings: [
+            { id: 'backupManager', name: 'Backup & Ripristino', modulePath: './modules/settings/backupManager.js', requiresCampaign: false },
         ]
     };
 
