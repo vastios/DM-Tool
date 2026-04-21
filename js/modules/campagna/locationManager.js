@@ -23,6 +23,7 @@ import { showToast } from '../../../utils/toast.js';
 import { escapeHtml } from '../../../utils/htmlHelpers.js';
 import { linkifyCampaignReferences } from '../../../utils/campaignLinker.js';
 import { initAutocomplete } from '../../../utils/autocomplete.js';
+import { getAllImages, getSuggestedImages } from '../../../assets/luoghi/locationImages.js';
 
 // ═══════════════════════════════════════════════════════════════
 // GERARCHIA DEI LUOGHI - 7 LIVELLI
@@ -946,6 +947,71 @@ ${this.getStyles()}
     resize: vertical;
 }
 
+/* Image selector */
+.location-image-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.location-image-select {
+    width: 100%;
+    padding: 0.6rem;
+    background: var(--input-bg, #333);
+    border: 1px solid var(--border-color, #444);
+    border-radius: 4px;
+    color: var(--text-primary, #fff);
+    font-family: 'Lora', serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.location-image-select optgroup {
+    background: var(--bg-tertiary, #2a2a2a);
+    color: var(--accent-color, #0891b2);
+    font-weight: bold;
+}
+
+.location-image-select option {
+    background: var(--input-bg, #333);
+    color: var(--text-primary, #fff);
+}
+
+.location-custom-url {
+    margin-top: 0.25rem;
+}
+
+.location-custom-url.hidden {
+    display: none;
+}
+
+.location-custom-url input {
+    width: 100%;
+    padding: 0.6rem;
+    background: var(--input-bg, #333);
+    border: 1px solid var(--border-color, #444);
+    border-radius: 4px;
+    color: var(--text-primary, #fff);
+    font-family: 'Lora', serif;
+    font-size: 0.9rem;
+}
+
+.location-image-preview {
+    margin-top: 0.75rem;
+    border-radius: 6px;
+    overflow: hidden;
+    max-height: 250px;
+    border: 1px solid var(--border-color, #444);
+}
+
+.location-image-preview img {
+    width: 100%;
+    height: auto;
+    max-height: 250px;
+    object-fit: cover;
+    display: block;
+}
+
 /* Type selector button */
 .location-type-selector {
     display: flex;
@@ -1683,6 +1749,46 @@ ${this.getStyles()}
         this.renderLocationsList();
     },
     
+    // ═══════════════════════════════════════════════════════════════
+    // HELPER PER SELEZIONE IMMAGINI
+    // ═══════════════════════════════════════════════════════════════
+    
+    /**
+     * Renderizza le opzioni del selettore immagini organizzate per categoria
+     */
+    renderImageOptions(currentImageUrl) {
+        const allImages = getAllImages();
+        const categories = {
+            mondo: '🌍 Mondo',
+            regione: '🗺️ Regione',
+            area: '🏞️ Area',
+            insediamento: '🏘️ Insediamento',
+            edificio: '🏠 Edificio'
+        };
+        
+        let options = '';
+        for (const [catId, catName] of Object.entries(categories)) {
+            const catImages = allImages.filter(img => img.category === catId);
+            if (catImages.length > 0) {
+                options += `<optgroup label="${catName}">`;
+                catImages.forEach(img => {
+                    const selected = currentImageUrl === img.path ? 'selected' : '';
+                    options += `<option value="${img.path}" ${selected}>${img.name}</option>`;
+                });
+                options += '</optgroup>';
+            }
+        }
+        return options;
+    },
+    
+    /**
+     * Verifica se un URL corrisponde a un'immagine pre-caricata
+     */
+    isPresetImage(url) {
+        if (!url) return false;
+        return url.startsWith('assets/luoghi/');
+    },
+    
     renderLocationEditor(location = null) {
         const main = this.container.querySelector('#location-main');
         if (!main) return;
@@ -1756,13 +1862,20 @@ ${this.getStyles()}
                 <!-- TAB DETTAGLI -->
                 <div class="location-tab-content" id="tab-details">
                     <div class="location-form-group">
-                        <label for="loc-image">🖼️ URL Immagine</label>
-                        <input type="url" id="loc-image" value="${escapeHtml(location?.imageUrl || '')}" placeholder="https://esempio.com/immagine.jpg">
-                        ${location?.imageUrl ? `
-                            <div class="location-image-preview" style="margin-top: 0.5rem; border-radius: 6px; overflow: hidden; max-height: 200px;">
-                                <img src="${escapeHtml(location.imageUrl)}" alt="Preview" style="width: 100%; object-fit: cover;" onerror="this.parentElement.style.display='none'">
+                        <label>🖼️ Immagine</label>
+                        <div class="location-image-selector">
+                            <select id="loc-image-select" class="location-image-select">
+                                <option value="">-- Seleziona immagine --</option>
+                                <option value="__custom__">🔗 URL personalizzato</option>
+                                ${this.renderImageOptions(location?.imageUrl)}
+                            </select>
+                            <div id="custom-url-container" class="location-custom-url ${location?.imageUrl && !this.isPresetImage(location?.imageUrl) ? '' : 'hidden'}">
+                                <input type="url" id="loc-image" value="${escapeHtml(location?.imageUrl || '')}" placeholder="https://esempio.com/immagine.jpg">
                             </div>
-                        ` : ''}
+                        </div>
+                        <div class="location-image-preview" id="image-preview-container" ${location?.imageUrl ? '' : 'style="display:none"'}>
+                            <img id="loc-image-preview" src="${escapeHtml(location?.imageUrl || '')}" alt="Preview" onerror="this.parentElement.style.display='none'">
+                        </div>
                     </div>
                     
                     <div class="location-form-group">
@@ -1865,6 +1978,50 @@ ${this.getStyles()}
         // Search
         this.container.querySelector('#location-search')?.addEventListener('input', (e) => {
             this.renderLocationsList(e.target.value);
+        });
+        
+        // Image selector
+        this.container.querySelector('#loc-image-select')?.addEventListener('change', (e) => {
+            const select = e.target;
+            const customUrlContainer = this.container.querySelector('#custom-url-container');
+            const previewContainer = this.container.querySelector('#image-preview-container');
+            const previewImg = this.container.querySelector('#loc-image-preview');
+            const customUrlInput = this.container.querySelector('#loc-image');
+            
+            if (select.value === '__custom__') {
+                // Mostra campo URL personalizzato
+                customUrlContainer?.classList.remove('hidden');
+                previewContainer.style.display = 'none';
+            } else if (select.value === '') {
+                // Nessuna immagine selezionata
+                customUrlContainer?.classList.add('hidden');
+                previewContainer.style.display = 'none';
+                if (customUrlInput) customUrlInput.value = '';
+            } else {
+                // Immagine pre-caricata selezionata
+                customUrlContainer?.classList.add('hidden');
+                previewContainer.style.display = 'block';
+                if (previewImg) {
+                    previewImg.src = select.value;
+                    previewImg.onerror = () => previewContainer.style.display = 'none';
+                }
+                if (customUrlInput) customUrlInput.value = select.value;
+            }
+        });
+        
+        // Custom URL input - update preview
+        this.container.querySelector('#loc-image')?.addEventListener('input', (e) => {
+            const url = e.target.value.trim();
+            const previewContainer = this.container.querySelector('#image-preview-container');
+            const previewImg = this.container.querySelector('#loc-image-preview');
+            
+            if (url) {
+                previewContainer.style.display = 'block';
+                previewImg.src = url;
+                previewImg.onerror = () => previewContainer.style.display = 'none';
+            } else {
+                previewContainer.style.display = 'none';
+            }
         });
         
         // List actions
