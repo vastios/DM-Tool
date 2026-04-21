@@ -8,9 +8,9 @@
  */
 
 import { advancedStorage } from '../../services/advancedStorage.js';
-import { showToast } from '../../utils/toast.js';
-import { escapeHtml } from '../../utils/htmlHelpers.js';
-import { getCurrentCampaignId, getCampaignsList } from '../../stateManager.js';
+import { showToast } from '../../../utils/toast.js';
+import { escapeHtml } from '../../../utils/htmlHelpers.js';
+import { getCurrentCampaignId, getCampaignsList } from '../../../stateManager.js';
 
 const BackupManager = {
     container: null,
