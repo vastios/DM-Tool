@@ -365,23 +365,27 @@ ${this.getStyles()}
     
     getStyles() {
         return `
-/* Layout principale */
+/* Layout principale - Card-separated style */
 .npc-manager-layout {
     display: flex;
     height: 100%;
-    gap: 0;
+    gap: 20px;
+    padding: 20px;
     background: var(--bg-secondary, #1a1a1a);
     overflow: hidden;
+    box-sizing: border-box;
 }
 
-/* Sidebar */
+/* Sidebar - Card style */
 .npc-sidebar {
     flex: 0 0 280px;
-    background: var(--card-bg, #252525);
-    border-right: 1px solid var(--border-color, #333);
+    background: var(--card-bg, #2a2a2a);
+    border: 1px solid var(--border-color, #444);
+    border-radius: 8px;
     display: flex;
     flex-direction: column;
-    padding: 0.75rem;
+    padding: 15px;
+    overflow: hidden;
 }
 
 .npc-sidebar-header {
@@ -500,14 +504,13 @@ ${this.getStyles()}
 
 /* Nuovo button - stile compatto come PG Manager */
 
-/* Area principale */
+/* Area principale - Card style */
 .npc-main {
     flex: 1;
     display: flex;
     gap: 20px;
-    padding: 15px;
     overflow: hidden;
-    background: var(--bg-secondary, #1a1a1a);
+    background: transparent;
 }
 
 .npc-empty-state {
@@ -528,7 +531,7 @@ ${this.getStyles()}
 /* Cards container */
 .npc-cards-container {
     display: flex;
-    gap: 15px;
+    gap: 20px;
     width: 100%;
     height: 100%;
     overflow: hidden;
@@ -544,6 +547,9 @@ ${this.getStyles()}
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    background: var(--card-bg, #2a2a2a);
+    border: 1px solid var(--border-color, #444);
+    border-radius: 8px;
 }
 
 .npc-flip-card-inner {
@@ -581,20 +587,18 @@ ${this.getStyles()}
     bottom: 6px;
     right: 8px;
     font-size: 0.6rem;
-    color: rgba(130, 32, 0, 0.4);
+    color: rgba(240, 173, 78, 0.5);
     font-style: italic;
 }
 
-/* Stile pergamena - uniformato al PG Manager */
+/* Stile scheda PNG - TEMA SCURO CAMPAGNA */
 .npc-parchment {
-    background: linear-gradient(180deg, #f4e4bc 0%, #e8d4a8 100%);
-    box-shadow: 
-        inset 0 0 60px rgba(139, 115, 85, 0.15),
-        0 0 20px rgba(61, 41, 20, 0.3);
-    border: 2px solid #8b7355;
-    border-radius: 6px;
-    color: #3d2914;
-    font-family: 'Cinzel', 'Georgia', serif;
+    background: var(--card-bg, #2a2a2a);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-color, #444);
+    border-radius: 8px;
+    color: var(--text-primary, #f0e6d2);
+    font-family: 'Cinzel', serif;
     padding: 0.75rem;
     font-size: 0.85rem;
 }
@@ -613,11 +617,11 @@ ${this.getStyles()}
     font-family: 'Cinzel Decorative', 'Cinzel', serif;
     font-size: 1.2rem;
     font-weight: 700;
-    color: #DC143C;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    color: var(--accent-color, #f0ad4e);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
     margin: 0 0 0.2rem;
     letter-spacing: 0.03em;
-    border-bottom: 2px solid #6b4423;
+    border-bottom: 1px solid var(--border-color, #444);
     padding-bottom: 0.3rem;
 }
 
@@ -625,9 +629,9 @@ ${this.getStyles()}
     font-family: 'Cinzel', serif;
     font-size: 0.85rem;
     font-weight: 700;
-    color: #1a1a1a;
+    color: var(--accent-color, #f0ad4e);
     margin: 0.5rem 0 0.2rem;
-    border-bottom: 1px solid #8b7355;
+    border-bottom: 1px solid var(--border-color, #444);
     padding-bottom: 0.15rem;
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -636,7 +640,7 @@ ${this.getStyles()}
 .npc-parchment hr {
     border: none;
     height: 1px;
-    background: linear-gradient(to right, #8b7355, transparent);
+    background: linear-gradient(to right, var(--border-color, #444), transparent);
     margin: 0.4rem 0;
 }
 
@@ -648,14 +652,16 @@ ${this.getStyles()}
     margin: 0.15rem 0;
     font-size: 0.8rem;
     line-height: 1.3;
+    color: var(--text-primary, #f0e6d2);
 }
 
 .npc-secret {
-    background: rgba(130, 32, 0, 0.1);
-    border-left: 3px solid #822000;
+    background: rgba(240, 173, 78, 0.1);
+    border-left: 3px solid var(--accent-color, #f0ad4e);
     padding: 0.3rem;
     font-style: italic;
     font-size: 0.8rem;
+    color: var(--text-primary, #f0e6d2);
 }
 
 /* Stats grid */
@@ -668,26 +674,27 @@ ${this.getStyles()}
 }
 
 .npc-stat-box {
-    background: rgba(130, 32, 0, 0.1);
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-color, #444);
     border-radius: 4px;
     padding: 0.25rem;
 }
 
 .npc-stat-label {
     font-size: 0.6rem;
-    color: #5a3a1a;
+    color: var(--text-muted, #888);
     text-transform: uppercase;
 }
 
 .npc-stat-value {
     font-size: 1rem;
     font-weight: bold;
-    color: #822000;
+    color: var(--accent-color, #f0ad4e);
 }
 
 .npc-stat-mod {
     font-size: 0.75rem;
-    color: #5a3a1a;
+    color: var(--text-primary, #f0e6d2);
 }
 
 /* Tag colorati */
@@ -709,7 +716,8 @@ ${this.getStyles()}
 }
 
 .npc-combat-stat {
-    background: rgba(130, 32, 0, 0.1);
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-color, #444);
     border-radius: 4px;
     padding: 0.3rem;
     text-align: center;
@@ -717,7 +725,7 @@ ${this.getStyles()}
 
 .npc-combat-stat label {
     font-size: 0.6rem;
-    color: #5a3a1a;
+    color: var(--text-muted, #888);
     text-transform: uppercase;
     display: block;
 }
@@ -725,7 +733,7 @@ ${this.getStyles()}
 .npc-combat-stat .value {
     font-size: 1.1rem;
     font-weight: bold;
-    color: #822000;
+    color: var(--accent-color, #f0ad4e);
 }
 
 /* Spells grid 10 blocchi */
@@ -736,7 +744,8 @@ ${this.getStyles()}
 }
 
 .npc-spell-block {
-    background: rgba(130, 32, 0, 0.08);
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-color, #444);
     border-radius: 4px;
     padding: 0.25rem;
 }
@@ -749,8 +758,8 @@ ${this.getStyles()}
 .npc-spell-block-header {
     font-family: 'Cinzel', serif;
     font-size: 0.7rem;
-    color: #5a3a1a;
-    border-bottom: 1px solid rgba(130, 32, 0, 0.3);
+    color: var(--accent-color, #f0ad4e);
+    border-bottom: 1px solid var(--border-color, #444);
     padding-bottom: 0.15rem;
     margin-bottom: 0.2rem;
 }
@@ -758,15 +767,16 @@ ${this.getStyles()}
 .npc-spell-tag {
     display: inline-block;
     padding: 0.1rem 0.25rem;
-    background: rgba(130, 32, 0, 0.15);
+    background: rgba(240, 173, 78, 0.15);
     border-radius: 3px;
     font-size: 0.65rem;
     margin: 0.05rem;
     cursor: pointer;
+    color: var(--text-primary, #f0e6d2);
 }
 
 .npc-spell-tag:hover {
-    background: rgba(130, 32, 0, 0.3);
+    background: rgba(240, 173, 78, 0.3);
 }
 
 /* Equipment list */
@@ -774,6 +784,7 @@ ${this.getStyles()}
     font-size: 0.8rem;
     margin: 0.2rem 0;
     padding-left: 1.2rem;
+    color: var(--text-primary, #f0e6d2);
 }
 
 .npc-equipment-list li {
