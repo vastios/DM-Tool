@@ -1,31 +1,45 @@
 /* ==========================================================================
-   NPC-MANAGER.CSS - Stili per il Gestore di PNG v3.0
-   Layout a 2 Card Flippabili con stile pergamena
+   NPC-MANAGER.CSS - Stili per il Gestore di PNG v3.1
+   Layout a 2 Card Flippabili - Tema CAMPAGNA unificato (scuro)
    ========================================================================== */
 
 /* ═══════════════════════════════════════════════════════════════
-   LAYOUT PRINCIPALE
+   VARIABILI TEMA CAMPAGNA
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+    --npc-bg: #1a1a1a;
+    --npc-panel: #2a2a2a;
+    --npc-border: #444;
+    --npc-text: #f0e6d2;
+    --npc-text-muted: #888;
+    --npc-accent: #f0ad4e;
+    --npc-gold: #d4af37;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LAYOUT PRINCIPALE - Card-separated style
    ═══════════════════════════════════════════════════════════════ */
 
 .npc-manager-v3 {
     display: flex;
-    gap: 15px;
-    padding: 15px;
+    gap: 20px;
+    padding: 20px;
     height: 100%;
     box-sizing: border-box;
-    background: #1a1a1a;
+    background: var(--npc-bg, #1a1a1a);
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   SIDEBAR
+   SIDEBAR - Card style
    ═══════════════════════════════════════════════════════════════ */
 
 .npc-sidebar {
     flex: 0 0 280px;
-    background: linear-gradient(180deg, #2a2a2a 0%, #252525 100%);
-    border: 1px solid #444;
+    background: var(--npc-panel, #2a2a2a);
+    border: 1px solid var(--npc-border, #444);
     border-radius: 8px;
-    padding: 15px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -38,7 +52,7 @@
 
 .npc-sidebar-header h2 {
     margin: 0 0 12px 0;
-    color: #d4af37;
+    color: var(--npc-accent, #f0ad4e);
     font-family: 'Cinzel', serif;
     font-size: 1.3rem;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
@@ -51,22 +65,22 @@
 .npc-search {
     width: 100%;
     padding: 10px 12px;
-    background: #1a1a1a;
-    border: 1px solid #444;
+    background: var(--npc-bg, #1a1a1a);
+    border: 1px solid var(--npc-border, #444);
     border-radius: 6px;
-    color: #fff;
+    color: var(--npc-text, #f0e6d2);
     font-size: 0.85rem;
     transition: all 0.2s;
 }
 
 .npc-search:focus {
     outline: none;
-    border-color: #d4af37;
-    box-shadow: 0 0 8px rgba(212, 175, 55, 0.2);
+    border-color: var(--npc-accent, #f0ad4e);
+    box-shadow: 0 0 8px rgba(240, 173, 78, 0.2);
 }
 
 .npc-search::placeholder {
-    color: #666;
+    color: var(--npc-text-muted, #666);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -101,8 +115,8 @@
 }
 
 .npc-list-item {
-    background: linear-gradient(135deg, #333 0%, #2a2a2a 100%);
-    border: 1px solid #444;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--npc-border, #444);
     border-radius: 8px;
     padding: 12px;
     margin-bottom: 10px;
@@ -111,15 +125,15 @@
 }
 
 .npc-list-item:hover {
-    background: linear-gradient(135deg, #3a3a3a 0%, #333 100%);
-    border-color: #555;
+    background: rgba(0, 0, 0, 0.4);
+    border-color: var(--npc-accent, #f0ad4e);
     transform: translateX(3px);
 }
 
 .npc-list-item.selected {
-    border-color: #d4af37;
-    background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(212, 175, 55, 0.05) 100%);
-    box-shadow: 0 0 12px rgba(212, 175, 55, 0.2);
+    border-color: var(--npc-accent, #f0ad4e);
+    background: rgba(240, 173, 78, 0.1);
+    box-shadow: 0 0 12px rgba(240, 173, 78, 0.2);
 }
 
 .npc-item-header {
@@ -131,7 +145,7 @@
 
 .npc-item-name {
     font-weight: 600;
-    color: #fff;
+    color: var(--npc-text, #f0e6d2);
     font-size: 0.95rem;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
@@ -184,7 +198,7 @@
 
 .npc-item-info {
     font-size: 0.75rem;
-    color: #999;
+    color: var(--npc-text-muted, #888);
     line-height: 1.4;
 }
 
@@ -229,7 +243,7 @@
     width: 100%;
     padding: 12px;
     margin-top: auto;
-    background: linear-gradient(135deg, #d4af37 0%, #b8962f 100%);
+    background: linear-gradient(135deg, var(--npc-accent, #f0ad4e) 0%, #c89f60 100%);
     border: none;
     border-radius: 8px;
     color: #1a1a1a;
@@ -239,12 +253,12 @@
     text-transform: uppercase;
     letter-spacing: 1px;
     transition: all 0.25s ease;
-    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+    box-shadow: 0 4px 12px rgba(240, 173, 78, 0.3);
 }
 
 .npc-new-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+    box-shadow: 0 6px 20px rgba(240, 173, 78, 0.4);
 }
 
 .npc-new-btn:active {
@@ -258,7 +272,7 @@
 .npc-main {
     flex: 1;
     display: flex;
-    gap: 15px;
+    gap: 20px;
     overflow: hidden;
     min-width: 0;
 }
@@ -513,8 +527,8 @@
 }
 
 .npc-editor-form {
-    background: linear-gradient(180deg, #2a2a2a 0%, #252525 100%);
-    border: 1px solid #444;
+    background: var(--npc-panel, #2a2a2a);
+    border: 1px solid var(--npc-border, #444);
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
@@ -558,8 +572,8 @@
 .npc-form-group select:focus,
 .npc-form-group textarea:focus {
     outline: none;
-    border-color: #d4af37;
-    box-shadow: 0 0 8px rgba(212, 175, 55, 0.15);
+    border-color: var(--npc-accent, #f0ad4e);
+    box-shadow: 0 0 8px rgba(240, 173, 78, 0.15);
 }
 
 .npc-form-group textarea {
@@ -649,7 +663,7 @@
 .npc-gen-btn {
     flex: 1;
     padding: 12px;
-    background: linear-gradient(135deg, #d4af37 0%, #b8962f 100%);
+    background: linear-gradient(135deg, var(--npc-accent, #f0ad4e) 0%, #c89f60 100%);
     border: none;
     border-radius: 6px;
     color: #1a1a1a;
@@ -663,7 +677,7 @@
 
 .npc-gen-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(212, 175, 55, 0.3);
+    box-shadow: 0 6px 16px rgba(240, 173, 78, 0.3);
 }
 
 .npc-gen-btn.secondary {
