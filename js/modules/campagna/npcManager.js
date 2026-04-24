@@ -32,7 +32,7 @@ import { getSpellsByLevel, getMaxSpellLevel } from '../../../database/classSpell
 import { linkifyCampaignReferences, getAllCampaignElements } from '../../../utils/campaignLinker.js';
 import { AlignmentGuide } from '../compendio/alignmentGuide.js';
 import { initAutocomplete } from '../../../utils/autocomplete.js';
-import { generateNPC, getEquipmentPacks, CLASS_EQUIPMENT, MAGIC_ITEMS_BY_RARITY } from '../compendio/quickBuilder.js';
+import { generateNPC, getEquipmentPacks, CLASS_EQUIPMENT, MAGIC_ITEMS_BY_RARITY, generateAppearance, generatePersonality } from '../compendio/quickBuilder.js';
 
 // ═══════════════════════════════════════════════════════════════
 // COSTANTI E CONFIGURAZIONE
@@ -2032,6 +2032,9 @@ ${this.getStyles()}
                             <button class="npc-qb-btn npc-qb-btn-generate" id="qb-generate">
                                 🎲 Genera PNG
                             </button>
+                            <button class="npc-qb-btn npc-qb-btn-secondary" id="qb-regen-desc" style="display: none; margin-top: 0.5rem; font-size: 0.8rem;">
+                                🔄 Rigenera Descrizioni
+                            </button>
                         </div>
                         
                         <!-- Area Preview -->
@@ -2080,6 +2083,10 @@ ${this.getStyles()}
         // Genera
         generateBtn?.addEventListener('click', () => this.generateQuickBuilderNpc());
         
+        // Rigenera descrizioni
+        const regenBtn = document.getElementById('qb-regen-desc');
+        regenBtn?.addEventListener('click', () => this.regenerateDescriptions());
+        
         // Salva
         saveBtn?.addEventListener('click', () => this.saveQuickBuilderNpc());
     },
@@ -2109,9 +2116,29 @@ ${this.getStyles()}
         this.qbGeneratedNpc = generated;
         this.renderQuickBuilderPreview(generated);
         
-        // Abilita salva
+        // Abilita salva e mostra pulsante rigenera descrizioni
         const saveBtn = document.getElementById('qb-save');
         if (saveBtn) saveBtn.disabled = false;
+        
+        const regenBtn = document.getElementById('qb-regen-desc');
+        if (regenBtn) regenBtn.style.display = 'block';
+    },
+    
+    regenerateDescriptions() {
+        if (!this.qbGeneratedNpc) {
+            showToast('Genera prima un PNG', 'warning');
+            return;
+        }
+        
+        const npc = this.qbGeneratedNpc;
+        
+        // Rigenera solo le descrizioni
+        npc.appearance = generateAppearance(npc.raceName, npc.className, npc.gender);
+        npc.personality = generatePersonality(npc.className, npc.raceName);
+        
+        // Aggiorna preview
+        this.renderQuickBuilderPreview(npc);
+        showToast('Descrizioni rigenerate!', 'success');
     },
     
     renderQuickBuilderPreview(npc) {
@@ -2163,6 +2190,23 @@ ${this.getStyles()}
                     <span class="value">d${npc.hitDie}</span>
                 </div>
             </div>
+            
+            <!-- Aspetto e Personalità -->
+            ${npc.appearance ? `
+                <div class="npc-qb-section-box" style="background: rgba(212, 175, 55, 0.08);">
+                    <div class="npc-qb-section-box-title">👤 Aspetto Fisico</div>
+                    <p style="font-size: 0.8rem; line-height: 1.4;">${escapeHtml(npc.appearance)}</p>
+                    <p style="font-size: 0.65rem; color: var(--text-muted); margin-top: 0.3rem; font-style: italic;">💡 Modificabile dopo il salvataggio</p>
+                </div>
+            ` : ''}
+            
+            ${npc.personality ? `
+                <div class="npc-qb-section-box" style="background: rgba(155, 89, 182, 0.08);">
+                    <div class="npc-qb-section-box-title">🎭 Personalità</div>
+                    <p style="font-size: 0.8rem; line-height: 1.4;">${escapeHtml(npc.personality)}</p>
+                    <p style="font-size: 0.65rem; color: var(--text-muted); margin-top: 0.3rem; font-style: italic;">💡 Modificabile dopo il salvataggio</p>
+                </div>
+            ` : ''}
             
             ${spells.dc ? `
                 <div class="npc-qb-section-box">
@@ -2266,6 +2310,10 @@ ${this.getStyles()}
             // Features
             features: generated.features || [],
             racialTraits: generated.racialTraits || [],
+            
+            // Descrizioni generate
+            appearance: generated.appearance || '',
+            personality: generated.personality || '',
             
             // Metadati
             createdAt: Date.now(),

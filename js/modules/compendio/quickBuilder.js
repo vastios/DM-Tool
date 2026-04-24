@@ -50,6 +50,222 @@ const NAMES_MALE = ['Goran', 'Theron', 'Kael', 'Bran', 'Darius', 'Marcus', 'Eldr
 const NAMES_FEMALE = ['Lyra', 'Kira', 'Elara', 'Mira', 'Thalia', 'Seraphina', 'Isolde', 'Brynn', 'Freya', 'Astrid', 'Helena', 'Natasha', 'Katya', 'Ingrid', 'Sigrid'];
 const SURNAMES = ['Stoneheart', 'Nightshade', 'Ironforge', 'Stormwind', 'Shadowmere', 'Brightblade', 'Ashford', 'Blackwood', 'Silvermoon', 'Fireborn', 'Winterfell', 'Ravencrest', 'Dawnbringer', 'Thornwood', 'Greymane'];
 
+// ═══════════════════════════════════════════════════════════════
+// GENERAZIONE DESCRIZIONI CASUALI
+// ═══════════════════════════════════════════════════════════════
+
+// Aspetto fisico - Elementi combinabili
+const APPEARANCE_BODY = [
+    'alto e slanciato', 'basso e tarchiato', 'di statura media',
+    'muscoloso e possente', 'magro e allampanato', 'robusto e massiccio',
+    'agile e scattante', 'corpulento', 'snello e atletico'
+];
+
+const APPEARANCE_FACE = [
+    'viso squadrato', 'volto affilato', 'faccia rotonda',
+    'lineamenti marcati', 'tratti delicati', 'viso segnato dalle intemperie',
+    'occhi penetranti', 'sguardo vivace', 'occhi scuri e profondi',
+    'barba curata', 'barba incolta', 'viso rasato',
+    'cicatrice sulla guancia', 'naso aquilino', 'mento volitivo'
+];
+
+const APPEARANCE_HAIR = [
+    'capelli scuri', 'capelli biondi', 'capelli rossi',
+    'capelli grigi', 'capelli neri come la pece', 'capelli castani',
+    'capelli lunghi legati', 'capelli corti', 'capelli ricci',
+    'capelli canuti', 'calvizie incipiente', 'chioma fluente'
+];
+
+const APPEARANCE_CLOTHING = [
+    'vestiti semplici e pratici', 'abbigliamento elegante',
+    'abiti logori ma puliti', 'armatura ben tenuta',
+    'vesti colorate', 'abiti scuri e discreti',
+    'indumenti di buona fattura', 'vestiti umili',
+    'abbigliamento vistoso', 'tunica da viaggio'
+];
+
+const APPEARANCE_DISTINCTIVE = [
+    'tatuaggio tribale sul braccio', 'orecchino d\'argento',
+    'collana di amuleti', 'anello con sigillo',
+    'cicatrice sull\'avambraccio', 'andatura zoppicante',
+    'voce profonda e tonante', 'risata contagiosa',
+    'sguardo sfuggente', 'maniere raffinate',
+    'odore di cuoio e ferro', 'profumo di erbe',
+    'sempre con un libro', 'pipa sempre in bocca'
+];
+
+// Personalità - Tratti combinabili
+const PERSONALITY_TRAITS = [
+    'coraggioso', 'codardo', 'prudente', 'avventato',
+    'gentile', 'scontroso', 'riservato', 'espansivo',
+    'onesto', 'furbo', 'ingenuo', 'sospettoso',
+    'leale', 'opportunista', 'ambizioso', 'modesto',
+    'curioso', 'indifferente', 'appassionato', 'cynico',
+    'ottimista', 'pessimista', 'pragmatico', 'idealista'
+];
+
+const PERSONALITY_MOTIVATIONS = [
+    'cerca vendetta per un torto subito',
+    'desidera arricchirsi',
+    'protegge la famiglia a ogni costo',
+    'vuole dimostrare il proprio valore',
+    'insegue un sogno romantico',
+    'è guidato dalla fede',
+    'cerca conoscenze proibite',
+    'vuole esplorare il mondo',
+    'nasconde un segreto doloroso',
+    'lotta per una causa'
+];
+
+const PERSONALITY_QUIRKS = [
+    'parla in terza persona',
+    'fischietta quando è nervoso',
+    'non guarda mai negli occhi',
+    'giocherella con una moneta',
+    'ha un incubo ricorrente',
+    'odia essere toccato',
+    'colleziona oggetti strani',
+    'parla troppo quando mente',
+    'beve solo acqua',
+    'non dorme mai due volte nello stesso letto'
+];
+
+// Descrizioni specifiche per razza
+const RACIAL_APPEARANCE = {
+    'Umano': {
+        extras: ['carnagione chiara', 'pelle olivastra', 'pelle scura', 'viso comune ma memorabile']
+    },
+    'Elfo': {
+        extras: ['orecchie a punta eleganti', 'occhi verdi luminescenti', 'pelle diafana', 'grazia eterea']
+    },
+    'Nano': {
+        extras: ['barba folta e intrecciata', 'naso importante', 'sopracciglia cespugliose', 'costituzione solida']
+    },
+    'Halfling': {
+        extras: ['piedi pelosi', 'faccia allegra', 'statura minuta', 'addome rotondetto']
+    },
+    'Mezzorco': {
+        extras: ['canini prominenti', 'pelle verdastra', 'mascelle possenti', 'sguardo intimidatorio']
+    },
+    'Tiefling': {
+        extras: ['corna piccole ma visibili', 'pelle rossastra', 'coda sottile', 'occhi gialli']
+    },
+    'Gnomo': {
+        extras: ['naso importante', 'occhi brillanti', 'orecchie grandi', 'sorriso furbo']
+    },
+    'Draghelnato': {
+        extras: ['scaglie sottili sul collo', 'occhi reptiliani', 'soffio caldo', 'artigli leggeri']
+    }
+};
+
+// Descrizioni specifiche per classe
+const CLASS_PERSONALITY = {
+    'Guerriero': {
+        traits: ['disciplinato', 'risoluto'],
+        motivations: ['protegge i compagni', 'segue un codice d\'onore']
+    },
+    'Mago': {
+        traits: ['intellettuale', 'curioso'],
+        motivations: ['cerca la conoscenza arcana', 'vuole capire i misteri del mondo']
+    },
+    'Chierico': {
+        traits: ['devoto', 'caritatevole'],
+        motivations: ['serve la divinità', 'cura i sofferenti']
+    },
+    'Ladro': {
+        traits: ['cauto', 'opportunista'],
+        motivations: ['sopravvive con l\'ingegno', 'cerca ricchezze facili']
+    },
+    'Ranger': {
+        traits: ['solitario', 'osservatore'],
+        motivations: ['protegge la natura', 'insegue una preda']
+    },
+    'Paladino': {
+        traits: ['giusto', 'ferreo'],
+        motivations: ['combatta il male', 'difende gli innocenti']
+    },
+    'Barbaro': {
+        traits: ['impulsivo', 'libero'],
+        motivations: ['segue l\'istinto', 'protegge la tribù']
+    },
+    'Bardo': {
+        traits: ['carismatico', 'creativo'],
+        motivations: ['cerca ispirazione', 'vuole essere ricordato']
+    },
+    'Druido': {
+        traits: ['riservato', 'saggio'],
+        motivations: ['preserva l\'equilibrio', 'comunica con la natura']
+    },
+    'Monaco': {
+        traits: ['disciplinato', 'contemplativo'],
+        motivations: ['persegue la perfezione interiore', 'segue la via']
+    },
+    'Stregone': {
+        traits: ['misterioso', 'intenso'],
+        motivations: ['controlla il potere innato', 'cerca le origini del suo dono']
+    },
+    'Warlock': {
+        traits: ['ambiguo', 'determinato'],
+        motivations: ['rispetta un patto', 'cerca potere a qualsiasi costo']
+    }
+};
+
+// Funzione per generare descrizione completa
+function generateAppearance(raceName, className, gender) {
+    const parts = [];
+    const genderAdj = gender === 'female' ? 'a' : 'o';
+    
+    // Corporatura
+    parts.push(pickRandom(APPEARANCE_BODY));
+    
+    // Tratti del viso
+    parts.push(pickRandom(APPEARANCE_FACE));
+    
+    // Capelli
+    parts.push(pickRandom(APPEARANCE_HAIR));
+    
+    // Tratto razziale specifico
+    if (RACIAL_APPEARANCE[raceName]) {
+        parts.push(pickRandom(RACIAL_APPEARANCE[raceName].extras));
+    }
+    
+    // Abbigliamento
+    parts.push(pickRandom(APPEARANCE_CLOTHING));
+    
+    // Segno distintivo
+    parts.push(pickRandom(APPEARANCE_DISTINCTIVE));
+    
+    // Costruisci la frase
+    return `È ${parts[0]}, con ${parts[1]} e ${parts[2]}. ${capitalizeFirst(parts[3])}. Indossa ${parts[4]}. Si nota un ${parts[5]}.`;
+}
+
+function generatePersonality(className, raceName) {
+    const parts = [];
+    
+    // Tratti base
+    const baseTraits = pickRandom(PERSONALITY_TRAITS, 2);
+    parts.push(`È ${baseTraits[0]} e ${baseTraits[1]}`);
+    
+    // Tratti di classe
+    if (CLASS_PERSONALITY[className]) {
+        const classTraits = CLASS_PERSONALITY[className].traits;
+        parts.push(`come ${className.toLowerCase()} è particolarmente ${classTraits[0]} e ${classTraits[1]}`);
+    }
+    
+    // Motivazione
+    parts.push(pickRandom(PERSONALITY_MOTIVATIONS));
+    
+    // Piccola stranezza
+    parts.push(pickRandom(PERSONALITY_QUIRKS));
+    
+    // Costruisci la frase
+    return `${capitalizeFirst(parts[0])}. ${capitalizeFirst(parts[1])}. ${capitalizeFirst(parts[2])}. Spesso ${parts[3]}.`;
+}
+
+function capitalizeFirst(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 // ─────────────────────────────────────────────────────────────
 // FUNZIONI DI UTILITÀ
 // ─────────────────────────────────────────────────────────────
@@ -58,8 +274,12 @@ function getModifier(score) {
     return Math.floor((score - 10) / 2);
 }
 
-function pickRandom(arr) {
-    return arr[Math.floor(Math.random() * arr.length)];
+function pickRandom(arr, count = 1) {
+    if (count === 1) {
+        return arr[Math.floor(Math.random() * arr.length)];
+    }
+    const shuffled = shuffleArray(arr);
+    return shuffled.slice(0, Math.min(count, arr.length));
 }
 
 function shuffleArray(arr) {
@@ -911,6 +1131,10 @@ function generateNPC(className, raceName, level, options = {}) {
     const features = getFeaturesForLevel(classData, level);
     const racialTraits = getRacialTraits(raceData);
     
+    // Genera descrizioni casuali
+    const appearance = generateAppearance(raceName, className, actualGender);
+    const personality = generatePersonality(className, raceName);
+    
     return {
         name,
         gender: actualGender,
@@ -931,7 +1155,9 @@ function generateNPC(className, raceName, level, options = {}) {
         equipment,
         hitDie: classData.hit_die || 8,
         savingThrows: classData.saving_throws || [],
-        spellAbility: getSpellAbility(className)
+        spellAbility: getSpellAbility(className),
+        appearance,
+        personality
     };
 }
 
@@ -1308,5 +1534,5 @@ const QuickBuilder = {
 };
 
 // Export named per integrazione con NPC Manager
-export { generateNPC, getEquipmentPacks, CLASS_EQUIPMENT, MAGIC_ITEMS_BY_RARITY };
+export { generateNPC, getEquipmentPacks, CLASS_EQUIPMENT, MAGIC_ITEMS_BY_RARITY, generateAppearance, generatePersonality };
 export default QuickBuilder;
