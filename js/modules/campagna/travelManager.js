@@ -32,7 +32,8 @@ const TERRAIN_CONFIG = {
         description: 'Terreno aperto, marcia agevole',
         waterConsumption: 1,
         foragingDC: 10,
-        monsterTypes: ['umanoide', 'bestia', 'gigante']
+        // Tipi mostro in inglese per compatibilità con monsterDatabase
+        monsterTypes: ['humanoid', 'beast', 'giant']
     },
     foresta: {
         name: 'Foresta',
@@ -42,7 +43,7 @@ const TERRAIN_CONFIG = {
         description: 'Visibilità ridotta, terreno difficile',
         waterConsumption: 1,
         foragingDC: 10,
-        monsterTypes: ['bestia', 'pianta', 'fata', 'umanoide']
+        monsterTypes: ['beast', 'plant', 'fey', 'humanoid']
     },
     montagna: {
         name: 'Montagna',
@@ -52,7 +53,7 @@ const TERRAIN_CONFIG = {
         description: 'Clima rigido, pericolo cadute',
         waterConsumption: 1.5,
         foragingDC: 15,
-        monsterTypes: ['gigante', 'drago', 'elementale', 'mostro']
+        monsterTypes: ['giant', 'dragon', 'elemental', 'monstrosity']
     },
     deserto: {
         name: 'Deserto',
@@ -62,7 +63,7 @@ const TERRAIN_CONFIG = {
         description: 'Calore estremo, consumo acqua raddoppiato',
         waterConsumption: 2,
         foragingDC: 20,
-        monsterTypes: ['elementale', 'mostro', 'nonmorto', 'bestia']
+        monsterTypes: ['elemental', 'monstrosity', 'undead', 'beast']
     },
     palude: {
         name: 'Palude',
@@ -72,7 +73,7 @@ const TERRAIN_CONFIG = {
         description: 'Terreno paludoso, malattie possibili',
         waterConsumption: 1.5,
         foragingDC: 12,
-        monsterTypes: ['bestia', 'pianta', 'drago', 'mostro']
+        monsterTypes: ['beast', 'plant', 'dragon', 'monstrosity']
     },
     collina: {
         name: 'Collina',
@@ -82,7 +83,7 @@ const TERRAIN_CONFIG = {
         description: 'Terreno ondulato, buona visibilità',
         waterConsumption: 1,
         foragingDC: 12,
-        monsterTypes: ['umanoide', 'bestia', 'gigante']
+        monsterTypes: ['humanoid', 'beast', 'giant']
     },
     acqua: {
         name: 'Acqua/Navigazione',
@@ -92,7 +93,7 @@ const TERRAIN_CONFIG = {
         description: 'Viaggio per nave o barca',
         waterConsumption: 1,
         foragingDC: 18,
-        monsterTypes: ['bestia', 'elementale', 'drago', 'gigante']
+        monsterTypes: ['beast', 'elemental', 'dragon', 'giant']
     },
     sottosuolo: {
         name: 'Sottosuolo',
@@ -102,7 +103,7 @@ const TERRAIN_CONFIG = {
         description: 'Grotte e tunnel, nessuna luce naturale',
         waterConsumption: 1,
         foragingDC: 25,
-        monsterTypes: ['aberrazione', 'mostro', 'nonmorto', 'elementale']
+        monsterTypes: ['aberration', 'monstrosity', 'undead', 'elemental']
     }
 };
 
@@ -1886,19 +1887,31 @@ ${this.getStyles()}
     startCombat() {
         if (!this.currentEncounter) return;
 
+        // Salva i mostri prima di chiudere il modal
+        const monstersToTransfer = this.currentEncounter.monsters || [];
+        
         // Close modal FIRST before changing modules
         this.closeEncounterModal();
-        showToast('Apri il Combat Tracker per gestire l\'incontro', 'info');
 
-        // Dispatch event to open combat tracker
+        if (monstersToTransfer.length === 0) {
+            showToast('Nessun mostro da trasferire al Combat Tracker', 'warning');
+            return;
+        }
+
+        // Dispatch event to open combat tracker con i mostri dell'incontro
         const event = new CustomEvent('openModuleWithItem', {
             detail: { 
                 moduleId: 'combatTracker', 
-                itemId: null, 
-                section: null
+                itemData: { 
+                    monsters: monstersToTransfer,
+                    encounterTitle: this.currentEncounter.title,
+                    source: 'travelManager'
+                }
             }
         });
         document.dispatchEvent(event);
+        
+        showToast(`${monstersToTransfer.length} tipi di mostri trasferiti al Combat Tracker`, 'success');
     },
 
     forage() {
@@ -1926,26 +1939,52 @@ ${this.getStyles()}
 
     navigate() {
         const terrain = TERRAIN_CONFIG[this.state.terrain];
-        const roll = rollD20();
         const paceMod = PACE_CONFIG[this.state.pace].passivePenalty || 0;
         const weatherMod = this.state.weather?.modifier || 0;
-
-        const success = (roll + paceMod + weatherMod) >= 15;
+        const roll = rollD20();
+        const totalRoll = roll + paceMod + weatherMod;
+        
+        // DC base 15, modificata da terreno difficile
+        const navigationDC = 15 - (terrain.speedMultiplier < 1 ? 2 : 0);
+        const success = totalRoll >= navigationDC;
 
         if (success) {
-            // Progress bonus
-            const bonusProgress = roll >= 20 ? 'Avanzamento straordinario! 1 giorno risparmiato.' : 
-                                  'Navigazione corretta. Avanzamento normale.';
-            this.addLogEntry(`Naviga: ${bonusProgress}`, '');
-            showToast(bonusProgress, 'success');
+            // Successo critico (nat 20 o 20+ totale)
+            if (roll === 20 || totalRoll >= 25) {
+                // Avanzamento straordinario: salva un giorno di viaggio
+                if (this.state.travelDays > 1 && this.state.currentDay < this.state.travelDays) {
+                    this.state.travelDays = Math.max(1, this.state.travelDays - 1);
+                    this.addLogEntry(`Naviga: Successo critico (roll ${roll})! Percorso trovato, 1 giorno risparmiato.`, '');
+                    showToast('Navigazione eccellente! Giorno risparmiato!', 'success');
+                } else {
+                    this.addLogEntry(`Naviga: Successo critico! Percorso ottimale trovato.`, '');
+                    showToast('Navigazione perfetta!', 'success');
+                }
+            } else {
+                this.addLogEntry(`Naviga: Successo (roll ${roll}). Percorso corretto.`, '');
+                showToast('Navigazione corretta', 'success');
+            }
         } else {
-            // Lost or delayed
-            const complication = roll <= 5 ? 'Persi! Perdite 1d4 ore.' : 
-                                 'Territorio confuso. Avanzamento rallentato.';
-            this.addLogEntry(`Naviga: ${complication}`, '');
-            showToast(complication, 'warning');
+            // Fallimento
+            if (roll === 1 || totalRoll <= 5) {
+                // Disastro: persi! Consumo risorse extra
+                const extraRations = Math.ceil(this.state.partySize / 2);
+                const extraWater = Math.ceil(this.state.partySize * 0.5);
+                this.state.resources.rations = Math.max(0, this.state.resources.rations - extraRations);
+                this.state.resources.water = Math.max(0, this.state.resources.water - extraWater);
+                this.addLogEntry(`Naviga: DISASTRO (roll ${roll})! Persi nel territorio. Consumate ${extraRations} razioni e ${extraWater}L acqua extra.`, 'resource');
+                showToast(`Persi! -${extraRations} razioni, -${extraWater}L acqua`, 'error');
+            } else {
+                // Rallentamento
+                this.state.navigationPenalty = true;
+                this.addLogEntry(`Naviga: Fallimento (roll ${roll}). Avanzamento rallentato.`, '');
+                showToast('Navigazione difficoltosa, percorso rallentato', 'warning');
+            }
         }
 
+        // Aggiorna UI
+        this.updateConsumption();
+        this.updateSummary();
         this.saveState();
     },
 
@@ -2033,6 +2072,40 @@ ${this.getStyles()}
 
     saveState() {
         saveTravelState(this.state);
+    },
+
+    // ═══════════════════════════════════════════════════════════════
+    // CLEANUP
+    // ═══════════════════════════════════════════════════════════════
+
+    /**
+     * Distrugge il modulo, rimuovendo tutti i riferimenti e listeners.
+     * Da chiamare quando si cambia modulo.
+     */
+    destroy() {
+        console.log('🧭 [TravelManager] Destroying module...');
+        
+        // Salva lo stato prima di distruggere
+        if (this.state) {
+            this.saveState();
+        }
+        
+        // Rimuovi eventuali modal aperti
+        this.closeEncounterModal();
+        
+        // Pulisci il container
+        if (this.container) {
+            this.container.innerHTML = '';
+            this.container = null;
+        }
+        
+        // Reset riferimenti
+        this.locations = null;
+        this.savedState = null;
+        this.state = null;
+        this.currentEncounter = null;
+        
+        console.log('🧭 [TravelManager] Module destroyed');
     }
 };
 
