@@ -1,15 +1,20 @@
 /* ==========================================================================
-   DEFINIZIONE VARIABILI CSS (per evitare errori)
+   _pgEditor.css
+   ─────────────────────────────────────────────────────────────
+   Stili per il form di creazione/modifica PG
+   Tema CAMPAGNA unificato (scuro)
    ========================================================================== */
 
+/* === VARIABILI TEMA CAMPAGNA (ereditate) === */
 :root {
-    --primary-color: #822000;
-    --background-color: #fdf5e6;
-    --border-color: #d4af37;
-    --hover-background-color: #f9f0d2;
-    --code-background-color: #e9e2c3;
-    --danger-color: #a52a2a;
-    --text-muted-color: #888;
+    --editor-bg: #2a2a2a;
+    --editor-panel: #333;
+    --editor-border: #444;
+    --editor-text: #f0e6d2;
+    --editor-text-muted: #888;
+    --editor-accent: #f0ad4e;
+    --editor-input-bg: #1a1a1a;
+    --editor-input-border: #555;
 }
 
 /* ==========================================================================
@@ -22,12 +27,12 @@
     grid-template-columns: 1fr 1fr; /* Due colonne principali */
     gap: 2rem;
     padding: 1.5rem;
-    background: #fdf5e6; /* Colore pergamena chiaro */
-    border: 2px solid #d4af37;
+    background: var(--editor-bg, #2a2a2a);
+    border: 1px solid var(--editor-border, #444);
     border-radius: 8px;
     font-family: 'Lora', serif;
-    color: #3d2817;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    color: var(--editor-text, #f0e6d2);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     height: 100%;
     box-sizing: border-box;
     overflow-y: auto;
@@ -35,15 +40,15 @@
 
 /* Sezioni collassabili */
 .form-section {
-    border: 1px solid #c9a961;
+    border: 1px solid var(--editor-border, #444);
     border-radius: 5px;
-    background-color: #f9f0d2;
+    background-color: rgba(0, 0, 0, 0.2);
     margin-bottom: 1rem;
 }
 
 .form-section-header {
-    background-color: #e8d9a0;
-    border-bottom: 1px solid #c9a961;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid var(--editor-border, #444);
     padding: 0.5rem 1rem;
     cursor: pointer;
     display: flex;
@@ -54,14 +59,14 @@
 }
 
 .form-section-header:hover {
-    background-color: #dcc896;
+    background-color: rgba(240, 173, 78, 0.1);
 }
 
 .form-section-header h4 {
     margin: 0;
     font-family: 'Cinzel', serif;
     font-size: 1.1rem;
-    color: #5a3a1a;
+    color: var(--editor-accent, #f0ad4e);
 }
 
 .form-section-content {
@@ -74,7 +79,7 @@
 .form-section-header::after {
     content: '▼'; /* Freccia giù */
     font-size: 0.8rem;
-    color: #5a3a1a;
+    color: var(--editor-accent, #f0ad4e);
     transition: transform 0.2s ease-in-out;
 }
 
@@ -96,27 +101,27 @@
     font-weight: bold;
     margin-bottom: 0.3rem;
     font-size: 0.9rem;
-    color: #5a3a1a;
+    color: var(--editor-accent, #f0ad4e);
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
     padding: 0.5rem;
-    border: 1px solid #b08d57;
+    border: 1px solid var(--editor-input-border, #555);
     border-radius: 4px;
-    background-color: #fffef9;
+    background-color: var(--editor-input-bg, #1a1a1a);
     font-family: inherit;
     font-size: 0.9rem;
-    color: #3d2817;
+    color: var(--editor-text, #f0e6d2);
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #822000;
-    box-shadow: 0 0 5px rgba(130, 32, 0, 0.3);
+    border-color: var(--editor-accent, #f0ad4e);
+    box-shadow: 0 0 5px rgba(240, 173, 78, 0.3);
 }
 
 /* Griglia per le caratteristiche */
@@ -128,17 +133,17 @@
 
 /* Stile per i blocchi di classe multiclasse */
 .class-block {
-    border: 1px solid #a0522d;
+    border: 1px solid var(--editor-border, #444);
     border-radius: 4px;
     padding: 1rem;
-    background-color: #f4e4c1;
+    background-color: rgba(0, 0, 0, 0.3);
     position: relative;
 }
 .class-block .remove-class-btn {
     position: absolute;
     top: 5px;
     right: 5px;
-    background: #a0522d;
+    background: #8b0000;
     color: #fff;
     border: none;
     border-radius: 50%;
@@ -150,16 +155,17 @@
     text-align: center;
 }
 .class-block .remove-class-btn:hover {
-    background: #8b4513;
+    background: #a52a2a;
 }
 
 /* Area per i campi auto-popolati (sola lettura) */
 .auto-populated-field {
-    background-color: #e9e2c3;
-    border-color: #b08d57;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-color: #555;
     font-style: italic;
-    color: #5a3a1a;
+    color: var(--editor-text-muted, #888);
 }
+
 /* Per la modale di selezione incantesimi */
 .spell-selection-modal {
     position: fixed;
@@ -167,7 +173,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.8);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -175,15 +181,15 @@
 }
 
 .spell-selection-modal .modal-content {
-    background: var(--background-color);
-    border: 1px solid var(--border-color);
+    background: var(--editor-bg, #2a2a2a);
+    border: 1px solid var(--editor-border, #444);
     border-radius: 8px;
     width: 90%;
     max-width: 500px;
     max-height: 80vh;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
 }
 
 .spell-selection-modal .modal-header {
@@ -191,17 +197,19 @@
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--editor-border, #444);
 }
 
 .spell-selection-modal .modal-header h3 {
     margin: 0;
+    color: var(--editor-accent, #f0ad4e);
+    font-family: 'Cinzel', serif;
 }
 
 .spell-selection-modal .modal-close {
     font-size: 1.5rem;
     cursor: pointer;
-    color: var(--text-muted-color);
+    color: var(--editor-text-muted, #888);
 }
 
 .spell-selection-modal .modal-body {
@@ -218,14 +226,15 @@
 
 .spell-selection-modal #spell-selection-list li {
     padding: 0.75rem;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--editor-border, #444);
     cursor: pointer;
     border-radius: 4px;
     transition: background-color 0.2s;
+    color: var(--editor-text, #f0e6d2);
 }
 
 .spell-selection-modal #spell-selection-list li:hover {
-    background-color: var(--hover-background-color);
+    background-color: rgba(240, 173, 78, 0.1);
 }
 
 /* Per la lista degli incantesimi selezionati nell'editor */
@@ -241,15 +250,15 @@
     justify-content: space-between;
     align-items: center;
     padding: 0.5rem;
-    background: var(--code-background-color);
+    background: rgba(0, 0, 0, 0.3);
     border-radius: 4px;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--editor-border, #444);
 }
 
 .selected-spell-item .remove-spell-btn {
     background: none;
     border: none;
-    color: var(--danger-color);
+    color: #dc3545;
     cursor: pointer;
     font-size: 1rem;
     padding: 0 0.5rem;
@@ -264,8 +273,8 @@
 }
 
 .pc-skill-tag {
-    background-color: var(--primary-color);
-    color: var(--background-color);
+    background-color: var(--editor-accent, #f0ad4e);
+    color: #1a1a1a;
     padding: 0.2rem 0.6rem;
     border-radius: 12px;
     font-size: 0.8rem;
