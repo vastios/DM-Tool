@@ -1887,8 +1887,9 @@ ${this.getStyles()}
     startCombat() {
         if (!this.currentEncounter) return;
 
-        // Salva i mostri prima di chiudere il modal
+        // Salva i dati prima di chiudere il modal
         const monstersToTransfer = this.currentEncounter.monsters || [];
+        const encounterTitle = this.currentEncounter.title || 'Incontro Travel';
         
         // Close modal FIRST before changing modules
         this.closeEncounterModal();
@@ -1904,7 +1905,7 @@ ${this.getStyles()}
                 moduleId: 'combatTracker', 
                 itemData: { 
                     monsters: monstersToTransfer,
-                    encounterTitle: this.currentEncounter.title,
+                    encounterTitle: encounterTitle,
                     source: 'travelManager'
                 }
             }

@@ -8,7 +8,7 @@
     "repository": {
       "url": "https://github.com/vastios/DM-Tool",
       "branch": "main",
-      "token": "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"
+      "token": "[TOKEN_RIMOSSO_PER_SICUREZZA]"
     }
   },
 
@@ -51,7 +51,7 @@
     {
       "id": 8,
       "title": "Token Autorizzato",
-      "description": "Token autorizzato per modifiche: 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"
+      "description": "Token autorizzato per modifiche: [vedi variabile d'ambiente o configurazione locale]"
     }
   ],
 
