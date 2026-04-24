@@ -1876,13 +1876,19 @@ ${this.getStyles()}
     },
 
     closeEncounterModal() {
-        this.container.querySelector('#encounter-modal').classList.remove('active');
-        this.container.querySelector('#encounter-modal-overlay').classList.remove('active');
+        const modal = this.container.querySelector('#encounter-modal');
+        const overlay = this.container.querySelector('#encounter-modal-overlay');
+        if (modal) modal.classList.remove('active');
+        if (overlay) overlay.classList.remove('active');
         this.currentEncounter = null;
     },
 
     startCombat() {
         if (!this.currentEncounter) return;
+
+        // Close modal FIRST before changing modules
+        this.closeEncounterModal();
+        showToast('Apri il Combat Tracker per gestire l\'incontro', 'info');
 
         // Dispatch event to open combat tracker
         const event = new CustomEvent('openModuleWithItem', {
@@ -1893,9 +1899,6 @@ ${this.getStyles()}
             }
         });
         document.dispatchEvent(event);
-
-        this.closeEncounterModal();
-        showToast('Apri il Combat Tracker per gestire l\'incontro', 'info');
     },
 
     forage() {
