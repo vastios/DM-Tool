@@ -350,11 +350,17 @@ const CombatTracker = {
     },
     actedThisTurn: new Set(), // Combattenti che hanno usato la loro azione questo turno
 
-    render(containerElement) {
+    render(containerElement, itemToLoad = null, itemData = null) {
         this.container = containerElement;
         this.targetCombatant = null; // Bersaglio selezionato per attacchi
         
         loadAllSources();
+
+        // Se arrivano mostri da TravelManager o altre fonti, importali
+        if (itemData && itemData.monsters && itemData.monsters.length > 0) {
+            console.log('👹 [CombatTracker] Ricevuti mostri da importare:', itemData);
+            setTimeout(() => this.importMonstersFromTravel(itemData), 100);
+        }
 
         containerElement.innerHTML = `
 <div class="combat-tracker-container">
@@ -989,6 +995,45 @@ const CombatTracker = {
             this.popupSearchTerm = e.target.value;
             this.refreshPopup();
         }
+    },
+
+    /**
+     * Importa mostri dal TravelManager o altre fonti esterne.
+     * @param {Object} data - Dati contenenti { monsters: [], encounterTitle: string, source: string }
+     */
+    importMonstersFromTravel(data) {
+        const { monsters, encounterTitle, source } = data;
+        
+        if (!monsters || monsters.length === 0) {
+            showToast('Nessun mostro da importare.', 'warning');
+            return;
+        }
+
+        let totalAdded = 0;
+        
+        monsters.forEach(monsterData => {
+            // Il mostro potrebbe avere un campo 'count' che indica quanti esemplari aggiungere
+            const count = monsterData.count || 1;
+            
+            // Cerca il mostro completo nel database per avere tutti i dati
+            let fullMonster = monsterDatabase.find(m => m.index === monsterData.index || m.name === monsterData.name);
+            
+            if (!fullMonster) {
+                // Se non trovato nel database, usa i dati parziali dal TravelManager
+                console.warn(`⚠️ [CombatTracker] Mostro non trovato nel database: ${monsterData.name}, uso dati parziali`);
+                fullMonster = monsterData;
+            }
+            
+            // Aggiungi 'count' esemplari di questo mostro
+            for (let i = 0; i < count; i++) {
+                addMonsterToCombat(fullMonster);
+                totalAdded++;
+            }
+        });
+
+        const sourceLabel = source === 'travelManager' ? 'Travel Manager' : source;
+        showToast(`${totalAdded} mostri importati da ${sourceLabel}${encounterTitle ? ` (${encounterTitle})` : ''}`, 'success');
+        console.log(`✅ [CombatTracker] Importati ${totalAdded} mostri da ${source}`);
     },
 
     addAllPcsToCombat() {

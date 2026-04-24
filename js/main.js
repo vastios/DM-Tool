@@ -213,7 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- FUNZIONE DI CARICAMENTO MODULI (CON DEBUG AGGIUNTIVO) ---
-    async function loadModule(modulePath, containerElement, itemToLoad = null) {
+    async function loadModule(modulePath, containerElement, itemToLoad = null, itemData = null) {
         console.log(`🚀 [main.js] Inizio caricamento modulo: ${modulePath}`);
         try {
             // 1. Pulisce il contenitore e distrugge il modulo precedente
@@ -233,7 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (typeof ModuleExport === 'function' && ModuleExport.prototype) {
                 console.log(`🏗️ [main.js] Rilevato modulo di tipo CLASSE.`);
                 const fullState = getState();
-                const dataForModule = { ...fullState, selectedId: itemToLoad };
+                const dataForModule = { ...fullState, selectedId: itemToLoad, itemData: itemData };
                 console.log(`🏗️ [main.js] Dati per il modulo:`, dataForModule);
                 console.log(`🏗️ [main.js] Istanziazione del modulo...`);
                 currentModuleInstance = new ModuleExport(containerElement, dataForModule);
@@ -253,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
             else if (ModuleExport && typeof ModuleExport.render === 'function') {
                 console.log(`🎨 [main.js] Rilevato modulo di tipo OGGETTO.`);
                 console.log(`🎨 [main.js] Invocazione di ModuleExport.render(...).`);
-                ModuleExport.render(containerElement, itemToLoad);
+                ModuleExport.render(containerElement, itemToLoad, itemData);
                 console.log(`✅ [main.js] Modulo oggetto renderizzato con successo.`);
             } 
             // 4. Se non è nessuno dei due, lancia un errore
@@ -280,6 +280,11 @@ document.addEventListener('DOMContentLoaded', () => {
      * Necessario perché handleMainTabClick resetta activeSubTab al primo elemento.
      */
     let pendingSubTab = null;
+    
+    /**
+     * Variabile per passare dati aggiuntivi (es. mostri da TravelManager) ai moduli.
+     */
+    let pendingItemData = null;
 
     /**
      * Trova in quale sezione si trova un modulo.
@@ -297,7 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- EVENT LISTENER GLOBALE PER COMUNICAZIONE TRA MODULI ---
     document.addEventListener('openModuleWithItem', (e) => {
-        const { moduleId, itemId, section } = e.detail;
+        const { moduleId, itemId, section, itemData } = e.detail;
         
         if (!moduleId) {
             console.error('❌ [main.js] moduleId mancante nell\'evento openModuleWithItem');
@@ -312,11 +317,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         console.log(`🔗 [main.js] Trovato modulo ${moduleId} in sezione ${targetSection}`);
+        if (itemData) {
+            console.log(`📦 [main.js] Ricevuti dati aggiuntivi per il modulo:`, itemData);
+        }
 
-        // Imposta pendingItemId E pendingSubTab PRIMA di qualsiasi altra operazione
+        // Imposta pendingItemId, pendingSubTab E pendingItemData PRIMA di qualsiasi altra operazione
         // Questo è critico per evitare race condition
         pendingItemId = itemId ? { id: itemId, section: section } : null;
         pendingSubTab = moduleId;
+        pendingItemData = itemData || null;
         
         // Se siamo in una sezione diversa, cambia tab
         if (targetSection !== activeMainTab) {
@@ -359,11 +368,13 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Controlla se c'è un itemId in attesa di essere caricato
-        if (pendingItemId !== null) {
+        // Controlla se c'è un itemId o itemData in attesa di essere caricato
+        if (pendingItemId !== null || pendingItemData !== null) {
             const itemIdToLoad = pendingItemId;
+            const itemDataToLoad = pendingItemData;
             pendingItemId = null;
-            loadModule(activeTool.modulePath, contentArea, itemIdToLoad);
+            pendingItemData = null;
+            loadModule(activeTool.modulePath, contentArea, itemIdToLoad, itemDataToLoad);
         } else {
             loadModule(activeTool.modulePath, contentArea);
         }
