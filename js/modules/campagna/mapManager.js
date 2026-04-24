@@ -1796,11 +1796,16 @@ ${this.getStyles()}
 
     applyTransform() {
         const wrapper = this.container.querySelector('#map-canvas-wrapper');
-        wrapper.style.transform = `translate(${this.pan.x}px, ${this.pan.y}px) scale(${this.zoom})`;
+        if (wrapper) {
+            wrapper.style.transform = `translate(${this.pan.x}px, ${this.pan.y}px) scale(${this.zoom})`;
+        }
     },
 
     updateZoomDisplay() {
-        this.container.querySelector('#zoom-display').textContent = `${Math.round(this.zoom * 100)}%`;
+        const display = this.container.querySelector('#zoom-display');
+        if (display) {
+            display.textContent = `${Math.round(this.zoom * 100)}%`;
+        }
     },
 
     // ═══════════════════════════════════════════════════════════════
@@ -1808,8 +1813,9 @@ ${this.getStyles()}
     // ═══════════════════════════════════════════════════════════════
 
     handleKeyDown(e) {
-        // Only handle if this module is active
-        if (!this.container.isConnected) return;
+        // Only handle if this module is active and has content
+        if (!this.container || !this.container.isConnected) return;
+        if (!this.container.querySelector('#map-canvas-wrapper')) return;
 
         // Escape to cancel placing
         if (e.key === 'Escape') {
