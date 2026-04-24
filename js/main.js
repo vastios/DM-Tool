@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // SEZIONE: ESPLORAZIONE
         exploration: [
             { id: 'TravelManager', name: 'Viaggi', modulePath: './modules/campagna/travelManager.js', requiresCampaign: true },
-            { id: 'DungeonGenerator', name: 'Generatore Dungeon', modulePath: './modules/campagna/dungeonGenerator.js', requiresCampaign: true },
+            { id: 'DungeonGenerator', name: 'Generatore Mappe', modulePath: './modules/campagna/dungeonGenerator/index.js', requiresCampaign: true },
         ],
         // SEZIONE: COMPENDIO
         compendium: [

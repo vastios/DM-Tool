@@ -3,9 +3,13 @@
   "name": "Foresta",
   "description": "Foresta lussureggiante con alberi, ruscelli e radure",
   "monsterTypes": ["beast", "fey", "plant", "humanoid", "monstrosity"],
+  "crRange": { "min": 0.25, "max": 8 },
+  "encounterDensity": 0.12,
+  "treasureDensity": 0.08,
+  
   "tiles": [
     {
-      "id": "01_erba_base",
+      "id": "erba_base",
       "name": "Erba",
       "file": "01_erba_base.png",
       "category": "terreno",
@@ -13,10 +17,17 @@
       "blocksVision": false,
       "description": "Erba verde lussureggiante",
       "tags": ["base", "terreno", "passaggio"],
-      "weight": 10
+      "weight": 15,
+      "symmetry": "X",
+      "sockets": {
+        "top": "ground",
+        "bottom": "ground",
+        "left": "ground",
+        "right": "ground"
+      }
     },
     {
-      "id": "02_albero_grande",
+      "id": "albero_grande",
       "name": "Albero Grande",
       "file": "02_albero_grande.png",
       "category": "vegetazione",
@@ -24,11 +35,17 @@
       "blocksVision": true,
       "description": "Una grande quercia secolare",
       "tags": ["albero", "copertura", "ostacolo"],
-      "weight": 3,
-      "encounterBonus": 5
+      "weight": 4,
+      "symmetry": "X",
+      "sockets": {
+        "top": "foliage",
+        "bottom": "foliage",
+        "left": "foliage",
+        "right": "foliage"
+      }
     },
     {
-      "id": "03_albero_medio",
+      "id": "albero_medio",
       "name": "Albero Medio",
       "file": "03_albero_medio.png",
       "category": "vegetazione",
@@ -36,10 +53,17 @@
       "blocksVision": true,
       "description": "Un albero di medie dimensioni",
       "tags": ["albero", "copertura", "ostacolo"],
-      "weight": 4
+      "weight": 5,
+      "symmetry": "X",
+      "sockets": {
+        "top": "foliage",
+        "bottom": "foliage",
+        "left": "foliage",
+        "right": "foliage"
+      }
     },
     {
-      "id": "04_albero_pino",
+      "id": "albero_pino",
       "name": "Pino",
       "file": "04_albero_pino.png",
       "category": "vegetazione",
@@ -47,10 +71,17 @@
       "blocksVision": true,
       "description": "Un alto pino",
       "tags": ["albero", "conifera", "copertura"],
-      "weight": 3
+      "weight": 4,
+      "symmetry": "X",
+      "sockets": {
+        "top": "foliage",
+        "bottom": "foliage",
+        "left": "foliage",
+        "right": "foliage"
+      }
     },
     {
-      "id": "05_alberi_doppi",
+      "id": "alberi_doppi",
       "name": "Folta Vegetazione",
       "file": "05_alberi_doppi.png",
       "category": "vegetazione",
@@ -58,11 +89,17 @@
       "blocksVision": true,
       "description": "Due alberi vicini creano una fitta barriera",
       "tags": ["alberi", "copertura", "nascondiglio"],
-      "weight": 2,
-      "encounterBonus": 10
+      "weight": 3,
+      "symmetry": "X",
+      "sockets": {
+        "top": "foliage",
+        "bottom": "foliage",
+        "left": "foliage",
+        "right": "foliage"
+      }
     },
     {
-      "id": "06_cespuglio",
+      "id": "cespuglio",
       "name": "Cespuglio",
       "file": "06_cespuglio.png",
       "category": "vegetazione",
@@ -70,11 +107,17 @@
       "blocksVision": false,
       "description": "Un cespuglio fitto",
       "tags": ["cespuglio", "copertura_leggera"],
-      "weight": 4,
-      "coverBonus": 2
+      "weight": 6,
+      "symmetry": "X",
+      "sockets": {
+        "top": "ground",
+        "bottom": "ground",
+        "left": "ground",
+        "right": "ground"
+      }
     },
     {
-      "id": "07_cespuglio_fiori",
+      "id": "cespuglio_fiori",
       "name": "Cespuglio Fiorito",
       "file": "07_cespuglio_fiori.png",
       "category": "vegetazione",
@@ -82,12 +125,17 @@
       "blocksVision": false,
       "description": "Un cespuglio con bei fiori colorati",
       "tags": ["cespuglio", "fiori", "copertura_leggera"],
-      "weight": 2,
-      "coverBonus": 2,
-      "herbalismDC": 12
+      "weight": 3,
+      "symmetry": "X",
+      "sockets": {
+        "top": "ground",
+        "bottom": "ground",
+        "left": "ground",
+        "right": "ground"
+      }
     },
     {
-      "id": "08_roccia_grande",
+      "id": "roccia_grande",
       "name": "Roccia Grande",
       "file": "08_roccia_grande.png",
       "category": "terreno",
@@ -96,11 +144,16 @@
       "description": "Una grande roccia massiccia",
       "tags": ["roccia", "copertura", "arrampicata"],
       "weight": 2,
-      "climbDC": 12,
-      "coverBonus": 4
+      "symmetry": "X",
+      "sockets": {
+        "top": "rock",
+        "bottom": "rock",
+        "left": "rock",
+        "right": "rock"
+      }
     },
     {
-      "id": "09_rocce",
+      "id": "rocce",
       "name": "Campo di Rocce",
       "file": "09_rocce.png",
       "category": "terreno",
@@ -108,12 +161,17 @@
       "blocksVision": false,
       "description": "Terreno roccioso dissestato",
       "tags": ["roccia", "difficile"],
-      "weight": 2,
-      "movementPenalty": 0.5,
-      "coverBonus": 2
+      "weight": 3,
+      "symmetry": "X",
+      "sockets": {
+        "top": "ground",
+        "bottom": "ground",
+        "left": "ground",
+        "right": "ground"
+      }
     },
     {
-      "id": "10_laghetto",
+      "id": "laghetto",
       "name": "Laghetto",
       "file": "10_laghetto.png",
       "category": "acqua",
@@ -121,37 +179,76 @@
       "blocksVision": false,
       "description": "Un piccolo laghetto tranquillo",
       "tags": ["acqua", "nuoto", "pesca"],
-      "weight": 1,
-      "swimDC": 10,
-      "fishingPossible": true
+      "weight": 2,
+      "symmetry": "X",
+      "sockets": {
+        "top": "water",
+        "bottom": "water",
+        "left": "water",
+        "right": "water"
+      }
     },
     {
-      "id": "11_ruscello_h",
-      "name": "Ruscello",
+      "id": "ruscello_h",
+      "name": "Ruscello Orizzontale",
       "file": "11_ruscello_h.png",
       "category": "acqua",
       "passable": true,
       "blocksVision": false,
       "description": "Un ruscello che scorre dolcemente",
       "tags": ["acqua", "guado", "orizzontale"],
-      "weight": 2,
-      "fordDC": 8,
-      "freshWater": true
+      "weight": 3,
+      "symmetry": "I",
+      "sockets": {
+        "top": "ground",
+        "bottom": "ground",
+        "left": "water",
+        "right": "water"
+      },
+      "rotations": ["ruscello_v"]
     },
     {
-      "id": "12_sentiero_h",
-      "name": "Sentiero",
+      "id": "ruscello_v",
+      "name": "Ruscello Verticale",
+      "file": "11_ruscello_h.png",
+      "category": "acqua",
+      "passable": true,
+      "blocksVision": false,
+      "description": "Un ruscello che scorre dolcemente",
+      "tags": ["acqua", "guado", "verticale"],
+      "weight": 0,
+      "symmetry": "I",
+      "isRotation": true,
+      "rotationOf": "ruscello_h",
+      "rotation": 90,
+      "sockets": {
+        "top": "water",
+        "bottom": "water",
+        "left": "ground",
+        "right": "ground"
+      }
+    },
+    {
+      "id": "sentiero_h",
+      "name": "Sentiero Orizzontale",
       "file": "12_sentiero_h.png",
       "category": "sentiero",
       "passable": true,
       "blocksVision": false,
       "description": "Un sentiero sterrato",
       "tags": ["sentiero", "passaggio", "orizzontale"],
-      "weight": 3,
-      "movementBonus": 1.25
+      "weight": 4,
+      "symmetry": "I",
+      "sockets": {
+        "top": "ground",
+        "bottom": "ground",
+        "left": "path",
+        "right": "path"
+      },
+      "rotations": ["sentiero_v"]
     },
     {
-      "id": "13_sentiero_v",
+      "id": "sentiero_v",
       "name": "Sentiero Verticale",
       "file": "13_sentiero_v.png",
       "category": "sentiero",
@@ -159,11 +256,20 @@
       "blocksVision": false,
       "description": "Un sentiero sterrato",
       "tags": ["sentiero", "passaggio", "verticale"],
-      "weight": 3,
-      "movementBonus": 1.25
+      "weight": 4,
+      "symmetry": "I",
+      "isRotation": true,
+      "rotationOf": "sentiero_h",
+      "rotation": 90,
+      "sockets": {
+        "top": "path",
+        "bottom": "path",
+        "left": "ground",
+        "right": "ground"
+      }
     },
     {
-      "id": "14_incrocio",
+      "id": "incrocio",
       "name": "Incrocio",
       "file": "14_incrocio.png",
       "category": "sentiero",
@@ -171,12 +277,99 @@
       "blocksVision": false,
       "description": "Un incrocio nel sentiero",
       "tags": ["sentiero", "incrocio", "passaggio"],
-      "weight": 1,
-      "movementBonus": 1.25,
-      "navigationPoint": true
+      "weight": 2,
+      "symmetry": "X",
+      "sockets": {
+        "top": "path",
+        "bottom": "path",
+        "left": "path",
+        "right": "path"
+      }
     },
     {
-      "id": "15_radura_fiori",
+      "id": "curva_sentiero",
+      "name": "Curva Sentiero",
+      "file": "14_incrocio.png",
+      "category": "sentiero",
+      "passable": true,
+      "blocksVision": false,
+      "description": "Una curva nel sentiero",
+      "tags": ["sentiero", "curva", "passaggio"],
+      "weight": 3,
+      "symmetry": "L",
+      "sockets": {
+        "top": "path",
+        "bottom": "ground",
+        "left": "ground",
+        "right": "path"
+      },
+      "rotations": ["curva_sentiero_90", "curva_sentiero_180", "curva_sentiero_270"]
+    },
+    {
+      "id": "curva_sentiero_90",
+      "name": "Curva Sentiero 90°",
+      "file": "14_incrocio.png",
+      "category": "sentiero",
+      "passable": true,
+      "blocksVision": false,
+      "description": "Una curva nel sentiero",
+      "tags": ["sentiero", "curva", "passaggio"],
+      "weight": 0,
+      "symmetry": "L",
+      "isRotation": true,
+      "rotationOf": "curva_sentiero",
+      "rotation": 90,
+      "sockets": {
+        "top": "ground",
+        "bottom": "ground",
+        "left": "path",
+        "right": "path"
+      }
+    },
+    {
+      "id": "curva_sentiero_180",
+      "name": "Curva Sentiero 180°",
+      "file": "14_incrocio.png",
+      "category": "sentiero",
+      "passable": true,
+      "blocksVision": false,
+      "description": "Una curva nel sentiero",
+      "tags": ["sentiero", "curva", "passaggio"],
+      "weight": 0,
+      "symmetry": "L",
+      "isRotation": true,
+      "rotationOf": "curva_sentiero",
+      "rotation": 180,
+      "sockets": {
+        "top": "ground",
+        "bottom": "path",
+        "left": "path",
+        "right": "ground"
+      }
+    },
+    {
+      "id": "curva_sentiero_270",
+      "name": "Curva Sentiero 270°",
+      "file": "14_incrocio.png",
+      "category": "sentiero",
+      "passable": true,
+      "blocksVision": false,
+      "description": "Una curva nel sentiero",
+      "tags": ["sentiero", "curva", "passaggio"],
+      "weight": 0,
+      "symmetry": "L",
+      "isRotation": true,
+      "rotationOf": "curva_sentiero",
+      "rotation": 270,
+      "sockets": {
+        "top": "path",
+        "bottom": "ground",
+        "left": "ground",
+        "right": "path"
+      }
+    },
+    {
+      "id": "radura_fiori",
       "name": "Radura Fiorita",
       "file": "15_radura_fiori.png",
       "category": "terreno",
@@ -184,12 +377,17 @@
       "blocksVision": false,
       "description": "Una bellissima radura piena di fiori",
       "tags": ["radura", "fiori", "erbe"],
-      "weight": 1,
-      "herbalismDC": 10,
-      "foragingBonus": 2
+      "weight": 3,
+      "symmetry": "X",
+      "sockets": {
+        "top": "clearing",
+        "bottom": "clearing",
+        "left": "clearing",
+        "right": "clearing"
+      }
     },
     {
-      "id": "16_tronco_caduto",
+      "id": "tronco_caduto",
       "name": "Tronco Caduto",
       "file": "16_tronco_caduto.png",
       "category": "vegetazione",
@@ -198,11 +396,16 @@
       "description": "Un grande tronco abbattuto",
       "tags": ["tronco", "copertura", "funghi"],
       "weight": 2,
-      "coverBonus": 2,
-      "survivalDC": 12
+      "symmetry": "I",
+      "sockets": {
+        "top": "ground",
+        "bottom": "ground",
+        "left": "ground",
+        "right": "ground"
+      }
     },
     {
-      "id": "17_funghi",
+      "id": "funghi",
       "name": "Funghi",
       "file": "17_funghi.png",
       "category": "vegetazione",
@@ -211,11 +414,16 @@
       "description": "Una colonia di funghi colorati",
       "tags": ["funghi", "erbe", "veleno"],
       "weight": 2,
-      "herbalismDC": 13,
-      "natureDC": 10
+      "symmetry": "X",
+      "sockets": {
+        "top": "ground",
+        "bottom": "ground",
+        "left": "ground",
+        "right": "ground"
+      }
     },
     {
-      "id": "18_rovine",
+      "id": "rovine",
       "name": "Rovine Antiche",
       "file": "18_rovine.png",
       "category": "struttura",
@@ -224,12 +432,19 @@
       "description": "Antiche rovine coperte di muschio",
       "tags": ["rovine", "esplorazione", "tesoro"],
       "weight": 1,
-      "investigationDC": 15,
-      "treasureChance": 25,
-      "encounterBonus": 15
+      "symmetry": "X",
+      "sockets": {
+        "top": "ground",
+        "bottom": "ground",
+        "left": "ground",
+        "right": "ground"
+      },
+      "isPOI": true,
+      "encounterBonus": 20,
+      "treasureChance": 40
     },
     {
-      "id": "19_ponte",
+      "id": "ponte",
       "name": "Ponte",
       "file": "19_ponte.png",
       "category": "struttura",
@@ -238,10 +453,17 @@
       "description": "Un ponte di legno",
       "tags": ["ponte", "passaggio", "struttura"],
       "weight": 1,
-      "movementBonus": 1.0
+      "symmetry": "I",
+      "sockets": {
+        "top": "ground",
+        "bottom": "ground",
+        "left": "path",
+        "right": "path"
+      },
+      "requiresWater": true
     },
     {
-      "id": "20_capanna",
+      "id": "capanna",
       "name": "Capanna",
       "file": "20_capanna.png",
       "category": "struttura",
@@ -250,11 +472,19 @@
       "description": "Una piccola capanna di legno",
       "tags": ["capanna", "riparo", "npc"],
       "weight": 1,
-      "enterable": true,
-      "encounterBonus": 10
+      "symmetry": "X",
+      "sockets": {
+        "top": "building",
+        "bottom": "building",
+        "left": "building",
+        "right": "building"
+      },
+      "isPOI": true,
+      "requiresPath": true,
+      "encounterBonus": 15
     },
     {
-      "id": "21_campo_falò",
+      "id": "campo_falo",
       "name": "Campo con Falò",
       "file": "21_campo_falò.png",
       "category": "punto_interesse",
@@ -263,11 +493,19 @@
       "description": "Un campo con un falò acceso",
       "tags": ["campo", "falò", "accampamento", "npc"],
       "weight": 1,
-      "restBonus": true,
-      "encounterBonus": 20
+      "symmetry": "X",
+      "sockets": {
+        "top": "clearing",
+        "bottom": "clearing",
+        "left": "clearing",
+        "right": "clearing"
+      },
+      "isPOI": true,
+      "requiresPath": true,
+      "encounterBonus": 25
     },
     {
-      "id": "22_pozzo",
+      "id": "pozzo",
       "name": "Pozzo",
       "file": "22_pozzo.png",
       "category": "struttura",
@@ -276,11 +514,18 @@
       "description": "Un vecchio pozzo di pietra",
       "tags": ["pozzo", "acqua", "mistero"],
       "weight": 1,
-      "investigationDC": 12,
-      "freshWater": true
+      "symmetry": "X",
+      "sockets": {
+        "top": "ground",
+        "bottom": "ground",
+        "left": "ground",
+        "right": "ground"
+      },
+      "isPOI": true,
+      "treasureChance": 15
     },
     {
-      "id": "23_radura_aperta",
+      "id": "radura_aperta",
       "name": "Radura Aperta",
       "file": "23_radura_aperta.png",
       "category": "terreno",
@@ -288,8 +533,282 @@
       "blocksVision": false,
       "description": "Una radura erbosa aperta",
       "tags": ["radura", "aperto", "visibilità"],
+      "weight": 5,
+      "symmetry": "X",
+      "sockets": {
+        "top": "clearing",
+        "bottom": "clearing",
+        "left": "clearing",
+        "right": "clearing"
+      }
+    },
+    {
+      "id": "ansa_fiume",
+      "name": "Ansa Fiume",
+      "file": "11_ruscello_h.png",
+      "category": "acqua",
+      "passable": true,
+      "blocksVision": false,
+      "description": "Una curva nel ruscello",
+      "tags": ["acqua", "curva", "ruscello"],
       "weight": 2,
-      "visibilityBonus": 2
+      "symmetry": "L",
+      "sockets": {
+        "top": "water",
+        "bottom": "ground",
+        "left": "ground",
+        "right": "water"
+      },
+      "rotations": ["ansa_fiume_90", "ansa_fiume_180", "ansa_fiume_270"]
+    },
+    {
+      "id": "ansa_fiume_90",
+      "name": "Ansa Fiume 90°",
+      "file": "11_ruscello_h.png",
+      "category": "acqua",
+      "passable": true,
+      "blocksVision": false,
+      "description": "Una curva nel ruscello",
+      "tags": ["acqua", "curva", "ruscello"],
+      "weight": 0,
+      "symmetry": "L",
+      "isRotation": true,
+      "rotationOf": "ansa_fiume",
+      "rotation": 90,
+      "sockets": {
+        "top": "ground",
+        "bottom": "ground",
+        "left": "water",
+        "right": "water"
+      }
+    },
+    {
+      "id": "ansa_fiume_180",
+      "name": "Ansa Fiume 180°",
+      "file": "11_ruscello_h.png",
+      "category": "acqua",
+      "passable": true,
+      "blocksVision": false,
+      "description": "Una curva nel ruscello",
+      "tags": ["acqua", "curva", "ruscello"],
+      "weight": 0,
+      "symmetry": "L",
+      "isRotation": true,
+      "rotationOf": "ansa_fiume",
+      "rotation": 180,
+      "sockets": {
+        "top": "ground",
+        "bottom": "water",
+        "left": "water",
+        "right": "ground"
+      }
+    },
+    {
+      "id": "ansa_fiume_270",
+      "name": "Ansa Fiume 270°",
+      "file": "11_ruscello_h.png",
+      "category": "acqua",
+      "passable": true,
+      "blocksVision": false,
+      "description": "Una curva nel ruscello",
+      "tags": ["acqua", "curva", "ruscello"],
+      "weight": 0,
+      "symmetry": "L",
+      "isRotation": true,
+      "rotationOf": "ansa_fiume",
+      "rotation": 270,
+      "sockets": {
+        "top": "water",
+        "bottom": "ground",
+        "left": "ground",
+        "right": "water"
+      }
+    },
+    {
+      "id": "fine_sentiero",
+      "name": "Fine Sentiero",
+      "file": "12_sentiero_h.png",
+      "category": "sentiero",
+      "passable": true,
+      "blocksVision": false,
+      "description": "Dove il sentiero termina",
+      "tags": ["sentiero", "fine", "passaggio"],
+      "weight": 2,
+      "symmetry": "T",
+      "sockets": {
+        "top": "ground",
+        "bottom": "ground",
+        "left": "ground",
+        "right": "path"
+      },
+      "rotations": ["fine_sentiero_90", "fine_sentiero_180", "fine_sentiero_270"]
+    },
+    {
+      "id": "fine_sentiero_90",
+      "name": "Fine Sentiero 90°",
+      "file": "13_sentiero_v.png",
+      "category": "sentiero",
+      "passable": true,
+      "blocksVision": false,
+      "description": "Dove il sentiero termina",
+      "tags": ["sentiero", "fine", "passaggio"],
+      "weight": 0,
+      "symmetry": "T",
+      "isRotation": true,
+      "rotationOf": "fine_sentiero",
+      "rotation": 90,
+      "sockets": {
+        "top": "ground",
+        "bottom": "path",
+        "left": "ground",
+        "right": "ground"
+      }
+    },
+    {
+      "id": "fine_sentiero_180",
+      "name": "Fine Sentiero 180°",
+      "file": "12_sentiero_h.png",
+      "category": "sentiero",
+      "passable": true,
+      "blocksVision": false,
+      "description": "Dove il sentiero termina",
+      "tags": ["sentiero", "fine", "passaggio"],
+      "weight": 0,
+      "symmetry": "T",
+      "isRotation": true,
+      "rotationOf": "fine_sentiero",
+      "rotation": 180,
+      "sockets": {
+        "top": "ground",
+        "bottom": "ground",
+        "left": "path",
+        "right": "ground"
+      }
+    },
+    {
+      "id": "fine_sentiero_270",
+      "name": "Fine Sentiero 270°",
+      "file": "13_sentiero_v.png",
+      "category": "sentiero",
+      "passable": true,
+      "blocksVision": false,
+      "description": "Dove il sentiero termina",
+      "tags": ["sentiero", "fine", "passaggio"],
+      "weight": 0,
+      "symmetry": "T",
+      "isRotation": true,
+      "rotationOf": "fine_sentiero",
+      "rotation": 270,
+      "sockets": {
+        "top": "path",
+        "bottom": "ground",
+        "left": "ground",
+        "right": "ground"
+      }
+    },
+    {
+      "id": "t_sentiero",
+      "name": "Bivio Sentiero",
+      "file": "14_incrocio.png",
+      "category": "sentiero",
+      "passable": true,
+      "blocksVision": false,
+      "description": "Un bivio a T nel sentiero",
+      "tags": ["sentiero", "bivio", "passaggio"],
+      "weight": 2,
+      "symmetry": "T",
+      "sockets": {
+        "top": "ground",
+        "bottom": "path",
+        "left": "path",
+        "right": "path"
+      },
+      "rotations": ["t_sentiero_90", "t_sentiero_180", "t_sentiero_270"]
+    },
+    {
+      "id": "t_sentiero_90",
+      "name": "Bivio Sentiero 90°",
+      "file": "14_incrocio.png",
+      "category": "sentiero",
+      "passable": true,
+      "blocksVision": false,
+      "description": "Un bivio a T nel sentiero",
+      "tags": ["sentiero", "bivio", "passaggio"],
+      "weight": 0,
+      "symmetry": "T",
+      "isRotation": true,
+      "rotationOf": "t_sentiero",
+      "rotation": 90,
+      "sockets": {
+        "top": "path",
+        "bottom": "path",
+        "left": "ground",
+        "right": "path"
+      }
+    },
+    {
+      "id": "t_sentiero_180",
+      "name": "Bivio Sentiero 180°",
+      "file": "14_incrocio.png",
+      "category": "sentiero",
+      "passable": true,
+      "blocksVision": false,
+      "description": "Un bivio a T nel sentiero",
+      "tags": ["sentiero", "bivio", "passaggio"],
+      "weight": 0,
+      "symmetry": "T",
+      "isRotation": true,
+      "rotationOf": "t_sentiero",
+      "rotation": 180,
+      "sockets": {
+        "top": "path",
+        "bottom": "ground",
+        "left": "path",
+        "right": "path"
+      }
+    },
+    {
+      "id": "t_sentiero_270",
+      "name": "Bivio Sentiero 270°",
+      "file": "14_incrocio.png",
+      "category": "sentiero",
+      "passable": true,
+      "blocksVision": false,
+      "description": "Un bivio a T nel sentiero",
+      "tags": ["sentiero", "bivio", "passaggio"],
+      "weight": 0,
+      "symmetry": "T",
+      "isRotation": true,
+      "rotationOf": "t_sentiero",
+      "rotation": 270,
+      "sockets": {
+        "top": "path",
+        "bottom": "path",
+        "left": "path",
+        "right": "ground"
+      }
     }
-  ]
+  ],
+  
+  "socketCompatibility": {
+    "ground": ["ground", "path", "water", "clearing", "foliage", "rock", "building"],
+    "path": ["path", "ground", "clearing"],
+    "water": ["water", "ground"],
+    "clearing": ["clearing", "ground", "path", "foliage"],
+    "foliage": ["foliage", "ground", "clearing"],
+    "rock": ["rock", "ground"],
+    "building": ["building", "ground", "path", "clearing"]
+  },
+  
+  "generationRules": {
+    "minPassablePercent": 60,
+    "maxConsecutiveObstacles": 3,
+    "pathConnectivity": true,
+    "waterFlowFromEdge": true,
+    "poiProximity": {
+      "capanna": { "requires": "path", "maxDistance": 1 },
+      "campo_falo": { "requires": "clearing", "maxDistance": 0 },
+      "ponte": { "requires": "water", "maxDistance": 0 }
+    }
+  }
 }

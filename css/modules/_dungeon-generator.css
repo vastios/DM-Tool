@@ -1,5 +1,5 @@
 /* ==========================================================================
-   DUNGEON-GENERATOR.CSS - Stili per il Modulo Generatore Mappe v2.0
+   DUNGEON-GENERATOR.CSS - Stili per il Modulo Generatore Mappe v2.0 WFC
    ========================================================================== */
 
 /* Container principale */
@@ -61,11 +61,19 @@
     padding: 8px 12px;
     border-radius: 6px;
     cursor: pointer;
+    transition: all 0.2s;
 }
 
 .control-group select:hover,
 .control-group input:hover {
     border-color: #4CAF50;
+}
+
+.control-group select:focus,
+.control-group input:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
 }
 
 #dg-generate {
@@ -83,6 +91,10 @@
 #dg-generate:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+}
+
+#dg-generate:active {
+    transform: translateY(0);
 }
 
 /* Main content */
@@ -110,19 +122,35 @@
     justify-content: center;
     border: 2px solid rgba(76, 175, 80, 0.2);
     overflow: auto;
+    min-height: 300px;
 }
 
-.dg-placeholder {
+/* WFC Placeholder */
+.wfc-placeholder {
     text-align: center;
     color: #666;
+    padding: 40px;
 }
 
-.dg-placeholder p {
-    font-size: 1.2rem;
+.wfc-placeholder-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    opacity: 0.5;
 }
 
-/* Map grid */
-.dg-map-grid {
+.wfc-placeholder p {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.wfc-placeholder-hint {
+    font-size: 0.9rem;
+    color: #555;
+    font-style: italic;
+}
+
+/* WFC Map Grid */
+.wfc-map-grid {
     display: grid;
     gap: 2px;
     background: rgba(0, 0, 0, 0.3);
@@ -130,64 +158,87 @@
     border-radius: 8px;
 }
 
-.dg-tile {
+.wfc-tile {
     position: relative;
     border-radius: 4px;
     overflow: hidden;
     cursor: pointer;
     transition: all 0.2s;
     border: 2px solid transparent;
+    background: #1a2a1a;
 }
 
-.dg-tile:hover {
+.wfc-tile:hover {
     border-color: #4CAF50;
     transform: scale(1.05);
     z-index: 10;
     box-shadow: 0 0 15px rgba(76, 175, 80, 0.5);
 }
 
-.dg-tile img {
+.wfc-tile.hovered {
+    z-index: 5;
+}
+
+.wfc-tile.highlighted {
+    border-color: #FFD700;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+.wfc-tile img {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.dg-tile.has-encounter {
+.wfc-tile.has-encounter {
     box-shadow: inset 0 0 20px rgba(244, 67, 54, 0.5);
 }
 
-.dg-tile.has-treasure {
+.wfc-tile.has-treasure {
     box-shadow: inset 0 0 20px rgba(255, 193, 7, 0.5);
 }
 
+.wfc-tile.is-poi {
+    border-color: rgba(156, 39, 176, 0.5);
+}
+
+.wfc-tile.obstacle {
+    /* Styling for obstacles */
+}
+
+.wfc-tile.passable {
+    /* Styling for passable tiles */
+}
+
 /* Markers */
-.dg-marker {
+.wfc-marker {
     position: absolute;
     top: 2px;
     right: 2px;
     font-size: 14px;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.8);
     border-radius: 50%;
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
     display: flex;
     align-items: center;
     justify-content: center;
-    animation: pulse 2s infinite;
+    animation: marker-pulse 2s infinite;
+    z-index: 2;
 }
 
-.dg-marker.encounter {
+.wfc-marker.encounter {
     box-shadow: 0 0 8px rgba(244, 67, 54, 0.8);
 }
 
-.dg-marker.treasure {
+.wfc-marker.treasure {
     box-shadow: 0 0 8px rgba(255, 193, 7, 0.8);
 }
 
-@keyframes pulse {
+@keyframes marker-pulse {
     0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.1); opacity: 0.8; }
+    50% { transform: scale(1.15); opacity: 0.8; }
 }
 
 /* Info panel */
@@ -197,6 +248,7 @@
     flex-direction: column;
     gap: 15px;
     max-width: 320px;
+    min-width: 250px;
 }
 
 .dg-card {
@@ -217,6 +269,7 @@
 .text-muted {
     color: #666;
     font-style: italic;
+    font-size: 0.9rem;
 }
 
 /* Area info */
@@ -224,6 +277,7 @@
     font-size: 0.9rem;
     line-height: 1.5;
     margin-bottom: 10px;
+    color: #c0c0c0;
 }
 
 .area-stats {
@@ -239,22 +293,29 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 10px;
+    padding: 10px 12px;
     background: rgba(244, 67, 54, 0.1);
     border-radius: 6px;
     margin-bottom: 6px;
     font-size: 0.85rem;
     border-left: 3px solid #f44336;
+    transition: all 0.2s;
+}
+
+.encounter-item:hover {
+    background: rgba(244, 67, 54, 0.15);
 }
 
 .encounter-name {
     flex: 1;
     font-weight: 500;
+    color: #e0e0e0;
 }
 
 .encounter-cr {
     color: #ff9800;
     font-size: 0.8rem;
+    font-weight: 500;
 }
 
 .encounter-xp {
@@ -262,19 +323,48 @@
     font-size: 0.8rem;
 }
 
+.encounter-difficulty {
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.encounter-difficulty.facile {
+    background: rgba(76, 175, 80, 0.2);
+    color: #4CAF50;
+}
+
+.encounter-difficulty.media {
+    background: rgba(255, 193, 7, 0.2);
+    color: #FFC107;
+}
+
+.encounter-difficulty.difficile {
+    background: rgba(255, 87, 34, 0.2);
+    color: #FF5722;
+}
+
+.encounter-difficulty.mortale {
+    background: rgba(244, 67, 54, 0.2);
+    color: #f44336;
+}
+
 .btn-start-combat {
-    background: #f44336;
+    background: linear-gradient(135deg, #f44336 0%, #c62828 100%);
     border: none;
-    padding: 4px 8px;
+    padding: 6px 10px;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 1rem;
     transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(244, 67, 54, 0.3);
 }
 
 .btn-start-combat:hover {
-    background: #d32f2f;
     transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(244, 67, 54, 0.4);
 }
 
 /* Treasure items */
@@ -282,7 +372,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 10px;
+    padding: 8px 12px;
     background: rgba(255, 193, 7, 0.1);
     border-radius: 6px;
     margin-bottom: 6px;
@@ -293,12 +383,14 @@
 .treasure-name {
     flex: 1;
     font-weight: 500;
+    color: #e0e0e0;
 }
 
 .treasure-type {
     color: #ffc107;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
+    font-weight: 500;
 }
 
 /* Export buttons */
@@ -411,4 +503,36 @@
     #dg-generate {
         width: 100%;
     }
+    
+    .dg-map-container {
+        min-height: 250px;
+    }
 }
+
+/* Animation for generation */
+@keyframes tile-appear {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.wfc-tile {
+    animation: tile-appear 0.3s ease-out;
+}
+
+/* Stagger animation for grid */
+.wfc-tile:nth-child(1) { animation-delay: 0ms; }
+.wfc-tile:nth-child(2) { animation-delay: 20ms; }
+.wfc-tile:nth-child(3) { animation-delay: 40ms; }
+.wfc-tile:nth-child(4) { animation-delay: 60ms; }
+.wfc-tile:nth-child(5) { animation-delay: 80ms; }
+.wfc-tile:nth-child(6) { animation-delay: 100ms; }
+.wfc-tile:nth-child(7) { animation-delay: 120ms; }
+.wfc-tile:nth-child(8) { animation-delay: 140ms; }
+.wfc-tile:nth-child(9) { animation-delay: 160ms; }
+.wfc-tile:nth-child(10) { animation-delay: 180ms; }
