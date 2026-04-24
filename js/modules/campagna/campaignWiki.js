@@ -89,10 +89,10 @@ const CampaignWiki = {
         let activeFilters = { type: 'Tutti', rarity: 'Tutti', status: 'Tutti' };
         const typeLabels = { 'Tutti': 'Tutti', 'npcs': 'PNG', 'locations': 'Luoghi', 'factions': 'Fazioni', 'uniqueItems': 'Oggetti', 'secrets': 'Segreti', 'sessionNotes': 'Note' };
 
-        // Layout Wiki con tema scuro unificato CAMPAGNA
+        // Layout Wiki con tema scuro unificato CAMPAGNA - card separate con bordi
         const layoutHTML = `
-            <div class="wiki-container wiki-detail-panel" style="display: flex; height: calc(100vh - 100px); background: #1a1a1a;">
-                <aside class="wiki-sidebar" style="flex: 0 0 350px; border-right: 2px solid #444; display: flex; flex-direction: column; padding: 20px; background: #2a2a2a; overflow-y: auto;">
+            <div class="wiki-container wiki-detail-panel" style="display: flex; gap: 20px; padding: 20px; height: calc(100vh - 100px); background: #1a1a1a; box-sizing: border-box;">
+                <aside class="wiki-sidebar" style="flex: 0 0 350px; border: 1px solid #444; border-radius: 8px; display: flex; flex-direction: column; padding: 20px; background: #2a2a2a; overflow-y: auto;">
                     <h2 class="wiki-label" style="font-size: 1.5rem; margin-bottom: 15px; color: #f0ad4e;">Archivio Campagna</h2>
                     <input type="text" id="wiki-search" placeholder="Cerca nel database..." style="width: 100%; padding: 10px; margin-bottom: 5px; border: 1px solid #444; border-radius: 8px; background: #1a1a1a; color: #f0e6d2;">
                     <button id="reset-filters-btn" class="action-btn small" style="width: 100%; margin-bottom: 15px; font-size: 0.7rem;">RESETTA FILTRI</button>
@@ -101,7 +101,7 @@ const CampaignWiki = {
                     <div id="status-filters" class="wiki-section-tabs" style="margin-bottom: 15px; display: none; flex-wrap: wrap; gap: 5px;"></div>
                     <ul id="wiki-items-list" style="list-style: none; padding: 0; border-top: 1px solid #444;"></ul>
                 </aside>
-                <main id="wiki-viewer" class="note-viewer" style="flex: 1; padding: 0; overflow-y: auto; background-color: #1a1a1a; position: relative;">
+                <main id="wiki-viewer" class="note-viewer" style="flex: 1; border: 1px solid #444; border-radius: 8px; overflow-y: auto; background-color: #2a2a2a; position: relative;">
                     <div id="editor-content" style="padding: 20px;">
                         <p style="text-align:center; color:#888; margin-top:100px; font-style: italic;">Seleziona un elemento per visualizzare i dettagli.</p>
                     </div>
