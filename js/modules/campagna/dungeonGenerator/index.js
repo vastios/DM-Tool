@@ -24,8 +24,8 @@ import { showToast } from '../../../../utils/toast.js';
 const BIOME_CONFIG = {
     foresta: {
         name: 'Foresta',
-        tilesPath: 'ASSET/TILES/FORESTA/',
-        tilesJson: 'ASSET/TILES/FORESTA/tiles.json'
+        tilesPath: 'assets/TILES/FORESTA/',
+        tilesJson: 'assets/TILES/FORESTA/tiles.json'
     }
 };
 
