@@ -1307,4 +1307,6 @@ const QuickBuilder = {
     }
 };
 
+// Export named per integrazione con NPC Manager
+export { generateNPC, getEquipmentPacks, CLASS_EQUIPMENT, MAGIC_ITEMS_BY_RARITY };
 export default QuickBuilder;

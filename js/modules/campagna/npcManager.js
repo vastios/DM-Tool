@@ -32,6 +32,7 @@ import { getSpellsByLevel, getMaxSpellLevel } from '../../../database/classSpell
 import { linkifyCampaignReferences, getAllCampaignElements } from '../../../utils/campaignLinker.js';
 import { AlignmentGuide } from '../compendio/alignmentGuide.js';
 import { initAutocomplete } from '../../../utils/autocomplete.js';
+import { generateNPC, getEquipmentPacks, CLASS_EQUIPMENT, MAGIC_ITEMS_BY_RARITY } from '../compendio/quickBuilder.js';
 
 // ═══════════════════════════════════════════════════════════════
 // COSTANTI E CONFIGURAZIONE
@@ -798,7 +799,10 @@ ${this.getStyles()}
     <div class="npc-sidebar">
         <div class="npc-sidebar-header">
             <h2>👥 Personaggi Non Giocanti</h2>
-            <button class="npc-new-btn" id="npc-new-btn">+ Nuovo</button>
+            <div class="npc-sidebar-buttons">
+                <button class="npc-new-btn" id="npc-new-btn">+ Nuovo</button>
+                <button class="npc-quickbuilder-btn" id="npc-quickbuilder-btn" title="Creazione Rapida Avanzata">⚡ QB</button>
+            </div>
         </div>
         
         <div class="npc-search-box">
@@ -850,6 +854,7 @@ ${this.getStyles()}
     align-items: center;
     gap: 0.5rem;
     margin-bottom: 0.5rem;
+    flex-wrap: wrap;
 }
 
 .npc-sidebar-header h2 {
@@ -860,6 +865,11 @@ ${this.getStyles()}
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.npc-sidebar-buttons {
+    display: flex;
+    gap: 0.3rem;
 }
 
 .npc-new-btn {
@@ -878,6 +888,24 @@ ${this.getStyles()}
 .npc-new-btn:hover {
     transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+}
+
+.npc-quickbuilder-btn {
+    padding: 0.25rem 0.6rem;
+    background: linear-gradient(135deg, #9b59b6 0%, #6c3483 100%);
+    border: none;
+    border-radius: 3px;
+    color: #fff;
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.npc-quickbuilder-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(155, 89, 182, 0.3);
 }
 
 .npc-search-box {
@@ -1571,6 +1599,297 @@ ${this.getStyles()}
         max-height: 200px;
     }
 }
+
+/* Quick Builder Modal */
+.npc-qb-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.npc-qb-modal {
+    background: var(--card-bg, #2a2a2a);
+    border: 2px solid var(--accent-color, #d4af37);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 1200px;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.npc-qb-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, rgba(155, 89, 182, 0.2) 0%, rgba(108, 52, 131, 0.1) 100%);
+    border-bottom: 1px solid var(--border-color, #444);
+}
+
+.npc-qb-modal-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.3rem;
+    color: var(--accent-color, #d4af37);
+    margin: 0;
+}
+
+.npc-qb-modal-close {
+    background: transparent;
+    border: none;
+    color: var(--text-muted, #888);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    transition: color 0.2s;
+}
+
+.npc-qb-modal-close:hover {
+    color: var(--text-primary, #fff);
+}
+
+.npc-qb-modal-body {
+    flex: 1;
+    display: flex;
+    gap: 0;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.npc-qb-sidebar {
+    width: 280px;
+    background: var(--bg-tertiary, #1a1a1a);
+    border-right: 1px solid var(--border-color, #444);
+    padding: 1rem;
+    overflow-y: auto;
+    flex-shrink: 0;
+}
+
+.npc-qb-main {
+    flex: 1;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+.npc-qb-section {
+    margin-bottom: 1rem;
+}
+
+.npc-qb-section-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    color: var(--accent-color, #d4af37);
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid var(--border-color, #444);
+}
+
+.npc-qb-form-group {
+    margin-bottom: 0.75rem;
+}
+
+.npc-qb-form-group label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-muted, #888);
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+}
+
+.npc-qb-form-group select,
+.npc-qb-form-group input {
+    width: 100%;
+    padding: 0.5rem;
+    background: var(--input-bg, #333);
+    border: 1px solid var(--border-color, #444);
+    border-radius: 4px;
+    color: var(--text-primary, #fff);
+    font-family: 'Lora', serif;
+    font-size: 0.85rem;
+}
+
+.npc-qb-btn {
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+}
+
+.npc-qb-btn-primary {
+    background: linear-gradient(135deg, #d4af37 0%, #8b6914 100%);
+    color: #fff;
+}
+
+.npc-qb-btn-secondary {
+    background: var(--bg-tertiary, #333);
+    border: 1px solid var(--border-color, #444);
+    color: var(--text-primary, #fff);
+}
+
+.npc-qb-btn-generate {
+    background: linear-gradient(135deg, #9b59b6 0%, #6c3483 100%);
+    color: #fff;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.npc-qb-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Preview card */
+.npc-qb-preview {
+    background: var(--card-bg, #252525);
+    border: 1px solid var(--border-color, #444);
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.npc-qb-preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--accent-color, #d4af37);
+}
+
+.npc-qb-preview-name {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.2rem;
+    color: var(--accent-color, #d4af37);
+    margin: 0;
+}
+
+.npc-qb-preview-info {
+    font-size: 0.8rem;
+    color: var(--text-muted, #888);
+}
+
+.npc-qb-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 4px;
+    margin: 0.75rem 0;
+}
+
+.npc-qb-stat-box {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-color, #444);
+    border-radius: 4px;
+    padding: 0.35rem;
+    text-align: center;
+}
+
+.npc-qb-stat-label {
+    font-size: 0.6rem;
+    color: var(--text-muted, #888);
+    text-transform: uppercase;
+}
+
+.npc-qb-stat-value {
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--accent-color, #f0ad4e);
+}
+
+.npc-qb-stat-mod {
+    font-size: 0.75rem;
+    color: var(--text-primary, #f0e6d2);
+}
+
+.npc-qb-combat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    margin: 0.5rem 0;
+}
+
+.npc-qb-combat-stat {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-color, #444);
+    border-radius: 4px;
+    padding: 0.4rem;
+    text-align: center;
+}
+
+.npc-qb-combat-stat label {
+    font-size: 0.6rem;
+    color: var(--text-muted, #888);
+    text-transform: uppercase;
+    display: block;
+}
+
+.npc-qb-combat-stat .value {
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--accent-color, #f0ad4e);
+}
+
+.npc-qb-section-box {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-color, #444);
+    border-radius: 6px;
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.npc-qb-section-box-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    color: var(--accent-color, #f0ad4e);
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid var(--border-color, #444);
+}
+
+.npc-qb-spell-tag {
+    display: inline-block;
+    padding: 0.15rem 0.4rem;
+    background: rgba(155, 89, 182, 0.2);
+    border-radius: 3px;
+    font-size: 0.7rem;
+    margin: 0.1rem;
+    color: var(--text-primary, #f0e6d2);
+}
+
+.npc-qb-item-tag {
+    display: inline-block;
+    padding: 0.15rem 0.4rem;
+    background: rgba(212, 175, 55, 0.15);
+    border-radius: 3px;
+    font-size: 0.7rem;
+    margin: 0.1rem;
+    color: var(--text-primary, #f0e6d2);
+}
+
+.npc-qb-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    background: var(--bg-tertiary, #1a1a1a);
+    border-top: 1px solid var(--border-color, #444);
+}
+
+.npc-qb-empty {
+    text-align: center;
+    color: var(--text-muted, #666);
+    padding: 2rem;
+    font-style: italic;
+}
         `;
     },
     
@@ -1623,8 +1942,349 @@ ${this.getStyles()}
     },
     
     // ─────────────────────────────────────────────────────────────
-    // SELEZIONE PNG
+    // QUICK BUILDER MODAL
     // ─────────────────────────────────────────────────────────────
+    
+    openQuickBuilderModal() {
+        // Rimuovi modal esistente se presente
+        this.closeQuickBuilderModal();
+        
+        const equipmentPacks = getEquipmentPacks();
+        this.qbGeneratedNpc = null;
+        
+        const modalHTML = `
+            <div class="npc-qb-modal-overlay" id="npc-qb-overlay">
+                <div class="npc-qb-modal">
+                    <div class="npc-qb-modal-header">
+                        <h2 class="npc-qb-modal-title">⚡ Quick Builder - Creazione Rapida PNG</h2>
+                        <button class="npc-qb-modal-close" id="npc-qb-close">&times;</button>
+                    </div>
+                    
+                    <div class="npc-qb-modal-body">
+                        <!-- Sidebar Controlli -->
+                        <div class="npc-qb-sidebar">
+                            <div class="npc-qb-section">
+                                <div class="npc-qb-section-title">🎯 Classe e Razza</div>
+                                <div class="npc-qb-form-group">
+                                    <label>Classe</label>
+                                    <select id="qb-class">
+                                        ${classDatabase.map(c => `<option value="${c.classe}">${c.classe}</option>`).join('')}
+                                    </select>
+                                </div>
+                                <div class="npc-qb-form-group">
+                                    <label>Razza</label>
+                                    <select id="qb-race">
+                                        ${raceDatabase.map(r => `<option value="${r.name}">${r.name}</option>`).join('')}
+                                    </select>
+                                </div>
+                                <div class="npc-qb-form-group">
+                                    <label>Livello</label>
+                                    <select id="qb-level">
+                                        ${Array.from({length: 20}, (_, i) => `<option value="${i+1}" ${i===2 ? 'selected' : ''}>${i+1}</option>`).join('')}
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="npc-qb-section">
+                                <div class="npc-qb-section-title">📦 Dotazione</div>
+                                <div class="npc-qb-form-group">
+                                    <label>Equipaggiamento Iniziale</label>
+                                    <select id="qb-pack">
+                                        <option value="">-- Default per classe --</option>
+                                        ${equipmentPacks.map(pack => {
+                                            const cost = pack.cost ? `${pack.cost.quantity} ${pack.cost.unit}` : '';
+                                            return `<option value="${pack.index}">${pack.name} (${cost})</option>`;
+                                        }).join('')}
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="npc-qb-section">
+                                <div class="npc-qb-section-title">⚙️ Opzioni</div>
+                                <div class="npc-qb-form-group">
+                                    <label>Focus Statistiche</label>
+                                    <select id="qb-focus">
+                                        <option value="balanced">Bilanciato</option>
+                                        <option value="offensive">Offensivo</option>
+                                        <option value="defensive">Difensivo</option>
+                                        <option value="random">Casuale</option>
+                                    </select>
+                                </div>
+                                <div class="npc-qb-form-group">
+                                    <label>Variabilità</label>
+                                    <select id="qb-variability">
+                                        <option value="fixed">Fissa (Standard Array)</option>
+                                        <option value="low">Bassa</option>
+                                        <option value="medium" selected>Media</option>
+                                        <option value="high">Alta</option>
+                                    </select>
+                                </div>
+                                <div class="npc-qb-form-group">
+                                    <label>Sesso</label>
+                                    <select id="qb-gender">
+                                        <option value="random">Casuale</option>
+                                        <option value="male">Maschio</option>
+                                        <option value="female">Femmina</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <button class="npc-qb-btn npc-qb-btn-generate" id="qb-generate">
+                                🎲 Genera PNG
+                            </button>
+                        </div>
+                        
+                        <!-- Area Preview -->
+                        <div class="npc-qb-main">
+                            <div class="npc-qb-preview" id="qb-preview">
+                                <div class="npc-qb-empty">
+                                    <p>🎯 Configura le opzioni e clicca "Genera PNG" per vedere l'anteprima</p>
+                                    <p style="font-size: 0.8rem; margin-top: 0.5rem;">Il Quick Builder genera statistiche complete, incantesimi ed equipaggiamento!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="npc-qb-footer">
+                        <button class="npc-qb-btn npc-qb-btn-secondary" id="qb-cancel">Annulla</button>
+                        <button class="npc-qb-btn npc-qb-btn-primary" id="qb-save" disabled>💾 Salva come PNG</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        this.bindQuickBuilderEvents();
+    },
+    
+    closeQuickBuilderModal() {
+        const overlay = document.getElementById('npc-qb-overlay');
+        if (overlay) overlay.remove();
+        this.qbGeneratedNpc = null;
+    },
+    
+    bindQuickBuilderEvents() {
+        const overlay = document.getElementById('npc-qb-overlay');
+        const closeBtn = document.getElementById('npc-qb-close');
+        const cancelBtn = document.getElementById('qb-cancel');
+        const saveBtn = document.getElementById('qb-save');
+        const generateBtn = document.getElementById('qb-generate');
+        
+        // Chiudi modal
+        closeBtn?.addEventListener('click', () => this.closeQuickBuilderModal());
+        cancelBtn?.addEventListener('click', () => this.closeQuickBuilderModal());
+        overlay?.addEventListener('click', (e) => {
+            if (e.target === overlay) this.closeQuickBuilderModal();
+        });
+        
+        // Genera
+        generateBtn?.addEventListener('click', () => this.generateQuickBuilderNpc());
+        
+        // Salva
+        saveBtn?.addEventListener('click', () => this.saveQuickBuilderNpc());
+    },
+    
+    generateQuickBuilderNpc() {
+        const className = document.getElementById('qb-class')?.value;
+        const raceName = document.getElementById('qb-race')?.value;
+        const level = parseInt(document.getElementById('qb-level')?.value) || 1;
+        const pack = document.getElementById('qb-pack')?.value || null;
+        const focus = document.getElementById('qb-focus')?.value || 'balanced';
+        const variability = document.getElementById('qb-variability')?.value || 'medium';
+        const gender = document.getElementById('qb-gender')?.value || 'random';
+        
+        // Usa la funzione generateNPC dal Quick Builder
+        const generated = generateNPC(className, raceName, level, {
+            focus,
+            variability,
+            gender,
+            selectedPack: pack
+        });
+        
+        if (!generated) {
+            showToast('Errore nella generazione del PNG', 'error');
+            return;
+        }
+        
+        this.qbGeneratedNpc = generated;
+        this.renderQuickBuilderPreview(generated);
+        
+        // Abilita salva
+        const saveBtn = document.getElementById('qb-save');
+        if (saveBtn) saveBtn.disabled = false;
+    },
+    
+    renderQuickBuilderPreview(npc) {
+        const preview = document.getElementById('qb-preview');
+        if (!preview) return;
+        
+        const abilities = npc.abilities || {};
+        const spells = npc.spells || { cantrips: [], spells: [] };
+        const equipment = npc.equipment || { weapons: [], other: [], magicItems: [], consumables: [] };
+        
+        preview.innerHTML = `
+            <div class="npc-qb-preview-header">
+                <div>
+                    <h3 class="npc-qb-preview-name">${escapeHtml(npc.name)}</h3>
+                    <p class="npc-qb-preview-info">${npc.raceName} | ${npc.className} Liv.${npc.level}</p>
+                    <p class="npc-qb-preview-info">${npc.gender === 'female' ? '♀' : '♂'} ${npc.size} | Velocità: ${npc.speed}m</p>
+                </div>
+            </div>
+            
+            <div class="npc-qb-stats-grid">
+                ${ABILITY_NAMES.map(ab => {
+                    const val = abilities[ab] || 10;
+                    const mod = getModifier(val);
+                    return `
+                        <div class="npc-qb-stat-box">
+                            <div class="npc-qb-stat-label">${ABILITY_IT[ab]}</div>
+                            <div class="npc-qb-stat-value">${val}</div>
+                            <div class="npc-qb-stat-mod">${mod >= 0 ? '+' : ''}${mod}</div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+            
+            <div class="npc-qb-combat-grid">
+                <div class="npc-qb-combat-stat">
+                    <label>PF</label>
+                    <span class="value">${npc.hp}</span>
+                </div>
+                <div class="npc-qb-combat-stat">
+                    <label>CA</label>
+                    <span class="value">${npc.ac}</span>
+                </div>
+                <div class="npc-qb-combat-stat">
+                    <label>Competenza</label>
+                    <span class="value">+${npc.profBonus}</span>
+                </div>
+                <div class="npc-qb-combat-stat">
+                    <label>Dado Vita</label>
+                    <span class="value">d${npc.hitDie}</span>
+                </div>
+            </div>
+            
+            ${spells.dc ? `
+                <div class="npc-qb-section-box">
+                    <div class="npc-qb-section-box-title">🔮 Incantamento (CD: ${spells.dc}, Attacco: +${spells.attackBonus})</div>
+                    ${spells.cantrips && spells.cantrips.length > 0 ? `
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.25rem;"><strong>Trucchetti:</strong></p>
+                        <div>${spells.cantrips.map(s => `<span class="npc-qb-spell-tag">${escapeHtml(typeof s === 'string' ? s : s.name)}</span>`).join('')}</div>
+                    ` : ''}
+                    ${spells.spells && spells.spells.length > 0 ? `
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin: 0.5rem 0 0.25rem;"><strong>Incantesimi:</strong></p>
+                        <div>${spells.spells.map(s => `<span class="npc-qb-spell-tag">${escapeHtml(typeof s === 'string' ? s : s.name)}</span>`).join('')}</div>
+                    ` : ''}
+                </div>
+            ` : ''}
+            
+            <div class="npc-qb-section-box">
+                <div class="npc-qb-section-box-title">⚔️ Equipaggiamento</div>
+                ${equipment.weapons && equipment.weapons.length > 0 ? `
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.25rem;"><strong>Armi:</strong></p>
+                    <div>${equipment.weapons.map(w => `<span class="npc-qb-item-tag">${escapeHtml(typeof w === 'string' ? w : w.name)}</span>`).join('')}</div>
+                ` : ''}
+                ${equipment.armor ? `<p style="font-size: 0.75rem; color: var(--text-muted); margin: 0.5rem 0 0.25rem;"><strong>Armatura:</strong> ${escapeHtml(equipment.armor)}${equipment.shield ? ' + Scudo' : ''}</p>` : ''}
+                ${equipment.other && equipment.other.length > 0 ? `
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin: 0.5rem 0 0.25rem;"><strong>Altro:</strong></p>
+                    <div>${equipment.other.map(o => `<span class="npc-qb-item-tag">${escapeHtml(typeof o === 'string' ? o : o.name)}</span>`).join('')}</div>
+                ` : ''}
+                ${equipment.consumables && equipment.consumables.length > 0 ? `
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin: 0.5rem 0 0.25rem;"><strong>Consumabili:</strong></p>
+                    <div>${equipment.consumables.map(c => `<span class="npc-qb-item-tag">${escapeHtml(c)}</span>`).join('')}</div>
+                ` : ''}
+                ${equipment.magicItems && equipment.magicItems.length > 0 ? `
+                    <p style="font-size: 0.75rem; color: var(--accent-color); margin: 0.5rem 0 0.25rem;"><strong>✨ Oggetti Magici:</strong></p>
+                    <div>${equipment.magicItems.map(m => `<span class="npc-qb-item-tag" style="background: rgba(155, 89, 182, 0.2);">${escapeHtml(m)}</span>`).join('')}</div>
+                ` : ''}
+            </div>
+            
+            ${npc.features && npc.features.length > 0 ? `
+                <div class="npc-qb-section-box">
+                    <div class="npc-qb-section-box-title">⭐ Privilegi di Classe</div>
+                    <p style="font-size: 0.75rem;">${npc.features.slice(0, 8).map(f => escapeHtml(f)).join(', ')}${npc.features.length > 8 ? '...' : ''}</p>
+                </div>
+            ` : ''}
+            
+            ${npc.racialTraits && npc.racialTraits.length > 0 ? `
+                <div class="npc-qb-section-box">
+                    <div class="npc-qb-section-box-title">🧬 Tratti Razziali</div>
+                    <p style="font-size: 0.75rem;">${npc.racialTraits.map(t => escapeHtml(t)).join(', ')}</p>
+                </div>
+            ` : ''}
+        `;
+    },
+    
+    saveQuickBuilderNpc() {
+        if (!this.qbGeneratedNpc) {
+            showToast('Genera prima un PNG', 'warning');
+            return;
+        }
+        
+        const generated = this.qbGeneratedNpc;
+        const equipment = generated.equipment || {};
+        
+        // Converti in formato NPC Manager
+        const npcData = {
+            id: `npc_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+            name: generated.name,
+            race: generated.raceName,
+            className: generated.className,
+            classLevel: generated.level,
+            tag: 'neutrale',
+            role: '',
+            
+            // Stats
+            abilities: generated.abilities,
+            profBonus: generated.profBonus,
+            hp: generated.hp,
+            ac: generated.ac,
+            speed: generated.speed,
+            savingThrows: generated.savingThrows || [],
+            hitDie: generated.hitDie,
+            
+            // Spells
+            spells: {
+                cantrips: generated.spells?.cantrips || [],
+                spells: generated.spells?.spells || [],
+                byLevel: {},
+                dc: generated.spells?.dc,
+                attackBonus: generated.spells?.attackBonus,
+                ability: generated.spells?.ability
+            },
+            
+            // Equipment
+            inventory: [
+                ...(equipment.weapons || []).map(w => typeof w === 'string' ? w : w.name),
+                equipment.armor ? equipment.armor : null,
+                ...(equipment.other || []),
+                ...(equipment.consumables || [])
+            ].filter(Boolean),
+            
+            specialItems: (equipment.magicItems || []).map(m => ({ name: m, description: 'Oggetto magico' })),
+            
+            // Features
+            features: generated.features || [],
+            racialTraits: generated.racialTraits || [],
+            
+            // Metadati
+            createdAt: Date.now(),
+            lastModified: Date.now(),
+            isQuickBuilder: true,
+            gender: generated.gender
+        };
+        
+        // Aggiungi alla lista
+        this.npcs.push(npcData);
+        saveNpcs(this.npcs);
+        
+        // Chiudi modal e aggiorna UI
+        this.closeQuickBuilderModal();
+        this.renderNpcList();
+        this.selectNpc(npcData.id);
+        
+        showToast(`PNG "${npcData.name}" salvato!`, 'success');
+    },
     
     selectNpc(npcId) {
         const npc = this.npcs.find(n => n.id === npcId);
@@ -2337,6 +2997,11 @@ ${this.getStyles()}
         container.querySelector('#npc-new-btn')?.addEventListener('click', () => {
             this.currentNpcId = null;
             this.renderNpcEditor(null);
+        });
+        
+        // Quick Builder Modal
+        container.querySelector('#npc-quickbuilder-btn')?.addEventListener('click', () => {
+            this.openQuickBuilderModal();
         });
         
         // Click su lista
