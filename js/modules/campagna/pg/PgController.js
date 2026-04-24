@@ -3769,16 +3769,16 @@ export class PgController {
             isQuickBuilder: true
         };
         
-        // Aggiungi alla lista
-        this.dataManager.add(pgData);
+        // Aggiungi alla lista e ottieni il PG creato con l'ID corretto
+        const savedPg = this.dataManager.create(pgData);
         
         // Chiudi modal e aggiorna UI
         this.closeQuickBuilderModal();
-        this.selectedPgId = pgData.id;
+        this.selectedPgId = savedPg.id;
         this.mode = 'view';
         this.render();
         
-        showToast(`PG "${pgData.name}" salvato!`, 'success');
+        showToast(`PG "${savedPg.name}" salvato!`, 'success');
     }
     
     // ========================================================================
