@@ -1,6 +1,7 @@
 /* ==========================================================================
-   NPC-MANAGER.CSS - Stili per il Gestore di PNG v3.1
+   NPC-MANAGER.CSS - Stili per il Gestore di PNG v3.2
    Layout a 2 Card Flippabili - Tema CAMPAGNA unificato (scuro)
+   Uniformato a PG Manager - Rimosso stile pergamena
    ========================================================================== */
 
 /* ═══════════════════════════════════════════════════════════════
@@ -330,17 +331,15 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   STILE PERGAMENA
+   STILE SCHEDA PNG - TEMA SCURO CAMPAGNA (uniformato a PG Manager)
    ═══════════════════════════════════════════════════════════════ */
 
 .npc-parchment {
-    background: linear-gradient(to right, #f5e8b0, #e8d9a0, #f5e8b0);
-    box-shadow: 
-        inset 0 0 60px rgba(139, 69, 19, 0.15),
-        0 4px 20px rgba(0, 0, 0, 0.3);
-    border: 2px solid #d4af37;
-    color: #3d2817;
-    font-family: 'Lora', serif;
+    background: var(--npc-panel, #2a2a2a);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--npc-border, #444);
+    color: var(--npc-text, #f0e6d2);
+    font-family: 'Cinzel', serif;
     line-height: 1.5;
     padding: 1rem;
     font-size: 0.9rem;
@@ -354,30 +353,30 @@
 }
 
 .npc-parchment-title {
-    font-family: 'Cinzel', serif;
+    font-family: 'Cinzel Decorative', 'Cinzel', serif;
     font-size: 1.3rem;
-    color: #822000;
+    color: var(--npc-accent, #f0ad4e);
     margin: 0;
     line-height: 1.1;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .npc-parchment-subtitle {
     font-size: 0.9rem;
-    color: #5a3a1a;
+    color: var(--npc-text-muted, #888);
     margin: 0.3rem 0 0 0;
     font-style: italic;
 }
 
 .npc-parchment hr {
     border: 0;
-    height: 2px;
-    background: linear-gradient(to right, #822000, rgba(130, 32, 0, 0.2), transparent);
+    height: 1px;
+    background: linear-gradient(to right, var(--npc-border, #444), transparent);
     margin: 1rem 0;
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   SEZIONI
+   SEZIONI - TEMA SCURO
    ═══════════════════════════════════════════════════════════════ */
 
 .npc-section {
@@ -387,8 +386,8 @@
 .npc-section h4 {
     font-family: 'Cinzel', serif;
     font-size: 1.05rem;
-    color: #5a3a1a;
-    border-bottom: 1px solid rgba(130, 32, 0, 0.3);
+    color: var(--npc-accent, #f0ad4e);
+    border-bottom: 1px solid var(--npc-border, #444);
     padding-bottom: 0.3rem;
     margin: 0.8rem 0 0.4rem 0;
     text-transform: none;
@@ -399,20 +398,21 @@
     font-size: 0.9rem;
     margin: 0.3rem 0;
     line-height: 1.5;
+    color: var(--npc-text, #f0e6d2);
 }
 
 .npc-secret-note {
-    background-color: rgba(130, 32, 0, 0.06);
-    border-left: 3px solid #822000;
+    background-color: rgba(240, 173, 78, 0.1);
+    border-left: 3px solid var(--npc-accent, #f0ad4e);
     padding: 0.8rem;
     font-style: italic;
     font-size: 0.88rem;
-    color: #2a1a0a;
+    color: var(--npc-text, #f0e6d2);
     border-radius: 0 4px 4px 0;
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   GRIGLIA STATISTICHE
+   GRIGLIA STATISTICHE - TEMA SCURO
    ═══════════════════════════════════════════════════════════════ */
 
 .npc-stats-grid {
@@ -423,17 +423,17 @@
 }
 
 .npc-stat-box {
-    background: rgba(130, 32, 0, 0.06);
+    background: rgba(0, 0, 0, 0.3);
     padding: 8px;
     border-radius: 6px;
     text-align: center;
-    border: 1px solid rgba(130, 32, 0, 0.1);
+    border: 1px solid var(--npc-border, #444);
 }
 
 .npc-stat-box .label {
     font-size: 0.7rem;
     text-transform: uppercase;
-    color: #5a3a1a;
+    color: var(--npc-text-muted, #888);
     font-weight: 600;
     letter-spacing: 0.5px;
 }
@@ -441,18 +441,18 @@
 .npc-stat-box .value {
     font-size: 1.1rem;
     font-weight: 700;
-    color: #822000;
+    color: var(--npc-accent, #f0ad4e);
     margin: 2px 0;
 }
 
 .npc-stat-box .mod {
     font-size: 0.85rem;
-    color: #6b4423;
+    color: var(--npc-text, #f0e6d2);
     font-weight: 500;
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   INCANTESIMI PER LIVELLO
+   INCANTESIMI PER LIVELLO - TEMA SCURO
    ═══════════════════════════════════════════════════════════════ */
 
 .npc-spells-grid {
@@ -462,18 +462,18 @@
 }
 
 .npc-spell-level {
-    background: rgba(130, 32, 0, 0.05);
+    background: rgba(0, 0, 0, 0.2);
     border-radius: 6px;
     padding: 10px;
-    border: 1px solid rgba(130, 32, 0, 0.1);
+    border: 1px solid var(--npc-border, #444);
 }
 
 .npc-spell-level h5 {
     margin: 0 0 6px 0;
     font-size: 0.8rem;
-    color: #822000;
+    color: var(--npc-accent, #f0ad4e);
     font-family: 'Cinzel', serif;
-    border-bottom: 1px solid rgba(130, 32, 0, 0.2);
+    border-bottom: 1px solid var(--npc-border, #444);
     padding-bottom: 4px;
 }
 
@@ -481,7 +481,7 @@
     font-size: 0.78rem;
     margin: 0;
     padding-left: 16px;
-    color: #3d2817;
+    color: var(--npc-text, #f0e6d2);
 }
 
 .npc-spell-list li {
@@ -490,16 +490,16 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   PULSANTE FLIP
+   PULSANTE FLIP - TEMA SCURO
    ═══════════════════════════════════════════════════════════════ */
 
 .npc-flip-btn {
     position: absolute;
     top: 12px;
     right: 12px;
-    background: rgba(130, 32, 0, 0.6);
-    color: #f5e8b0;
-    border: 1px solid rgba(212, 175, 55, 0.4);
+    background: rgba(0, 0, 0, 0.5);
+    color: var(--npc-accent, #f0ad4e);
+    border: 1px solid var(--npc-border, #444);
     border-radius: 50%;
     width: 32px;
     height: 32px;
@@ -513,7 +513,8 @@
 }
 
 .npc-flip-btn:hover {
-    background: rgba(130, 32, 0, 0.8);
+    background: rgba(240, 173, 78, 0.3);
+    border-color: var(--npc-accent, #f0ad4e);
     transform: scale(1.1) rotate(90deg);
 }
 
@@ -838,7 +839,7 @@
    ═══════════════════════════════════════════════════════════════ */
 
 .campaign-link {
-    color: #822000;
+    color: var(--npc-accent, #f0ad4e);
     cursor: pointer;
     text-decoration: underline;
     font-weight: 600;
@@ -847,7 +848,7 @@
 }
 
 .campaign-link:hover {
-    color: #b83500;
+    color: var(--npc-gold, #d4af37);
     text-decoration-thickness: 2px;
 }
 
@@ -904,21 +905,21 @@
 .npc-list-item:nth-child(4) { animation-delay: 0.2s; }
 .npc-list-item:nth-child(5) { animation-delay: 0.25s; }
 
-/* Custom scrollbar per pergamena */
+/* Custom scrollbar per scheda PNG - tema scuro */
 .npc-parchment::-webkit-scrollbar {
     width: 8px;
 }
 
 .npc-parchment::-webkit-scrollbar-track {
-    background: rgba(139, 69, 19, 0.1);
+    background: rgba(0, 0, 0, 0.2);
     border-radius: 4px;
 }
 
 .npc-parchment::-webkit-scrollbar-thumb {
-    background: rgba(139, 69, 19, 0.3);
+    background: var(--npc-border, #444);
     border-radius: 4px;
 }
 
 .npc-parchment::-webkit-scrollbar-thumb:hover {
-    background: rgba(139, 69, 19, 0.5);
+    background: var(--npc-accent, #f0ad4e);
 }
