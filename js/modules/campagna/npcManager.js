@@ -10,12 +10,15 @@
  * - Card 2 Back: Risorse (Incantesimi per livello, Equipaggiamento)
  * 
  * Features:
- * - Generazione rapida da classe/livello (stile QuickBuilder)
- * - Sistema tag/etichette (Alleato, Nemico, Neutrale...)
- * - Integrazione wiki campagna (@tag links)
- * - Generazione nome automatica editabile
+ * - ⚡ Creazione Rapida PNG con template predefiniti (12 tipi)
+ * - 🎲 Generazione rapida da classe/livello (stile QuickBuilder)
+ * - 🏷️ Sistema tag/etichette (Alleato, Nemico, Neutrale...)
+ * - 🔗 Integrazione wiki campagna (@tag links)
+ * - 👤 Generazione nome automatica editabile (per razza)
+ * - 📝 Descrizioni automatiche per ruolo
+ * - 🔒 Segreti casuali per DM
  * 
- * @version 3.0.0 - Refactoring completo
+ * @version 3.1.0 - Creazione Rapida PNG
  */
 
 import { getCurrentCampaignId } from '../../../stateManager.js';
@@ -69,10 +72,382 @@ const SPELL_ABILITY = {
     'Stregone': 'car', 'Warlock': 'car', 'Paladino': 'car', 'Ranger': 'sag'
 };
 
-// Nomi casuali
-const NAMES_MALE = ['Goran', 'Theron', 'Kael', 'Bran', 'Darius', 'Marcus', 'Eldric', 'Roland', 'Gareth', 'Aldric', 'Torin', 'Viktor', 'Stefan', 'Nikolai', 'Henrik'];
-const NAMES_FEMALE = ['Lyra', 'Kira', 'Elara', 'Mira', 'Thalia', 'Seraphina', 'Isolde', 'Brynn', 'Freya', 'Astrid', 'Helena', 'Natasha', 'Katya', 'Ingrid', 'Sigrid'];
-const SURNAMES = ['Stoneheart', 'Nightshade', 'Ironforge', 'Stormwind', 'Shadowmere', 'Brightblade', 'Ashford', 'Blackwood', 'Silvermoon', 'Fireborn', 'Winterfell', 'Ravencrest', 'Dawnbringer', 'Thornwood', 'Greymane'];
+// Nomi casuali - Espansi
+const NAMES_MALE = [
+    'Goran', 'Theron', 'Kael', 'Bran', 'Darius', 'Marcus', 'Eldric', 'Roland', 'Gareth', 'Aldric',
+    'Torin', 'Viktor', 'Stefan', 'Nikolai', 'Henrik', 'Alaric', 'Benedict', 'Cedric', 'Duncan', 'Edmund',
+    'Finnian', 'Gideon', 'Hadrian', 'Ivan', 'Jasper', 'Klaus', 'Lucian', 'Magnus', 'Nolan', 'Oscar',
+    'Percival', 'Quinn', 'Reginald', 'Sebastian', 'Theodore', 'Ulric', 'Vincent', 'Wilhelm', 'Xavier', 'Yorick'
+];
+const NAMES_FEMALE = [
+    'Lyra', 'Kira', 'Elara', 'Mira', 'Thalia', 'Seraphina', 'Isolde', 'Brynn', 'Freya', 'Astrid',
+    'Helena', 'Natasha', 'Katya', 'Ingrid', 'Sigrid', 'Adrianna', 'Beatrice', 'Cordelia', 'Diana', 'Eleanor',
+    'Fiona', 'Gwendolyn', 'Helena', 'Iris', 'Juliana', 'Katarina', 'Liliana', 'Margaret', 'Natasha', 'Olivia',
+    'Penelope', 'Quinn', 'Rosalind', 'Sophia', 'Tatiana', 'Ursula', 'Valentina', 'Willow', 'Xena', 'Yvonne'
+];
+const SURNAMES = [
+    'Stoneheart', 'Nightshade', 'Ironforge', 'Stormwind', 'Shadowmere', 'Brightblade', 'Ashford', 'Blackwood',
+    'Silvermoon', 'Fireborn', 'Winterfell', 'Ravencrest', 'Dawnbringer', 'Thornwood', 'Greymane', 'Hawthorn',
+    'Whitemane', 'Darkholme', 'Starfall', 'Thunderaxe', 'Seaworth', 'Goldmane', 'Redthorn', 'Bluewater',
+    'Greengale', 'Blackstone', 'Whitaker', 'Sterling', 'Vance', 'Moretti', 'Fleming', 'Cromwell'
+];
+
+// ═══════════════════════════════════════════════════════════════
+// NOMI PER RAZZA
+// ═══════════════════════════════════════════════════════════════
+
+const RACIAL_NAMES = {
+    'Umano': {
+        male: ['Marcus', 'Gareth', 'Elena', 'Roland', 'Isolde', 'Theron', 'Lyra', 'Darius', 'Seraphina', 'Bran'],
+        female: ['Elena', 'Isolde', 'Seraphina', 'Lyra', 'Thalia', 'Helena', 'Beatrice', 'Margaret', 'Cordelia', 'Adrianna'],
+        surnames: ['Ashford', 'Blackwood', 'Sterling', 'Moretti', 'Cromwell', 'Vance', 'Fleming', 'Whitaker']
+    },
+    'Elfo': {
+        male: ['Aelindel', 'Theron', 'Caladwen', 'Elandorr', 'Faelan', 'Galanodel', 'Hadarion', 'Ilian', 'Jaerith', 'Kaelen'],
+        female: ['Arwen', 'Galadriel', 'Lúthien', 'Aredhel', 'Celebrian', 'Elanor', 'Finrod', 'Gilraen', 'Idril', 'Nimrodel'],
+        surnames: ['Moonwhisper', 'Starseeker', 'Nightbreeze', 'Dawnblade', 'Shadowdancer', 'Sunstrike', 'Frostwind', 'Leafsong']
+    },
+    'Nano': {
+        male: ['Thorin', 'Balin', 'Dwalin', 'Gimli', 'Gloin', 'Bombur', 'Dori', 'Nori', 'Ori', 'Thrain'],
+        female: ['Dis', 'Hilda', 'Brunhild', 'Gerta', 'Helga', 'Sigrid', 'Svala', 'Tora', 'Ulla', 'Yrsa'],
+        surnames: ['Ironforge', 'Stonehammer', 'Firebeard', 'Bronzebottom', 'Goldfinder', 'Silveraxe', 'Copperkettle', 'Steelblade']
+    },
+    'Halfling': {
+        male: ['Bilbo', 'Frodo', 'Samwise', 'Peregrin', 'Meriadoc', 'Bungo', 'Drogo', 'Hamfast', 'Rorimac', 'Tolman'],
+        female: ['Belladonna', 'Lobelia', 'Rosie', 'Petunia', 'Daisy', 'Primrose', 'Marigold', 'Esmeralda', 'Angelica', 'Peony'],
+        surnames: ['Baggins', 'Took', 'Brandybuck', 'Gamgee', 'Cotton', 'Goodbody', 'Greenhand', 'Proudfoot']
+    },
+    'Mezzorco': {
+        male: ['Grom', 'Karg', 'Morg', 'Ragash', 'Throg', 'Zog', 'Brak', 'Durg', 'Gash', 'Krugg'],
+        female: ['Baggi', 'Gorga', 'Kargah', 'Morga', 'Sharga', 'Ugga', 'Zaga', 'Braka', 'Durga', 'Gasha'],
+        surnames: ['Skullcrusher', 'Bonebreaker', 'Ironfang', 'Bloodaxe', 'Deadeye', 'Gorehowl', 'Skullsplitter', 'Wolfrider']
+    },
+    'Tiefling': {
+        male: ['Azar', 'Barakas', 'Damakos', 'Kairon', 'Mekhet', 'Morgar', 'Nemmon', 'Ravis', 'Sarvin', 'Zevon'],
+        female: ['Akta', 'Anakis', 'Bryseis', 'Criella', 'Damaia', 'Ea', 'Kallista', 'Lerissa', 'Makaria', 'Nemeia'],
+        surnames: ['Infernal', 'Abysswalker', 'Shadowborn', 'Flameheart', 'Darkwhisper', 'Hellbringer', 'Voidwalker', 'Ashblood']
+    },
+    'Gnomo': {
+        male: ['Alston', 'Boddynock', 'Dimble', 'Fonkin', 'Gerbo', 'Gimble', 'Glim', 'Jebeddo', 'Namfoodle', 'Roondar'],
+        female: ['Bimpnottin', 'Breena', 'Calliope', 'Duvamil', 'Ellyjoybell', 'Lilli', 'Lootnud', 'Mardnab', 'Nissa', 'Waywocket'],
+        surnames: ['Sparklegem', 'Fiddlewocket', 'Nackle', 'Timbers', 'Turen', 'Zook', 'Bafflestone', 'Gabbletwitch']
+    },
+    'Draghelnato': {
+        male: ['Arjhan', 'Balasar', 'Bharash', 'Donaar', 'Ghesh', 'Heskan', 'Kriv', 'Medrash', 'Nadarr', 'Pandjed'],
+        female: ['Akra', 'Biri', 'Daar', 'Farideh', 'Harann', 'Jheri', 'Kava', 'Korinn', 'Mishann', 'Nala'],
+        surnames: ['Cafesle', 'Clenched', 'Dazzlebright', 'Eye', 'Firedancer', 'Giantbane', 'Hammerfall', 'Kepeshkmolik']
+    }
+};
+
+// ═══════════════════════════════════════════════════════════════
+// TEMPLATE PNG RAPIDI - PER SESSIONI URGENTI
+// ═══════════════════════════════════════════════════════════════
+
+const QUICK_TEMPLATES = [
+    {
+        id: 'guard',
+        name: '🛡️ Guardia',
+        description: 'Guardia cittadina o soldato semplice',
+        race: 'Umano',
+        className: 'Guerriero',
+        level: 1,
+        tag: 'neutrale',
+        role: 'Guardia',
+        focus: 'defensive',
+        appearance: 'Indossa un\'uniforme semplice con lo stemma della città. Porta una lancia e uno scudo.',
+        personality: 'Vigile e disciplinato. Segue gli ordini, ma può essere corrotto o comprensibile.',
+        inventory: ['Lancia', 'Scudo', 'Armatura di cuoio', 'Fischietto', 'Torcia'],
+        personalityTraits: ['Vigile', 'Disciplinato', 'Coraggioso']
+    },
+    {
+        id: 'merchant',
+        name: '💰 Mercante',
+        description: 'Commerciante viaggiatore o bottegaio',
+        race: 'Umano',
+        className: 'Ladro',
+        level: 2,
+        tag: 'contatto',
+        role: 'Mercante',
+        focus: 'balanced',
+        appearance: 'Vestito con abiti di buona fattura, porta una borsa piena di monete e documenti commerciali.',
+        personality: 'Affarista nato, sa valutare le persone. Parla molto e ascolta di più.',
+        inventory: ['Carro merci', 'Borsa con 200mo', 'Libro mastro', 'Set di pesi', 'Merci varie'],
+        personalityTraits: ['Affarista', 'Oculato', 'Loquace']
+    },
+    {
+        id: 'noble',
+        name: '👑 Nobile',
+        description: 'Aristocratico con influenza politica',
+        race: 'Umano',
+        className: 'Bardo',
+        level: 3,
+        tag: 'neutrale',
+        role: 'Nobile',
+        focus: 'balanced',
+        appearance: 'Abiti eleganti e gioielli costosi. Portamento fiero e sguardo superbo.',
+        personality: 'Abituato al lusso e al potere. Può essere generoso o arrogante.',
+        inventory: ['Abiti signorili', 'Gioielli (50mo)', 'Sigillo nobiliare', 'Lettera di credito', 'Servitore'],
+        personalityTraits: ['Ambizioso', 'Raffinato', 'Manipolatore']
+    },
+    {
+        id: 'innkeeper',
+        name: '🍺 Oste',
+        description: 'Gestore di locanda o taverna',
+        race: 'Umano',
+        className: 'Ladro',
+        level: 1,
+        tag: 'contatto',
+        role: 'Oste',
+        focus: 'balanced',
+        appearance: 'Grembiule macchiato, viso rubizzo, mani callose da anni di lavoro.',
+        personality: 'Conosce tutti i pettegolezzi locali. Amichevole ma sa tenere i segreti.',
+        inventory: ['Locanda', 'Chiavi stanze', 'Botte di birra', 'Cibo per avventori', 'Libro contabile'],
+        personalityTraits: ['Pettegolo', 'Ospitale', 'Discreto']
+    },
+    {
+        id: 'sage',
+        name: '📚 Saggio',
+        description: 'Studioso, bibliotecario o consigliere',
+        race: 'Umano',
+        className: 'Mago',
+        level: 5,
+        tag: 'mentore',
+        role: 'Saggio',
+        focus: 'balanced',
+        appearance: 'Vesti logore, occhiali, dita macchiate d\'inchiostro. Sempre con un libro.',
+        personality: 'Curioso e pedante. Conosce storie e leggende dimenticate.',
+        inventory: ['Libreria personale', 'Libro dei libri', 'Inchiostro e penne', 'Lente d\'ingrandimento', 'Appunti vari'],
+        personalityTraits: ['Curioso', 'Pedante', 'Erudito']
+    },
+    {
+        id: 'bandit',
+        name: '🗡️ Bandito',
+        description: 'Fuorilegge e predone',
+        race: 'Umano',
+        className: 'Ladro',
+        level: 2,
+        tag: 'nemico',
+        role: 'Bandito',
+        focus: 'offensive',
+        appearance: 'Vesti logore e armi nascoste. Sguardo circospetto, cicatrici vecchie.',
+        personality: 'Disperato o spietato. Sa cogliere le occasioni.',
+        inventory: ['Pugnale', 'Cappio', 'Benda per occhi', 'Borsa con 30mo', 'Cavallo rubato'],
+        personalityTraits: ['Spregevole', 'Astuto', 'Rancoroso']
+    },
+    {
+        id: 'priest',
+        name: '⛪ Chierico',
+        description: 'Sacerdote o sacerdotessa di un tempio',
+        race: 'Umano',
+        className: 'Chierico',
+        level: 3,
+        tag: 'alleato',
+        role: 'Chierico',
+        focus: 'balanced',
+        appearance: 'Vesti liturgiche, simbolo sacro evidente. Sguardo sereno o fanatico.',
+        personality: 'Devoto e compassionevole, oppure intransigente e giudicante.',
+        inventory: ['Simbolo sacro', 'Testo sacro', 'Pozioni curative (2)', 'Vesti cerimoniali', 'Chiavi tempio'],
+        personalityTraits: ['Devoto', 'Caritatevole', 'Zelante']
+    },
+    {
+        id: 'spy',
+        name: '🕵️ Spia',
+        description: 'Agente segreto o informatore',
+        race: 'Umano',
+        className: 'Ladro',
+        level: 4,
+        tag: 'contatto',
+        role: 'Spia',
+        focus: 'offensive',
+        appearance: 'Aspetto comune, facile da dimenticare. Occhi che osservano tutto.',
+        personality: 'Riservato, mente con facilità. Sempre in allerta.',
+        inventory: ['Falso documenti', 'Veleno', 'Pugnale nascosto', 'Kit travestimento', 'Codice cifrato'],
+        personalityTraits: ['Riservato', 'Mentitore', 'Osservatore']
+    },
+    {
+        id: 'blacksmith',
+        name: '⚒️ Fabbro',
+        description: 'Artigiano del metallo',
+        race: 'Nano',
+        className: 'Guerriero',
+        level: 2,
+        tag: 'contatto',
+        role: 'Fabbro',
+        focus: 'defensive',
+        appearance: 'Braccia muscolose, barba bruciacchiata, grembiule di cuoio spesso.',
+        personality: 'Lavoratore instancabile, orgoglioso del suo lavoro. Parla poco.',
+        inventory: ['Fucina', 'Martello', 'Incudine', 'Ferro grezzo', 'Armi forgiate'],
+        personalityTraits: ['Lavoratore', 'Orgoglioso', 'Testardo']
+    },
+    {
+        id: 'healer',
+        name: '💊 Guaritore',
+        description: 'Medico o erborista',
+        race: 'Mezzelfo',
+        className: 'Druido',
+        level: 2,
+        tag: 'alleato',
+        role: 'Guaritore',
+        focus: 'balanced',
+        appearance: 'Vesti semplici, borsa di erbe, mani delicate.',
+        personality: 'Compassionevole e paziente. Odia vedere soffrire.',
+        inventory: ['Kit da guaritore', 'Erbe medicinali', 'Bende', 'Pozione cura', 'Libro erbe'],
+        personalityTraits: ['Compassionevole', 'Paziente', 'Altruista']
+    },
+    {
+        id: 'rival',
+        name: '⚔️ Rivale',
+        description: 'Avversario dei PG, competente',
+        race: 'Umano',
+        className: 'Guerriero',
+        level: 3,
+        tag: 'rivale',
+        role: 'Avventuriero',
+        focus: 'offensive',
+        appearance: 'Armatura curata, armi di qualità. Portamento sicuro.',
+        personality: 'Ambizioso e competitivo. Vuole dimostrare di essere il migliore.',
+        inventory: ['Armatura di maglia', 'Spada lunga', 'Scudo', 'Pozione forza', 'Cavallo da guerra'],
+        personalityTraits: ['Ambizioso', 'Competitivo', 'Orgoglioso']
+    },
+    {
+        id: 'mentor',
+        name: '🎓 Mentore',
+        description: 'Guida esperta per i PG',
+        race: 'Elfo',
+        className: 'Mago',
+        level: 8,
+        tag: 'mentore',
+        role: 'Maestro',
+        focus: 'balanced',
+        appearance: 'Vesti antiche, occhi saggi, portamento elegante.',
+        personality: 'Paziente e saggio. Vede potenziale nei giovani avventurieri.',
+        inventory: ['Grimorio', 'Bastone magico', 'Pozioni varie', 'Mappa antica', 'Amuleto protettivo'],
+        personalityTraits: ['Saggio', 'Paziente', 'Enigmatico']
+    }
+];
+
+// ═══════════════════════════════════════════════════════════════
+// DESCRIZIONI AUTOMATICHE PER RUOLO
+// ═══════════════════════════════════════════════════════════════
+
+const ROLE_DESCRIPTIONS = {
+    'Guardia': {
+        appearances: [
+            'Porta l\'uniforme della guardia locale con orgoglio, armatura lucida e arma al fianco.',
+            'Vesti militari semplici ma ben tenute. Sguardo vigile e postura rigida.',
+            'Armatura ammaccata da precedenti scontri, ma arma affilata e pronta.'
+        ],
+        personalities: [
+            'Disciplinato e ligio al dovere. Diffida degli stranieri ma rispetta la legge.',
+            'Corrotto ma non malvagio. Chiude un occhio per qualche moneta.',
+            'Idealista convinto, crede fermamente nella giustizia e nell\'ordine.'
+        ],
+        secrets: [
+            'Accetta tangenti dai mercanti locali per ignorare piccole infrazioni.',
+            'Ha un conto in sospeso con una banda di criminali che ha ucciso suo fratello.',
+            'In realtà è una spia infiltrata per conto di un nobile rivale.'
+        ]
+    },
+    'Mercante': {
+        appearances: [
+            'Vesti di buona fattura, anelli alle dita, sempre pronto a mostrare la sua merce.',
+            'Abbigliamento pratico da viaggio, borse piene di campioni e contratti.',
+            'Aspetto curato ma non vistoso, sa che l\'apparenza è tutto nel commercio.'
+        ],
+        personalities: [
+            'Affarista nato, vede opportunità ovunque. Parla molto, ascolta di più.',
+            'Onesto ma astuto. Non imbroglia ma non regala nulla.',
+            'Ambizioso e spietato. Schiaccerebbe la concorrenza senza rimorsi.'
+        ],
+        secrets: [
+            'Contrabbanda merci proibite sotto la merce legittima.',
+            'È indebitato con la gilda dei ladri e cerca un modo per liberarsi.',
+            'In realtà è una spia che raccoglie informazioni per un regno nemico.'
+        ]
+    },
+    'Nobile': {
+        appearances: [
+            'Abiti di seta e velluto, gioielli sfarzosi, servitori al seguito.',
+            'Elegante ma sobrio, preferisce la discrezione all\'ostentazione.',
+            'Vesti costose ma leggermente fuori moda, finanzie in difficoltà?'
+        ],
+        personalities: [
+            'Alto e superbo, tratta i comuni con condiscendenza.',
+            'Raffinato e colto, patrono delle arti e delle lettere.',
+            'Ambizioso e spietato, manovra nell\'ombra per più potere.'
+        ],
+        secrets: [
+            'La sua famiglia è in realtà indebitata fino al collo.',
+            'Ha un figlio illegittimo che mantiene segretamente.',
+            'Trama per rovesciare il signore locale e prendere il suo posto.'
+        ]
+    },
+    'Oste': {
+        appearances: [
+            'Grembiule macchiato, viso rubizzo, mani callose da anni di lavoro.',
+            'Aspetto gioviale e accogliente, sempre pronto a offrire un boccale.',
+            'Cicatrice sul volto, ma sorriso sincero. Ha visto di tutto.'
+        ],
+        personalities: [
+            'Conosce tutti i pettegolezzi della città. Parla troppo quando beve.',
+            'Riservato e discreto, la sua locanda è un rifugio sicuro.',
+            'Avido ma non malvagio, si fa pagare bene per il silenzio.'
+        ],
+        secrets: [
+            'La locanda è un covile per contrabbandieri, lui chiude un occhio.',
+            'Nasconde un fuggitivo in cambio di denaro.',
+            'Un tempo era un avventuriero, ma non ne parla mai.'
+        ]
+    },
+    'Bandito': {
+        appearances: [
+            'Vesti logore e armi nascoste, sguardo circospetto.',
+            'Cappuccio calato sul viso, mano sempre sull\'arma.',
+            'Aspetto rozzo ma muscoloso, abituato a combattere.'
+        ],
+        personalities: [
+            'Disperato, ha perso tutto e non ha nulla da perdere.',
+            'Spregevole e violento, gode nel terrorizzare i deboli.',
+            'Reluttante, si è unito alla banda per necessità ma cerca una via d\'uscita.'
+        ],
+        secrets: [
+            'In realtà è un nobile decaduto che cerca di sopravvivere.',
+            'Ha un codice d\'onore personale, non uccide innocenti.',
+            'Vuole tradire il capobanda e prendere il comando.'
+        ]
+    },
+    'Mentore': {
+        appearances: [
+            'Vesti antiche e logore, occhi che hanno visto molto.',
+            'Portamento sereno, bastone da passeggio, mani delicate.',
+            'Aspetto ordinario che nasconde un\'aura di potere.'
+        ],
+        personalities: [
+            'Paziente e saggio, vede potenziale dove altri vedono difetti.',
+            'Enigmatico, parla per enigmi e metafore.',
+            'Severo ma giusto, richiede dedizione totale.'
+        ],
+        secrets: [
+            'Nasconde un terribile errore del passato che ancora lo perseguita.',
+            'È più potente di quanto sembri, ma ha giurato di non usare il suo pieno potere.',
+            'Sta cercando un erede degno a cui trasmettere la sua conoscenza.'
+        ]
+    }
+};
+
+// Segreti generici per ruoli senza descrizioni specifiche
+const GENERIC_SECRETS = [
+    'Nasconde un oscuro segreto del passato che potrebbe rovinarlo.',
+    'Ha un debito di gioco con persone pericolose.',
+    'È innamorato di qualcuno che non può avere.',
+    'Ha una doppia vita che nessuno conosce.',
+    'Ha visto qualcosa che non avrebbe dovuto vedere.',
+    'Protegge qualcuno in segreto.',
+    'Sta morendo di una malattia incurabile.',
+    'Ha ereditato una maledizione familiare.',
+    'È ricattato da qualcuno.',
+    'Ha ucciso qualcuno in passato, per legittima difesa o no.'
+];
 
 // ═══════════════════════════════════════════════════════════════
 // FUNZIONI UTILITÀ
@@ -155,10 +530,91 @@ function loadNpcs() {
 // GENERAZIONE AUTOMATICA (da QuickBuilder)
 // ═══════════════════════════════════════════════════════════════
 
-function generateRandomName(gender = 'random') {
+function generateRandomName(gender = 'random', race = null) {
     const actualGender = gender === 'random' ? pickRandom(['male', 'female']) : gender;
+    
+    // Usa nomi specifici per razza se disponibili
+    if (race && RACIAL_NAMES[race]) {
+        const racialData = RACIAL_NAMES[race];
+        const names = actualGender === 'female' ? racialData.female : racialData.male;
+        return `${pickRandom(names)} ${pickRandom(racialData.surnames)}`;
+    }
+    
+    // Fallback ai nomi generici
     const names = actualGender === 'female' ? NAMES_FEMALE : NAMES_MALE;
     return `${pickRandom(names)} ${pickRandom(SURNAMES)}`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// GENERAZIONE RAPIDA DA TEMPLATE
+// ═══════════════════════════════════════════════════════════════
+
+function generateQuickNpc(templateId) {
+    const template = QUICK_TEMPLATES.find(t => t.id === templateId);
+    if (!template) {
+        console.error(`Template "${templateId}" non trovato`);
+        return null;
+    }
+    
+    // Genera dati meccanici
+    const generatedData = generateFullNpc(template.className, template.race, template.level, template.focus);
+    if (!generatedData) {
+        console.error('Errore generazione dati NPC');
+        return null;
+    }
+    
+    // Genera nome appropriato per razza
+    const name = generateRandomName('random', template.race);
+    
+    // Genera segreto casuale
+    let secret;
+    if (ROLE_DESCRIPTIONS[template.role]) {
+        secret = pickRandom(ROLE_DESCRIPTIONS[template.role].secrets);
+    } else {
+        secret = pickRandom(GENERIC_SECRETS);
+    }
+    
+    // Assembla il PNG completo
+    const npc = {
+        id: `npc_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        name,
+        race: template.race,
+        className: template.className,
+        classLevel: template.level,
+        tag: template.tag,
+        role: template.role,
+        
+        // Dati meccanici generati
+        abilities: generatedData.abilities,
+        profBonus: generatedData.profBonus,
+        hp: generatedData.hp,
+        ac: generatedData.ac,
+        speed: generatedData.speed,
+        savingThrows: generatedData.savingThrows,
+        spells: generatedData.spells,
+        hitDie: generatedData.hitDie,
+        
+        // Descrizioni dal template
+        appearance: template.appearance,
+        personality: template.personality,
+        inventory: template.inventory,
+        secretNote: secret,
+        personalityTraits: template.personalityTraits || [],
+        
+        // Metadati
+        createdAt: Date.now(),
+        lastModified: Date.now(),
+        isQuickGenerated: true,
+        templateId: template.id
+    };
+    
+    return npc;
+}
+
+// Genera PNG casuale (qualsiasi template)
+function generateRandomNpc() {
+    const randomTemplate = pickRandom(QUICK_TEMPLATES);
+    return generateQuickNpc(randomTemplate.id);
 }
 
 function generateAbilityScores(className, focus = 'balanced') {
@@ -866,6 +1322,119 @@ ${this.getStyles()}
     margin-bottom: 1rem;
 }
 
+/* Quick Templates Panel */
+.npc-quick-templates {
+    background: linear-gradient(135deg, rgba(240, 173, 78, 0.15) 0%, rgba(212, 175, 55, 0.08) 100%);
+    border: 2px solid var(--accent-color, #f0ad4e);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 12px rgba(240, 173, 78, 0.15);
+}
+
+.npc-quick-templates-header {
+    text-align: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(240, 173, 78, 0.3);
+}
+
+.npc-quick-templates-header .npc-quick-gen-title {
+    font-size: 1.2rem;
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.npc-quick-templates-subtitle {
+    font-size: 0.8rem;
+    color: var(--text-muted, #888);
+    font-style: italic;
+}
+
+.npc-templates-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 1rem;
+}
+
+.npc-template-btn {
+    background: linear-gradient(135deg, rgba(42, 42, 42, 0.9) 0%, rgba(30, 30, 30, 0.95) 100%);
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 10px 8px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    min-height: 80px;
+}
+
+.npc-template-btn:hover {
+    background: linear-gradient(135deg, rgba(240, 173, 78, 0.2) 0%, rgba(212, 175, 55, 0.1) 100%);
+    border-color: var(--accent-color, #f0ad4e);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(240, 173, 78, 0.25);
+}
+
+.npc-template-btn:active {
+    transform: translateY(-1px);
+}
+
+.npc-template-icon {
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+.npc-template-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    color: var(--text-primary, #f0e6d2);
+    text-align: center;
+    font-weight: 600;
+}
+
+.npc-template-info {
+    font-size: 0.6rem;
+    color: var(--text-muted, #888);
+    background: rgba(0, 0, 0, 0.3);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.npc-quick-templates-footer {
+    text-align: center;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(240, 173, 78, 0.2);
+}
+
+.npc-btn-random {
+    background: linear-gradient(135deg, #9b59b6 0%, #6c3483 100%);
+    color: #fff;
+    padding: 0.6rem 1.5rem;
+    font-size: 0.9rem;
+}
+
+.npc-btn-random:hover {
+    background: linear-gradient(135deg, #a569bd 0%, #7d3c98 100%);
+    box-shadow: 0 4px 12px rgba(155, 89, 182, 0.4);
+}
+
+/* Responsive templates grid */
+@media (max-width: 900px) {
+    .npc-templates-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .npc-templates-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 .npc-quick-gen-header {
     display: flex;
     justify-content: space-between;
@@ -1295,10 +1864,30 @@ ${this.getStyles()}
                     </div>
                 </div>
                 
-                <!-- Quick Generation Panel -->
+                <!-- Quick Templates - Creazione Istantanea -->
+                <div class="npc-quick-templates">
+                    <div class="npc-quick-templates-header">
+                        <span class="npc-quick-gen-title">⚡ Creazione Rapida PNG</span>
+                        <span class="npc-quick-templates-subtitle">Un click per PNG pronti all'uso!</span>
+                    </div>
+                    <div class="npc-templates-grid">
+                        ${QUICK_TEMPLATES.map(t => `
+                            <button class="npc-template-btn" data-template="${t.id}" title="${t.description}">
+                                <span class="npc-template-icon">${t.name.split(' ')[0]}</span>
+                                <span class="npc-template-name">${t.name.split(' ').slice(1).join(' ')}</span>
+                                <span class="npc-template-info">Liv.${t.level} ${t.className}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                    <div class="npc-quick-templates-footer">
+                        <button class="npc-btn npc-btn-random" id="quick-random-npc">🎲 PNG Casuale</button>
+                    </div>
+                </div>
+                
+                <!-- Quick Generation Panel - Avanzato -->
                 <div class="npc-quick-gen">
                     <div class="npc-quick-gen-header">
-                        <span class="npc-quick-gen-title">🎲 Generazione Rapida</span>
+                        <span class="npc-quick-gen-title">🔧 Generazione Personalizzata</span>
                     </div>
                     <div class="npc-quick-gen-content">
                         <div class="npc-form-group">
@@ -1457,8 +2046,32 @@ ${this.getStyles()}
         
         // Genera nome
         main.querySelector('#npc-gen-name')?.addEventListener('click', () => {
+            const raceSelect = main.querySelector('#npc-race');
             const nameInput = main.querySelector('#npc-name');
-            if (nameInput) nameInput.value = generateRandomName();
+            const race = raceSelect?.value || null;
+            if (nameInput) nameInput.value = generateRandomName('random', race);
+        });
+        
+        // Quick Templates - Click su template button
+        main.querySelectorAll('.npc-template-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const templateId = btn.dataset.template;
+                const npc = generateQuickNpc(templateId);
+                
+                if (npc) {
+                    this.applyTemplateToForm(npc);
+                    showToast(`PNG "${npc.name}" creato! Modifica se necessario.`, 'success');
+                }
+            });
+        });
+        
+        // PNG Casuale
+        main.querySelector('#quick-random-npc')?.addEventListener('click', () => {
+            const npc = generateRandomNpc();
+            if (npc) {
+                this.applyTemplateToForm(npc);
+                showToast(`PNG casuale "${npc.name}" creato!`, 'success');
+            }
         });
         
         // Quick generation - solo stats
@@ -1545,6 +2158,66 @@ ${this.getStyles()}
         this.tempData = {
             ...this.tempData,
             ...generated
+        };
+    },
+    
+    // Applica un template completo al form
+    applyTemplateToForm(npc) {
+        const main = this.container.querySelector('#npc-main');
+        
+        // Nome
+        const nameInput = main.querySelector('#npc-name');
+        if (nameInput) nameInput.value = npc.name;
+        
+        // Razza
+        const raceSelect = main.querySelector('#npc-race');
+        if (raceSelect) raceSelect.value = npc.race;
+        
+        // Tag
+        const tagSelect = main.querySelector('#npc-tag');
+        if (tagSelect) tagSelect.value = npc.tag;
+        
+        // Ruolo
+        const roleInput = main.querySelector('#npc-role');
+        if (roleInput) roleInput.value = npc.role;
+        
+        // Stats
+        ABILITY_NAMES.forEach(ab => {
+            const input = main.querySelector(`#stat-${ab}`);
+            if (input) input.value = npc.abilities[ab] || 10;
+        });
+        
+        // Derived stats
+        const hpInput = main.querySelector('#npc-hp');
+        const acInput = main.querySelector('#npc-ac');
+        const speedInput = main.querySelector('#npc-speed');
+        
+        if (hpInput) hpInput.value = npc.hp;
+        if (acInput) acInput.value = npc.ac;
+        if (speedInput) speedInput.value = npc.speed;
+        
+        // Descrizioni
+        const appearanceInput = main.querySelector('#npc-appearance');
+        const personalityInput = main.querySelector('#npc-personality');
+        const secretInput = main.querySelector('#npc-secret');
+        const inventoryInput = main.querySelector('#npc-inventory');
+        
+        if (appearanceInput) appearanceInput.value = npc.appearance || '';
+        if (personalityInput) personalityInput.value = npc.personality || '';
+        if (secretInput) secretInput.value = npc.secretNote || '';
+        if (inventoryInput) inventoryInput.value = (npc.inventory || []).join('\n');
+        
+        // Quick generation panel
+        const quickClass = main.querySelector('#quick-class');
+        const quickLevel = main.querySelector('#quick-level');
+        
+        if (quickClass) quickClass.value = npc.className;
+        if (quickLevel) quickLevel.value = npc.classLevel;
+        
+        // Salva tutto in tempData
+        this.tempData = {
+            ...this.tempData,
+            ...npc
         };
     },
     
