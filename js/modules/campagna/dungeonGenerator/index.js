@@ -51,6 +51,10 @@ const DungeonGenerator = {
     mapRenderer: null,
     encounterGenerator: null,
     container: null,
+    
+    // Modal editing state
+    editingTile: null,
+    editingPosition: null,
 
     // ═══════════════════════════════════════════════════════════════
     // RENDER PRINCIPALE
@@ -254,26 +258,264 @@ const DungeonGenerator = {
     },
 
     /**
-     * Handler click su tile
+     * Handler click su tile - Apre modal di editing
      */
     handleTileClick(detail) {
         const { x, y, tileId, tile, encounter, treasure } = detail;
         
-        let info = `<strong>${tile?.name || tileId}</strong>`;
-        info += `<br><em>${tile?.description || ''}</em>`;
-        info += `<br>Posizione: (${x}, ${y})`;
-        info += `<br>Passabile: ${tile?.passable ? '✅' : '❌'}`;
+        // Apri modal di editing
+        this.openTileEditor(x, y, tileId, tile);
+    },
+    
+    /**
+     * Apre il modal per editare un tile
+     */
+    openTileEditor(x, y, tileId, tile) {
+        // Salva stato editing
+        this.editingPosition = { x, y };
+        this.editingTile = tileId;
         
-        if (encounter) {
-            info += `<br><br>⚔️ <strong>${encounter.monster.name} ×${encounter.count}</strong>`;
-            info += `<br>CR ${encounter.cr} | ${encounter.xp} XP | ${encounter.difficulty}`;
+        const biomeConfig = BIOME_CONFIG[this.state.currentBiome];
+        const allTiles = this.tileDatabase.getAllTiles();
+        
+        // Raggruppa tile per categoria
+        const categories = {};
+        allTiles.forEach(t => {
+            const cat = t.category || 'altro';
+            if (!categories[cat]) categories[cat] = [];
+            categories[cat].push(t);
+        });
+        
+        // Calcola compatibilità
+        const compatibleTiles = this.getCompatibleTilesForPosition(x, y);
+        
+        // Genera HTML modal
+        const modalHTML = `
+            <div class="dg-modal-overlay" id="dg-tile-modal-overlay">
+                <div class="dg-tile-modal">
+                    <div class="dg-modal-header">
+                        <h3>🎨 Modifica Tile</h3>
+                        <button class="dg-modal-close" id="dg-modal-close">×</button>
+                    </div>
+                    
+                    <div class="dg-current-tile">
+                        <img src="${biomeConfig.tilesPath}${this.tileDatabase.getTileFilePath(tileId)}" 
+                             alt="${tile?.name}" 
+                             class="dg-current-tile-img"
+                             style="${this.tileDatabase.getTileRotation(tileId) ? `transform: rotate(${this.tileDatabase.getTileRotation(tileId)}deg)` : ''}">
+                        <div class="dg-current-tile-info">
+                            <div class="dg-current-tile-name">${tile?.name || tileId}</div>
+                            <div class="dg-current-tile-pos">Posizione: (${x}, ${y})</div>
+                        </div>
+                    </div>
+                    
+                    <div class="dg-tile-selector">
+                        ${Object.entries(categories).map(([cat, tiles]) => `
+                            <div class="dg-tile-category">
+                                <div class="dg-tile-category-title">${this.getCategoryLabel(cat)}</div>
+                                <div class="dg-tile-grid">
+                                    ${tiles.map(t => {
+                                        const isCompatible = compatibleTiles.has(t.id);
+                                        const isSelected = t.id === tileId;
+                                        const rotation = this.tileDatabase.getTileRotation(t.id);
+                                        return `
+                                            <div class="dg-tile-option ${isSelected ? 'selected' : ''} ${!isCompatible ? 'incompatible' : ''}" 
+                                                 data-tile-id="${t.id}"
+                                                 data-compatible="${isCompatible}"
+                                                 title="${t.name}${!isCompatible ? ' (Non compatibile)' : ''}">
+                                                <img src="${biomeConfig.tilesPath}${this.tileDatabase.getTileFilePath(t.id)}" 
+                                                     alt="${t.name}"
+                                                     style="${rotation ? `transform: rotate(${rotation}deg)` : ''}">
+                                                <span class="dg-tile-option-name">${t.name}</span>
+                                                ${!isCompatible ? '<span class="dg-compat-badge warning">⚠</span>' : ''}
+                                            </div>
+                                        `;
+                                    }).join('')}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="dg-modal-footer">
+                        <button class="dg-btn-cancel" id="dg-modal-cancel">Annulla</button>
+                        <button class="dg-btn-apply" id="dg-modal-apply" ${!compatibleTiles.has(this.editingTile) ? 'disabled' : ''}>
+                            Applica Modifiche
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Aggiungi modal al DOM
+        const modalContainer = document.createElement('div');
+        modalContainer.innerHTML = modalHTML;
+        document.body.appendChild(modalContainer.firstElementChild);
+        
+        // Bind eventi modal
+        this.bindModalEvents();
+    },
+    
+    /**
+     * Bind eventi del modal
+     */
+    bindModalEvents() {
+        const overlay = document.getElementById('dg-tile-modal-overlay');
+        const closeBtn = document.getElementById('dg-modal-close');
+        const cancelBtn = document.getElementById('dg-modal-cancel');
+        const applyBtn = document.getElementById('dg-modal-apply');
+        
+        // Chiudi modal
+        const closeModal = () => {
+            overlay?.remove();
+            this.editingTile = null;
+            this.editingPosition = null;
+        };
+        
+        closeBtn?.addEventListener('click', closeModal);
+        cancelBtn?.addEventListener('click', closeModal);
+        overlay?.addEventListener('click', (e) => {
+            if (e.target === overlay) closeModal();
+        });
+        
+        // Selezione tile
+        overlay.querySelectorAll('.dg-tile-option').forEach(opt => {
+            opt.addEventListener('click', (e) => {
+                const tileId = opt.dataset.tileId;
+                const isCompatible = opt.dataset.compatible === 'true';
+                
+                if (!isCompatible) {
+                    showToast('Questo tile non è compatibile con i vicini!', 'warning');
+                    return;
+                }
+                
+                // Aggiorna selezione
+                overlay.querySelectorAll('.dg-tile-option').forEach(o => o.classList.remove('selected'));
+                opt.classList.add('selected');
+                
+                this.editingTile = tileId;
+                applyBtn.disabled = false;
+            });
+        });
+        
+        // Applica modifiche
+        applyBtn?.addEventListener('click', () => {
+            if (this.editingTile && this.editingPosition) {
+                this.applyTileChange(this.editingPosition.x, this.editingPosition.y, this.editingTile);
+                closeModal();
+            }
+        });
+        
+        // ESC per chiudere
+        const escHandler = (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+                document.removeEventListener('keydown', escHandler);
+            }
+        };
+        document.addEventListener('keydown', escHandler);
+    },
+    
+    /**
+     * Ottiene i tile compatibili per una posizione
+     */
+    getCompatibleTilesForPosition(x, y) {
+        const compatible = new Set();
+        const allTiles = this.tileDatabase.getAllTiles();
+        
+        // Se non c'è una griglia, tutti i tile sono compatibili
+        if (!this.state.grid || !this.state.grid.length) {
+            allTiles.forEach(t => compatible.add(t.id));
+            return compatible;
         }
         
-        if (treasure) {
-            info += `<br><br>💎 <strong>${treasure.name}${treasure.details}</strong>`;
-        }
+        // Ottieni tile dei vicini
+        const neighbors = {
+            top: y > 0 ? this.state.grid[y - 1]?.[x] : null,
+            bottom: y < this.state.grid.length - 1 ? this.state.grid[y + 1]?.[x] : null,
+            left: x > 0 ? this.state.grid[y]?.[x - 1] : null,
+            right: x < this.state.grid[0].length - 1 ? this.state.grid[y]?.[x + 1] : null
+        };
         
-        showToast(info, 'info');
+        // Verifica ogni tile
+        allTiles.forEach(tile => {
+            let isCompatible = true;
+            
+            // Verifica compatibilità con ogni vicino
+            if (neighbors.top) {
+                const topTile = this.tileDatabase.getTile(neighbors.top);
+                const topSocket = topTile?.sockets?.bottom;
+                const myTopSocket = tile.sockets?.top;
+                if (topSocket && myTopSocket && !this.tileDatabase.areSocketsCompatible(myTopSocket, topSocket)) {
+                    isCompatible = false;
+                }
+            }
+            
+            if (neighbors.bottom) {
+                const bottomTile = this.tileDatabase.getTile(neighbors.bottom);
+                const bottomSocket = bottomTile?.sockets?.top;
+                const myBottomSocket = tile.sockets?.bottom;
+                if (bottomSocket && myBottomSocket && !this.tileDatabase.areSocketsCompatible(myBottomSocket, bottomSocket)) {
+                    isCompatible = false;
+                }
+            }
+            
+            if (neighbors.left) {
+                const leftTile = this.tileDatabase.getTile(neighbors.left);
+                const leftSocket = leftTile?.sockets?.right;
+                const myLeftSocket = tile.sockets?.left;
+                if (leftSocket && myLeftSocket && !this.tileDatabase.areSocketsCompatible(myLeftSocket, leftSocket)) {
+                    isCompatible = false;
+                }
+            }
+            
+            if (neighbors.right) {
+                const rightTile = this.tileDatabase.getTile(neighbors.right);
+                const rightSocket = rightTile?.sockets?.left;
+                const myRightSocket = tile.sockets?.right;
+                if (rightSocket && myRightSocket && !this.tileDatabase.areSocketsCompatible(myRightSocket, rightSocket)) {
+                    isCompatible = false;
+                }
+            }
+            
+            if (isCompatible) {
+                compatible.add(tile.id);
+            }
+        });
+        
+        return compatible;
+    },
+    
+    /**
+     * Applica il cambio di tile
+     */
+    applyTileChange(x, y, newTileId) {
+        // Aggiorna la griglia
+        this.state.grid[y][x] = newTileId;
+        
+        // Re-renderizza la mappa
+        this.renderMap();
+        
+        // Feedback
+        const tile = this.tileDatabase.getTile(newTileId);
+        showToast(`Tile cambiato in "${tile?.name || newTileId}"`, 'success');
+        
+        console.log(`🎨 [DungeonGenerator] Tile (${x},${y}) cambiato in ${newTileId}`);
+    },
+    
+    /**
+     * Traduce le categorie in italiano
+     */
+    getCategoryLabel(category) {
+        const labels = {
+            'terreno': '🌿 Terreno',
+            'vegetazione': '🌳 Vegetazione',
+            'acqua': '💧 Acqua',
+            'sentiero': '🛤️ Sentieri',
+            'struttura': '🏠 Strutture',
+            'punto_interesse': '⭐ Punti Interesse',
+            'altro': '📦 Altro'
+        };
+        return labels[category] || `📁 ${category}`;
     },
 
     // ═══════════════════════════════════════════════════════════════

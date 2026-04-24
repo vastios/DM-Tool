@@ -7,10 +7,13 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+    max-height: 100%;
     background: linear-gradient(135deg, #1a2a1a 0%, #0d1a0d 100%);
     color: #e0e0e0;
-    padding: 20px;
-    gap: 15px;
+    padding: 15px;
+    gap: 12px;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 /* Header */
@@ -19,11 +22,12 @@
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: 15px;
+    gap: 12px;
     background: rgba(0, 0, 0, 0.3);
-    padding: 15px 20px;
-    border-radius: 12px;
+    padding: 12px 15px;
+    border-radius: 10px;
     border: 1px solid rgba(76, 175, 80, 0.3);
+    flex-shrink: 0;
 }
 
 .dg-header h2 {
@@ -100,9 +104,10 @@
 /* Main content */
 .dg-main {
     display: flex;
-    gap: 20px;
+    gap: 15px;
     flex: 1;
     min-height: 0;
+    overflow: hidden;
 }
 
 /* Map section */
@@ -110,19 +115,20 @@
     flex: 2;
     display: flex;
     flex-direction: column;
+    min-width: 0;
 }
 
 .dg-map-container {
     flex: 1;
     background: rgba(0, 0, 0, 0.4);
-    border-radius: 12px;
-    padding: 20px;
+    border-radius: 10px;
+    padding: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
     border: 2px solid rgba(76, 175, 80, 0.2);
     overflow: auto;
-    min-height: 300px;
+    min-height: 200px;
 }
 
 /* WFC Placeholder */
@@ -246,9 +252,10 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    max-width: 320px;
-    min-width: 250px;
+    gap: 10px;
+    max-width: 280px;
+    min-width: 220px;
+    overflow-y: auto;
 }
 
 .dg-card {
@@ -441,11 +448,12 @@
 .dg-legend {
     display: flex;
     justify-content: center;
-    gap: 25px;
-    padding: 12px;
+    gap: 20px;
+    padding: 8px 12px;
     background: rgba(0, 0, 0, 0.3);
     border-radius: 8px;
     flex-wrap: wrap;
+    flex-shrink: 0;
 }
 
 .legend-item {
@@ -551,3 +559,281 @@
 .wfc-tile:nth-child(8) { animation-delay: 140ms; }
 .wfc-tile:nth-child(9) { animation-delay: 160ms; }
 .wfc-tile:nth-child(10) { animation-delay: 180ms; }
+
+/* ==========================================================================
+   TILE EDITOR MODAL
+   ========================================================================== */
+
+/* Modal overlay */
+.dg-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    animation: modal-fade-in 0.2s ease-out;
+}
+
+@keyframes modal-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Modal container */
+.dg-tile-modal {
+    background: linear-gradient(135deg, #1a2a1a 0%, #0d1a0d 100%);
+    border: 2px solid rgba(76, 175, 80, 0.4);
+    border-radius: 16px;
+    padding: 20px;
+    max-width: 90vw;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    animation: modal-slide-in 0.3s ease-out;
+}
+
+@keyframes modal-slide-in {
+    from { transform: translateY(-20px) scale(0.95); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.dg-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.dg-modal-header h3 {
+    margin: 0;
+    color: #4CAF50;
+    font-size: 1.2rem;
+}
+
+.dg-modal-close {
+    background: rgba(244, 67, 54, 0.2);
+    border: 1px solid rgba(244, 67, 54, 0.4);
+    color: #f44336;
+    font-size: 1.5rem;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dg-modal-close:hover {
+    background: rgba(244, 67, 54, 0.4);
+    transform: scale(1.1);
+}
+
+/* Current tile info */
+.dg-current-tile {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px;
+    background: rgba(76, 175, 80, 0.1);
+    border-radius: 10px;
+    margin-bottom: 15px;
+    border: 1px solid rgba(76, 175, 80, 0.2);
+}
+
+.dg-current-tile-img {
+    width: 64px;
+    height: 64px;
+    border-radius: 8px;
+    border: 2px solid rgba(76, 175, 80, 0.3);
+    object-fit: cover;
+}
+
+.dg-current-tile-info {
+    flex: 1;
+}
+
+.dg-current-tile-name {
+    font-weight: bold;
+    color: #e0e0e0;
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+}
+
+.dg-current-tile-pos {
+    color: #888;
+    font-size: 0.9rem;
+}
+
+/* Tile grid selector */
+.dg-tile-selector {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+}
+
+.dg-tile-category {
+    margin-bottom: 15px;
+}
+
+.dg-tile-category-title {
+    color: #4CAF50;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    padding-left: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.dg-tile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 8px;
+}
+
+.dg-tile-option {
+    position: relative;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid transparent;
+    border-radius: 8px;
+    padding: 5px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.dg-tile-option:hover {
+    border-color: #4CAF50;
+    background: rgba(76, 175, 80, 0.15);
+    transform: scale(1.05);
+}
+
+.dg-tile-option.selected {
+    border-color: #FFD700;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+}
+
+.dg-tile-option.incompatible {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.dg-tile-option.incompatible:hover {
+    border-color: transparent;
+    background: rgba(0, 0, 0, 0.3);
+    transform: none;
+}
+
+.dg-tile-option img {
+    width: 50px;
+    height: 50px;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.dg-tile-option-name {
+    font-size: 0.65rem;
+    color: #aaa;
+    text-align: center;
+    margin-top: 3px;
+    line-height: 1.2;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Modal footer */
+.dg-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 15px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(76, 175, 80, 0.2);
+}
+
+.dg-btn-cancel {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ccc;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.dg-btn-cancel:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.dg-btn-apply {
+    background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+    border: none;
+    color: white;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+}
+
+.dg-btn-apply:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+}
+
+.dg-btn-apply:disabled {
+    background: #555;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* Compatibility badge */
+.dg-compat-badge {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    font-size: 0.6rem;
+    padding: 1px 4px;
+    border-radius: 3px;
+    background: rgba(76, 175, 80, 0.8);
+    color: white;
+}
+
+.dg-compat-badge.warning {
+    background: rgba(255, 193, 7, 0.8);
+    color: #000;
+}
+
+/* Edit hint on tiles */
+.wfc-tile-edit-hint {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    font-size: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: #4CAF50;
+    padding: 2px 5px;
+    border-radius: 3px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.wfc-tile:hover .wfc-tile-edit-hint {
+    opacity: 1;
+}

@@ -107,6 +107,7 @@ export class MapRenderer {
                              ${rotationStyle}
                              onerror="this.src='${this.tilesPath}01_erba_base.png'">
                         ${this.renderMarkers(encounter, treasure)}
+                        <span class="wfc-tile-edit-hint">✏️</span>
                     </div>
                 `;
             }
