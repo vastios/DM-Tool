@@ -89,22 +89,21 @@ const CampaignWiki = {
         let activeFilters = { type: 'Tutti', rarity: 'Tutti', status: 'Tutti' };
         const typeLabels = { 'Tutti': 'Tutti', 'npcs': 'PNG', 'locations': 'Luoghi', 'factions': 'Fazioni', 'uniqueItems': 'Oggetti', 'secrets': 'Segreti', 'sessionNotes': 'Note' };
 
-        // SOSTITUISCI IL BLOCCO `layoutHTML` IN campaignWiki.js CON QUESTO
+        // Layout Wiki con tema scuro unificato CAMPAGNA
         const layoutHTML = `
-            <div class="wiki-container wiki-detail-panel" style="display: grid; grid-template-columns: 350px 1fr; height: calc(100vh - 100px); background: #f6f5ee;">
-                <aside style="border-right: 2px solid #742307; display: flex; flex-direction: column; padding: 15px; background: #eee; overflow-y: auto;">
-                    <h2 class="wiki-label" style="font-size: 1.5rem; margin-bottom: 15px;">Archivio Campagna</h2>
-                    <input type="text" id="wiki-search" placeholder="Cerca nel database..." style="width: 100%; padding: 10px; margin-bottom: 5px; border: 1px solid #742307; border-radius: 4px;">
+            <div class="wiki-container wiki-detail-panel" style="display: flex; height: calc(100vh - 100px); background: #1a1a1a;">
+                <aside class="wiki-sidebar" style="flex: 0 0 350px; border-right: 2px solid #444; display: flex; flex-direction: column; padding: 20px; background: #2a2a2a; overflow-y: auto;">
+                    <h2 class="wiki-label" style="font-size: 1.5rem; margin-bottom: 15px; color: #f0ad4e;">Archivio Campagna</h2>
+                    <input type="text" id="wiki-search" placeholder="Cerca nel database..." style="width: 100%; padding: 10px; margin-bottom: 5px; border: 1px solid #444; border-radius: 8px; background: #1a1a1a; color: #f0e6d2;">
                     <button id="reset-filters-btn" class="action-btn small" style="width: 100%; margin-bottom: 15px; font-size: 0.7rem;">RESETTA FILTRI</button>
                     <div id="type-filters" class="wiki-section-tabs" style="margin-bottom: 15px; display: flex; flex-wrap: wrap; gap: 5px;"></div>
                     <div id="rarity-filters" class="wiki-section-tabs" style="margin-bottom: 15px; display: none; flex-wrap: wrap; gap: 5px;"></div>
                     <div id="status-filters" class="wiki-section-tabs" style="margin-bottom: 15px; display: none; flex-wrap: wrap; gap: 5px;"></div>
-                    <ul id="wiki-items-list" style="list-style: none; padding: 0; border-top: 1px solid #ccc;"></ul>
+                    <ul id="wiki-items-list" style="list-style: none; padding: 0; border-top: 1px solid #444;"></ul>
                 </aside>
-                <!-- Il main ora gestisce il suo scroll direttamente -->
-                <main id="wiki-viewer" class="note-viewer" style="padding: 0; overflow-y: auto; background-color: #f6f5ee; position: relative;">
-                    <div id="editor-content" style="padding: 40px;">
-                        <p style="text-align:center; color:#999; margin-top:100px; font-style: italic;">Seleziona un elemento per visualizzare i dettagli.</p>
+                <main id="wiki-viewer" class="note-viewer" style="flex: 1; padding: 0; overflow-y: auto; background-color: #1a1a1a; position: relative;">
+                    <div id="editor-content" style="padding: 20px;">
+                        <p style="text-align:center; color:#888; margin-top:100px; font-style: italic;">Seleziona un elemento per visualizzare i dettagli.</p>
                     </div>
                 </main>
             </div>
@@ -338,7 +337,7 @@ const CampaignWiki = {
                     </div>
                 `;
             } else {
-                // --- LOGICA GENERICA PER TUTTE LE ALTRE CATEGORIE ---
+                // --- LOGICA GENERICA PER TUTTE LE ALTRE CATEGORIE (TEMA SCURO) ---
                 const config = schemaConfig[section];
                 const internalKeys = ['id', 'name', 'title', 'description', 'content', 'secrets', 'secretNote', 'lastModified', '_section', 'linkedChapterId', 'dmNotes', 'summary'];
                 
@@ -357,7 +356,7 @@ const CampaignWiki = {
                         if (key === 'keyEvents' && Array.isArray(val)) {
                             val = val.map(e => `- ${e}`).join('\n');
                         }
-                        if (val === true) val = "Sì";
+                        if (val === true) val = "Si";
                         else if (val === false) val = "No";
                         else if (val === null || val === undefined) val = "";
 
@@ -372,9 +371,9 @@ const CampaignWiki = {
                         }
 
                         return `
-                            <div style="margin-bottom: 12px; padding: 10px; background: #1e1e1e; border-radius: 4px; border-left: 3px solid #742307;">
-                                <label style="display: block; color: #d4af37; font-size: 0.7rem; text-transform: uppercase; font-weight: bold; margin-bottom: 4px; letter-spacing: 0.5px;">${label}</label>
-                                <div style="color: #eee; line-height: 1.4; font-size: 0.95rem;">${displayVal}</div>
+                            <div style="margin-bottom: 12px; padding: 10px; background: #2a2a2a; border-radius: 8px; border-left: 3px solid #f0ad4e;">
+                                <label style="display: block; color: #f0ad4e; font-size: 0.7rem; text-transform: uppercase; font-weight: bold; margin-bottom: 4px; letter-spacing: 0.5px;">${label}</label>
+                                <div style="color: #f0e6d2; line-height: 1.4; font-size: 0.95rem;">${displayVal}</div>
                             </div>
                         `;
                     }).join('');
@@ -384,8 +383,8 @@ const CampaignWiki = {
 
                 contentTarget.innerHTML = `
                     <div class="wiki-entry-fade-in">
-                        <div class="note-viewer-header" style="border-bottom: 2px solid #742307; margin-bottom: 25px; padding-bottom: 10px;">
-                            <h2 style="font-size: 2.8rem; color: #401101; margin: 0;">${escapeHtml(item.name || item.title)}</h2>
+                        <div class="note-viewer-header" style="border-bottom: 2px solid #f0ad4e; margin-bottom: 25px; padding-bottom: 10px;">
+                            <h2 style="font-size: 2rem; color: #f0ad4e; margin: 0; font-family: 'Cinzel', serif;">${escapeHtml(item.name || item.title)}</h2>
                             <span class="wiki-label" style="opacity: 0.8; text-transform: uppercase; letter-spacing: 1px;">${config.label}</span>
                         </div>
 
@@ -393,17 +392,17 @@ const CampaignWiki = {
                             ${fieldsHTML}
                         </div>
 
-                        <div style="background: rgba(116, 35, 7, 0.03); padding: 20px; border-left: 4px solid #742307; border-radius: 0 8px 8px 0; margin-bottom: 30px;">
+                        <div style="background: #2a2a2a; padding: 20px; border-left: 4px solid #f0ad4e; border-radius: 8px; margin-bottom: 30px;">
                             <h3 class="wiki-label" style="margin-top: 0; font-size: 1.2rem;">${descriptionTitle}</h3>
-                            <div class="npc-narrative-content" style="color: #000 !important; line-height: 1.6;">
+                            <div class="npc-narrative-content" style="color: #f0e6d2; line-height: 1.6;">
                                 ${descriptionContent.replace(/\n/g, '<br>')}
                             </div>
                         </div>
 
                         ${(item.secrets || item.secretNote || item.dmNotes) ? `
-                            <div class="unrevealed-status" style="margin-top: 20px; padding: 20px; border: 1px dashed #742307; background: #fffcf5;">
-                                <h3 class="wiki-label" style="margin-top: 0;">🕵️ Segreti e Note DM</h3>
-                                <div style="color: #eee !important; font-style: italic;">
+                            <div class="unrevealed-status" style="margin-top: 20px; padding: 20px; border: 1px dashed #f0ad4e; background: #1a1a1a; border-radius: 8px;">
+                                <h3 class="wiki-label" style="margin-top: 0; color: #d4af37;">🕵 Segreti e Note DM</h3>
+                                <div style="color: #f0e6d2; font-style: italic;">
                                     ${linkifyCampaignReferences(escapeHtml(item.secrets || item.secretNote || item.dmNotes || '')).replace(/\n/g, '<br>')}
                                 </div>
                             </div>
@@ -429,10 +428,10 @@ const CampaignWiki = {
             if (activeFilters.status !== 'Tutti') items = items.filter(i => i.status === activeFilters.status);
             items.sort((a, b) => (b.lastModified || 0) - (a.lastModified || 0));
 
-            listElement.innerHTML = items.length === 0 ? '<li style="padding: 20px; color: #999; text-align: center;">Nessun elemento trovato.</li>' :
-                items.map(item => `<li class="wiki-item" data-id="${item.id}" data-section="${item._section}" style="padding: 12px; border-bottom: 1px solid #ddd; cursor: pointer;">
-                    <div style="font-weight: bold; color: #401101;">${escapeHtml(item.name || item.title || 'Senza Titolo')}</div>
-                    <small style="color: #777;">${typeLabels[item._section]}</small></li>`).join('');
+            listElement.innerHTML = items.length === 0 ? '<li style="padding: 20px; color: #888; text-align: center;">Nessun elemento trovato.</li>' :
+                items.map(item => `<li class="wiki-item" data-id="${item.id}" data-section="${item._section}" style="padding: 12px; border-bottom: 1px solid #444; cursor: pointer; border-radius: 4px; margin-bottom: 4px; background: #333;">
+                    <div style="font-weight: bold; color: #f0ad4e;">${escapeHtml(item.name || item.title || 'Senza Titolo')}</div>
+                    <small style="color: #888;">${typeLabels[item._section]}</small></li>`).join('');
         };
 
         const setupEventListeners = () => {

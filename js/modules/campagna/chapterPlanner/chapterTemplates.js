@@ -76,9 +76,9 @@ export const getViewerHTML = (entry, linkedSessions, allChapters) => {
     const parentChapter = isChapter ? null : allChapters.find(c => c.id === entry.parentChapterId);
 
     return `
-        <div class="note-viewer" style="background-color: #f5f5f5; color: #333;">
+        <div class="note-viewer">
             <div class="note-viewer-header">
-                <h2 style="color: #333;">${chapterPrefix}${escapeHtml(entry.title)}</h2>
+                <h2>${chapterPrefix}${escapeHtml(entry.title)}</h2>
                 <div class="viewer-status-controls">
                     <span class="status-badge status-${entry.status}">${getStatusLabel(entry.status)}</span>
                     <div class="status-controls-group">
@@ -90,36 +90,36 @@ export const getViewerHTML = (entry, linkedSessions, allChapters) => {
             </div>
             ${isChapter ? renderChapterProgress(entry) : ''}
             ${isChapter ? renderChapterCheckpoints(entry) : ''}
-            <p><strong class="wiki-label" style="color: #333;">Riepilogo per i Giocatori:</strong></p>
-            <p class="note-viewer-content" style="color: #333;">${linkifyCampaignReferences(entry.playerNotes || '').replace(/\n/g, '<br>')}</p>
+            <p><strong class="wiki-label">Riepilogo per i Giocatori:</strong></p>
+            <p class="note-viewer-content">${linkifyCampaignReferences(entry.playerNotes || '').replace(/\n/g, '<br>')}</p>
             
-            <div class="related-sessions-box" style="margin: 20px 0; padding: 15px; background: #fff; border-radius: 8px; border-left: 4px solid #007bff; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                <h4 style="margin: 0 0 10px 0; color: #007bff;">📅 Sessioni di questo capitolo:</h4>
-                <button id="start-new-session-btn" class="action-btn small" data-chapter-id="${entry.id}" style="margin-bottom: 10px;">+ Avvia Nuova Sessione</button>
+            <div class="related-sessions-box">
+                <h4>📅 Sessioni di questo capitolo:</h4>
+                <button id="start-new-session-btn" class="action-btn small" data-chapter-id="${entry.id}">+ Avvia Nuova Sessione</button>
                 ${linkedSessions.length > 0 ? `
-                    <ul style="margin: 0; padding-left: 20px; color: #333;">
+                    <ul>
                         ${linkedSessions.map(s => `
                             <li>
-                                <a href="#" class="view-session-link" data-session-id="${s.id}" style="color: #007bff; text-decoration: underline; cursor: pointer;">
+                                <a href="#" class="view-session-link" data-session-id="${s.id}">
                                     <strong>${escapeHtml(s.title)}</strong>
                                 </a> (${new Date(s.lastModified).toLocaleDateString()})
                             </li>
                         `).join('')}
                     </ul>
-                ` : '<p style="color: #666; font-style: italic;">Nessuna sessione ancora registrata per questo capitolo.</p>'}
+                ` : '<p class="empty-list">Nessuna sessione ancora registrata per questo capitolo.</p>'}
             </div>
 
-            <hr>
-            ${!isChapter && parentChapter ? `<p><strong>Capitolo Padre:</strong> ${toRoman(parentChapter.chapterNumber)} ${parentChapter.title}</p><hr>` : ''}
-            <p><strong class="wiki-label" style="color: #333;">PNG da usare:</strong></p>
-            <p class="note-viewer-content" style="color: #333;">${linkifyCampaignReferences(entry.npcs || '').replace(/\n/g, '<br>')}</p>
-            <p><strong class="wiki-label" style="color: #333;">Luoghi da esplorare:</strong></p>
-            <p class="note-viewer-content" style="color: #333;">${linkifyCampaignReferences(entry.locations || '').replace(/\n/g, '<br>')}</p>
-            <p><strong class="wiki-label" style="color: #333;">Tesoro Ottenuto:</strong></p>
-            <p class="note-viewer-content" style="color: #333;">${linkifyCampaignReferences(entry.loot || '').replace(/\n/g, '<br>')}</p>
-            <div class="unrevealed-status" style="background-color: #333; border-color: #000;">
-                <p><strong class="wiki-label" style="color: #fff;">🕵️ Note Segrete del DM:</strong></p>
-                <p class="note-viewer-content" style="color: #fff;">${linkifyCampaignReferences(entry.dmNotes || '').replace(/\n/g, '<br>')}</p>
+            <hr style="border-color: #444;">
+            ${!isChapter && parentChapter ? `<p><strong>Capitolo Padre:</strong> ${toRoman(parentChapter.chapterNumber)} ${parentChapter.title}</p><hr style="border-color: #444;">` : ''}
+            <p><strong class="wiki-label">PNG da usare:</strong></p>
+            <p class="note-viewer-content">${linkifyCampaignReferences(entry.npcs || '').replace(/\n/g, '<br>')}</p>
+            <p><strong class="wiki-label">Luoghi da esplorare:</strong></p>
+            <p class="note-viewer-content">${linkifyCampaignReferences(entry.locations || '').replace(/\n/g, '<br>')}</p>
+            <p><strong class="wiki-label">Tesoro Ottenuto:</strong></p>
+            <p class="note-viewer-content">${linkifyCampaignReferences(entry.loot || '').replace(/\n/g, '<br>')}</p>
+            <div class="unrevealed-status">
+                <p><strong class="wiki-label">🕵 Note Segrete del DM:</strong></p>
+                <p class="note-viewer-content">${linkifyCampaignReferences(entry.dmNotes || '').replace(/\n/g, '<br>')}</p>
             </div>
         </div>
     `;
@@ -206,13 +206,13 @@ export const getEditorHTML = (entry, isEditing, allChapters, nextChapterNumber) 
 const renderChapterProgress = (entry) => {
     const progress = entry.progress || 0;
     return `
-        <p><strong class="wiki-label" style="color: #333;">Progresso del Capitolo:</strong></p>
+        <p><strong class="wiki-label">Progresso del Capitolo:</strong></p>
         <div class="progress-bar-container">
             <div class="progress-bar" style="width: ${progress}%">
                 <span class="progress-text">${progress}%</span>
             </div>
         </div>
-        <p><strong class="wiki-label" style="color: #333;">Obiettivi del Capitolo:</strong></p>
+        <p><strong class="wiki-label">Obiettivi del Capitolo:</strong></p>
         <ul class="objectives-list">
             ${(entry.objectives || []).map(obj => `
                 <li class="objective-item ${obj.completed ? 'completed' : ''}">
@@ -228,8 +228,8 @@ const renderChapterProgress = (entry) => {
 const renderChapterCheckpoints = (entry) => {
     const checkpoints = entry.checkpoints || [];
     return `
-        <hr>
-        <p><strong class="wiki-label" style="color: #333;">Checkpoint del Capitolo:</strong></p>
+        <hr style="border-color: #444;">
+        <p><strong class="wiki-label">Checkpoint del Capitolo:</strong></p>
         <ul class="checkpoints-list">
             ${checkpoints.map(cp => `
                 <li class="checkpoint-item ${cp.completed ? 'completed' : ''}">

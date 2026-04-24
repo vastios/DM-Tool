@@ -1,21 +1,36 @@
 /* ==========================================================================
    SESSION-NOTES.CSS - Stili per le Note di Sessione e Chapter Planner
+   Tema CAMPAGNA unificato (scuro)
    ========================================================================== */
 
+/* === VARIABILI TEMA CAMPAGNA (ereditate da _wiki.css) === */
+/* Fallback se non definite */
+.session-notes-container {
+    --campagna-bg: #1a1a1a;
+    --campagna-panel: #2a2a2a;
+    --campagna-border: #444;
+    --campagna-text: #f0e6d2;
+    --campagna-text-muted: #888;
+    --campagna-accent: #f0ad4e;
+}
+
+/* === CONTAINER PRINCIPALE === */
 .session-notes-container {
     display: flex;
     gap: 20px;
     padding: 20px;
     height: 100%;
     box-sizing: border-box;
+    background: var(--campagna-bg);
 }
 
+/* === PANNELLI === */
 .notes-list-panel,
 .note-editor-panel {
-    background-color: #2a2a2a;
-    border: 1px solid #444;
+    background-color: var(--campagna-panel);
+    border: 1px solid var(--campagna-border);
     border-radius: 8px;
-    padding: 15px;
+    padding: 20px;
     overflow-y: auto;
 }
 
@@ -29,20 +44,24 @@
     flex-direction: column;
 }
 
+/* === HEADER PANNELLO === */
 .panel-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 15px;
     padding-bottom: 10px;
-    border-bottom: 1px solid #444;
+    border-bottom: 1px solid var(--campagna-border);
 }
 
 .panel-header h2 {
     margin: 0;
-    color: #f0ad4e;
+    color: var(--campagna-accent);
+    font-family: 'Cinzel', serif;
+    font-size: 1.5rem;
 }
 
+/* === LISTA NOTE === */
 .saved-notes-list {
     list-style-type: none;
     padding: 0;
@@ -51,15 +70,15 @@
 
 .note-list-item {
     background-color: #333;
-    border: 1px solid #555;
-    border-radius: 5px;
-    padding: 10px;
+    border: 1px solid var(--campagna-border);
+    border-radius: 8px;
+    padding: 12px;
     margin-bottom: 10px;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, border-left-color 0.3s ease;
     border-left: 5px solid transparent;
 }
 
@@ -74,20 +93,21 @@
 
 .note-item-info h3 {
     margin: 0 0 5px 0;
-    color: #ffffff;
+    color: var(--campagna-accent);
     font-size: 1rem;
+    font-family: 'Cinzel', serif;
 }
 
 .note-item-info p {
     margin: 0 0 5px 0;
-    color: #cccccc;
+    color: var(--campagna-text);
     font-size: 0.8rem;
     font-style: italic;
     line-height: 1.4;
 }
 
 .note-item-info small {
-    color: #888;
+    color: var(--campagna-text-muted);
     font-size: 0.7rem;
 }
 
@@ -96,13 +116,14 @@
     width: 100%;
     margin-bottom: 5px;
     padding: 4px 8px;
-    border: 1px solid #555;
+    border: 1px solid var(--campagna-border);
     background-color: #444;
-    color: #fff;
-    border-radius: 3px;
+    color: var(--campagna-text);
+    border-radius: 4px;
     font-size: 0.7rem;
     cursor: pointer;
     white-space: nowrap;
+    transition: background-color 0.2s;
 }
 
 .note-item-actions button:hover {
@@ -119,15 +140,16 @@
     background-color: #a52a2a;
 }
 
-/* --- Stili per il Visualizzatore di Note --- */
+/* === VISUALIZZATORE NOTE (TEMA SCURO) === */
 .note-viewer {
     display: flex;
     flex-direction: column;
     height: 100%;
     padding: 20px;
-    background-color: #1a1a1a;
-    border: 1px solid #333;
+    background-color: var(--campagna-panel);
+    border: 1px solid var(--campagna-border);
     border-radius: 8px;
+    color: var(--campagna-text);
 }
 
 .note-viewer-header {
@@ -136,12 +158,12 @@
     align-items: center;
     margin-bottom: 1rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid #444;
+    border-bottom: 1px solid var(--campagna-border);
 }
 
 .note-viewer h2 {
     margin: 0;
-    color: #f0ad4e;
+    color: var(--campagna-accent);
     font-family: 'Cinzel', serif;
     font-size: 2rem;
 }
@@ -151,21 +173,21 @@
     font-family: 'Lora', serif;
     font-size: 1rem;
     line-height: 1.7;
-    color: #f0e6d2;
+    color: var(--campagna-text);
     white-space: pre-wrap;
     word-wrap: break-word;
 }
 
 .note-viewer-date {
     margin-top: 1rem;
-    color: #888;
+    color: var(--campagna-text-muted);
     font-size: 0.8rem;
     text-align: right;
 }
 
-/* --- Stili per i Segreti --- */
+/* === STATI SEGRETI === */
 .note-list-item.unrevealed {
-    border-left: 4px solid #f0ad4e;
+    border-left: 4px solid var(--campagna-accent);
 }
 
 .note-list-item.revealed {
@@ -179,48 +201,41 @@
 }
 
 .unrevealed-status {
-    color: #f0ad4e;
+    color: var(--campagna-accent);
     font-weight: bold;
 }
 
-/* --- Stili per il Chapter Planner --- */
+/* === SEPARATORI LISTA === */
 .list-separator {
     text-align: center;
     margin: 20px 0 10px 0;
     padding-top: 10px;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid var(--campagna-border);
 }
 
 .list-separator h4 {
     margin: 0;
     font-size: 0.9rem;
-    color: #777;
+    color: var(--campagna-text-muted);
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
-/* --- Stili per gli Stati delle Note --- */
-.note-list-item {
-    transition: background-color 0.3s ease, border-left-color 0.3s ease;
-    border-radius: 4px;
-    padding: 10px;
-    margin-bottom: 8px;
-}
-
+/* === STATI DELLE NOTE === */
 .note-list-item.status-planning {
-    background: rgba(158, 158, 158, 0.05);
+    background: rgba(158, 158, 158, 0.1);
     border-left-color: #9e9e9e;
 }
 .note-list-item.status-active {
-    background: rgba(40, 167, 69, 0.05);
+    background: rgba(40, 167, 69, 0.1);
     border-left-color: #28a745;
 }
 .note-list-item.status-completed {
-    background: rgba(0, 123, 255, 0.05);
+    background: rgba(0, 123, 255, 0.1);
     border-left-color: #007bff;
 }
 .note-list-item.status-on-hold {
-    background: rgba(255, 193, 7, 0.05);
+    background: rgba(255, 193, 7, 0.1);
     border-left-color: #ffc107;
 }
 
@@ -257,8 +272,8 @@
 }
 
 .status-btn {
-    background-color: #e0e0e0;
-    border: 1px solid #bbb;
+    background-color: #444;
+    border: 1px solid var(--campagna-border);
     border-radius: 4px;
     padding: 5px 8px;
     font-size: 1rem;
@@ -269,42 +284,43 @@
 .status-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    background-color: #555;
 }
 
 .status-btn.active {
-    background-color: #742307;
-    color: white;
-    border-color: #5a1b05;
+    background-color: var(--campagna-accent);
+    color: #1a1a1a;
+    border-color: #c89f60;
 }
 
-/* --- Gerarchia Visiva degli Obiettivi --- */
+/* === GERARCHIA OBIETTIVI === */
 .objectives-list .objective-item span.priority-main {
     font-weight: bold;
-    color: #333;
+    color: var(--campagna-text);
 }
 .objectives-list .objective-item span.priority-main::before {
-    content: '⭐ ';
-    color: #f0ad4e;
+    content: '\2B50 ';
+    color: var(--campagna-accent);
 }
 
 .objectives-list .objective-item span.priority-secondary {
     font-weight: normal;
-    color: #666;
+    color: var(--campagna-text-muted);
     font-size: 0.9em;
 }
 .objectives-list .objective-item span.priority-secondary::before {
-    content: '○ ';
-    color: #999;
+    content: '\25CB ';
+    color: var(--campagna-text-muted);
 }
 
-/* --- "Nebbia di Guerra" per le Note del DM --- */
+/* === "NEBBIA DI GUERRA" PER NOTE DM === */
 .unrevealed-status {
-    border: 1px dashed #f0ad4e;
+    border: 1px dashed var(--campagna-accent);
     background-color: #1a1a1a !important;
     position: relative;
     padding: 20px !important;
     margin-top: 20px;
-    border-radius: 5px;
+    border-radius: 8px;
 }
 
 .unrevealed-status::before {
@@ -312,38 +328,299 @@
     position: absolute;
     top: -10px;
     right: 10px;
-    background: #f0ad4e;
-    color: #000;
+    background: var(--campagna-accent);
+    color: #1a1a1a;
     padding: 2px 6px;
     font-size: 0.6rem;
     border-radius: 4px;
     font-weight: bold;
 }
 
-/* --- Animazione per la barra di progresso --- */
+/* === BARRA PROGRESSO === */
 .progress-bar {
     transition: width 0.5s ease-in-out;
+    background-color: var(--campagna-accent);
+    height: 20px;
+    border-radius: 4px;
+    position: relative;
 }
 .progress-bar.progress-updated {
     animation: pulse 0.5s ease-in-out;
 }
 
 @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(116, 35, 7, 0.4); }
-    70% { box-shadow: 0 0 0 10px rgba(116, 35, 7, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(116, 35, 7, 0); }
+    0% { box-shadow: 0 0 0 0 rgba(240, 173, 78, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(240, 173, 78, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(240, 173, 78, 0); }
 }
 
-/* --- Stili per le liste annidate --- */
+.progress-bar-container {
+    background-color: #333;
+    border-radius: 4px;
+    height: 20px;
+    margin-bottom: 15px;
+    overflow: hidden;
+}
+
+.progress-text {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #1a1a1a;
+}
+
+/* === LISTE ANNIDATE === */
 .nested-list {
     list-style-type: none;
     padding-left: 25px;
     margin-top: 5px;
-    border-left: 2px solid #ccc;
+    border-left: 2px solid var(--campagna-border);
 }
 
 .nested-item {
-    background-color: #f9f9f9;
+    background-color: #333;
     border-radius: 4px;
     margin-bottom: 5px;
+}
+
+/* === FORM EDITOR === */
+.editor-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-group label {
+    color: var(--campagna-accent);
+    font-size: 0.85rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    background-color: #1a1a1a;
+    border: 1px solid var(--campagna-border);
+    border-radius: 8px;
+    padding: 10px;
+    color: var(--campagna-text);
+    font-family: 'Lora', serif;
+    font-size: 0.95rem;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--campagna-accent);
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+/* === KEY EVENTS === */
+.key-events-container {
+    background-color: #1a1a1a;
+    border: 1px solid var(--campagna-border);
+    border-radius: 8px;
+    padding: 15px;
+}
+
+.key-events-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 10px 0;
+}
+
+.key-event-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background-color: #333;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    border-left: 3px solid var(--campagna-accent);
+}
+
+.key-event-text {
+    color: var(--campagna-text);
+    font-size: 0.9rem;
+}
+
+.remove-key-event-btn {
+    background: none;
+    border: none;
+    color: #dc3545;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0 5px;
+}
+
+.remove-key-event-btn:hover {
+    color: #ff6b6b;
+}
+
+/* === OBIETTIVI E CHECKPOINT === */
+.objective-item,
+.checkpoint-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px;
+    background-color: #333;
+    border-radius: 4px;
+    margin-bottom: 5px;
+}
+
+.objective-item input[type="checkbox"],
+.checkpoint-item input[type="checkbox"] {
+    margin-top: 4px;
+    accent-color: var(--campagna-accent);
+}
+
+.objective-item.completed span,
+.checkpoint-item.completed span {
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
+.objective-description,
+.checkpoint-description {
+    font-size: 0.85rem;
+    color: var(--campagna-text-muted);
+    margin-top: 4px;
+    margin-left: 28px;
+}
+
+/* === EDITOR ITEMS (drag & drop) === */
+.objective-item.editor-item,
+.checkpoint-item.editor-item {
+    display: grid;
+    grid-template-columns: 20px 100px 1fr auto;
+    gap: 10px;
+    align-items: center;
+    padding: 10px;
+}
+
+.objective-item.editor-item .drag-handle,
+.checkpoint-item.editor-item .drag-handle {
+    cursor: grab;
+    color: var(--campagna-text-muted);
+}
+
+.objective-item.editor-item input[type="text"],
+.objective-item.editor-item textarea,
+.checkpoint-item.editor-item input[type="text"],
+.checkpoint-item.editor-item textarea {
+    background-color: #1a1a1a;
+    border: 1px solid var(--campagna-border);
+    border-radius: 4px;
+    padding: 6px;
+    color: var(--campagna-text);
+    font-size: 0.9rem;
+}
+
+.priority-select {
+    background-color: #1a1a1a;
+    border: 1px solid var(--campagna-border);
+    border-radius: 4px;
+    padding: 6px;
+    color: var(--campagna-text);
+}
+
+.remove-objective-btn,
+.remove-checkpoint-btn {
+    background: none;
+    border: none;
+    color: #dc3545;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+/* === AZIONI EDITOR === */
+.editor-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--campagna-border);
+}
+
+/* === SESSIONE COLLEGATA BOX === */
+.related-sessions-box {
+    margin: 20px 0;
+    padding: 15px;
+    background: #1a1a1a;
+    border-radius: 8px;
+    border-left: 4px solid var(--campagna-accent);
+}
+
+.related-sessions-box h4 {
+    margin: 0 0 10px 0;
+    color: var(--campagna-accent);
+    font-family: 'Cinzel', serif;
+}
+
+.view-session-link {
+    color: var(--campagna-accent);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.view-session-link:hover {
+    color: #c89f60;
+}
+
+/* === EMPTY STATE === */
+.empty-state-msg {
+    text-align: center;
+    color: var(--campagna-text-muted);
+    padding: 40px;
+    font-style: italic;
+}
+
+.empty-list {
+    text-align: center;
+    color: var(--campagna-text-muted);
+    padding: 20px;
+    font-style: italic;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+    .session-notes-container {
+        flex-direction: column;
+    }
+    
+    .notes-list-panel {
+        flex: none;
+        width: 100%;
+        max-height: 40vh;
+    }
+    
+    .form-row {
+        flex-direction: column;
+    }
+    
+    .objective-item.editor-item,
+    .checkpoint-item.editor-item {
+        grid-template-columns: 1fr;
+    }
 }

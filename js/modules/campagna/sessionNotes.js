@@ -144,35 +144,35 @@ const SessionNotes = {
             editorContent.innerHTML = `
                 <div class="note-viewer">
                     <div class="note-viewer-header">
-                        <h2 style="color: #f0ad4e;">${linkedTitle}</h2>
-                        ${linkedChapter ? `<p><span class="status-badge" style="background:#e0f0ff; color:#0056b3; border: 1px solid #b3d7ff;">📖 Collegata a: ${linkedChapter.title}</span></p>` : ''}
-                        <p><strong class="wiki-label" style="color: #f0ad4e;">Sessione N°:</strong> <span style="color: #ffffff;">${note.sessionNumber || 'N/D'}</span></p>
-                        <p><strong class="wiki-label" style="color: #f0ad4e;">Data di Gioco:</strong> <span style="color: #ffffff;">${note.gameDate || 'N/D'}</span></p>
+                        <h2>${linkedTitle}</h2>
+                        ${linkedChapter ? `<p><span class="status-badge" style="background:#3b82f6; color:#fff; border: 1px solid #2563eb;">📖 Collegata a: ${linkedChapter.title}</span></p>` : ''}
+                        <p><strong class="wiki-label">Sessione N°:</strong> <span>${note.sessionNumber || 'N/D'}</span></p>
+                        <p><strong class="wiki-label">Data di Gioco:</strong> <span>${note.gameDate || 'N/D'}</span></p>
                     </div>
-                    <p><strong class="wiki-label" style="color: #f0ad4e;">Riepilogo:</strong></p>
-                    <p class="note-viewer-content" style="color: #ffffff;">${linkedSummary.replace(/\n/g, '<br>')}</p>
+                    <p><strong class="wiki-label">Riepilogo:</strong></p>
+                    <p class="note-viewer-content">${linkedSummary.replace(/\n/g, '<br>')}</p>
                     
-                    <p><strong class="wiki-label" style="color: #f0ad4e;">Eventi Chiave:</strong></p>
-                    <p class="note-viewer-content" style="color: #ffffff; white-space: pre-line;">${linkedKeyEvents}</p>
+                    <p><strong class="wiki-label">Eventi Chiave:</strong></p>
+                    <p class="note-viewer-content" style="white-space: pre-line;">${linkedKeyEvents}</p>
                     
-                    <p><strong class="wiki-label" style="color: #f0ad4e;">PNG Incontrati:</strong></p>
-                    <p class="note-viewer-content" style="color: #ffffff;">${linkedNpcs.replace(/\n/g, '<br>')}</p>
+                    <p><strong class="wiki-label">PNG Incontrati:</strong></p>
+                    <p class="note-viewer-content">${linkedNpcs.replace(/\n/g, '<br>')}</p>
                     
-                    <p><strong class="wiki-label" style="color: #f0ad4e;">Luoghi Visitati:</strong></p>
-                    <p class="note-viewer-content" style="color: #ffffff;">${linkedLocations.replace(/\n/g, '<br>')}</p>
+                    <p><strong class="wiki-label">Luoghi Visitati:</strong></p>
+                    <p class="note-viewer-content">${linkedLocations.replace(/\n/g, '<br>')}</p>
                     
-                    <p><strong class="wiki-label" style="color: #f0ad4e;">Tesoro Ottenuto:</strong></p>
-                    <p class="note-viewer-content" style="color: #ffffff;">${linkedLoot.replace(/\n/g, '<br>')}</p>
+                    <p><strong class="wiki-label">Tesoro Ottenuto:</strong></p>
+                    <p class="note-viewer-content">${linkedLoot.replace(/\n/g, '<br>')}</p>
                     
-                    <p><strong class="wiki-label" style="color: #f0ad4e;">Note per i Giocatori:</strong></p>
-                    <p class="note-viewer-content" style="color: #ffffff;">${linkedPlayerNotes.replace(/\n/g, '<br>')}</p>
+                    <p><strong class="wiki-label">Note per i Giocatori:</strong></p>
+                    <p class="note-viewer-content">${linkedPlayerNotes.replace(/\n/g, '<br>')}</p>
                     
-                    <div class="unrevealed-status" style="margin-top: 20px; padding: 15px; border: 1px dashed #742307; background: #fffcf5;">
-                        <p><strong class="wiki-label" style="color: #f0ad4e;">Note Segrete del DM:</strong></p>
-                        <p class="note-viewer-content" style="color: #eee !important;">${linkedDmNotes.replace(/\n/g, '<br>')}</p>
+                    <div class="unrevealed-status">
+                        <p><strong class="wiki-label">Note Segrete del DM:</strong></p>
+                        <p class="note-viewer-content">${linkedDmNotes.replace(/\n/g, '<br>')}</p>
                     </div>
                     
-                    <small class="note-viewer-date" style="color: #aaaaaa;">Ultima modifica: ${date}</small>
+                    <small class="note-viewer-date">Ultima modifica: ${date}</small>
                 </div>
             `;
         };
