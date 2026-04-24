@@ -38,7 +38,7 @@ import { addMonsterToCombat } from '../../../../stateManager.js';
 import { showToast } from '../../../../utils/toast.js';
 import { getAutocompleteSuggestions } from '../../../../utils/campaignLinker.js';
 import { backgroundDatabase } from '../../../../database/backgroundDatabase.js';
-import { generateAppearance, generatePersonality } from '../../compendio/quickBuilder.js';
+import { generateAppearance, generatePersonality, generateNPC, getEquipmentPacks } from '../../compendio/quickBuilder.js';
 
 export class PgController {
     
@@ -506,6 +506,12 @@ export class PgController {
         // Pulsante Nuovo PG
         if (button.id === 'btn-new-pg') {
             this.startWizard();
+            return;
+        }
+        
+        // Pulsante Quick Builder
+        if (button.id === 'btn-quick-builder-pg') {
+            this.openQuickBuilderModal();
             return;
         }
         
@@ -3305,6 +3311,474 @@ export class PgController {
         
         showToast(`Rimossa: ${condition}`, 'info');
         this.render();
+    }
+    
+    // ========================================================================
+    // QUICK BUILDER MODAL
+    // ========================================================================
+    
+    /**
+     * Apre il modal del Quick Builder per creazione rapida PG
+     */
+    openQuickBuilderModal() {
+        // Rimuovi modal esistente se presente
+        this.closeQuickBuilderModal();
+        
+        const equipmentPacks = getEquipmentPacks();
+        this.qbGeneratedPg = null;
+        
+        // Trova la razza umano come default
+        const defaultRaceIndex = this.databases.races.findIndex(r => r.name === 'Umano' || r.index === 'human');
+        const defaultClassIndex = this.databases.classes.findIndex(c => c.classe === 'Guerriero' || c.index === 'fighter');
+        
+        const modalHTML = `
+            <div class="pg-qb-modal-overlay" id="pg-qb-overlay">
+                <div class="pg-qb-modal">
+                    <div class="pg-qb-modal-header">
+                        <h2 class="pg-qb-modal-title">⚡ Quick Builder - Creazione Rapida PG</h2>
+                        <button class="pg-qb-modal-close" id="pg-qb-close">&times;</button>
+                    </div>
+                    
+                    <div class="pg-qb-modal-body">
+                        <!-- Sidebar Controlli -->
+                        <div class="pg-qb-sidebar">
+                            <div class="pg-qb-section">
+                                <div class="pg-qb-section-title">🎯 Classe e Razza</div>
+                                <div class="pg-qb-form-group">
+                                    <label>Classe</label>
+                                    <select id="qb-pg-class">
+                                        ${this.databases.classes.map(c => `<option value="${c.classe}" ${c.classe === 'Guerriero' ? 'selected' : ''}>${c.classe}</option>`).join('')}
+                                    </select>
+                                </div>
+                                <div class="pg-qb-form-group">
+                                    <label>Razza</label>
+                                    <select id="qb-pg-race">
+                                        ${this.databases.races.map(r => `<option value="${r.name}" ${r.name === 'Umano' ? 'selected' : ''}>${r.name}</option>`).join('')}
+                                    </select>
+                                </div>
+                                <div class="pg-qb-form-group">
+                                    <label>Livello</label>
+                                    <select id="qb-pg-level">
+                                        ${Array.from({length: 20}, (_, i) => `<option value="${i+1}" ${i===0 ? 'selected' : ''}>${i+1}</option>`).join('')}
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="pg-qb-section">
+                                <div class="pg-qb-section-title">📦 Dotazione</div>
+                                <div class="pg-qb-form-group">
+                                    <label>Equipaggiamento Iniziale</label>
+                                    <select id="qb-pg-pack">
+                                        <option value="">-- Default per classe --</option>
+                                        ${equipmentPacks.map(pack => {
+                                            const cost = pack.cost ? `${pack.cost.quantity} ${pack.cost.unit}` : '';
+                                            return `<option value="${pack.index}">${pack.name} (${cost})</option>`;
+                                        }).join('')}
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="pg-qb-section">
+                                <div class="pg-qb-section-title">⚙️ Opzioni</div>
+                                <div class="pg-qb-form-group">
+                                    <label>Nome Giocatore</label>
+                                    <input type="text" id="qb-pg-player" placeholder="Nome del giocatore">
+                                </div>
+                                <div class="pg-qb-form-group">
+                                    <label>Focus Statistiche</label>
+                                    <select id="qb-pg-focus">
+                                        <option value="balanced">Bilanciato</option>
+                                        <option value="offensive">Offensivo</option>
+                                        <option value="defensive">Difensivo</option>
+                                        <option value="random">Casuale</option>
+                                    </select>
+                                </div>
+                                <div class="pg-qb-form-group">
+                                    <label>Variabilità</label>
+                                    <select id="qb-pg-variability">
+                                        <option value="fixed">Fissa (Standard Array)</option>
+                                        <option value="low">Bassa</option>
+                                        <option value="medium" selected>Media</option>
+                                        <option value="high">Alta</option>
+                                    </select>
+                                </div>
+                                <div class="pg-qb-form-group">
+                                    <label>Sesso</label>
+                                    <select id="qb-pg-gender">
+                                        <option value="random">Casuale</option>
+                                        <option value="male">Maschio</option>
+                                        <option value="female">Femmina</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <button class="pg-qb-btn pg-qb-btn-generate" id="qb-pg-generate">
+                                🎲 Genera PG
+                            </button>
+                            <button class="pg-qb-btn pg-qb-btn-secondary" id="qb-pg-regen-desc" style="display: none; margin-top: 0.5rem; font-size: 0.8rem;">
+                                🔄 Rigenera Descrizioni
+                            </button>
+                        </div>
+                        
+                        <!-- Area Preview -->
+                        <div class="pg-qb-main">
+                            <div class="pg-qb-preview" id="qb-pg-preview">
+                                <div class="pg-qb-empty">
+                                    <p>🎯 Configura le opzioni e clicca "Genera PG" per vedere l'anteprima</p>
+                                    <p style="font-size: 0.8rem; margin-top: 0.5rem;">Il Quick Builder genera statistiche complete, incantesimi ed equipaggiamento!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="pg-qb-footer">
+                        <button class="pg-qb-btn pg-qb-btn-secondary" id="qb-pg-cancel">Annulla</button>
+                        <button class="pg-qb-btn pg-qb-btn-primary" id="qb-pg-save" disabled>💾 Salva come PG</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        this.bindQuickBuilderEvents();
+    }
+    
+    /**
+     * Chiude il modal del Quick Builder
+     */
+    closeQuickBuilderModal() {
+        const overlay = document.getElementById('pg-qb-overlay');
+        if (overlay) overlay.remove();
+        this.qbGeneratedPg = null;
+    }
+    
+    /**
+     * Collega gli eventi del Quick Builder modal
+     */
+    bindQuickBuilderEvents() {
+        const overlay = document.getElementById('pg-qb-overlay');
+        const closeBtn = document.getElementById('pg-qb-close');
+        const cancelBtn = document.getElementById('qb-pg-cancel');
+        const saveBtn = document.getElementById('qb-pg-save');
+        const generateBtn = document.getElementById('qb-pg-generate');
+        
+        // Chiudi modal
+        closeBtn?.addEventListener('click', () => this.closeQuickBuilderModal());
+        cancelBtn?.addEventListener('click', () => this.closeQuickBuilderModal());
+        overlay?.addEventListener('click', (e) => {
+            if (e.target === overlay) this.closeQuickBuilderModal();
+        });
+        
+        // Genera
+        generateBtn?.addEventListener('click', () => this.generateQuickBuilderPg());
+        
+        // Rigenera descrizioni
+        const regenBtn = document.getElementById('qb-pg-regen-desc');
+        regenBtn?.addEventListener('click', () => this.regenerateDescriptions());
+        
+        // Salva
+        saveBtn?.addEventListener('click', () => this.saveQuickBuilderPg());
+    }
+    
+    /**
+     * Genera un PG usando il Quick Builder
+     */
+    generateQuickBuilderPg() {
+        const className = document.getElementById('qb-pg-class')?.value;
+        const raceName = document.getElementById('qb-pg-race')?.value;
+        const level = parseInt(document.getElementById('qb-pg-level')?.value) || 1;
+        const pack = document.getElementById('qb-pg-pack')?.value || null;
+        const focus = document.getElementById('qb-pg-focus')?.value || 'balanced';
+        const variability = document.getElementById('qb-pg-variability')?.value || 'medium';
+        const gender = document.getElementById('qb-pg-gender')?.value || 'random';
+        const playerName = document.getElementById('qb-pg-player')?.value || '';
+        
+        // Usa la funzione generateNPC dal Quick Builder
+        const generated = generateNPC(className, raceName, level, {
+            focus,
+            variability,
+            gender,
+            selectedPack: pack
+        });
+        
+        if (!generated) {
+            showToast('Errore nella generazione del PG', 'error');
+            return;
+        }
+        
+        // Aggiungi il nome del giocatore
+        generated.playerName = playerName;
+        
+        this.qbGeneratedPg = generated;
+        this.renderQuickBuilderPreview(generated);
+        
+        // Abilita salva e mostra pulsante rigenera descrizioni
+        const saveBtn = document.getElementById('qb-pg-save');
+        if (saveBtn) saveBtn.disabled = false;
+        
+        const regenBtn = document.getElementById('qb-pg-regen-desc');
+        if (regenBtn) regenBtn.style.display = 'block';
+    }
+    
+    /**
+     * Rigenera le descrizioni (aspetto e personalità)
+     */
+    regenerateDescriptions() {
+        if (!this.qbGeneratedPg) {
+            showToast('Genera prima un PG', 'warning');
+            return;
+        }
+        
+        const pg = this.qbGeneratedPg;
+        
+        // Rigenera solo le descrizioni
+        pg.appearance = generateAppearance(pg.raceName, pg.className, pg.gender);
+        pg.personality = generatePersonality(pg.className, pg.raceName);
+        
+        // Aggiorna preview
+        this.renderQuickBuilderPreview(pg);
+        showToast('Descrizioni rigenerate!', 'success');
+    }
+    
+    /**
+     * Renderizza l'anteprima del PG generato
+     */
+    renderQuickBuilderPreview(pg) {
+        const preview = document.getElementById('qb-pg-preview');
+        if (!preview) return;
+        
+        const abilities = pg.abilities || {};
+        const spells = pg.spells || { cantrips: [], spells: [] };
+        const equipment = pg.equipment || { weapons: [], other: [], magicItems: [], consumables: [] };
+        
+        const ABILITY_LABELS = {
+            'for': 'FOR', 'des': 'DES', 'cos': 'COS',
+            'int': 'INT', 'sag': 'SAG', 'car': 'CAR'
+        };
+        
+        const getMod = (val) => Math.floor((val - 10) / 2);
+        
+        preview.innerHTML = `
+            <div class="pg-qb-preview-header">
+                <div>
+                    <h3 class="pg-qb-preview-name">${escapeHtml(pg.name)}</h3>
+                    <p class="pg-qb-preview-info">${pg.raceName} | ${pg.className} Liv.${pg.level}</p>
+                    <p class="pg-qb-preview-info">${pg.gender === 'female' ? '♀' : '♂'} ${pg.size} | Velocità: ${pg.speed}m</p>
+                    ${pg.playerName ? `<p class="pg-qb-preview-info">👤 Giocatore: ${escapeHtml(pg.playerName)}</p>` : ''}
+                </div>
+            </div>
+            
+            <div class="pg-qb-stats-grid">
+                ${Object.entries(abilities).map(([key, val]) => {
+                    const mod = getMod(val);
+                    return `
+                        <div class="pg-qb-stat-box">
+                            <div class="pg-qb-stat-label">${ABILITY_LABELS[key] || key.toUpperCase()}</div>
+                            <div class="pg-qb-stat-value">${val}</div>
+                            <div class="pg-qb-stat-mod">${mod >= 0 ? '+' : ''}${mod}</div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+            
+            <div class="pg-qb-combat-grid">
+                <div class="pg-qb-combat-stat">
+                    <label>PF</label>
+                    <span class="value">${pg.hp}</span>
+                </div>
+                <div class="pg-qb-combat-stat">
+                    <label>CA</label>
+                    <span class="value">${pg.ac}</span>
+                </div>
+                <div class="pg-qb-combat-stat">
+                    <label>Competenza</label>
+                    <span class="value">+${pg.profBonus}</span>
+                </div>
+                <div class="pg-qb-combat-stat">
+                    <label>Dado Vita</label>
+                    <span class="value">d${pg.hitDie}</span>
+                </div>
+            </div>
+            
+            <!-- Aspetto e Personalità -->
+            ${pg.appearance ? `
+                <div class="pg-qb-section-box" style="background: rgba(212, 175, 55, 0.08);">
+                    <div class="pg-qb-section-box-title">👤 Aspetto Fisico</div>
+                    <p style="font-size: 0.8rem; line-height: 1.4;">${escapeHtml(pg.appearance)}</p>
+                    <p style="font-size: 0.65rem; color: var(--text-muted); margin-top: 0.3rem; font-style: italic;">💡 Modificabile dopo il salvataggio</p>
+                </div>
+            ` : ''}
+            
+            ${pg.personality ? `
+                <div class="pg-qb-section-box" style="background: rgba(155, 89, 182, 0.08);">
+                    <div class="pg-qb-section-box-title">🎭 Personalità</div>
+                    <p style="font-size: 0.8rem; line-height: 1.4;">${escapeHtml(pg.personality)}</p>
+                    <p style="font-size: 0.65rem; color: var(--text-muted); margin-top: 0.3rem; font-style: italic;">💡 Modificabile dopo il salvataggio</p>
+                </div>
+            ` : ''}
+            
+            ${spells.dc ? `
+                <div class="pg-qb-section-box">
+                    <div class="pg-qb-section-box-title">🔮 Incantamento (CD: ${spells.dc}, Attacco: +${spells.attackBonus})</div>
+                    ${spells.cantrips && spells.cantrips.length > 0 ? `
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.25rem;"><strong>Trucchetti:</strong></p>
+                        <div>${spells.cantrips.map(s => `<span class="pg-qb-spell-tag">${escapeHtml(typeof s === 'string' ? s : s.name)}</span>`).join('')}</div>
+                    ` : ''}
+                    ${spells.spells && spells.spells.length > 0 ? `
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin: 0.5rem 0 0.25rem;"><strong>Incantesimi:</strong></p>
+                        <div>${spells.spells.map(s => `<span class="pg-qb-spell-tag">${escapeHtml(typeof s === 'string' ? s : s.name)}</span>`).join('')}</div>
+                    ` : ''}
+                </div>
+            ` : ''}
+            
+            <div class="pg-qb-section-box">
+                <div class="pg-qb-section-box-title">⚔️ Equipaggiamento</div>
+                ${equipment.weapons && equipment.weapons.length > 0 ? `
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.25rem;"><strong>Armi:</strong></p>
+                    <div>${equipment.weapons.map(w => `<span class="pg-qb-item-tag">${escapeHtml(typeof w === 'string' ? w : w.name)}</span>`).join('')}</div>
+                ` : ''}
+                ${equipment.armor ? `<p style="font-size: 0.75rem; color: var(--text-muted); margin: 0.5rem 0 0.25rem;"><strong>Armatura:</strong> ${escapeHtml(equipment.armor)}${equipment.shield ? ' + Scudo' : ''}</p>` : ''}
+                ${equipment.other && equipment.other.length > 0 ? `
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin: 0.5rem 0 0.25rem;"><strong>Altro:</strong></p>
+                    <div>${equipment.other.map(o => `<span class="pg-qb-item-tag">${escapeHtml(typeof o === 'string' ? o : o.name)}</span>`).join('')}</div>
+                ` : ''}
+                ${equipment.consumables && equipment.consumables.length > 0 ? `
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin: 0.5rem 0 0.25rem;"><strong>Consumabili:</strong></p>
+                    <div>${equipment.consumables.map(c => `<span class="pg-qb-item-tag">${escapeHtml(c)}</span>`).join('')}</div>
+                ` : ''}
+                ${equipment.magicItems && equipment.magicItems.length > 0 ? `
+                    <p style="font-size: 0.75rem; color: var(--accent-color); margin: 0.5rem 0 0.25rem;"><strong>✨ Oggetti Magici:</strong></p>
+                    <div>${equipment.magicItems.map(m => `<span class="pg-qb-item-tag" style="background: rgba(155, 89, 182, 0.2);">${escapeHtml(m)}</span>`).join('')}</div>
+                ` : ''}
+            </div>
+            
+            ${pg.features && pg.features.length > 0 ? `
+                <div class="pg-qb-section-box">
+                    <div class="pg-qb-section-box-title">⭐ Privilegi di Classe</div>
+                    <p style="font-size: 0.75rem;">${pg.features.slice(0, 8).map(f => escapeHtml(f)).join(', ')}${pg.features.length > 8 ? '...' : ''}</p>
+                </div>
+            ` : ''}
+            
+            ${pg.racialTraits && pg.racialTraits.length > 0 ? `
+                <div class="pg-qb-section-box">
+                    <div class="pg-qb-section-box-title">🧬 Tratti Razziali</div>
+                    <p style="font-size: 0.75rem;">${pg.racialTraits.map(t => escapeHtml(t)).join(', ')}</p>
+                </div>
+            ` : ''}
+        `;
+    }
+    
+    /**
+     * Salva il PG generato nel database
+     */
+    saveQuickBuilderPg() {
+        if (!this.qbGeneratedPg) {
+            showToast('Genera prima un PG', 'warning');
+            return;
+        }
+        
+        const generated = this.qbGeneratedPg;
+        const equipment = generated.equipment || {};
+        
+        // Trova la razza e classe nel database per ottenere index
+        const raceData = this.databases.races.find(r => r.name === generated.raceName);
+        const classData = this.databases.classes.find(c => c.classe === generated.className);
+        
+        // Converti in formato PG Manager
+        const pgData = {
+            id: `pg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+            name: generated.name,
+            race: raceData?.index || generated.raceName?.toLowerCase(),
+            raceName: generated.raceName,
+            class: classData?.index || generated.className?.toLowerCase(),
+            className: generated.className,
+            level: generated.level,
+            subclass: '',
+            
+            // Player info
+            playerName: generated.playerName || '',
+            gender: generated.gender,
+            appearance: generated.appearance || '',
+            personality: generated.personality || '',
+            backstory: '',
+            notes: '',
+            dmSecrets: '',
+            
+            // Stats
+            abilities: generated.abilities,
+            profBonus: generated.profBonus,
+            hp: {
+                max: generated.hp,
+                current: generated.hp,
+                temp: 0
+            },
+            armorClass: generated.ac,
+            speed: generated.speed,
+            hitDice: {
+                total: generated.level,
+                current: generated.level,
+                size: generated.hitDie
+            },
+            
+            // Saving throws
+            savingThrows: generated.savingThrows || [],
+            
+            // Skills - derivati dalle competenze di classe
+            skills: [],
+            
+            // Proficiencies
+            proficiencies: {
+                armor: classData?.competenze?.armature || [],
+                weapons: classData?.competenze?.armi || [],
+                tools: classData?.competenze?.strumenti || [],
+                languages: ['Comune', ...(raceData?.linguaggi || [])]
+            },
+            
+            // Spells
+            spells: {
+                cantrips: generated.spells?.cantrips || [],
+                spells: generated.spells?.spells || [],
+                byLevel: {},
+                slots: generated.spells?.slots || {},
+                dc: generated.spells?.dc,
+                attackBonus: generated.spells?.attackBonus,
+                ability: generated.spells?.ability
+            },
+            
+            // Inventory
+            inventory: [
+                ...(equipment.weapons || []).map(w => typeof w === 'string' ? { name: w, quantity: 1 } : { name: w.name, quantity: 1 }),
+                ...(equipment.other || []).map(o => typeof o === 'string' ? { name: o, quantity: 1 } : { name: o.name, quantity: 1 }),
+                ...(equipment.consumables || []).map(c => ({ name: c, quantity: 1 }))
+            ],
+            equipment: [],
+            magicItems: (equipment.magicItems || []).map(m => ({ name: m, description: 'Oggetto magico' })),
+            treasure: { gold: 0, silver: 0, copper: 0 },
+            
+            // Features
+            classFeatures: generated.features || [],
+            racialTraits: generated.racialTraits || [],
+            feats: [],
+            
+            // Conditions
+            conditions: [],
+            
+            // Metadati
+            createdAt: Date.now(),
+            lastModified: Date.now(),
+            isQuickBuilder: true
+        };
+        
+        // Aggiungi alla lista
+        this.dataManager.add(pgData);
+        
+        // Chiudi modal e aggiorna UI
+        this.closeQuickBuilderModal();
+        this.selectedPgId = pgData.id;
+        this.mode = 'view';
+        this.render();
+        
+        showToast(`PG "${pgData.name}" salvato!`, 'success');
     }
     
     // ========================================================================

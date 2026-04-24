@@ -56,9 +56,14 @@ export class PgViewManager {
                 <aside class="pg-sidebar">
                     <div class="pg-sidebar-header">
                         <h3>👥 Personaggi</h3>
-                        <button class="btn btn-primary btn-sm" id="btn-new-pg">
-                            + Nuovo
-                        </button>
+                        <div class="pg-sidebar-buttons">
+                            <button class="btn btn-primary btn-sm" id="btn-new-pg" title="Creazione guidata">
+                                + Nuovo
+                            </button>
+                            <button class="btn btn-secondary btn-sm" id="btn-quick-builder-pg" title="Creazione rapida">
+                                ⚡ Quick
+                            </button>
+                        </div>
                     </div>
                     <div class="pg-sidebar-list">
                         ${pcs.length === 0 

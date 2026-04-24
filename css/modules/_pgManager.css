@@ -7436,3 +7436,373 @@ label.spell-cb input {
     margin: 0;
     font-size: 1rem;
 }
+
+.level-change-display .level-old {
+    color: var(--text-muted, #888);
+    text-decoration: line-through;
+}
+
+.level-change-display .level-arrow {
+    color: var(--accent-color, #d4af37);
+}
+
+.level-change-display .level-new {
+    color: var(--success-color, #4caf50);
+    font-weight: bold;
+}
+
+/* ============================================================================
+   QUICK BUILDER MODAL - PG Manager
+   ============================================================================ */
+
+/* Modal Overlay */
+.pg-qb-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Modal Container */
+.pg-qb-modal {
+    background: var(--campagna-panel, #2a2a2a);
+    border: 2px solid var(--campagna-accent, #f0ad4e);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 1200px;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* Modal Header */
+.pg-qb-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, rgba(240, 173, 78, 0.15) 0%, rgba(212, 175, 55, 0.1) 100%);
+    border-bottom: 1px solid var(--campagna-border, #444);
+}
+
+.pg-qb-modal-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.3rem;
+    color: var(--campagna-accent, #f0ad4e);
+    margin: 0;
+}
+
+.pg-qb-modal-close {
+    background: transparent;
+    border: none;
+    color: var(--campagna-text-muted, #888);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    transition: color 0.2s;
+}
+
+.pg-qb-modal-close:hover {
+    color: var(--campagna-text, #fff);
+}
+
+/* Modal Body */
+.pg-qb-modal-body {
+    flex: 1;
+    display: flex;
+    gap: 0;
+    overflow: hidden;
+    min-height: 0;
+}
+
+/* Sidebar Controls */
+.pg-qb-sidebar {
+    width: 280px;
+    background: var(--campagna-bg, #1a1a1a);
+    border-right: 1px solid var(--campagna-border, #444);
+    padding: 1rem;
+    overflow-y: auto;
+    flex-shrink: 0;
+}
+
+.pg-qb-main {
+    flex: 1;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+.pg-qb-section {
+    margin-bottom: 1rem;
+}
+
+.pg-qb-section-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    color: var(--campagna-accent, #f0ad4e);
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid var(--campagna-border, #444);
+}
+
+.pg-qb-form-group {
+    margin-bottom: 0.75rem;
+}
+
+.pg-qb-form-group label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--campagna-text-muted, #888);
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+}
+
+.pg-qb-form-group select,
+.pg-qb-form-group input {
+    width: 100%;
+    padding: 0.5rem;
+    background: var(--input-bg, #333);
+    border: 1px solid var(--campagna-border, #444);
+    border-radius: 4px;
+    color: var(--campagna-text, #f0e6d2);
+    font-family: 'Lora', serif;
+    font-size: 0.85rem;
+}
+
+.pg-qb-form-group select:focus,
+.pg-qb-form-group input:focus {
+    outline: none;
+    border-color: var(--campagna-accent, #f0ad4e);
+}
+
+/* Buttons */
+.pg-qb-btn {
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+}
+
+.pg-qb-btn-primary {
+    background: linear-gradient(135deg, #f0ad4e 0%, #c9a959 100%);
+    color: #1a1a1a;
+    font-weight: 600;
+}
+
+.pg-qb-btn-primary:hover {
+    background: linear-gradient(135deg, #ffc107 0%, #f0ad4e 100%);
+    transform: translateY(-1px);
+}
+
+.pg-qb-btn-secondary {
+    background: var(--campagna-bg, #333);
+    border: 1px solid var(--campagna-border, #444);
+    color: var(--campagna-text, #fff);
+}
+
+.pg-qb-btn-secondary:hover {
+    background: #444;
+}
+
+.pg-qb-btn-generate {
+    background: linear-gradient(135deg, #9b59b6 0%, #6c3483 100%);
+    color: #fff;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.pg-qb-btn-generate:hover {
+    background: linear-gradient(135deg, #a86abd 0%, #7d4a99 100%);
+    transform: translateY(-1px);
+}
+
+.pg-qb-btn:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Preview Card */
+.pg-qb-preview {
+    background: var(--card-bg, #252525);
+    border: 1px solid var(--campagna-border, #444);
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.pg-qb-preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--campagna-accent, #f0ad4e);
+}
+
+.pg-qb-preview-name {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.2rem;
+    color: var(--campagna-accent, #f0ad4e);
+    margin: 0;
+}
+
+.pg-qb-preview-info {
+    font-size: 0.8rem;
+    color: var(--campagna-text-muted, #888);
+    margin: 0.2rem 0;
+}
+
+/* Stats Grid */
+.pg-qb-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 4px;
+    margin: 0.75rem 0;
+}
+
+.pg-qb-stat-box {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--campagna-border, #444);
+    border-radius: 4px;
+    padding: 0.35rem;
+    text-align: center;
+}
+
+.pg-qb-stat-label {
+    font-size: 0.6rem;
+    color: var(--campagna-text-muted, #888);
+    text-transform: uppercase;
+}
+
+.pg-qb-stat-value {
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--campagna-accent, #f0ad4e);
+}
+
+.pg-qb-stat-mod {
+    font-size: 0.75rem;
+    color: var(--campagna-text, #f0e6d2);
+}
+
+/* Combat Grid */
+.pg-qb-combat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    margin: 0.5rem 0;
+}
+
+.pg-qb-combat-stat {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--campagna-border, #444);
+    border-radius: 4px;
+    padding: 0.4rem;
+    text-align: center;
+}
+
+.pg-qb-combat-stat label {
+    font-size: 0.6rem;
+    color: var(--campagna-text-muted, #888);
+    text-transform: uppercase;
+    display: block;
+}
+
+.pg-qb-combat-stat .value {
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--campagna-accent, #f0ad4e);
+}
+
+/* Section Box */
+.pg-qb-section-box {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--campagna-border, #444);
+    border-radius: 6px;
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.pg-qb-section-box-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    color: var(--campagna-accent, #f0ad4e);
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid var(--campagna-border, #444);
+}
+
+/* Tags */
+.pg-qb-spell-tag {
+    display: inline-block;
+    padding: 0.15rem 0.4rem;
+    background: rgba(155, 89, 182, 0.2);
+    border-radius: 3px;
+    font-size: 0.7rem;
+    margin: 0.1rem;
+    color: var(--campagna-text, #f0e6d2);
+}
+
+.pg-qb-item-tag {
+    display: inline-block;
+    padding: 0.15rem 0.4rem;
+    background: rgba(212, 175, 55, 0.15);
+    border-radius: 3px;
+    font-size: 0.7rem;
+    margin: 0.1rem;
+    color: var(--campagna-text, #f0e6d2);
+}
+
+/* Footer */
+.pg-qb-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    background: var(--campagna-bg, #1a1a1a);
+    border-top: 1px solid var(--campagna-border, #444);
+}
+
+/* Empty State */
+.pg-qb-empty {
+    text-align: center;
+    color: var(--campagna-text-muted, #666);
+    padding: 2rem;
+    font-style: italic;
+}
+
+/* Sidebar Buttons Container */
+.pg-sidebar-buttons {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+/* Responsive Quick Builder Modal */
+@media (max-width: 900px) {
+    .pg-qb-modal-body {
+        flex-direction: column;
+    }
+    
+    .pg-qb-sidebar {
+        width: 100%;
+        max-height: 250px;
+        border-right: none;
+        border-bottom: 1px solid var(--campagna-border, #444);
+    }
+    
+    .pg-qb-stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .pg-qb-combat-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
