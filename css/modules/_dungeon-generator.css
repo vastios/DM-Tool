@@ -288,6 +288,21 @@
     color: #a0a0a0;
 }
 
+/* Structure stats */
+.structure-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 0.85rem;
+    color: #a0a0a0;
+}
+
+.structure-stats span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
 /* Encounter items */
 .encounter-item {
     display: flex;

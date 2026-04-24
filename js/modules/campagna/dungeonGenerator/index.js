@@ -1,24 +1,21 @@
 /**
  * DungeonGenerator - Entry Point
  * ─────────────────────────────────────────────────────────────
- * Generatore di mappe procedurali usando Wave Function Collapse.
+ * Generatore di mappe procedurali con approccio ibrido.
  * 
- * Moduli:
- * - WFCEngine: Algoritmo WFC per generazione
- * - TileDatabase: Gestione tiles e constraints
- * - MapRenderer: Rendering visivo
- * - EncounterGenerator: Incontri e tesori
+ * FASE 1: Generazione struttura (fiumi, sentieri, POI)
+ * FASE 2: Riempimento intelligente
+ * FASE 3: Post-processing
  * 
- * @version 2.0.0 - WFC-based generation
+ * @version 2.1.0 - Hybrid generation
  */
 
-import { WFCEngine } from './WFCEngine.js';
+import { MapGenerator } from './MapGenerator.js';
 import { TileDatabase } from './TileDatabase.js';
 import { MapRenderer } from './MapRenderer.js';
 import { EncounterGenerator } from './EncounterGenerator.js';
 import { monsterDatabase } from '../../../../database/monsterDatabase.js';
 import { showToast } from '../../../../utils/toast.js';
-import { getCurrentCampaignId } from '../../../../stateManager.js';
 
 // ═══════════════════════════════════════════════════════════════
 // CONFIGURAZIONE BIOMI
@@ -30,9 +27,6 @@ const BIOME_CONFIG = {
         tilesPath: 'ASSET/TILES/FORESTA/',
         tilesJson: 'ASSET/TILES/FORESTA/tiles.json'
     }
-    // Futuri biomi:
-    // dungeon: { ... },
-    // citta: { ... }
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -52,7 +46,7 @@ const DungeonGenerator = {
     },
 
     // Istanze moduli
-    wfcEngine: null,
+    mapGenerator: null,
     tileDatabase: null,
     mapRenderer: null,
     encounterGenerator: null,
@@ -96,7 +90,6 @@ const DungeonGenerator = {
         try {
             await this.tileDatabase.load(biomeConfig.tilesJson);
             
-            // Configura altri moduli
             this.mapRenderer.configure({
                 tileDatabase: this.tileDatabase,
                 tilesPath: biomeConfig.tilesPath
@@ -124,7 +117,7 @@ const DungeonGenerator = {
             <div class="dg-container-v2">
                 <!-- Header Controls -->
                 <div class="dg-header">
-                    <h2>🗺️ Generatore Mappe WFC</h2>
+                    <h2>🗺️ Generatore Mappe</h2>
                     <div class="dg-controls">
                         <div class="control-group">
                             <label>Bioma:</label>
@@ -158,7 +151,7 @@ const DungeonGenerator = {
                             <div class="wfc-placeholder">
                                 <div class="wfc-placeholder-icon">🗺️</div>
                                 <p>Clicca <strong>"Genera Mappa"</strong> per creare una nuova area</p>
-                                <p class="wfc-placeholder-hint">L'algoritmo WFC genera mappe coerenti con sentieri collegati, fiumi continui e posizioni logiche</p>
+                                <p class="wfc-placeholder-hint">Generazione ibrida: fiumi continui, sentieri collegati, POI logici</p>
                             </div>
                         </div>
                     </div>
@@ -169,6 +162,13 @@ const DungeonGenerator = {
                             <h3>📋 Dettagli Area</h3>
                             <div id="dg-area-info">
                                 <p class="text-muted">Nessuna mappa generata</p>
+                            </div>
+                        </div>
+
+                        <div class="dg-card">
+                            <h3>🗺️ Struttura</h3>
+                            <div id="dg-structure">
+                                <p class="text-muted">-</p>
                             </div>
                         </div>
 
@@ -201,6 +201,7 @@ const DungeonGenerator = {
                     <span class="legend-item"><span class="legend-dot" style="background:#4CAF50"></span> Passabile</span>
                     <span class="legend-item"><span class="legend-dot" style="background:#f44336"></span> Ostacolo</span>
                     <span class="legend-item"><span class="legend-dot" style="background:#2196F3"></span> Acqua</span>
+                    <span class="legend-item"><span class="legend-dot" style="background:#795548"></span> Sentiero</span>
                     <span class="legend-item"><span class="legend-dot" style="background:#FF9800"></span> Tesoro</span>
                     <span class="legend-item"><span class="legend-dot" style="background:#9C27B0"></span> Incontro</span>
                 </div>
@@ -262,16 +263,14 @@ const DungeonGenerator = {
         info += `<br><em>${tile?.description || ''}</em>`;
         info += `<br>Posizione: (${x}, ${y})`;
         info += `<br>Passabile: ${tile?.passable ? '✅' : '❌'}`;
-        info += `<br>Categoria: ${tile?.category || 'N/A'}`;
         
         if (encounter) {
-            info += `<br><br>⚔️ <strong>${encounter.monster.name} x${encounter.count}</strong>`;
+            info += `<br><br>⚔️ <strong>${encounter.monster.name} ×${encounter.count}</strong>`;
             info += `<br>CR ${encounter.cr} | ${encounter.xp} XP | ${encounter.difficulty}`;
         }
         
         if (treasure) {
             info += `<br><br>💎 <strong>${treasure.name}${treasure.details}</strong>`;
-            info += `<br>${treasure.description}`;
         }
         
         showToast(info, 'info');
@@ -293,23 +292,25 @@ const DungeonGenerator = {
         const size = this.state.gridSize;
         const partyLevel = this.state.partyLevel;
 
-        console.log(`🗺️ [DungeonGenerator] Generazione mappa ${size}×${size} con WFC...`);
+        console.log(`🗺️ [DungeonGenerator] Generazione mappa ${size}×${size} (ibrida)...`);
 
         try {
-            // Crea WFC Engine
-            this.wfcEngine = new WFCEngine(this.tileDatabase, {
+            // Crea MapGenerator
+            this.mapGenerator = new MapGenerator({
                 width: size,
-                height: size,
-                maxRetries: 15
+                height: size
             });
 
             // Genera mappa
             const startTime = performance.now();
-            this.state.grid = this.wfcEngine.generate();
+            this.mapGenerator.generate();
             const endTime = performance.now();
 
+            // Estrai griglia semplice (solo ID)
+            this.state.grid = this.mapGenerator.getTileIds();
+
             console.log(`⏱️ [DungeonGenerator] Generazione completata in ${(endTime - startTime).toFixed(2)}ms`);
-            console.log(`🔄 [DungeonGenerator] Tentativi: ${this.wfcEngine.generationAttempts}`);
+            console.log(`📊 [DungeonGenerator] Features:`, this.mapGenerator.features);
 
             // Genera incontri
             this.state.encounters = this.encounterGenerator.generateEncounters(
@@ -334,11 +335,11 @@ const DungeonGenerator = {
             this.container.querySelector('#dg-export-image').disabled = false;
             this.container.querySelector('#dg-export-json').disabled = false;
 
-            showToast(`Mappa ${size}×${size} generata! (${this.state.encounters.length} incontri)`, 'success');
+            showToast(`Mappa ${size}×${size} generata!`, 'success');
 
         } catch (error) {
             console.error('❌ [DungeonGenerator] Errore generazione:', error);
-            showToast(`Errore nella generazione: ${error.message}`, 'error');
+            showToast(`Errore: ${error.message}`, 'error');
         }
     },
 
@@ -373,7 +374,18 @@ const DungeonGenerator = {
             <div class="area-stats">
                 <span>📐 Dimensione: ${this.state.gridSize}×${this.state.gridSize}</span>
                 <span>🌲 Bioma: ${biomeConfig.name}</span>
-                <span>🎯 Tentativi WFC: ${this.wfcEngine?.generationAttempts || 1}</span>
+            </div>
+        `;
+
+        // Structure Info
+        const structDiv = this.container.querySelector('#dg-structure');
+        const features = this.mapGenerator?.features || { rivers: [], paths: [], pois: [] };
+        
+        structDiv.innerHTML = `
+            <div class="structure-stats">
+                <span>🌊 Celle acqua: ${features.rivers.length}</span>
+                <span>🛤️ Celle sentiero: ${features.paths.length}</span>
+                <span>📍 POI: ${features.pois.length}</span>
             </div>
         `;
 
@@ -416,18 +428,28 @@ const DungeonGenerator = {
      */
     generateDescription() {
         const biomeConfig = BIOME_CONFIG[this.state.currentBiome];
-        const biomeInfo = this.tileDatabase.getBiomeConfig();
+        const features = this.mapGenerator?.features || { rivers: [], paths: [], pois: [] };
         
-        const descriptions = [
-            'Una fitta foresta si estende davanti a voi, i raggi del sole filtrano tra le fronde.',
-            'Il terreno è coperto da un tappeto di foglie che scricchiolano sotto i vostri passi.',
-            'L\'aria è fresca e profumata di resina e terriccio umido.',
-            'Sentieri tortuosi si snodano tra gli alberi secolari.',
-            'Un ruscello gorgoglia nelle vicinanze.'
-        ];
-
-        const selected = descriptions.sort(() => 0.5 - Math.random()).slice(0, 2);
-        return `${biomeInfo?.description || biomeConfig.name}. ${selected.join(' ')}`;
+        let desc = `Una zona di ${biomeConfig.name.toLowerCase()}`;
+        
+        if (features.rivers.length > 0) {
+            desc += ` attraversata da un corso d'acqua`;
+        }
+        
+        if (features.paths.length > 0) {
+            desc += `. Sentieri tortuosi si snodano tra la vegetazione`;
+        }
+        
+        if (features.pois.length > 0) {
+            const poiTypes = features.pois.map(p => p.type);
+            if (poiTypes.includes('capanna')) desc += `. Si intravede una capanna`;
+            if (poiTypes.includes('rovine')) desc += `. Antiche rovine emergono tra gli alberi`;
+            if (poiTypes.includes('campo_falo')) desc += `. Un falò brucia in una radura`;
+        }
+        
+        desc += `.`;
+        
+        return desc;
     },
 
     // ═══════════════════════════════════════════════════════════════
@@ -441,13 +463,11 @@ const DungeonGenerator = {
         const encounter = this.state.encounters.find(e => e.id === encounterId);
         if (!encounter) return;
 
-        // Prepara mostri
         const monsters = [];
         for (let i = 0; i < encounter.count; i++) {
             monsters.push({ ...encounter.monster, count: 1 });
         }
 
-        // Dispatch evento
         const event = new CustomEvent('openModuleWithItem', {
             detail: {
                 moduleId: 'combatTracker',
@@ -468,11 +488,12 @@ const DungeonGenerator = {
      */
     exportJSON() {
         const data = {
-            version: '2.0.0-wfc',
+            version: '2.1.0-hybrid',
             biome: this.state.currentBiome,
             size: this.state.gridSize,
             partyLevel: this.state.partyLevel,
             grid: this.state.grid,
+            features: this.mapGenerator?.features,
             encounters: this.state.encounters.map(e => ({
                 monster: e.monster.name,
                 count: e.count,
@@ -483,7 +504,6 @@ const DungeonGenerator = {
             })),
             treasures: this.state.treasures,
             description: this.state.description,
-            wfcAttempts: this.wfcEngine?.generationAttempts,
             exportedAt: new Date().toISOString()
         };
 
@@ -491,7 +511,7 @@ const DungeonGenerator = {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `mappa_wfc_${this.state.currentBiome}_${Date.now()}.json`;
+        a.download = `mappa_${this.state.currentBiome}_${Date.now()}.json`;
         a.click();
         URL.revokeObjectURL(url);
 
@@ -507,7 +527,7 @@ const DungeonGenerator = {
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `mappa_wfc_${this.state.currentBiome}_${Date.now()}.png`;
+            a.download = `mappa_${this.state.currentBiome}_${Date.now()}.png`;
             a.click();
             URL.revokeObjectURL(url);
 
@@ -537,7 +557,7 @@ const DungeonGenerator = {
         if (this.container) this.container.innerHTML = '';
         
         this.container = null;
-        this.wfcEngine = null;
+        this.mapGenerator = null;
     }
 };
 
