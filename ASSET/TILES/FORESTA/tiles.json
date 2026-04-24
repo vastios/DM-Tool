@@ -2,11 +2,19 @@
   "biome": "foresta",
   "name": "Foresta",
   "description": "Foresta lussureggiante con alberi, ruscelli e radure",
-  "monsterTypes": ["beast", "fey", "plant", "humanoid", "monstrosity"],
-  "crRange": { "min": 0.25, "max": 8 },
+  "monsterTypes": [
+    "beast",
+    "fey",
+    "plant",
+    "humanoid",
+    "monstrosity"
+  ],
+  "crRange": {
+    "min": 0.25,
+    "max": 8
+  },
   "encounterDensity": 0.12,
   "treasureDensity": 0.08,
-  
   "tiles": [
     {
       "id": "erba_base",
@@ -16,7 +24,11 @@
       "passable": true,
       "blocksVision": false,
       "description": "Erba verde lussureggiante",
-      "tags": ["base", "terreno", "passaggio"],
+      "tags": [
+        "base",
+        "terreno",
+        "passaggio"
+      ],
       "weight": 15,
       "symmetry": "X",
       "sockets": {
@@ -34,7 +46,11 @@
       "passable": false,
       "blocksVision": true,
       "description": "Una grande quercia secolare",
-      "tags": ["albero", "copertura", "ostacolo"],
+      "tags": [
+        "albero",
+        "copertura",
+        "ostacolo"
+      ],
       "weight": 4,
       "symmetry": "X",
       "sockets": {
@@ -52,7 +68,11 @@
       "passable": false,
       "blocksVision": true,
       "description": "Un albero di medie dimensioni",
-      "tags": ["albero", "copertura", "ostacolo"],
+      "tags": [
+        "albero",
+        "copertura",
+        "ostacolo"
+      ],
       "weight": 5,
       "symmetry": "X",
       "sockets": {
@@ -70,7 +90,11 @@
       "passable": false,
       "blocksVision": true,
       "description": "Un alto pino",
-      "tags": ["albero", "conifera", "copertura"],
+      "tags": [
+        "albero",
+        "conifera",
+        "copertura"
+      ],
       "weight": 4,
       "symmetry": "X",
       "sockets": {
@@ -88,7 +112,11 @@
       "passable": false,
       "blocksVision": true,
       "description": "Due alberi vicini creano una fitta barriera",
-      "tags": ["alberi", "copertura", "nascondiglio"],
+      "tags": [
+        "alberi",
+        "copertura",
+        "nascondiglio"
+      ],
       "weight": 3,
       "symmetry": "X",
       "sockets": {
@@ -106,7 +134,10 @@
       "passable": true,
       "blocksVision": false,
       "description": "Un cespuglio fitto",
-      "tags": ["cespuglio", "copertura_leggera"],
+      "tags": [
+        "cespuglio",
+        "copertura_leggera"
+      ],
       "weight": 6,
       "symmetry": "X",
       "sockets": {
@@ -124,7 +155,11 @@
       "passable": true,
       "blocksVision": false,
       "description": "Un cespuglio con bei fiori colorati",
-      "tags": ["cespuglio", "fiori", "copertura_leggera"],
+      "tags": [
+        "cespuglio",
+        "fiori",
+        "copertura_leggera"
+      ],
       "weight": 3,
       "symmetry": "X",
       "sockets": {
@@ -142,7 +177,11 @@
       "passable": false,
       "blocksVision": true,
       "description": "Una grande roccia massiccia",
-      "tags": ["roccia", "copertura", "arrampicata"],
+      "tags": [
+        "roccia",
+        "copertura",
+        "arrampicata"
+      ],
       "weight": 2,
       "symmetry": "X",
       "sockets": {
@@ -160,7 +199,10 @@
       "passable": true,
       "blocksVision": false,
       "description": "Terreno roccioso dissestato",
-      "tags": ["roccia", "difficile"],
+      "tags": [
+        "roccia",
+        "difficile"
+      ],
       "weight": 3,
       "symmetry": "X",
       "sockets": {
@@ -178,7 +220,11 @@
       "passable": false,
       "blocksVision": false,
       "description": "Un piccolo laghetto tranquillo",
-      "tags": ["acqua", "nuoto", "pesca"],
+      "tags": [
+        "acqua",
+        "nuoto",
+        "pesca"
+      ],
       "weight": 2,
       "symmetry": "X",
       "sockets": {
@@ -196,7 +242,11 @@
       "passable": true,
       "blocksVision": false,
       "description": "Un ruscello che scorre dolcemente",
-      "tags": ["acqua", "guado", "orizzontale"],
+      "tags": [
+        "acqua",
+        "guado",
+        "orizzontale"
+      ],
       "weight": 3,
       "symmetry": "I",
       "sockets": {
@@ -205,7 +255,9 @@
         "left": "water",
         "right": "water"
       },
-      "rotations": ["ruscello_v"]
+      "rotations": [
+        "ruscello_v"
+      ]
     },
     {
       "id": "ruscello_v",
@@ -215,8 +267,12 @@
       "passable": true,
       "blocksVision": false,
       "description": "Un ruscello che scorre dolcemente",
-      "tags": ["acqua", "guado", "verticale"],
-      "weight": 0,
+      "tags": [
+        "acqua",
+        "guado",
+        "verticale"
+      ],
+      "weight": 3,
       "symmetry": "I",
       "isRotation": true,
       "rotationOf": "ruscello_h",
@@ -236,7 +292,11 @@
       "passable": true,
       "blocksVision": false,
       "description": "Un sentiero sterrato",
-      "tags": ["sentiero", "passaggio", "orizzontale"],
+      "tags": [
+        "sentiero",
+        "passaggio",
+        "orizzontale"
+      ],
       "weight": 4,
       "symmetry": "I",
       "sockets": {
@@ -245,7 +305,9 @@
         "left": "path",
         "right": "path"
       },
-      "rotations": ["sentiero_v"]
+      "rotations": [
+        "sentiero_v"
+      ]
     },
     {
       "id": "sentiero_v",
@@ -255,7 +317,11 @@
       "passable": true,
       "blocksVision": false,
       "description": "Un sentiero sterrato",
-      "tags": ["sentiero", "passaggio", "verticale"],
+      "tags": [
+        "sentiero",
+        "passaggio",
+        "verticale"
+      ],
       "weight": 4,
       "symmetry": "I",
       "isRotation": true,
@@ -276,7 +342,11 @@
       "passable": true,
       "blocksVision": false,
       "description": "Un incrocio nel sentiero",
-      "tags": ["sentiero", "incrocio", "passaggio"],
+      "tags": [
+        "sentiero",
+        "incrocio",
+        "passaggio"
+      ],
       "weight": 2,
       "symmetry": "X",
       "sockets": {
@@ -294,7 +364,11 @@
       "passable": true,
       "blocksVision": false,
       "description": "Una curva nel sentiero",
-      "tags": ["sentiero", "curva", "passaggio"],
+      "tags": [
+        "sentiero",
+        "curva",
+        "passaggio"
+      ],
       "weight": 3,
       "symmetry": "L",
       "sockets": {
@@ -303,7 +377,11 @@
         "left": "ground",
         "right": "path"
       },
-      "rotations": ["curva_sentiero_90", "curva_sentiero_180", "curva_sentiero_270"]
+      "rotations": [
+        "curva_sentiero_90",
+        "curva_sentiero_180",
+        "curva_sentiero_270"
+      ]
     },
     {
       "id": "curva_sentiero_90",
@@ -313,8 +391,12 @@
       "passable": true,
       "blocksVision": false,
       "description": "Una curva nel sentiero",
-      "tags": ["sentiero", "curva", "passaggio"],
-      "weight": 0,
+      "tags": [
+        "sentiero",
+        "curva",
+        "passaggio"
+      ],
+      "weight": 3,
       "symmetry": "L",
       "isRotation": true,
       "rotationOf": "curva_sentiero",
@@ -334,8 +416,12 @@
       "passable": true,
       "blocksVision": false,
       "description": "Una curva nel sentiero",
-      "tags": ["sentiero", "curva", "passaggio"],
-      "weight": 0,
+      "tags": [
+        "sentiero",
+        "curva",
+        "passaggio"
+      ],
+      "weight": 3,
       "symmetry": "L",
       "isRotation": true,
       "rotationOf": "curva_sentiero",
@@ -355,8 +441,12 @@
       "passable": true,
       "blocksVision": false,
       "description": "Una curva nel sentiero",
-      "tags": ["sentiero", "curva", "passaggio"],
-      "weight": 0,
+      "tags": [
+        "sentiero",
+        "curva",
+        "passaggio"
+      ],
+      "weight": 3,
       "symmetry": "L",
       "isRotation": true,
       "rotationOf": "curva_sentiero",
@@ -376,7 +466,11 @@
       "passable": true,
       "blocksVision": false,
       "description": "Una bellissima radura piena di fiori",
-      "tags": ["radura", "fiori", "erbe"],
+      "tags": [
+        "radura",
+        "fiori",
+        "erbe"
+      ],
       "weight": 3,
       "symmetry": "X",
       "sockets": {
@@ -394,7 +488,11 @@
       "passable": true,
       "blocksVision": false,
       "description": "Un grande tronco abbattuto",
-      "tags": ["tronco", "copertura", "funghi"],
+      "tags": [
+        "tronco",
+        "copertura",
+        "funghi"
+      ],
       "weight": 2,
       "symmetry": "I",
       "sockets": {
@@ -412,7 +510,11 @@
       "passable": true,
       "blocksVision": false,
       "description": "Una colonia di funghi colorati",
-      "tags": ["funghi", "erbe", "veleno"],
+      "tags": [
+        "funghi",
+        "erbe",
+        "veleno"
+      ],
       "weight": 2,
       "symmetry": "X",
       "sockets": {
@@ -430,7 +532,11 @@
       "passable": true,
       "blocksVision": false,
       "description": "Antiche rovine coperte di muschio",
-      "tags": ["rovine", "esplorazione", "tesoro"],
+      "tags": [
+        "rovine",
+        "esplorazione",
+        "tesoro"
+      ],
       "weight": 1,
       "symmetry": "X",
       "sockets": {
@@ -451,7 +557,11 @@
       "passable": true,
       "blocksVision": false,
       "description": "Un ponte di legno",
-      "tags": ["ponte", "passaggio", "struttura"],
+      "tags": [
+        "ponte",
+        "passaggio",
+        "struttura"
+      ],
       "weight": 1,
       "symmetry": "I",
       "sockets": {
@@ -470,7 +580,11 @@
       "passable": false,
       "blocksVision": true,
       "description": "Una piccola capanna di legno",
-      "tags": ["capanna", "riparo", "npc"],
+      "tags": [
+        "capanna",
+        "riparo",
+        "npc"
+      ],
       "weight": 1,
       "symmetry": "X",
       "sockets": {
@@ -491,7 +605,12 @@
       "passable": true,
       "blocksVision": false,
       "description": "Un campo con un falò acceso",
-      "tags": ["campo", "falò", "accampamento", "npc"],
+      "tags": [
+        "campo",
+        "falò",
+        "accampamento",
+        "npc"
+      ],
       "weight": 1,
       "symmetry": "X",
       "sockets": {
@@ -512,7 +631,11 @@
       "passable": true,
       "blocksVision": false,
       "description": "Un vecchio pozzo di pietra",
-      "tags": ["pozzo", "acqua", "mistero"],
+      "tags": [
+        "pozzo",
+        "acqua",
+        "mistero"
+      ],
       "weight": 1,
       "symmetry": "X",
       "sockets": {
@@ -532,7 +655,11 @@
       "passable": true,
       "blocksVision": false,
       "description": "Una radura erbosa aperta",
-      "tags": ["radura", "aperto", "visibilità"],
+      "tags": [
+        "radura",
+        "aperto",
+        "visibilità"
+      ],
       "weight": 5,
       "symmetry": "X",
       "sockets": {
@@ -550,7 +677,11 @@
       "passable": true,
       "blocksVision": false,
       "description": "Una curva nel ruscello",
-      "tags": ["acqua", "curva", "ruscello"],
+      "tags": [
+        "acqua",
+        "curva",
+        "ruscello"
+      ],
       "weight": 2,
       "symmetry": "L",
       "sockets": {
@@ -559,7 +690,11 @@
         "left": "ground",
         "right": "water"
       },
-      "rotations": ["ansa_fiume_90", "ansa_fiume_180", "ansa_fiume_270"]
+      "rotations": [
+        "ansa_fiume_90",
+        "ansa_fiume_180",
+        "ansa_fiume_270"
+      ]
     },
     {
       "id": "ansa_fiume_90",
@@ -569,8 +704,12 @@
       "passable": true,
       "blocksVision": false,
       "description": "Una curva nel ruscello",
-      "tags": ["acqua", "curva", "ruscello"],
-      "weight": 0,
+      "tags": [
+        "acqua",
+        "curva",
+        "ruscello"
+      ],
+      "weight": 2,
       "symmetry": "L",
       "isRotation": true,
       "rotationOf": "ansa_fiume",
@@ -590,8 +729,12 @@
       "passable": true,
       "blocksVision": false,
       "description": "Una curva nel ruscello",
-      "tags": ["acqua", "curva", "ruscello"],
-      "weight": 0,
+      "tags": [
+        "acqua",
+        "curva",
+        "ruscello"
+      ],
+      "weight": 2,
       "symmetry": "L",
       "isRotation": true,
       "rotationOf": "ansa_fiume",
@@ -611,8 +754,12 @@
       "passable": true,
       "blocksVision": false,
       "description": "Una curva nel ruscello",
-      "tags": ["acqua", "curva", "ruscello"],
-      "weight": 0,
+      "tags": [
+        "acqua",
+        "curva",
+        "ruscello"
+      ],
+      "weight": 2,
       "symmetry": "L",
       "isRotation": true,
       "rotationOf": "ansa_fiume",
@@ -632,7 +779,11 @@
       "passable": true,
       "blocksVision": false,
       "description": "Dove il sentiero termina",
-      "tags": ["sentiero", "fine", "passaggio"],
+      "tags": [
+        "sentiero",
+        "fine",
+        "passaggio"
+      ],
       "weight": 2,
       "symmetry": "T",
       "sockets": {
@@ -641,7 +792,11 @@
         "left": "ground",
         "right": "path"
       },
-      "rotations": ["fine_sentiero_90", "fine_sentiero_180", "fine_sentiero_270"]
+      "rotations": [
+        "fine_sentiero_90",
+        "fine_sentiero_180",
+        "fine_sentiero_270"
+      ]
     },
     {
       "id": "fine_sentiero_90",
@@ -651,8 +806,12 @@
       "passable": true,
       "blocksVision": false,
       "description": "Dove il sentiero termina",
-      "tags": ["sentiero", "fine", "passaggio"],
-      "weight": 0,
+      "tags": [
+        "sentiero",
+        "fine",
+        "passaggio"
+      ],
+      "weight": 2,
       "symmetry": "T",
       "isRotation": true,
       "rotationOf": "fine_sentiero",
@@ -672,8 +831,12 @@
       "passable": true,
       "blocksVision": false,
       "description": "Dove il sentiero termina",
-      "tags": ["sentiero", "fine", "passaggio"],
-      "weight": 0,
+      "tags": [
+        "sentiero",
+        "fine",
+        "passaggio"
+      ],
+      "weight": 2,
       "symmetry": "T",
       "isRotation": true,
       "rotationOf": "fine_sentiero",
@@ -693,8 +856,12 @@
       "passable": true,
       "blocksVision": false,
       "description": "Dove il sentiero termina",
-      "tags": ["sentiero", "fine", "passaggio"],
-      "weight": 0,
+      "tags": [
+        "sentiero",
+        "fine",
+        "passaggio"
+      ],
+      "weight": 2,
       "symmetry": "T",
       "isRotation": true,
       "rotationOf": "fine_sentiero",
@@ -714,7 +881,11 @@
       "passable": true,
       "blocksVision": false,
       "description": "Un bivio a T nel sentiero",
-      "tags": ["sentiero", "bivio", "passaggio"],
+      "tags": [
+        "sentiero",
+        "bivio",
+        "passaggio"
+      ],
       "weight": 2,
       "symmetry": "T",
       "sockets": {
@@ -723,7 +894,11 @@
         "left": "path",
         "right": "path"
       },
-      "rotations": ["t_sentiero_90", "t_sentiero_180", "t_sentiero_270"]
+      "rotations": [
+        "t_sentiero_90",
+        "t_sentiero_180",
+        "t_sentiero_270"
+      ]
     },
     {
       "id": "t_sentiero_90",
@@ -733,8 +908,12 @@
       "passable": true,
       "blocksVision": false,
       "description": "Un bivio a T nel sentiero",
-      "tags": ["sentiero", "bivio", "passaggio"],
-      "weight": 0,
+      "tags": [
+        "sentiero",
+        "bivio",
+        "passaggio"
+      ],
+      "weight": 2,
       "symmetry": "T",
       "isRotation": true,
       "rotationOf": "t_sentiero",
@@ -754,8 +933,12 @@
       "passable": true,
       "blocksVision": false,
       "description": "Un bivio a T nel sentiero",
-      "tags": ["sentiero", "bivio", "passaggio"],
-      "weight": 0,
+      "tags": [
+        "sentiero",
+        "bivio",
+        "passaggio"
+      ],
+      "weight": 2,
       "symmetry": "T",
       "isRotation": true,
       "rotationOf": "t_sentiero",
@@ -775,8 +958,12 @@
       "passable": true,
       "blocksVision": false,
       "description": "Un bivio a T nel sentiero",
-      "tags": ["sentiero", "bivio", "passaggio"],
-      "weight": 0,
+      "tags": [
+        "sentiero",
+        "bivio",
+        "passaggio"
+      ],
+      "weight": 2,
       "symmetry": "T",
       "isRotation": true,
       "rotationOf": "t_sentiero",
@@ -789,26 +976,65 @@
       }
     }
   ],
-  
   "socketCompatibility": {
-    "ground": ["ground", "path", "water", "clearing", "foliage", "rock", "building"],
-    "path": ["path", "ground", "clearing"],
-    "water": ["water", "ground"],
-    "clearing": ["clearing", "ground", "path", "foliage"],
-    "foliage": ["foliage", "ground", "clearing"],
-    "rock": ["rock", "ground"],
-    "building": ["building", "ground", "path", "clearing"]
+    "ground": [
+      "ground",
+      "path",
+      "water",
+      "clearing",
+      "foliage",
+      "rock",
+      "building"
+    ],
+    "path": [
+      "path",
+      "ground",
+      "clearing"
+    ],
+    "water": [
+      "water",
+      "ground"
+    ],
+    "clearing": [
+      "clearing",
+      "ground",
+      "path",
+      "foliage"
+    ],
+    "foliage": [
+      "foliage",
+      "ground",
+      "clearing"
+    ],
+    "rock": [
+      "rock",
+      "ground"
+    ],
+    "building": [
+      "building",
+      "ground",
+      "path",
+      "clearing"
+    ]
   },
-  
   "generationRules": {
     "minPassablePercent": 60,
     "maxConsecutiveObstacles": 3,
     "pathConnectivity": true,
     "waterFlowFromEdge": true,
     "poiProximity": {
-      "capanna": { "requires": "path", "maxDistance": 1 },
-      "campo_falo": { "requires": "clearing", "maxDistance": 0 },
-      "ponte": { "requires": "water", "maxDistance": 0 }
+      "capanna": {
+        "requires": "path",
+        "maxDistance": 1
+      },
+      "campo_falo": {
+        "requires": "clearing",
+        "maxDistance": 0
+      },
+      "ponte": {
+        "requires": "water",
+        "maxDistance": 0
+      }
     }
   }
 }

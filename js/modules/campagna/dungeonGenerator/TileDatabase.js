@@ -115,8 +115,9 @@ export class TileDatabase {
     getAllTileIds() {
         return Array.from(this.tiles.keys()).filter(id => {
             const tile = this.tiles.get(id);
-            // Escludi tiles con peso 0 (sono solo varianti rotazionali)
-            return tile.weight > 0;
+            // Includi tutti i tile, ANCHE le rotazioni (hanno socket diversi!)
+            // Il WFC deve poter scegliere ruscello_v quando serve acqua verticale
+            return true;
         });
     }
 
@@ -222,6 +223,23 @@ export class TileDatabase {
         }
         
         return tile.file;
+    }
+
+    /**
+     * Ottiene la rotazione da applicare per un tile (in gradi)
+     * @param {string} tileId 
+     * @returns {number}
+     */
+    getTileRotation(tileId) {
+        const tile = this.tiles.get(tileId);
+        if (!tile) return 0;
+        
+        // Se è una rotazione definita, ritorna i gradi
+        if (tile.isRotation && tile.rotation !== undefined) {
+            return tile.rotation;
+        }
+        
+        return 0;
     }
 
     /**

@@ -76,6 +76,7 @@ export class MapRenderer {
                 const tileId = grid[y][x];
                 const tile = this.tileDatabase?.getTile(tileId);
                 const filePath = this.tileDatabase?.getTileFilePath(tileId);
+                const rotation = this.tileDatabase?.getTileRotation(tileId) || 0;
                 
                 // Verifica se c'è un incontro o tesoro su questa cella
                 const encounter = this.encounters.find(e => e.position.x === x && e.position.y === y);
@@ -85,18 +86,25 @@ export class MapRenderer {
                 const poiClass = tile?.isPOI ? 'is-poi' : '';
                 const passableClass = tile?.passable ? 'passable' : 'obstacle';
                 
+                // Applica rotazione CSS se necessario
+                const rotationStyle = rotation !== 0 
+                    ? `style="transform: rotate(${rotation}deg); transform-origin: center center;"` 
+                    : '';
+                
                 html += `
                     <div class="wfc-tile ${markerClass} ${poiClass} ${passableClass}" 
                          data-x="${x}" data-y="${y}"
                          data-tile-id="${tileId}"
                          data-passable="${tile?.passable || false}"
                          data-category="${tile?.category || 'unknown'}"
+                         data-rotation="${rotation}"
                          title="${this.getTileTooltip(tile, x, y, encounter, treasure)}">
                         <img src="${this.tilesPath}${filePath}" 
                              alt="${tile?.name || tileId}"
                              width="${this.options.tileSize}" 
                              height="${this.options.tileSize}"
                              loading="lazy"
+                             ${rotationStyle}
                              onerror="this.src='${this.tilesPath}01_erba_base.png'">
                         ${this.renderMarkers(encounter, treasure)}
                     </div>
@@ -251,9 +259,10 @@ export class MapRenderer {
             for (let x = 0; x < width; x++) {
                 const tileId = this.grid[y][x];
                 const filePath = this.tileDatabase?.getTileFilePath(tileId);
+                const rotation = this.tileDatabase?.getTileRotation(tileId) || 0;
                 
                 if (filePath) {
-                    promises.push(this.drawTile(ctx, x, y, `${this.tilesPath}${filePath}`, tileSize));
+                    promises.push(this.drawTile(ctx, x, y, `${this.tilesPath}${filePath}`, tileSize, rotation));
                 }
             }
         }
@@ -278,11 +287,23 @@ export class MapRenderer {
     /**
      * Disegna un tile sul canvas
      */
-    drawTile(ctx, x, y, src, tileSize) {
+    drawTile(ctx, x, y, src, tileSize, rotation = 0) {
         return new Promise((resolve, reject) => {
             const img = new Image();
             img.onload = () => {
+                ctx.save();
+                
+                // Applica rotazione se necessario
+                if (rotation !== 0) {
+                    const centerX = x * tileSize + tileSize / 2;
+                    const centerY = y * tileSize + tileSize / 2;
+                    ctx.translate(centerX, centerY);
+                    ctx.rotate(rotation * Math.PI / 180);
+                    ctx.translate(-centerX, -centerY);
+                }
+                
                 ctx.drawImage(img, x * tileSize, y * tileSize, tileSize, tileSize);
+                ctx.restore();
                 resolve();
             };
             img.onerror = () => {
