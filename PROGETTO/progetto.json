@@ -1,0 +1,388 @@
+{
+  "project": {
+    "name": "DM-Tool",
+    "version": "1.0.0",
+    "description": "Web application per Dungeon Master di D&D 5a Edizione (2014)",
+    "type": "Single Page Application",
+    "language": "Italiano",
+    "repository": {
+      "url": "https://github.com/vastios/DM-Tool",
+      "branch": "main",
+      "token": "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"
+    }
+  },
+
+  "goldenRules": [
+    {
+      "id": 1,
+      "title": "Lettura Preliminare",
+      "description": "Prima di fare qualsiasi cosa, rileggere dalla prima all'ultima queste regole"
+    },
+    {
+      "id": 2,
+      "title": "Comprensione Totale",
+      "description": "Agire solo ed esclusivamente quando si è certi di aver capito cosa viene richiesto. È possibile fare tutte le domande necessarie per comprendere al 100% le richieste."
+    },
+    {
+      "id": 3,
+      "title": "Codice Professionale",
+      "description": "Agire come un programmatore professionista, scrivendo codice robusto, scalabile e facilmente manutenibile. Avere sempre una visione futuribile del progetto e scrivere il codice in maniera che sia facilmente utilizzabile da tutto il tool."
+    },
+    {
+      "id": 4,
+      "title": "Esperto D&D 5e",
+      "description": "Agire come un grande esperto di Dungeons and Dragons quinta edizione (2014), fornendo suggerimenti utili a migliorare sia l'esperienza da master che da giocatore. Tutti i moduli devono fornire un'esperienza utile e devono essere facilmente consultabili per migliorare la fase di scrittura e progettazione di una campagna e la gestione delle varie sessioni di gioco."
+    },
+    {
+      "id": 5,
+      "title": "Scope Limitato",
+      "description": "Agire SOLO ed ESCLUSIVAMENTE sulla repo fornita. Lavorare solo su questo progetto. È possibile modificare, eliminare e creare nuovo codice ma solo utilizzabile dal tool nella repo. Non creare assolutamente altri progetti con altri linguaggi di programmazione."
+    },
+    {
+      "id": 6,
+      "title": "Repository",
+      "description": "La repo si trova al seguente link: https://github.com/vastios/DM-Tool"
+    },
+    {
+      "id": 7,
+      "title": "Branch Unico",
+      "description": "C'è un solo branch: MAIN"
+    },
+    {
+      "id": 8,
+      "title": "Token Autorizzato",
+      "description": "Token autorizzato per modifiche: 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"
+    }
+  ],
+
+  "philosophy": {
+    "principles": [
+      {
+        "name": "Self-Contained",
+        "description": "L'applicazione deve funzionare completamente offline. Nessuna dipendenza da server esterni, API, o servizi cloud. Tutti i dati sono salvati localmente nel browser."
+      },
+      {
+        "name": "Multi-Campagna",
+        "description": "Supporto per più campagne contemporanee. Ogni campagna ha i suoi dati isolati. Il selettore campagne è sempre visibile nella Home."
+      },
+      {
+        "name": "User Experience First",
+        "description": "L'interfaccia deve essere intuitiva senza tutorial, veloce e responsive, accessibile con tastiera, visivamente coerente."
+      },
+      {
+        "name": "Dati Reali",
+        "description": "I moduli usano dati reali di D&D 5e: mostri con stat block completi, incantesimi con descrizioni, oggetti con proprietà. Niente dati fittizi o placeholder."
+      },
+      {
+        "name": "Integrazione",
+        "description": "I moduli devono comunicare tra loro: luoghi linkati alle mappe, incontri che importano mostri nel combat tracker, PNG collegati a fazioni e luoghi, Wiki che aggrega tutto."
+      },
+      {
+        "name": "Italiano",
+        "description": "Tutto in italiano: interfaccia, codice, commenti, nomi variabili. L'utente è italiano, il progetto è italiano."
+      }
+    ]
+  },
+
+  "stack": {
+    "technologies": [
+      { "name": "JavaScript", "version": "ES6+", "usage": "Linguaggio principale, vanilla" },
+      { "name": "ES6 Modules", "version": "native", "usage": "Sistema modulare nativo" },
+      { "name": "HTML5", "version": "-", "usage": "Struttura e semantica" },
+      { "name": "CSS3", "version": "-", "usage": "Styling con Custom Properties" },
+      { "name": "localStorage", "version": "-", "usage": "Persistenza dati" },
+      { "name": "Git", "version": "-", "usage": "Version control" }
+    ],
+    "notUsed": [
+      "React, Vue, Angular",
+      "Node.js / Backend", 
+      "Database server",
+      "API esterne",
+      "Build tools (Webpack, Vite)",
+      "CSS frameworks (Bootstrap, Tailwind)"
+    ]
+  },
+
+  "architecture": {
+    "folders": {
+      "DM-Tool/": {
+        "index.html": "Entry point unico dell'applicazione",
+        "css/": {
+          "main.css": "Variabili CSS e stili globali",
+          "modules/": "Stili per moduli specifici (_combat-tracker.css, ecc.)"
+        },
+        "js/": {
+          "main.js": "Inizializzazione, navigazione, caricamento moduli",
+          "stateManager.js": "State management globale",
+          "modules/": {
+            "campagna/": "Moduli della campagna attiva (locationManager, npcManager, mapManager, travelManager, combatTracker, ecc.)",
+            "compendio/": "Database di riferimento D&D (monsterList, spellList, itemList, classList, raceList, ecc.)",
+            "equipment/": "Gestione equipaggiamento",
+            "pg/": "Creazione personaggi (PgController, PgDataManager, ecc.)"
+          },
+          "services/": "Servizi condivisi (campaignManager, storageHelper, DataService)",
+          "utils/": "Utility functions (dice, toast, htmlHelpers, validators)"
+        },
+        "database/": "Dati statici D&D 5e (monsterDatabase, spells, items, conditions, magicItems)",
+        "assets/": "Risorse statiche (maps/, luoghi/)",
+        "utils/": "Utility generiche (themeManager, keyboardShortcuts)"
+      }
+    }
+  },
+
+  "modulePattern": {
+    "description": "Ogni modulo segue un pattern consistente per garantire manutenibilità e riusabilità",
+    "structure": {
+      "imports": "Import da stateManager, utils, database",
+      "constants": "Configurazione del modulo (CONFIG, TERRAIN_CONFIG, ecc.)",
+      "storage": "Funzioni getStorageKey(), saveState(), loadState() per localStorage",
+      "mainObject": {
+        "properties": ["container", "state"],
+        "methods": {
+          "render(containerElement, itemToLoad)": "Metodo principale, genera HTML e binda eventi",
+          "getTemplate()": "Genera l'HTML del modulo con stile inline",
+          "getStyles()": "Genera il CSS del modulo",
+          "bindEvents()": "Bind degli event listeners",
+          "updateUI()": "Aggiorna l'interfaccia utente",
+          "saveState()": "Salva lo stato in localStorage",
+          "destroy()": "Cleanup quando il modulo viene distrutto"
+        }
+      },
+      "export": "export default NomeModulo"
+    },
+    "storageKeyPattern": "dungeonMasterTool{Modulo}_{CampaignId}",
+    "storageExamples": [
+      "dungeonMasterToolNpcs_abc123",
+      "dungeonMasterToolLocations_abc123",
+      "dungeonMasterToolTravels_abc123"
+    ]
+  },
+
+  "communicationPattern": {
+    "type": "CustomEvent",
+    "mainEvent": "openModuleWithItem",
+    "eventDetail": {
+      "moduleId": "ID del modulo target (es. 'combatTracker')",
+      "itemId": "ID elemento da caricare (opzionale)",
+      "itemData": "Dati aggiuntivi da passare (opzionale)"
+    },
+    "emitExample": "document.dispatchEvent(new CustomEvent('openModuleWithItem', { detail: { moduleId: 'combatTracker', itemData: { monsters: [...] } } }));",
+    "listenExample": "document.addEventListener('openModuleWithItem', (e) => { const { moduleId, itemId, itemData } = e.detail; });"
+  },
+
+  "sections": {
+    "home": {
+      "name": "Home",
+      "icon": "🏠",
+      "description": "Dashboard riassuntiva e gestione campagne",
+      "features": [
+        "Selettore campagne esistenti",
+        "Creazione nuova campagna",
+        "Eliminazione campagna",
+        "Statistiche rapide"
+      ]
+    },
+    "compendio": {
+      "name": "Compendio",
+      "icon": "⚔️",
+      "description": "Database di riferimento D&D 5e",
+      "modules": [
+        { "id": "monsterList", "name": "Mostri", "description": "~300+ mostri con stat block completi, filtrabili per CR, tipo, ambiente" },
+        { "id": "spellList", "name": "Incantesimi", "description": "Tutti gli incantesimi, filtrabili per livello, scuola, classe" },
+        { "id": "itemList", "name": "Oggetti", "description": "Equipaggiamento normale e magico" },
+        { "id": "classList", "name": "Classi", "description": "Informazioni sulle classi con features per livello" },
+        { "id": "raceList", "name": "Razze", "description": "Dettagli sulle razze con tratti" },
+        { "id": "backgroundList", "name": "Background", "description": "Background disponibili" },
+        { "id": "combatRules", "name": "Regole Combattimento", "description": "Riferimento rapido regole" }
+      ]
+    },
+    "personaggi": {
+      "name": "Personaggi",
+      "icon": "👤",
+      "description": "Gestione personaggi della campagna",
+      "modules": [
+        { "id": "pgManager", "name": "PG Manager", "description": "Creazione PG completa con wizard step-by-step: identità, statistiche, classi, incantesimi, inventario" },
+        { "id": "npcManager", "name": "PNG Manager", "description": "Gestione NPC: descrizione, roleplay, statistiche, relazioni, note segrete" },
+        { "id": "equipment", "name": "Equipaggiamento", "description": "Gestione inventario con slot corporei" }
+      ]
+    },
+    "campagna": {
+      "name": "Campagna",
+      "icon": "🌍",
+      "description": "Il cuore dell'applicazione - gestione campagna attiva",
+      "modules": [
+        { "id": "locationManager", "name": "Luoghi", "description": "Gestione luoghi con immagini, descrizioni, tipologie, collegamenti" },
+        { "id": "mapManager", "name": "Mappe", "description": "Mappe interattive con pin posizionabili, zoom, pan, token party, layer" },
+        { "id": "travelManager", "name": "Viaggi", "description": "Selezione partenza/destinazione, calcolo distanze, 8 terreni, 3 andature, meteo dinamico, incontri casuali con mostri reali, tracciamento risorse" },
+        { "id": "combatTracker", "name": "Combat Tracker", "description": "Gestione combattimenti: initiative, HP, CA, condizioni, azioni, incantesimi, log" },
+        { "id": "encounterBuilder", "name": "Encounter Builder", "description": "Creazione incontri bilanciati con calcolo difficoltà, XP, tesoro" },
+        { "id": "sessionNotes", "name": "Note Sessioni", "description": "Note per ogni sessione con collegamenti a elementi della campagna" },
+        { "id": "campaignWiki", "name": "Wiki Campagna", "description": "Riepilogo automatico di tutto ciò che è accaduto" },
+        { "id": "factionManager", "name": "Fazioni", "description": "Gestione organizzazioni, relazioni, obiettivi" },
+        { "id": "secretManager", "name": "Segreti", "description": "Plot hooks e segreti da rivelare durante la campagna" },
+        { "id": "chapterPlanner", "name": "Capitoli", "description": "Pianificazione della storia in capitoli" },
+        { "id": "uniqueItemManager", "name": "Oggetti Unici", "description": "Oggetti custom creati per la campagna" }
+      ]
+    }
+  },
+
+  "codingConventions": {
+    "naming": {
+      "variables": "camelCase in italiano (es: luoghiSalvati, calcolaDistanza)",
+      "functions": "camelCase in italiano (es: getStorageKey, renderEncounter)",
+      "constants": "UPPER_SNAKE_CASE (es: TERRAIN_CONFIG, ENCOUNTER_TEMPLATES)",
+      "classes": "PascalCase (es: CombatTracker, TravelManager)",
+      "elementIds": "kebab-case (es: combat-tracker-container, encounter-modal)"
+    },
+    "htmlTemplate": {
+      "pattern": "Template literal con stile inline",
+      "example": "getTemplate() { return `<style>${this.getStyles()}</style><div class=\"modulo\">...</div>`; }"
+    },
+    "css": {
+      "pattern": "Usare variabili CSS con fallback",
+      "variables": ["--card-bg", "--border-color", "--text-primary", "--text-muted", "--bg-secondary"],
+      "example": "background: var(--card-bg, #252525);"
+    },
+    "eventListeners": {
+      "pattern": "Optional chaining per sicurezza, delegation per elementi dinamici",
+      "example": "this.container.querySelector('#btn')?.addEventListener('click', () => { });"
+    },
+    "security": {
+      "userInput": "Sempre usare escapeHtml() per input utente",
+      "nullChecks": "Verificare che gli elementi DOM esistano prima di usarli"
+    }
+  },
+
+  "database": {
+    "monsters": {
+      "file": "database/monsterDatabase.js",
+      "count": 300,
+      "structure": {
+        "index": "Identificatore univoco (es. 'goblin')",
+        "name": "Nome del mostro",
+        "size": "Taglia (Tiny, Small, Medium, Large, Huge, Gargantuan)",
+        "type": "Tipo (humanoid, beast, dragon, undead, ecc.)",
+        "armor_class": "Array con valore e tipo armatura",
+        "hit_points": "Punti ferita medi",
+        "hit_dice": "Dadi vita (es. '2d6')",
+        "speed": "Oggetto con velocità per tipo movimento",
+        "strength/dexterity/constitution/intelligence/wisdom/charisma": "Statistiche",
+        "challenge_rating": "Grado sfida (0.25, 1, 5, ecc.)",
+        "xp": "Punti esperienza",
+        "actions": "Array di azioni con nome e descrizione"
+      }
+    },
+    "spells": {
+      "file": "database/spells.js",
+      "structure": {
+        "name": "Nome incantesimo",
+        "level": "Livello (0=trucco, 1-9)",
+        "school": "Scuola (Evocation, Abjuration, ecc.)",
+        "casting_time": "Tempo di lancio",
+        "range": "Gittata",
+        "components": "Componenti (V, S, M)",
+        "duration": "Durata",
+        "description": "Descrizione completa",
+        "classes": "Classi che possono lanciarlo"
+      }
+    },
+    "conditions": {
+      "file": "database/conditions.js",
+      "conditions": ["Blinded", "Charmed", "Deafened", "Exhaustion", "Frightened", "Grappled", "Incapacitated", "Invisible", "Paralyzed", "Petrified", "Poisoned", "Prone", "Restrained", "Stunned", "Unconscious"],
+      "structure": {
+        "name": "Nome condizione",
+        "summary": "Riassunto rapido",
+        "description": "Descrizione completa degli effetti"
+      }
+    }
+  },
+
+  "gitWorkflow": {
+    "branch": "main",
+    "commitMessageFormat": {
+      "pattern": "<tipo>: <descrizione>",
+      "types": {
+        "feat": "Nuova funzionalità",
+        "fix": "Bug fix",
+        "refactor": "Refactoring codice senza cambio funzionalità",
+        "docs": "Documentazione",
+        "style": "Formattazione/style"
+      },
+      "examples": [
+        "feat: aggiunto MapManager con mappe interattive",
+        "fix: risolto errore null in closeEncounterModal",
+        "refactor: estratta logica storage in funzione separata"
+      ]
+    },
+    "workflow": [
+      "Leggere Regole d'Oro",
+      "Capire la richiesta",
+      "Analizzare codice esistente",
+      "Implementare soluzione",
+      "Testare",
+      "Commit con messaggio chiaro",
+      "Push IMMEDIATO"
+    ]
+  },
+
+  "checklist": {
+    "newModule": [
+      "Analizzare requisiti e chiedere chiarimenti",
+      "Studiare moduli simili esistenti",
+      "Definire struttura stato",
+      "Creare getTemplate() e getStyles()",
+      "Implementare bindEvents()",
+      "Integrare con altri moduli se necessario",
+      "Testare funzionalità",
+      "Commit e push"
+    ],
+    "bugFix": [
+      "Riprodurre il bug",
+      "Identificare la causa",
+      "Valutare impatto della fix",
+      "Implementare soluzione",
+      "Testare fix e regressioni",
+      "Commit e push"
+    ],
+    "feature": [
+      "Capire requisiti funzionali",
+      "Valutare impatto su moduli esistenti",
+      "Progettare soluzione scalabile",
+      "Implementare con codice pulito",
+      "Aggiungere integrazioni",
+      "Testare completamente",
+      "Commit e push"
+    ]
+  },
+
+  "integrationPatterns": {
+    "travelManager_to_combatTracker": {
+      "trigger": "Utente clicca 'Combatti' su incontro ostile",
+      "flow": [
+        "TravelManager genera evento openModuleWithItem con itemData.monsters",
+        "main.js riceve evento e carica combatTracker",
+        "combatTracker.render() riceve itemToLoad.data.monsters",
+        "importMonstersFromEncounter() aggiunge mostri al combattimento"
+      ]
+    },
+    "mapManager_to_locationManager": {
+      "trigger": "Utente clicca su pin collegato a luogo",
+      "flow": [
+        "MapManager genera evento openModuleWithItem con itemId del luogo",
+        "main.js naviga a locationManager",
+        "locationManager carica il luogo specifico"
+      ]
+    },
+    "npcManager_to_factionManager": {
+      "trigger": "Creazione/modifica PNG con fazione associata",
+      "flow": [
+        "NPC salvato con riferimento a fazione",
+        "Fazione mostra membri aggiornati",
+        "Wiki aggrega informazioni"
+      ]
+    }
+  },
+
+  "lastUpdated": "2024-04-24",
+  "documentVersion": "1.0.0"
+}
