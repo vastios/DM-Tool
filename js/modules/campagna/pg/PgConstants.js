@@ -257,6 +257,9 @@ export const EMPTY_PG = {
     notes: '',
     backstory: '',
     dmSecrets: '',  // Segreti del DM (visibili solo al DM)
+    appearance: '',  // Aspetto fisico del personaggio
+    personality: '',  // Tratti caratteriali e personalità
+    gender: 'random',  // Sesso del personaggio (male/female/random)
     wikiLinks: [],
     conditions: [],
     isInCombat: false,

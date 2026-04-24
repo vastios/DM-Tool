@@ -458,11 +458,29 @@ function renderSpellLevelBlocks(spellsByLevel) {
 }
 
 /**
- * Renderizza il fronte della Card 2: Note + Backstory + Segreti DM
+ * Renderizza il fronte della Card 2: Aspetto + Personalità + Note + Backstory + Segreti DM
  */
 function renderCard2Front(pg) {
     return `
         <div class="card-face card-front">
+            <!-- Aspetto e Personalità -->
+            <div class="card-section appearance-section" style="flex: 0 0 auto;">
+                <div class="appearance-personality-grid">
+                    ${pg.appearance ? `
+                        <div class="ap-item">
+                            <h4>👤 Aspetto</h4>
+                            <p class="ap-text">${linkifyCampaignReferences(escapeHtml(pg.appearance))}</p>
+                        </div>
+                    ` : ''}
+                    ${pg.personality ? `
+                        <div class="ap-item">
+                            <h4>🎭 Personalità</h4>
+                            <p class="ap-text">${linkifyCampaignReferences(escapeHtml(pg.personality))}</p>
+                        </div>
+                    ` : ''}
+                </div>
+            </div>
+            
             <div class="card-section notes-section flex-third">
                 <h3>📝 Note</h3>
                 <div class="note-content">
@@ -704,4 +722,4 @@ export function renderTraitsAndPrivileges(pgData, databases) {
     return html;
 }
 
-console.log('📋 [PgCharacterSheet] Modulo caricato v2.2');
+console.log('📋 [PgCharacterSheet] Modulo caricato v2.3 - Aspetto e Personalità');

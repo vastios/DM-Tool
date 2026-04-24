@@ -2,9 +2,10 @@
  * PgStep1Identity.js
  * ─────────────────────────────────────────────────────────────
  * Renderizza lo Step 1 del wizard: Identità del personaggio.
+ * Include generazione casuale di aspetto fisico e personalità.
  * 
  * @author DM Tool
- * @version 1.1.0 - getSubclassMinLevel importata da PgConstants
+ * @version 1.2.0 - Generazione casuale aspetto e personalità
  */
 
 import { escapeHtml, getSubclassMinLevel } from './PgConstants.js';
@@ -191,6 +192,48 @@ export function renderStep1Identity(pgData, databases, traitsHtml = '') {
                                 <option value="${a}" ${pgData.alignment === a ? 'selected' : ''}>${a}</option>
                             `).join('')}
                         </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="pg-gender">Sesso</label>
+                        <select id="pg-gender" class="form-control">
+                            <option value="random" ${pgData.gender === 'random' ? 'selected' : ''}>Casuale</option>
+                            <option value="male" ${pgData.gender === 'male' ? 'selected' : ''}>Maschio</option>
+                            <option value="female" ${pgData.gender === 'female' ? 'selected' : ''}>Femmina</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="display: flex; align-items: flex-end;">
+                        <button type="button" id="btn-generate-descriptions" class="btn btn-secondary" style="width: 100%; background: linear-gradient(135deg, #9b59b6 0%, #6c3483 100%); color: #fff; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">
+                            🎲 Genera Aspetto & Personalità
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Aspetto Fisico -->
+                <div class="form-section" style="margin-top: 1rem;">
+                    <h4 style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>👤 Aspetto Fisico</span>
+                        <button type="button" id="btn-regen-appearance" class="btn btn-small" style="font-size: 0.75rem; padding: 0.25rem 0.5rem; background: rgba(155, 89, 182, 0.3); border: 1px solid #9b59b6; color: #d4a5e8; border-radius: 3px; cursor: pointer;" title="Rigenera solo aspetto">🔄</button>
+                    </h4>
+                    <div class="form-group">
+                        <textarea id="pg-appearance" class="form-control tag-autocomplete" rows="3" 
+                            placeholder="Descrivi l'aspetto fisico del personaggio o usa il pulsante per generarlo casualmente...">${escapeHtml(pgData.appearance || '')}</textarea>
+                        <div id="autocomplete-pg-appearance" class="autocomplete-dropdown"></div>
+                    </div>
+                </div>
+                
+                <!-- Personalità -->
+                <div class="form-section" style="margin-top: 0.75rem;">
+                    <h4 style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>🎭 Personalità</span>
+                        <button type="button" id="btn-regen-personality" class="btn btn-small" style="font-size: 0.75rem; padding: 0.25rem 0.5rem; background: rgba(155, 89, 182, 0.3); border: 1px solid #9b59b6; color: #d4a5e8; border-radius: 3px; cursor: pointer;" title="Rigenera solo personalità">🔄</button>
+                    </h4>
+                    <div class="form-group">
+                        <textarea id="pg-personality" class="form-control tag-autocomplete" rows="3" 
+                            placeholder="Descrivi i tratti caratteriali del personaggio o usa il pulsante per generarli casualmente...">${escapeHtml(pgData.personality || '')}</textarea>
+                        <div id="autocomplete-pg-personality" class="autocomplete-dropdown"></div>
                     </div>
                 </div>
             </div>

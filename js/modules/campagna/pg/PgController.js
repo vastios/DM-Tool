@@ -38,6 +38,7 @@ import { addMonsterToCombat } from '../../../../stateManager.js';
 import { showToast } from '../../../../utils/toast.js';
 import { getAutocompleteSuggestions } from '../../../../utils/campaignLinker.js';
 import { backgroundDatabase } from '../../../../database/backgroundDatabase.js';
+import { generateAppearance, generatePersonality } from '../../compendio/quickBuilder.js';
 
 export class PgController {
     
@@ -529,6 +530,11 @@ export class PgController {
         if (button.id === 'btn-roll-abilities') { this.rollAbilities(); return; }
         if (button.id === 'btn-standard-array') { this.applyStandardArray(); return; }
         
+        // Generazione aspetto e personalità
+        if (button.id === 'btn-generate-descriptions') { this.generateDescriptions(); return; }
+        if (button.id === 'btn-regen-appearance') { this.generateAppearanceOnly(); return; }
+        if (button.id === 'btn-regen-personality') { this.generatePersonalityOnly(); return; }
+        
         // === LEVEL-UP WIZARD ACTIONS ===
         if (this.levelUpManager?.isActive) {
             // ASI buttons
@@ -707,6 +713,7 @@ export class PgController {
         if (target.id === 'pg-subclass') this.wizardData.subclass = target.value;
         if (target.id === 'pg-alignment') this.wizardData.alignment = target.value;
         if (target.id === 'pg-background') this.updateBackground(target.value);
+        if (target.id === 'pg-gender') this.wizardData.gender = target.value;
         
         // Step 2
         if (target.id?.startsWith('ability-')) {
@@ -762,6 +769,9 @@ export class PgController {
         if (target.id === 'pg-notes') this.wizardData.notes = target.value;
         if (target.id === 'pg-dm-secrets') this.wizardData.dmSecrets = target.value;
         if (target.id === 'pg-extra-languages') this.wizardData.extraLanguages = target.value;
+        if (target.id === 'pg-appearance') this.wizardData.appearance = target.value;
+        if (target.id === 'pg-personality') this.wizardData.personality = target.value;
+        if (target.id === 'pg-gender') this.wizardData.gender = target.value;
         
         // HP massimi modificabili
         if (target.id === 'pg-max-hp') {
@@ -899,6 +909,10 @@ export class PgController {
             this.wizardData.notes = newValue;
         } else if (textarea.id === 'pg-dm-secrets') {
             this.wizardData.dmSecrets = newValue;
+        } else if (textarea.id === 'pg-appearance') {
+            this.wizardData.appearance = newValue;
+        } else if (textarea.id === 'pg-personality') {
+            this.wizardData.personality = newValue;
         }
         
         // Nascondi il dropdown
@@ -1844,6 +1858,51 @@ export class PgController {
         this.render();
         
         showToast('Standard Array applicato.', 'info');
+    }
+    
+    // ========================================================================
+    // GENERAZIONE ASPETTO E PERSONALITÀ
+    // ========================================================================
+    
+    /**
+     * Genera sia aspetto che personalità casuali
+     */
+    generateDescriptions() {
+        const raceName = this.databases.selectedRace?.name || 'Umano';
+        const className = this.databases.selectedClass?.classe || this.databases.selectedClass?.name || 'Guerriero';
+        const gender = this.wizardData.gender || 'random';
+        
+        // Genera aspetto e personalità
+        this.wizardData.appearance = generateAppearance(raceName, className, gender);
+        this.wizardData.personality = generatePersonality(className, raceName);
+        
+        this.render();
+        showToast('Aspetto e personalità generati!', 'success');
+    }
+    
+    /**
+     * Genera solo l'aspetto fisico
+     */
+    generateAppearanceOnly() {
+        const raceName = this.databases.selectedRace?.name || 'Umano';
+        const className = this.databases.selectedClass?.classe || this.databases.selectedClass?.name || 'Guerriero';
+        const gender = this.wizardData.gender || 'random';
+        
+        this.wizardData.appearance = generateAppearance(raceName, className, gender);
+        this.render();
+        showToast('Aspetto fisico rigenerato!', 'success');
+    }
+    
+    /**
+     * Genera solo la personalità
+     */
+    generatePersonalityOnly() {
+        const raceName = this.databases.selectedRace?.name || 'Umano';
+        const className = this.databases.selectedClass?.classe || this.databases.selectedClass?.name || 'Guerriero';
+        
+        this.wizardData.personality = generatePersonality(className, raceName);
+        this.render();
+        showToast('Personalità rigenerata!', 'success');
     }
     
     // ========================================================================
