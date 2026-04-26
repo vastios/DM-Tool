@@ -3784,6 +3784,28 @@ export class PgController {
         }
         
         // Converti in formato PG Manager
+        // Conversione chiavi abilities da formato italiano a inglese
+        const convertAbilities = (abilities) => {
+            if (!abilities) return { strength: 10, dexterity: 10, constitution: 10, intelligence: 10, wisdom: 10, charisma: 10 };
+            
+            // Se è già in formato inglese, ritorna così
+            if (abilities.strength !== undefined) {
+                return abilities;
+            }
+            
+            // Converte da formato italiano (for, des, cos, int, sag, car) a inglese
+            return {
+                strength: abilities.for || abilities.str || 10,
+                dexterity: abilities.des || abilities.dex || 10,
+                constitution: abilities.cos || abilities.con || 10,
+                intelligence: abilities.int || 10,
+                wisdom: abilities.sag || abilities.wis || 10,
+                charisma: abilities.car || abilities.cha || 10
+            };
+        };
+        
+        const convertedAbilities = convertAbilities(generated.abilities);
+        
         const pgData = {
             id: `pg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
             name: generated.name,
@@ -3804,7 +3826,7 @@ export class PgController {
             dmSecrets: '',
             
             // Stats
-            abilities: generated.abilities,
+            abilities: convertedAbilities,
             profBonus: generated.profBonus,
             hp: {
                 max: generated.hp,
