@@ -60,6 +60,9 @@ export class PgViewManager {
                             <button class="btn btn-primary btn-sm" id="btn-new-pg" title="Creazione guidata">
                                 + Nuovo PG
                             </button>
+                            <button class="btn btn-secondary btn-sm" id="btn-quick-builder" title="Creazione rapida">
+                                ⚡ Quick
+                            </button>
                         </div>
                     </div>
                     <div class="pg-sidebar-list">
