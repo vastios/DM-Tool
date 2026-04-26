@@ -39,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
         ],
         // SEZIONE: PERSONAGGI
         characters: [
-            { id: 'quickBuilder', name: 'Creazione Rapida', modulePath: './modules/compendio/quickBuilder.js', requiresCampaign: false },
             { id: 'pgManager', name: 'Personaggi Giocanti', modulePath: './modules/campagna/pg/index.js', requiresCampaign: true, entityType: 'pg' },
             { id: 'npcManager', name: 'Personaggi Non Giocanti', modulePath: './modules/campagna/npcManager.js', requiresCampaign: true, entityType: 'npc' },
         ],
