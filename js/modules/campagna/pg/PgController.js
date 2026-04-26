@@ -509,12 +509,6 @@ export class PgController {
             return;
         }
         
-        // Pulsante Quick Builder
-        if (button.id === 'btn-quick-builder-pg') {
-            this.openQuickBuilderModal();
-            return;
-        }
-        
         // Navigazione wizard
         if (button.id === 'btn-prev') { 
             if (this.levelUpManager?.isActive) { this.levelUpManager.levelUpPrevStep(); }
