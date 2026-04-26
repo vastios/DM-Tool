@@ -3833,7 +3833,8 @@ export class PgController {
                 current: generated.hp,
                 temp: 0
             },
-            armorClass: generated.ac,
+            // CA verrà ricalcolata dopo aver costruito l'inventario
+            armorClass: 10, // placeholder, verrà ricalcolata
             speed: generated.speed,
             hitDice: {
                 total: generated.level,
@@ -3884,6 +3885,15 @@ export class PgController {
             createdAt: Date.now(),
             lastModified: Date.now(),
             isQuickBuilder: true
+        };
+        
+        // Ricalcola la CA in base all'equipaggiamento effettivo
+        const acResult = calculateArmorClass(pgData, this.databases.items);
+        pgData.armorClass = acResult.ac;
+        pgData.armorInfo = {
+            name: acResult.armorName,
+            hasShield: acResult.hasShield,
+            shieldBonus: acResult.shieldBonus
         };
         
         // Aggiungi alla lista e ottieni il PG creato con l'ID corretto
