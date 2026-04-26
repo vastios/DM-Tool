@@ -44,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
         ],
         // SEZIONE: IL MONDO
         world: [
-            { id: 'mapManager', name: 'Mappe', modulePath: './modules/campagna/mapManager.js', requiresCampaign: true },
             { id: 'locationManager', name: 'Luoghi', modulePath: './modules/campagna/locationManager.js', requiresCampaign: true, entityType: 'location' },
             { id: 'factionManager', name: 'Fazioni', modulePath: './modules/campagna/factionManager.js', requiresCampaign: true, entityType: 'faction' },
             { id: 'secretManager', name: 'Segreti', modulePath: './modules/campagna/secretManager.js', requiresCampaign: true, entityType: 'secret' },
@@ -59,8 +58,9 @@ document.addEventListener('DOMContentLoaded', () => {
         ],
         // SEZIONE: ESPLORAZIONE
         exploration: [
+            { id: 'mapManager', name: 'Mappe', modulePath: './modules/campagna/mapManager.js', requiresCampaign: true },
             { id: 'TravelManager', name: 'Viaggi', modulePath: './modules/campagna/travelManager.js', requiresCampaign: true },
-            { id: 'DungeonGenerator', name: 'Generatore Mappe', modulePath: './modules/campagna/dungeonGenerator/index.js', requiresCampaign: true },
+            { id: 'DungeonGenerator', name: 'Generatore Dungeon', modulePath: './modules/campagna/dungeonGenerator/index.js', requiresCampaign: true },
         ],
         // SEZIONE: COMPENDIO
         compendium: [
