@@ -3684,6 +3684,105 @@ export class PgController {
         const raceData = this.databases.races.find(r => r.name === generated.raceName);
         const classData = this.databases.classes.find(c => c.classe === generated.className);
         
+        // Helper per cercare e convertire oggetti dal database
+        const convertToDbItem = (itemName, qty = 1) => {
+            const dbItem = this.findItemInDatabase(itemName);
+            if (dbItem) {
+                return {
+                    ...dbItem,
+                    quantity: qty
+                };
+            }
+            // Fallback per oggetti non trovati
+            return {
+                index: `custom-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
+                name: itemName,
+                quantity: qty,
+                weight: 0,
+                cost: { quantity: 0, unit: 'mo' },
+                custom: true,
+                equipment_category: { name: 'Custom', index: 'custom' }
+            };
+        };
+        
+        // Costruisci l'inventario con oggetti reali dal database
+        const inventory = [];
+        
+        // Armi
+        (equipment.weapons || []).forEach(w => {
+            const name = typeof w === 'string' ? w : w.name;
+            inventory.push(convertToDbItem(name, 1));
+        });
+        
+        // Armatura (se presente)
+        if (equipment.armor) {
+            inventory.push(convertToDbItem(equipment.armor, 1));
+        }
+        
+        // Scudo (se presente)
+        if (equipment.shield) {
+            inventory.push(convertToDbItem('Scudo', 1));
+        }
+        
+        // Altri oggetti
+        (equipment.other || []).forEach(o => {
+            const name = typeof o === 'string' ? o : o.name;
+            inventory.push(convertToDbItem(name, 1));
+        });
+        
+        // Consumabili (pozioni, etc.)
+        (equipment.consumables || []).forEach(c => {
+            const name = typeof c === 'string' ? c : c.name;
+            // Raggruppa consumabili uguali
+            const existing = inventory.find(i => i.name?.toLowerCase() === name?.toLowerCase());
+            if (existing) {
+                existing.quantity = (existing.quantity || 1) + 1;
+            } else {
+                inventory.push(convertToDbItem(name, 1));
+            }
+        });
+        
+        // Oggetti dalla dotazione (packItems)
+        (equipment.packItems || []).forEach(p => {
+            const name = typeof p === 'string' ? p : p.name;
+            const qty = p.quantity || 1;
+            inventory.push(convertToDbItem(name, qty));
+        });
+        
+        // Oggetti magici - cerca nel database magicItems
+        const magicItems = (equipment.magicItems || []).map(m => {
+            const name = typeof m === 'string' ? m : m.name;
+            const dbMagicItem = this.databases.magicItems?.find(mi => 
+                mi.name?.toLowerCase() === name?.toLowerCase()
+            );
+            if (dbMagicItem) {
+                return { ...dbMagicItem, quantity: 1 };
+            }
+            return { name, description: 'Oggetto magico', quantity: 1 };
+        });
+        
+        // Ottieni tratti razziali completi dalla razza
+        const racialTraits = raceData?.traits?.map(t => ({
+            name: t.name || t,
+            description: t.descrizione || t.desc || ''
+        })) || generated.racialTraits || [];
+        
+        // Ottieni caratteristiche di classe complete
+        const classFeatures = [];
+        if (classData?.tabella_progressione) {
+            classData.tabella_progressione.forEach(row => {
+                if (row.livello <= generated.level && row.privilegi) {
+                    row.privilegi.forEach(p => {
+                        classFeatures.push({
+                            name: typeof p === 'string' ? p : (p.nome || p.name),
+                            level: row.livello,
+                            description: typeof p === 'object' ? (p.descrizione || p.desc || '') : ''
+                        });
+                    });
+                }
+            });
+        }
+        
         // Converti in formato PG Manager
         const pgData = {
             id: `pg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -3731,7 +3830,7 @@ export class PgController {
                 armor: classData?.competenze?.armature || [],
                 weapons: classData?.competenze?.armi || [],
                 tools: classData?.competenze?.strumenti || [],
-                languages: ['Comune', ...(raceData?.linguaggi || [])]
+                languages: ['Comune', ...(raceData?.linguaggi || raceData?.languages?.map(l => l.name) || [])]
             },
             
             // Spells
@@ -3745,19 +3844,15 @@ export class PgController {
                 ability: generated.spells?.ability
             },
             
-            // Inventory
-            inventory: [
-                ...(equipment.weapons || []).map(w => typeof w === 'string' ? { name: w, quantity: 1 } : { name: w.name, quantity: 1 }),
-                ...(equipment.other || []).map(o => typeof o === 'string' ? { name: o, quantity: 1 } : { name: o.name, quantity: 1 }),
-                ...(equipment.consumables || []).map(c => ({ name: c, quantity: 1 }))
-            ],
+            // Inventory - oggetti reali dal database
+            inventory: inventory,
             equipment: [],
-            magicItems: (equipment.magicItems || []).map(m => ({ name: m, description: 'Oggetto magico' })),
+            magicItems: magicItems,
             treasure: { gold: 0, silver: 0, copper: 0 },
             
-            // Features
-            classFeatures: generated.features || [],
-            racialTraits: generated.racialTraits || [],
+            // Features - con descrizioni complete
+            classFeatures: classFeatures,
+            racialTraits: racialTraits,
             feats: [],
             
             // Conditions
