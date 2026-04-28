@@ -825,46 +825,50 @@ ${this.getStyles()}
     
     getStyles() {
         return `
-/* Layout principale - Card-separated style */
+/* Layout principale - Card-separated style (uniformato a PG Manager) */
 .npc-manager-layout {
     display: flex;
-    height: 100%;
-    gap: 20px;
-    padding: 20px;
+    height: calc(100vh - 120px);
+    gap: 12px;
+    padding: 12px;
     background: var(--bg-secondary, #1a1a1a);
     overflow: hidden;
     box-sizing: border-box;
 }
 
-/* Sidebar - Card style */
+/* Sidebar - Card style (uniformato a PG Manager) */
 .npc-sidebar {
-    flex: 0 0 280px;
+    width: 25%;
+    min-width: 220px;
+    max-width: 300px;
     background: var(--card-bg, #2a2a2a);
     border: 1px solid var(--border-color, #444);
     border-radius: 8px;
     display: flex;
     flex-direction: column;
-    padding: 15px;
     overflow: hidden;
+    position: relative;
 }
 
 .npc-sidebar-header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0.75rem 1rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid var(--border-color, #444);
     gap: 0.5rem;
-    margin-bottom: 0.5rem;
-    flex-wrap: wrap;
 }
 
 .npc-sidebar-header h2 {
     margin: 0;
     font-family: 'Cinzel', serif;
-    font-size: 0.95rem;
-    color: var(--text-primary, #fff);
+    font-size: 1rem;
+    color: var(--accent-color, #f0ad4e);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    text-align: center;
 }
 
 .npc-sidebar-buttons {
@@ -908,8 +912,14 @@ ${this.getStyles()}
     box-shadow: 0 2px 8px rgba(155, 89, 182, 0.3);
 }
 
+.npc-sidebar-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.5rem;
+}
+
 .npc-search-box {
-    margin-bottom: 0.75rem;
+    padding: 0 0.5rem 0.5rem;
 }
 
 .npc-search-input {
@@ -926,7 +936,7 @@ ${this.getStyles()}
 .npc-list {
     flex: 1;
     overflow-y: auto;
-    margin-bottom: 0.75rem;
+    padding: 0.5rem;
 }
 
 .npc-list-item {
@@ -988,13 +998,14 @@ ${this.getStyles()}
 
 /* Nuovo button - stile compatto come PG Manager */
 
-/* Area principale - Card style */
+/* Area principale - Card style (uniformato a PG Manager) */
 .npc-main {
     flex: 1;
-    display: flex;
-    gap: 20px;
-    overflow: hidden;
-    background: transparent;
+    overflow-y: auto;
+    padding: 0;
+    background: var(--card-bg, #2a2a2a);
+    border: 1px solid var(--border-color, #444);
+    border-radius: 8px;
 }
 
 .npc-empty-state {
@@ -1015,10 +1026,11 @@ ${this.getStyles()}
 /* Cards container */
 .npc-cards-container {
     display: flex;
-    gap: 20px;
+    gap: 12px;
     width: 100%;
     height: 100%;
     overflow: hidden;
+    padding: 12px;
 }
 
 /* Flip card - strutturata come PG Manager */
