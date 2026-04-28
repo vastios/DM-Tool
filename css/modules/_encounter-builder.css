@@ -240,9 +240,10 @@
 }
 
 .encounter-item-actions {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 0.25rem;
+    min-width: 70px;
 }
 
 .encounter-item-actions button {
