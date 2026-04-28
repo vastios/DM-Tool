@@ -29,3 +29,8 @@ Segui SEMPRE le "goldenRules" definite nel JSON di progetto.
 - Spiega cosa stai facendo
 - Chiedi conferma prima di operazioni critiche
 - Non assumere nulla, chiedi sempre
+⚠️ PROBLEMA NOTO - IMPORTANTE
+NON USARE MAI git pull --rebase - causa conflitti che bloccano l'intera sessione.
+
+Metodo Git Sicuro (DA USARE SEMPRE):
+git fetch origingit stashgit reset --hard origin/maingit stash popgit add -A && git commit -m "messaggio" && git push origin main
