@@ -353,47 +353,68 @@ const EncounterBuilder = {
             
             editorContent.innerHTML = `
                 <div class="editor-layout">
-                    <!-- Colonna Sinistra: Form e Selettore -->
+                    <!-- Colonna Sinistra: Creature Selezionate -->
                     <div class="editor-left-column">
-                        <!-- Header con nome e descrizione -->
-                        <div class="editor-header">
-                            <div class="form-group">
-                                <label>🏷️ Nome Incontro</label>
-                                <input type="text" id="encounter-name-input" value="${encounter ? encounter.name : ''}" placeholder="Es. Ambascata dei Goblin">
+                        <div class="selected-creatures-column">
+                            <!-- Header con nome e descrizione -->
+                            <div class="editor-header">
+                                <div class="form-group">
+                                    <label>🏷️ Nome Incontro</label>
+                                    <input type="text" id="encounter-name-input" value="${encounter ? encounter.name : ''}" placeholder="Es. Ambascata dei Goblin">
+                                </div>
+                                <div class="form-group">
+                                    <label>📝 Descrizione</label>
+                                    <textarea id="encounter-desc-input" placeholder="Descrizione opzionale..." rows="2">${encounter ? encounter.description : ''}</textarea>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label>📝 Descrizione</label>
-                                <textarea id="encounter-desc-input" placeholder="Descrizione opzionale..." rows="2">${encounter ? encounter.description : ''}</textarea>
+
+                            <!-- Pannello Difficoltà Party -->
+                            <div class="party-difficulty-panel">
+                                <div class="party-info">
+                                    <span class="party-icon">👥</span>
+                                    <span class="party-stats">
+                                        ${partyInfo.count > 0 
+                                            ? `<strong>${partyInfo.count} PG</strong> • Lv <strong>${partyInfo.avgLevel}</strong>` 
+                                            : '<em>Nessun PG</em>'}
+                                    </span>
+                                </div>
+                                ${thresholds ? `
+                                    <div class="thresholds-bar">
+                                        <div class="threshold-segment easy" title="Facile: ${thresholds.easy} XP"><span>Facile</span></div>
+                                        <div class="threshold-segment medium" title="Media: ${thresholds.medium} XP"><span>Media</span></div>
+                                        <div class="threshold-segment hard" title="Difficile: ${thresholds.hard} XP"><span>Difficile</span></div>
+                                        <div class="threshold-segment deadly" title="Mortale: ${thresholds.deadly} XP"><span>Mortale</span></div>
+                                    </div>
+                                    <div class="threshold-values">
+                                        <span>${thresholds.easy}</span>
+                                        <span>${thresholds.medium}</span>
+                                        <span>${thresholds.hard}</span>
+                                        <span>${thresholds.deadly} XP</span>
+                                    </div>
+                                ` : ''}
+                            </div>
+
+                            <div class="panel-header-row">
+                                <h3>⚔️ Creature Selezionate</h3>
+                                <div id="encounter-stats" class="encounter-stats"></div>
+                            </div>
+                            <div class="selected-list-container">
+                                <ul id="selected-monsters-list" class="selected-monsters-list"></ul>
+                            </div>
+                            <!-- Footer con azioni -->
+                            <div class="editor-actions">
+                                <div class="action-hint">
+                                    <span>💡 Trascina per riordinare</span>
+                                </div>
+                                <button id="save-encounter-btn" class="action-btn success">
+                                    <span class="btn-icon">💾</span> Salva
+                                </button>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Pannello Difficoltà Party -->
-                        <div class="party-difficulty-panel">
-                            <div class="party-info">
-                                <span class="party-icon">👥</span>
-                                <span class="party-stats">
-                                    ${partyInfo.count > 0 
-                                        ? `<strong>${partyInfo.count} PG</strong> • Lv <strong>${partyInfo.avgLevel}</strong>` 
-                                        : '<em>Nessun PG</em>'}
-                                </span>
-                            </div>
-                            ${thresholds ? `
-                                <div class="thresholds-bar">
-                                    <div class="threshold-segment easy" title="Facile: ${thresholds.easy} XP"><span>Facile</span></div>
-                                    <div class="threshold-segment medium" title="Media: ${thresholds.medium} XP"><span>Media</span></div>
-                                    <div class="threshold-segment hard" title="Difficile: ${thresholds.hard} XP"><span>Difficile</span></div>
-                                    <div class="threshold-segment deadly" title="Mortale: ${thresholds.deadly} XP"><span>Mortale</span></div>
-                                </div>
-                                <div class="threshold-values">
-                                    <span>${thresholds.easy}</span>
-                                    <span>${thresholds.medium}</span>
-                                    <span>${thresholds.hard}</span>
-                                    <span>${thresholds.deadly} XP</span>
-                                </div>
-                            ` : ''}
-                        </div>
-
-                        <!-- Selettore Creature -->
+                    <!-- Colonna Destra: Selettore Creature -->
+                    <div class="editor-right-column">
                         <div class="creature-selector-column">
                             <div class="selector-header">
                                 <h3>🔍 Aggiungi Creature</h3>
@@ -416,28 +437,6 @@ const EncounterBuilder = {
                             
                             <div class="selection-list-container">
                                 <ul id="monster-selection-list" class="monster-selection-list"></ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Colonna Destra: Creature Selezionate -->
-                    <div class="editor-right-column">
-                        <div class="selected-creatures-column">
-                            <div class="panel-header-row">
-                                <h3>⚔️ Creature Selezionate</h3>
-                                <div id="encounter-stats" class="encounter-stats"></div>
-                            </div>
-                            <div class="selected-list-container">
-                                <ul id="selected-monsters-list" class="selected-monsters-list"></ul>
-                            </div>
-                            <!-- Footer con azioni -->
-                            <div class="editor-actions">
-                                <div class="action-hint">
-                                    <span>💡 Trascina per riordinare</span>
-                                </div>
-                                <button id="save-encounter-btn" class="action-btn success">
-                                    <span class="btn-icon">💾</span> Salva
-                                </button>
                             </div>
                         </div>
                     </div>

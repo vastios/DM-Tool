@@ -302,7 +302,7 @@
     gap: 0;
 }
 
-/* Colonna Sinistra - Form e Selettore */
+/* Colonna Sinistra - Creature Selezionate */
 .editor-left-column {
     width: 50%;
     display: flex;
@@ -311,7 +311,7 @@
     overflow: hidden;
 }
 
-/* Colonna Destra - Creature Selezionate */
+/* Colonna Destra - Selettore Creature */
 .editor-right-column {
     width: 50%;
     display: flex;
