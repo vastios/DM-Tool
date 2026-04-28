@@ -41,13 +41,15 @@ const EncounterBuilder = {
             <div class="encounter-builder-container">
                 <div class="encounter-list-panel">
                     <div class="panel-header">
-                        <h2>I Tuoi Incontri</h2>
-                        <button id="new-encounter-btn" class="action-btn">Nuovo Incontro</button>
+                        <h2>⚔️ Incontri</h2>
+                        <button id="new-encounter-btn" class="action-btn">+ Nuovo</button>
                     </div>
-                    <ul id="saved-encounters-list" class="saved-encounters-list"></ul>
+                    <div class="encounter-list-content">
+                        <ul id="saved-encounters-list" class="saved-encounters-list"></ul>
+                    </div>
                 </div>
                 <div class="encounter-editor-panel">
-                    <div id="editor-content">
+                    <div id="editor-content" class="editor-content-wrapper">
                         <p style="text-align: center; color: #888; margin-top: 3rem;">Seleziona un incontro o creane uno nuovo.</p>
                     </div>
                 </div>

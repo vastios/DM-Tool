@@ -123,13 +123,14 @@
     font-family: 'Cinzel', serif;
 }
 
-/* --- Costruttore di Incontri --- */
+/* --- Costruttore di Incontri (uniformato a PG Manager) --- */
 .encounter-builder-container {
     display: flex;
-    gap: 20px;
-    padding: 20px;
-    height: 100%;
+    gap: 12px;
+    padding: 12px;
+    height: calc(100vh - 120px);
     box-sizing: border-box;
+    background: #1a1a1a;
 }
 
 .encounter-list-panel,
@@ -137,93 +138,154 @@
     background-color: #2a2a2a;
     border: 1px solid #444;
     border-radius: 8px;
-    padding: 15px;
-    overflow-y: auto;
-}
-
-.encounter-list-panel {
-    flex: 0 0 350px;
-}
-
-.encounter-editor-panel {
-    flex: 1;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
 }
 
+.encounter-list-panel {
+    width: 25%;
+    min-width: 220px;
+    max-width: 300px;
+}
+
+.encounter-editor-panel {
+    flex: 1;
+}
+
 .panel-header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0.75rem 1rem;
+    background: rgba(0, 0, 0, 0.2);
     border-bottom: 1px solid #444;
+    gap: 0.5rem;
 }
 
 .panel-header h2 {
     margin: 0;
+    font-size: 1rem;
     color: #f0ad4e;
+    font-family: 'Cinzel', serif;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.panel-header .action-btn {
+    padding: 0.4rem 0.8rem;
+    background: linear-gradient(135deg, #f0ad4e 0%, #c89f60 100%);
+    border: none;
+    border-radius: 4px;
+    color: #1a1a1a;
+    font-weight: 600;
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+}
+
+.panel-header .action-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(240, 173, 78, 0.4);
+}
+
+.encounter-list-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.5rem;
 }
 
 .saved-encounters-list {
     list-style-type: none;
     padding: 0;
     margin: 0;
+    overflow-y: auto;
 }
 
 .encounter-list-item {
-    background-color: #333;
-    border: 1px solid #555;
-    border-radius: 5px;
-    padding: 10px;
-    margin-bottom: 10px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 1px solid #444;
+    border-radius: 6px;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.encounter-list-item:hover {
+    border-color: #f0ad4e;
+    background: rgba(240, 173, 78, 0.1);
+    transform: translateX(2px);
 }
 
 .encounter-item-info h3 {
     margin: 0 0 5px 0;
-    color: #ffffff;
-    font-size: 1rem;
+    color: #f0e6d2;
+    font-size: 0.95rem;
+    font-family: 'Cinzel', serif;
 }
 
 .encounter-item-info p {
     margin: 0 0 5px 0;
-    color: #cccccc;
+    color: #888;
     font-size: 0.8rem;
     font-style: italic;
 }
 
 .encounter-item-info small {
-    color: #888;
+    color: #666;
+    font-size: 0.75rem;
+}
+
+.encounter-item-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
 }
 
 .encounter-item-actions button {
-    display: block;
-    width: 100%;
-    margin-bottom: 5px;
-    padding: 4px 8px;
-    border: 1px solid #555;
-    background-color: #444;
-    color: #fff;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid #444;
+    background-color: #3a3a3a;
+    color: #ccc;
     border-radius: 3px;
     font-size: 0.7rem;
     cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
 }
 
 .encounter-item-actions button:hover {
-    background-color: #555;
+    background-color: #4a4a4a;
+    color: #fff;
 }
 
-.encounter-item-actions button:last-child {
-    margin-bottom: 0;
-    background-color: #8b0000;
-    border-color: #a52a2a;
+.encounter-item-actions button.primary {
+    background-color: rgba(76, 175, 80, 0.2);
+    border-color: #4caf50;
+    color: #4caf50;
 }
 
-.encounter-item-actions button:last-child:hover {
-    background-color: #a52a2a;
+.encounter-item-actions button.primary:hover {
+    background-color: rgba(76, 175, 80, 0.3);
+}
+
+.encounter-item-actions button.danger {
+    background-color: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #f87171;
+}
+
+.encounter-item-actions button.danger:hover {
+    background-color: rgba(239, 68, 68, 0.25);
 }
 
 .empty-list {
@@ -234,7 +296,13 @@
 }
 
 .editor-form {
-    margin-bottom: 20px;
+    padding: 1rem;
+}
+
+.editor-content-wrapper {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
 }
 
 .form-group {
@@ -262,18 +330,21 @@
 
 .monster-selector-panel,
 .selected-monsters-panel {
-    background-color: rgba(0,0,0,0.1);
-    border-radius: 5px;
-    padding: 15px;
-    margin-bottom: 20px;
+    background-color: rgba(0,0,0,0.2);
+    border: 1px solid #444;
+    border-radius: 6px;
+    padding: 1rem;
+    margin-bottom: 1rem;
 }
 
 .monster-selector-panel h3,
 .selected-monsters-panel h3 {
-    margin-top: 0;
-    color: #87CEFA;
-    border-bottom: 1px solid #555;
-    padding-bottom: 5px;
+    margin: 0 0 0.5rem 0;
+    color: #f0ad4e;
+    font-family: 'Cinzel', serif;
+    font-size: 0.95rem;
+    border-bottom: 1px solid #444;
+    padding-bottom: 0.5rem;
 }
 
 .monster-selection-list,
@@ -351,7 +422,109 @@
 }
 
 .editor-actions {
-    text-align: right;
-    margin-top: auto;
-    padding-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding: 1rem;
+    border-top: 1px solid #444;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.editor-actions .action-btn,
+.editor-actions .success {
+    padding: 0.5rem 1rem;
+    background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    font-weight: 600;
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+}
+
+.editor-actions .action-btn:hover,
+.editor-actions .success:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+}
+
+/* Toggle modalità Mostri/PNG */
+.selection-mode-toggle {
+    display: flex;
+    gap: 0.3rem;
+    margin-bottom: 0.5rem;
+}
+
+.mode-btn {
+    flex: 1;
+    padding: 0.4rem 0.5rem;
+    background: #3a3a3a;
+    border: 1px solid #444;
+    border-radius: 4px;
+    color: #888;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.mode-btn:hover {
+    background: #4a4a4a;
+    color: #ccc;
+}
+
+.mode-btn.active {
+    background: rgba(240, 173, 78, 0.2);
+    border-color: #f0ad4e;
+    color: #f0ad4e;
+}
+
+/* Filtri tipo compatti */
+.compact-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.filter-btn {
+    padding: 0.2rem 0.5rem;
+    background: #333;
+    border: 1px solid #444;
+    border-radius: 3px;
+    color: #888;
+    font-size: 0.7rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filter-btn:hover {
+    background: #444;
+    color: #ccc;
+}
+
+.filter-btn.active {
+    background: rgba(240, 173, 78, 0.2);
+    border-color: #f0ad4e;
+    color: #f0ad4e;
+}
+
+/* Campo ricerca mostri */
+#monster-search {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    background: #1a1a1a;
+    border: 1px solid #444;
+    border-radius: 4px;
+    color: #f0e6d2;
+    font-size: 0.85rem;
+}
+
+#monster-search:focus {
+    outline: none;
+    border-color: #f0ad4e;
 }
