@@ -156,7 +156,16 @@ function renderSheetHeader(pg) {
             <div class="header-left">
                 <div class="header-name-row">
                     <h2 class="char-name">${escapeHtml(pg.name || 'Senza Nome')}</h2>
-                    <button class="btn btn-sm btn-level-up-sheet" data-action="level-up" data-pg-id="${pg.id}" title="Aumenta Livello">⬆️ Livello Su</button>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-level-up-sheet" data-action="level-up" data-pg-id="${pg.id}" title="Aumenta Livello">
+                        <span class="btn-icon">⬆️</span>
+                        <span class="btn-text">Livello Su</span>
+                    </button>
+                    <button class="btn btn-equipment-sheet" data-action="open-equipment" data-pg-id="${pg.id}" title="Gestisci equipaggiamento">
+                        <span class="btn-icon">⚔️</span>
+                        <span class="btn-text">Equipaggiamento</span>
+                    </button>
                 </div>
             </div>
             <div class="header-right">
@@ -610,9 +619,6 @@ function renderCard2Back(pg, databases) {
             <div class="card-section inventory-section flex-half">
                 <div class="section-header-row">
                     <h3>🎒 Inventario</h3>
-                    <button class="btn btn-equipment" data-action="open-equipment" data-pg-id="${pg.id}" title="Gestisci equipaggiamento">
-                        ⚔️ Equipaggiamento
-                    </button>
                 </div>
                 <div class="inventory-summary">
                     <span>📦 ${inventory.length} oggetti</span>
