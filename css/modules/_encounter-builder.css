@@ -528,3 +528,336 @@
     outline: none;
     border-color: #f0ad4e;
 }
+
+/* ==========================================================================
+   NUOVI STILI - Funzionalità Avanzate
+   ========================================================================== */
+
+/* --- Pannello Difficoltà Party --- */
+.party-difficulty-panel {
+    background: linear-gradient(135deg, rgba(240, 173, 78, 0.1) 0%, rgba(0,0,0,0.2) 100%);
+    border: 1px solid rgba(240, 173, 78, 0.3);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.party-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.party-icon {
+    font-size: 1.5rem;
+}
+
+.party-stats {
+    font-family: 'Cinzel', serif;
+    color: #f0ad4e;
+    font-size: 0.95rem;
+}
+
+.thresholds-bar {
+    display: flex;
+    height: 24px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 0.5rem;
+}
+
+.threshold-segment {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    min-width: 0;
+}
+
+.threshold-segment.easy {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    color: #fff;
+}
+
+.threshold-segment.medium {
+    background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%);
+    color: #1a1a1a;
+}
+
+.threshold-segment.hard {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+    color: #fff;
+}
+
+.threshold-segment.deadly {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    color: #fff;
+}
+
+/* --- Statistiche Incontro --- */
+.panel-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid #444;
+    padding-bottom: 0.5rem;
+}
+
+.panel-header-row h3 {
+    margin: 0;
+    color: #f0ad4e;
+    font-family: 'Cinzel', serif;
+    font-size: 0.95rem;
+}
+
+.encounter-stats {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+}
+
+.stat-label {
+    color: #888;
+}
+
+.stat-value {
+    color: #f0ad4e;
+    font-weight: 600;
+    font-family: 'Cinzel', serif;
+}
+
+.difficulty-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    border: 1px solid;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.difficulty-icon {
+    font-size: 0.85rem;
+}
+
+/* --- Lista Creature Selezionate Avanzata --- */
+.add-creature {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.add-creature .creature-name {
+    color: #f0e6d2;
+}
+
+.add-creature .creature-info {
+    color: #888;
+    font-size: 0.75rem;
+}
+
+.draggable-creature {
+    cursor: grab;
+    transition: all 0.2s ease;
+}
+
+.draggable-creature:active {
+    cursor: grabbing;
+}
+
+.drag-handle {
+    color: #555;
+    cursor: grab;
+    font-size: 1rem;
+    padding-right: 0.5rem;
+    user-select: none;
+}
+
+.draggable-creature:hover .drag-handle {
+    color: #f0ad4e;
+}
+
+.draggable-creature.dragging {
+    opacity: 0.5;
+    background: rgba(240, 173, 78, 0.2);
+}
+
+.draggable-creature.drag-over {
+    border-top: 2px solid #f0ad4e;
+    background: rgba(240, 173, 78, 0.1);
+}
+
+.draggable-creature .creature-cr {
+    color: #888;
+    font-size: 0.75rem;
+    min-width: 50px;
+    text-align: right;
+}
+
+/* --- Modal di Conferma --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+    border: 1px solid #444;
+    border-radius: 12px;
+    padding: 2rem;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.modal-content h3 {
+    margin: 0 0 1rem 0;
+    color: #f0e6d2;
+    font-family: 'Cinzel', serif;
+}
+
+.modal-content p {
+    color: #888;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.modal-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.modal-btn.cancel {
+    background: #3a3a3a;
+    border: 1px solid #555;
+    color: #ccc;
+}
+
+.modal-btn.cancel:hover {
+    background: #4a4a4a;
+    color: #fff;
+}
+
+.modal-btn.danger {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    border: none;
+    color: #fff;
+}
+
+.modal-btn.danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+}
+
+/* --- Pulsante Duplica --- */
+.duplicate-encounter-btn {
+    background-color: rgba(59, 130, 246, 0.15) !important;
+    border-color: rgba(59, 130, 246, 0.3) !important;
+    color: #60a5fa !important;
+}
+
+.duplicate-encounter-btn:hover {
+    background-color: rgba(59, 130, 246, 0.25) !important;
+}
+
+/* --- Placeholder input migliorato --- */
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #555;
+    font-style: italic;
+}
+
+/* --- Miglioramenti lista creature --- */
+.selected-monsters-list li {
+    gap: 0.5rem;
+}
+
+.selected-monsters-list .creature-name {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* --- Responsive adjustments --- */
+@media (max-width: 768px) {
+    .encounter-stats {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .panel-header-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .thresholds-bar {
+        height: 32px;
+    }
+    
+    .threshold-segment span {
+        font-size: 0.6rem;
+    }
+}
