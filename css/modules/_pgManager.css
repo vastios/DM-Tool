@@ -50,8 +50,8 @@
 .pg-main-layout {
     display: flex;
     height: calc(100vh - 120px);
-    gap: 20px;
-    padding: 20px;
+    gap: 12px;
+    padding: 12px;
     background: var(--campagna-bg, #1a1a1a);
 }
 
