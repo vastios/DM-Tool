@@ -767,12 +767,6 @@ const EncounterBuilder = {
                 const id = listLi.dataset.id;
                 const enc = encounters.find(e => e.id === id);
 
-                // Click sul corpo dell'item → Preview
-                if (e.target.closest('.encounter-item-info')) {
-                    if (enc) renderPreview(enc);
-                    return;
-                }
-
                 // Click sui pulsanti → Azioni specifiche
                 if (e.target.classList.contains('edit-encounter-btn')) renderEditor(enc);
                 
@@ -797,6 +791,11 @@ const EncounterBuilder = {
                 if (e.target.classList.contains('delete-encounter-btn') && enc) {
                     pendingDeleteId = id;
                     showDeleteModal(enc.name);
+                }
+                
+                // Click su tutta la card (esclusi pulsanti) → Preview
+                if (!e.target.closest('.encounter-item-actions') && enc) {
+                    renderPreview(enc);
                 }
             }
         });
