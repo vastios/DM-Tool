@@ -451,6 +451,14 @@ const CombatTracker = {
             </div>
         </div>
     </div>
+    
+    <!-- Saving Throw Popup Overlay -->
+    <div id="saving-throw-overlay" class="popup-overlay hidden">
+        <div class="saving-throw-popup-container">
+            <button class="popup-close" title="Chiudi">×</button>
+            <div id="saving-throw-content" class="popup-content"></div>
+        </div>
+    </div>
 </div>
         `;
 
@@ -615,6 +623,20 @@ const CombatTracker = {
         const orderList = container.querySelector('#combatants-order-list');
         orderList?.addEventListener('mouseover', (e) => this.handleOrderListHover(e));
         orderList?.addEventListener('mouseout', (e) => this.handleOrderListOut(e));
+        
+        // Saving Throw popup events
+        const savingThrowOverlay = container.querySelector('#saving-throw-overlay');
+        savingThrowOverlay?.addEventListener('click', (e) => {
+            if (e.target.id === 'saving-throw-overlay') {
+                this.closeSavingThrowPopup();
+            }
+        });
+        
+        const savingThrowCloseBtn = savingThrowOverlay?.querySelector('.popup-close');
+        savingThrowCloseBtn?.addEventListener('click', () => this.closeSavingThrowPopup());
+        
+        const savingThrowContent = container.querySelector('#saving-throw-content');
+        savingThrowContent?.addEventListener('click', (e) => this.handleSavingThrowPopupClick(e));
     },
 
     // --- POPUP MANAGEMENT ---
@@ -816,6 +838,321 @@ const CombatTracker = {
         
         showToast(`${name} aggiunto come effetto attivo!`, 'success');
         this.closeSpellsPopup();
+    },
+    
+    // --- SAVING THROW POPUP ---
+    
+    /**
+     * Apre il popup per il tiro salvezza.
+     * @param {Object} data - { targetId, attackerId, attackName, effect }
+     */
+    openSavingThrowPopup(data) {
+        const overlay = this.container.querySelector('#saving-throw-overlay');
+        const content = this.container.querySelector('#saving-throw-content');
+        if (!overlay || !content) return;
+        
+        this.savingThrowData = data;
+        
+        const combatants = getCombatState();
+        const target = combatants.find(c => c.id === data.targetId);
+        const attacker = combatants.find(c => c.id === data.attackerId);
+        
+        const targetName = target?.customName || target?.name || 'Bersaglio';
+        const attackerName = attacker?.customName || attacker?.name || 'Attaccante';
+        
+        content.innerHTML = `
+            <div class="saving-throw-popup">
+                <h3>🛡️ Tiro Salvezza</h3>
+                <div class="save-info">
+                    <p><strong>${targetName}</strong> deve superare un tiro salvezza!</p>
+                    <div class="save-details">
+                        <span class="save-type">${data.effect.saveType || 'Costituzione'}</span>
+                        <span class="save-dc">CD ${data.effect.dc || 10}</span>
+                    </div>
+                    <p class="save-effect">${data.effect.description || ''}</p>
+                </div>
+                <div class="save-roll-section">
+                    <label>Tiro effettuato dal DM:</label>
+                    <div class="save-input-row">
+                        <input type="number" id="save-roll-input" value="" placeholder="Tiro" min="1" max="20" style="width: 60px;">
+                        <span>+</span>
+                        <input type="number" id="save-bonus-input" value="${this.getSaveBonus(target, data.effect.saveType)}" placeholder="Bonus" style="width: 50px;">
+                        <span>=</span>
+                        <span id="save-total">?</span>
+                    </div>
+                    <button id="roll-save-btn" class="roll-save-btn">🎲 Tira d20</button>
+                </div>
+                <div class="save-buttons">
+                    <button id="save-success-btn" class="save-btn success">✅ Successo</button>
+                    <button id="save-fail-btn" class="save-btn fail">❌ Fallimento</button>
+                </div>
+                <input type="hidden" id="save-effect-data" value='${JSON.stringify(data.effect)}'>
+            </div>
+        `;
+        
+        overlay.classList.remove('hidden');
+        
+        // Bind roll button
+        const rollBtn = content.querySelector('#roll-save-btn');
+        rollBtn?.addEventListener('click', () => {
+            const rollResult = rollDice('1d20');
+            const roll = rollResult.rolls?.[0] || rollResult;
+            const rollInput = content.querySelector('#save-roll-input');
+            if (rollInput) rollInput.value = roll;
+            this.updateSaveTotal();
+        });
+        
+        // Bind input changes
+        content.querySelector('#save-roll-input')?.addEventListener('input', () => this.updateSaveTotal());
+        content.querySelector('#save-bonus-input')?.addEventListener('input', () => this.updateSaveTotal());
+    },
+    
+    updateSaveTotal() {
+        const roll = parseInt(this.container.querySelector('#save-roll-input')?.value, 10) || 0;
+        const bonus = parseInt(this.container.querySelector('#save-bonus-input')?.value, 10) || 0;
+        const totalSpan = this.container.querySelector('#save-total');
+        if (totalSpan) {
+            totalSpan.textContent = roll + bonus;
+        }
+    },
+    
+    getSaveBonus(combatant, saveType) {
+        if (!combatant || !saveType) return 0;
+        
+        const saveMap = {
+            'Forza': 'strength_save',
+            'Destrezza': 'dexterity_save',
+            'Costituzione': 'constitution_save',
+            'Intelligenza': 'intelligence_save',
+            'Saggezza': 'wisdom_save',
+            'Carisma': 'charisma_save'
+        };
+        
+        const saveKey = saveMap[saveType];
+        if (saveKey && combatant[saveKey]) {
+            return combatant[saveKey];
+        }
+        
+        // Fallback: calcola dalla caratteristica
+        const abilityMap = {
+            'Forza': 'strength',
+            'Destrezza': 'dexterity',
+            'Costituzione': 'constitution',
+            'Intelligenza': 'intelligence',
+            'Saggezza': 'wisdom',
+            'Carisma': 'charisma'
+        };
+        
+        const abilityKey = abilityMap[saveType];
+        if (abilityKey && combatant[abilityKey]) {
+            const abilityMod = Math.floor((combatant[abilityKey] - 10) / 2);
+            return abilityMod;
+        }
+        
+        return 0;
+    },
+    
+    closeSavingThrowPopup() {
+        const overlay = this.container.querySelector('#saving-throw-overlay');
+        if (overlay) {
+            overlay.classList.add('hidden');
+        }
+        this.savingThrowData = null;
+    },
+    
+    handleSavingThrowPopupClick(e) {
+        const data = this.savingThrowData;
+        if (!data) return;
+        
+        if (e.target.id === 'save-success-btn') {
+            // Salvezza riuscita
+            this.logSavingThrow(data, true);
+            showToast(`Tiro salvezza riuscito!`, 'success');
+            this.closeSavingThrowPopup();
+        } else if (e.target.id === 'save-fail-btn') {
+            // Salvezza fallita - applica condizione
+            this.logSavingThrow(data, false);
+            this.applySpecialEffect(data);
+            this.closeSavingThrowPopup();
+        }
+    },
+    
+    logSavingThrow(data, success) {
+        const combatants = getCombatState();
+        const target = combatants.find(c => c.id === data.targetId);
+        const attacker = combatants.find(c => c.id === data.attackerId);
+        
+        const targetName = target?.customName || target?.name || 'Bersaglio';
+        const attackerName = attacker?.customName || attacker?.name || 'Attaccante';
+        const effectDesc = data.effect.description || 'effetto speciale';
+        
+        const resultText = success ? '✅ Riuscito' : '❌ Fallito';
+        
+        this.addCombatLogEntry({
+            type: 'saving_throw',
+            round: this.currentRound,
+            attackerId: data.attackerId,
+            targetId: data.targetId,
+            attackName: data.attackName,
+            saveType: data.effect.saveType,
+            dc: data.effect.dc,
+            success: success
+        });
+        
+        // Log nel results box
+        const resultsBox = this.container.querySelector('.results-box-mini');
+        if (resultsBox) {
+            const logHtml = `
+                <div class="save-result ${success ? 'success' : 'fail'}" style="
+                    padding: 6px 10px;
+                    margin: 4px 0;
+                    background: ${success ? 'rgba(76, 175, 80, 0.15)' : 'rgba(244, 67, 54, 0.15)'};
+                    border-left: 3px solid ${success ? '#4caf50' : '#f44336'};
+                    border-radius: 4px;
+                ">
+                    🛡️ <strong>${targetName}</strong>: Tiro Salvezza ${data.effect.saveType} CD ${data.effect.dc}
+                    <br>${resultText}
+                    ${!success ? `<br><small style="color: #f44336;">${data.effect.condition || 'Effetto applicato!'}</small>` : ''}
+                </div>
+            `;
+            resultsBox.innerHTML = logHtml + resultsBox.innerHTML;
+        }
+    },
+    
+    applySpecialEffect(data) {
+        if (!data.targetId || !data.effect) return;
+        
+        const effect = data.effect;
+        
+        // Applica la condizione se specificata
+        if (effect.condition) {
+            const duration = effect.duration || 0;
+            addConditionToCombatant(data.targetId, effect.condition, duration);
+            showToast(`${effect.condition} applicato!`, 'warning');
+            
+            // Log
+            this.addCombatLogEntry({
+                type: 'condition_applied',
+                round: this.currentRound,
+                targetId: data.targetId,
+                conditionName: effect.condition
+            });
+        }
+        
+        // Gestisci effetti speciali multi-step (come la Cockatrice)
+        if (effect.followUpSave) {
+            // Memorizza che il bersaglio deve fare un altro tiro salvezza
+            const combatants = getCombatState();
+            const target = combatants.find(c => c.id === data.targetId);
+            if (target) {
+                const pendingSaves = target.pendingSaves || [];
+                pendingSaves.push({
+                    source: data.attackerId,
+                    attackName: data.attackName,
+                    effect: effect.followUpSave,
+                    turn: this.currentRound + 1 // Prossimo turno
+                });
+                updateMonsterProperty(data.targetId, 'pendingSaves', pendingSaves);
+                showToast(`${target.customName || target.name} deve ripetere il tiro salvezza al prossimo turno!`, 'info');
+            }
+        }
+    },
+    
+    // --- SPECIAL EFFECTS PARSER ---
+    
+    /**
+     * Analizza la descrizione di un attacco per estrarre effetti speciali.
+     * @param {Object} attack - L'oggetto attacco con name, desc, ecc.
+     * @returns {Object|null} Oggetto con dc, saveType, condition, description, duration, followUp
+     */
+    parseSpecialEffect(attack) {
+        if (!attack || !attack.desc) return null;
+        
+        const desc = attack.desc;
+        const effect = {
+            dc: null,
+            saveType: null,
+            condition: null,
+            description: null,
+            duration: 0,
+            followUpSave: null
+        };
+        
+        // Pattern per estrarre CD
+        const dcPattern = /CD\s*(\d+)|tiro salvezza[^.]*CD\s*(\d+)|CD\s*(\d+)\s*(?:per|a)/i;
+        const dcMatch = desc.match(dcPattern);
+        if (dcMatch) {
+            effect.dc = parseInt(dcMatch[1] || dcMatch[2] || dcMatch[3], 10);
+        }
+        
+        // Pattern per estrarre tipo di tiro salvezza
+        const saveTypes = ['Costituzione', 'Destrezza', 'Forza', 'Saggezza', 'Intelligenza', 'Carisma',
+                          'costituzione', 'destrezza', 'forza', 'saggezza', 'intelligenza', 'carisma'];
+        for (const save of saveTypes) {
+            if (desc.toLowerCase().includes(save.toLowerCase())) {
+                effect.saveType = save.charAt(0).toUpperCase() + save.slice(1).toLowerCase();
+                break;
+            }
+        }
+        
+        // Pattern per estrarre condizioni
+        const conditionPatterns = [
+            { pattern: /pietrificato/i, condition: 'Pietrificato' },
+            { pattern: /avvelenato/i, condition: 'Avvelenato' },
+            { pattern: /stordito/i, condition: 'Stordito' },
+            { pattern: /paralizzato/i, condition: 'Paralizzato' },
+            { pattern: /trattenuto/i, condition: 'Trattenuto' },
+            { pattern: /afferrato/i, condition: 'Afferrato' },
+            { pattern: /prono/i, condition: 'Prono' },
+            { pattern: /accecato/i, condition: 'Accecato' },
+            { pattern: /assordato/i, condition: 'Assordato' },
+            { pattern: /spaventato/i, condition: 'Spaventato' },
+            { pattern: /affascinato/i, condition: 'Affascinato' },
+            { pattern: /inabile/i, condition: 'Inabile' },
+            { pattern: /svenuto/i, condition: 'Svenuto' }
+        ];
+        
+        for (const cp of conditionPatterns) {
+            if (cp.pattern.test(desc)) {
+                effect.condition = cp.condition;
+                break;
+            }
+        }
+        
+        // Pattern per estrarre durata
+        const durationPattern = /(\d+)\s*(?:turni?|ore?|minuti?|round)/i;
+        const durationMatch = desc.match(durationPattern);
+        if (durationMatch) {
+            effect.duration = parseInt(durationMatch[1], 10);
+        }
+        
+        // Pattern per effetti multi-step (es. Cockatrice: "trattenuta" poi "pietrificato")
+        if (desc.includes('ripetere') || desc.includes('fine del suo turno successivo')) {
+            // Questo attacco ha un effetto progressivo
+            const nextConditionMatch = desc.match(/se lo fallisce[^.]*è\s+(\w+)/i);
+            if (nextConditionMatch) {
+                effect.followUpSave = {
+                    dc: effect.dc,
+                    saveType: effect.saveType,
+                    condition: 'Pietrificato', // La condizione finale
+                    duration: effect.duration || 24, // Default 24 ore per pietrificazione
+                    description: 'Deve ripetere il tiro salvezza'
+                };
+                // La condizione iniziale è "Trattenuto" per la Cockatrice
+                if (desc.includes('trasformarsi in pietra') || desc.includes('inizia a')) {
+                    effect.condition = 'Trattenuto';
+                    effect.description = 'Inizia a trasformarsi in pietra';
+                }
+            }
+        }
+        
+        // Se abbiamo trovato CD e tipo salvezza, ritorna l'effetto
+        if (effect.dc && effect.saveType) {
+            effect.description = effect.description || `Se fallisce: ${effect.condition || 'effetto speciale'}`;
+            return effect;
+        }
+        
+        return null;
     },
     
     // --- CONDITION TAGS & TOOLTIPS ---
@@ -1969,6 +2306,10 @@ const CombatTracker = {
             const damage = parseInt(e.target.dataset.damage, 10);
             const damageType = e.target.dataset.damageType || 'physical';
             this.applyDamageToTarget(targetId, damage, damageType);
+        } else if (e.target.classList.contains('trigger-saving-throw-btn')) {
+            // Apri popup per il tiro salvezza
+            const effectData = JSON.parse(e.target.dataset.effectData.replace(/&quot;/g, '"'));
+            this.openSavingThrowPopup(effectData);
         } else if (e.target.classList.contains('spell-btn-mini')) {
             // Click su un incantesimo per lanciarlo
             const spellData = JSON.parse(e.target.dataset.spell.replace(/&quot;/g, '"'));
@@ -2717,6 +3058,9 @@ const CombatTracker = {
             });
         }
         
+        // Analizza se l'attacco ha un effetto speciale
+        const specialEffect = this.parseSpecialEffect(attackData);
+        
         // Show result - cerca sia .results-box che .results-box-mini
         const resultsBox = this.container.querySelector('.results-box-mini') || this.container.querySelector('.results-box');
         if (resultsBox) {
@@ -2726,6 +3070,24 @@ const CombatTracker = {
             
             const card = this.container.querySelector(`.combatant-card[data-id="${attacker.id}"]`);
             const cardResultsBox = card?.querySelector('.results-box-mini') || resultsBox;
+            
+            // Pulsante per effetto speciale
+            let specialEffectBtn = '';
+            if (specialEffect && this.targetCombatant && !isFumble) {
+                const effectData = JSON.stringify({
+                    targetId: this.targetCombatant,
+                    attackerId: attacker.id,
+                    attackName: attackData.name,
+                    effect: specialEffect
+                }).replace(/"/g, '&quot;');
+                specialEffectBtn = `
+                    <button class="trigger-saving-throw-btn" 
+                            data-effect-data="${effectData}"
+                            style="background: #9c27b0; color: white; border: none; padding: 2px 8px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; margin-left: 4px;">
+                        🛡️ Tiro Salvezza
+                    </button>
+                `;
+            }
             
             cardResultsBox.innerHTML = `
                 <p class="${isCritical ? 'critical' : isFumble ? 'fumble' : ''}">
@@ -2738,6 +3100,7 @@ const CombatTracker = {
                             💾 Applica Danno
                         </button>
                     ` : ''}
+                    ${specialEffectBtn}
                 </p>
             ` + cardResultsBox.innerHTML;
         }

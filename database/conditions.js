@@ -22,6 +22,10 @@ export const conditionsDatabase = {
         description: "La velocità di una creatura afferrata diventa 0, e non può beneficiare di alcun bonus alla sua velocità. La condizione termina se chi l'ha afferrata è inabile (vedi quella condizione). La condizione termina anche se un effetto allontana la creatura afferrata dalla portata di chi l'ha iniziato l'attacco o l'effetto di lottare, come quando una creatura viene scagliata via dall'incantesimo onda di tuono.",
         summary: "Velocità 0. I tiri per colpire contro di esso hanno vantaggio"
     },
+    "Trattenuto": {
+        description: "Una creatura trattenuta ha velocità 0 e non può beneficiare di alcun bonus alla sua velocità. I tiri per colpire contro la creatura hanno vantaggio, e i tiri per colpire della creatura hanno svantaggio. La creatura ha svantaggio sui tiri salvezza su Destrezza. Può ancora agire ma non può muoversi.",
+        summary: "Velocità 0. Svantaggio su tiri per colpire e Destrezza"
+    },
     "Assordato": {
         description: "Una creatura assordata non può udire e fallisce automaticamente tutte le prove di caratteristica basate sull'udito.",
         summary: "Fallisce prove basate sull'udito"
