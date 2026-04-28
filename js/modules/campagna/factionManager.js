@@ -2,7 +2,7 @@ import { getCurrentCampaignId } from '../../../stateManager.js';
 import { showToast } from '../../../utils/toast.js';
 import { escapeHtml } from '../../../utils/htmlHelpers.js';
 import { linkifyCampaignReferences } from '../../../utils/campaignLinker.js';
-import { initAutocomplete } from '../../../utils/autocomplete.js'; // <<< MODIFICA 1: Import aggiunto
+import { initAutocomplete } from '../../../utils/autocomplete.js';
 
 // Mappa per la traduzione degli stati
 const statusLabels = {
@@ -33,26 +33,29 @@ function loadFactions() {
 const FactionManager = {
     render(containerElement) {
         containerElement.innerHTML = `
-            <div class="session-notes-container">
-                <div class="notes-list-panel">
-                    <div class="panel-header">
-                        <h2>Fazioni della Campagna</h2>
-                        <button id="new-faction-btn" class="action-btn">Nuova Fazione</button>
+            <div class="world-module-container">
+                <aside class="world-sidebar">
+                    <div class="world-sidebar-header">
+                        <h2>⚔️ Fazioni</h2>
+                        <button id="new-faction-btn" class="world-btn world-btn-primary">+ Nuova</button>
                     </div>
-                    <input type="text" id="faction-search" class="list-search" placeholder="Cerca una fazione...">
-                    <ul id="saved-factions-list" class="saved-notes-list"></ul>
-                </div>
+                    <div class="world-search-box">
+                        <input type="text" id="faction-search" class="world-search-input" placeholder="Cerca una fazione...">
+                    </div>
+                    <ul id="saved-factions-list" class="world-list"></ul>
+                </aside>
 
-                <div class="note-editor-panel">
-                    <div id="editor-content">
-                        <p style="text-align: center; color: #888; margin-top: 3rem;">Seleziona una fazione per visualizzarla o creane una nuova.</p>
+                <main class="world-main" id="faction-main">
+                    <div class="world-empty-state">
+                        <div class="world-empty-icon">⚔️</div>
+                        <p>Seleziona una fazione per visualizzarla o creane una nuova.</p>
                     </div>
-                </div>
+                </main>
             </div>
         `;
 
         const savedList = containerElement.querySelector('#saved-factions-list');
-        const editorContent = containerElement.querySelector('#editor-content');
+        const mainContent = containerElement.querySelector('#faction-main');
         const newFactionBtn = containerElement.querySelector('#new-faction-btn');
         const searchInput = containerElement.querySelector('#faction-search');
 
@@ -67,23 +70,32 @@ const FactionManager = {
 
             savedList.innerHTML = '';
             if (filteredFactions.length === 0) {
-                savedList.innerHTML = '<li class="empty-list">Nessuna fazione trovata.</li>';
+                savedList.innerHTML = '<li class="world-empty-list">Nessuna fazione trovata.</li>';
                 return;
             }
 
             [...filteredFactions].sort((a, b) => b.lastModified - a.lastModified).forEach(faction => {
                 const li = document.createElement('li');
-                li.className = `note-list-item ${faction.status === 'Defunct' ? 'defunct-faction' : ''}`;
+                const statusClass = faction.status === 'Defunct' ? 'faction-defunct' : 
+                                   faction.status === 'Hidden' ? 'faction-hidden' : '';
+                li.className = `world-list-item ${statusClass}`;
                 li.dataset.id = faction.id;
                 
+                const statusIcon = faction.status === 'Hidden' ? '🕵️' : '';
+                
                 li.innerHTML = `
-                    <div class="note-item-info">
-                        <h3>${escapeHtml(faction.name)} ${faction.status === 'Hidden' ? '🕵️' : ''}</h3>
+                    <div class="world-item-header">
+                        <span class="world-item-name">${escapeHtml(faction.name)} ${statusIcon}</span>
+                        <span class="world-tag world-tag-${faction.status === 'Active' ? 'active' : faction.status === 'Hidden' ? 'hidden' : 'inactive'}">
+                            ${statusLabels[faction.status] || faction.status}
+                        </span>
+                    </div>
+                    <div class="world-item-info">
                         <p><em>Leader: ${escapeHtml(faction.leader || 'Sconosciuto')}</em></p>
                     </div>
-                    <div class="note-item-actions">
-                        <button class="edit-faction-btn">Modifica</button>
-                        <button class="delete-faction-btn">Elimina</button>
+                    <div class="world-item-actions">
+                        <button class="world-action-btn edit-faction-btn">Modifica</button>
+                        <button class="world-action-btn danger delete-faction-btn">Elimina</button>
                     </div>
                 `;
                 savedList.appendChild(li);
@@ -93,6 +105,7 @@ const FactionManager = {
         const renderFactionViewer = (faction) => {
             const date = new Date(faction.lastModified).toLocaleString('it-IT');
             const displayStatus = statusLabels[faction.status] || faction.status;
+            const statusIcon = faction.status === 'Hidden' ? '🕵️' : '';
 
             // Applica linkifyCampaignReferences a tutti i campi di testo
             const linkedName = linkifyCampaignReferences(faction.name);
@@ -104,60 +117,60 @@ const FactionManager = {
             const linkedEnemies = linkifyCampaignReferences(faction.enemies || '---');
             const linkedSecrets = linkifyCampaignReferences(faction.secrets || 'Nessun segreto.');
 
-            editorContent.innerHTML = `
-                <div class="note-viewer wiki-detail-panel" style="color: #000;">
-                    <div class="note-viewer-header" style="border-bottom: 2px solid #742307; margin-bottom: 20px; padding-bottom: 10px;">
-                        <h2 style="margin: 0; color: #401101;">${linkedName} ${faction.status === 'Hidden' ? '🕵️' : ''}</h2>
-                    </div>
-                    
-                    <div class="faction-details-grid" style="display: grid; gap: 10px;">
-                        <p><strong class="wiki-label" style="color: #f0ad4e;">Stato:</strong> <span style="color: #000000 !important; font-weight: 500;">${displayStatus}</span></p>
-                        <p><strong class="wiki-label" style="color: #f0ad4e;">Leader:</strong> <span style="color: #000000 !important; font-weight: 500;">${linkedLeader}</span></p>
-                        <p><strong class="wiki-label" style="color: #f0ad4e;">Sede Operativa:</strong> <span style="color: #000000 !important; font-weight: 500;">${linkedHeadquarters}</span></p>
-                    </div>
-
-                    <hr style="border: 0; border-top: 1px solid #ccc; margin: 20px 0;">
-
-                    <div class="content-section">
-                        <p><strong class="wiki-label" style="color: #f0ad4e;">Descrizione e Filosofia:</strong></p>
-                        <div class="npc-narrative-content" style="color: #000000 !important;">
-                            ${linkedDescription.replace(/\n/g, '<br>')}
-                        </div>
-                    </div>
-
-                    <div class="content-section" style="margin-top: 15px;">
-                        <p><strong class="wiki-label" style="color: #f0ad4e;">Membri Noti:</strong></p>
-                        <div style="color: #000000 !important;">${linkedMembers.replace(/\n/g, '<br>')}</div>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 15px;">
+            mainContent.innerHTML = `
+                <div class="faction-viewer">
+                    <div class="faction-viewer-header">
                         <div>
-                            <p><strong class="wiki-label" style="color: #f0ad4e;">Alleati:</strong></p>
-                            <div style="color: #000000 !important;">${linkedAllies.replace(/\n/g, '<br>')}</div>
+                            <h2 class="faction-viewer-title">${linkedName} ${statusIcon}</h2>
                         </div>
-                        <div>
-                            <p><strong class="wiki-label" style="color: #f0ad4e;">Nemici:</strong></p>
-                            <div style="color: #000000 !important;">${linkedEnemies.replace(/\n/g, '<br>')}</div>
-                        </div>
-                    </div>
-
-                    <div class="unrevealed-status" style="margin-top: 30px; padding: 15px; border: 1px dashed #742307; background: rgba(116, 35, 7, 0.05);">
-                        <p><strong class="wiki-label" style="color: #f0ad4e;">Segreti del DM:</strong></p>
-                        <div style="color: #000000 !important;">
-                            ${linkedSecrets.replace(/\n/g, '<br>')}
+                        <div class="world-viewer-actions">
+                            <button class="world-btn world-btn-secondary edit-faction-btn" data-id="${faction.id}">✏️ Modifica</button>
                         </div>
                     </div>
                     
-                    <small style="display: block; margin-top: 20px; color: #666; font-style: italic;">
+                    <div class="faction-details-grid">
+                        <p><strong class="wiki-label">Stato:</strong> <span>${displayStatus}</span></p>
+                        <p><strong class="wiki-label">Leader:</strong> <span>${linkedLeader}</span></p>
+                        <p><strong class="wiki-label">Sede Operativa:</strong> <span>${linkedHeadquarters}</span></p>
+                    </div>
+
+                    <hr style="border: 0; border-top: 1px solid var(--world-border); margin: 16px 0;">
+
+                    <div class="faction-content-section">
+                        <p><strong class="wiki-label">Descrizione e Filosofia:</strong></p>
+                        <p>${linkedDescription.replace(/\n/g, '<br>')}</p>
+                    </div>
+
+                    <div class="faction-content-section">
+                        <p><strong class="wiki-label">Membri Noti:</strong></p>
+                        <p>${linkedMembers.replace(/\n/g, '<br>')}</p>
+                    </div>
+
+                    <div class="faction-relations-grid">
+                        <div class="faction-relation-column">
+                            <h4>🤝 Alleati</h4>
+                            <p>${linkedAllies.replace(/\n/g, '<br>')}</p>
+                        </div>
+                        <div class="faction-relation-column">
+                            <h4>⚔️ Nemici</h4>
+                            <p>${linkedEnemies.replace(/\n/g, '<br>')}</p>
+                        </div>
+                    </div>
+
+                    <div class="faction-secrets-box">
+                        <p><strong class="wiki-label">Segreti del DM:</strong></p>
+                        <p>${linkedSecrets.replace(/\n/g, '<br>')}</p>
+                    </div>
+                    
+                    <div class="world-timestamp">
                         Ultima modifica: ${date}
-                    </small>
+                    </div>
                 </div>
             `;
         };
 
         const renderFactionEditor = (faction = null) => {
             const isNew = !faction;
-            // --- MODIFICA 2: Aggiunto fallback a stringa vuota e nuovi campi ---
             const name = isNew ? '' : (faction.name || '');
             const status = isNew ? 'Active' : (faction.status || 'Active');
             const description = isNew ? '' : (faction.description || '');
@@ -165,55 +178,73 @@ const FactionManager = {
             const allies = isNew ? '' : (faction.allies || '');
             const enemies = isNew ? '' : (faction.enemies || '');
             const secrets = isNew ? '' : (faction.secrets || '');
-            const leader = isNew ? '' : (faction.leader || ''); // Nuovo campo
-            const headquarters = isNew ? '' : (faction.headquarters || ''); // Nuovo campo
+            const leader = isNew ? '' : (faction.leader || '');
+            const headquarters = isNew ? '' : (faction.headquarters || '');
 
-            editorContent.innerHTML = `
-                <div class="editor-form">
-                    <div class="form-group">
-                        <label for="faction-name">Nome della Fazione:</label>
-                        <input type="text" id="faction-name" value="${escapeHtml(name)}">
+            mainContent.innerHTML = `
+                <div class="faction-editor">
+                    <div class="world-editor-header">
+                        <h3 class="world-editor-title">${isNew ? '✨ Nuova Fazione' : '✏️ Modifica Fazione'}</h3>
                     </div>
-                    <div class="form-group">
-                        <label for="faction-status">Stato:</label>
-                        <select id="faction-status">
-                            <option value="Active" ${(isNew || faction.status === 'Active') ? 'selected' : ''}>Attiva</option>
-                            <option value="Defunct" ${(!isNew && faction.status === 'Defunct') ? 'selected' : ''}>Sciolta</option>
-                            <option value="Hidden" ${(!isNew && faction.status === 'Hidden') ? 'selected' : ''}>Segreta</option>
-                        </select>
+                    
+                    <div class="world-form">
+                        <div class="world-form-row">
+                            <div class="world-form-group">
+                                <label for="faction-name">Nome della Fazione</label>
+                                <input type="text" id="faction-name" value="${escapeHtml(name)}" placeholder="Es. Gilda dei Ladri, Ordine del Dragone...">
+                            </div>
+                            <div class="world-form-group">
+                                <label for="faction-status">Stato</label>
+                                <select id="faction-status">
+                                    <option value="Active" ${status === 'Active' ? 'selected' : ''}>Attiva</option>
+                                    <option value="Defunct" ${status === 'Defunct' ? 'selected' : ''}>Sciolta</option>
+                                    <option value="Hidden" ${status === 'Hidden' ? 'selected' : ''}>Segreta</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="world-form-row">
+                            <div class="world-form-group">
+                                <label for="faction-leader">Leader</label>
+                                <input type="text" id="faction-leader" value="${escapeHtml(leader)}" placeholder="Es. Re Theron, il Mago Supremo">
+                            </div>
+                            <div class="world-form-group">
+                                <label for="faction-headquarters">Sede Operativa</label>
+                                <input type="text" id="faction-headquarters" value="${escapeHtml(headquarters)}" placeholder="Es. Torre Grigia, città di Luskan">
+                            </div>
+                        </div>
+                        
+                        <div class="world-form-group">
+                            <label for="faction-description">Descrizione e Filosofia</label>
+                            <textarea id="faction-description" rows="5" placeholder="Descrivi la fazione, i suoi obiettivi, la sua filosofia...">${escapeHtml(description)}</textarea>
+                        </div>
+                        
+                        <div class="world-form-group">
+                            <label for="faction-members">Membri Noti</label>
+                            <textarea id="faction-members" rows="3" placeholder="Elenca i membri noti della fazione...">${escapeHtml(members)}</textarea>
+                        </div>
+                        
+                        <div class="world-form-row">
+                            <div class="world-form-group">
+                                <label for="faction-allies">Alleati</label>
+                                <textarea id="faction-allies" rows="2" placeholder="Fazioni alleate...">${escapeHtml(allies)}</textarea>
+                            </div>
+                            <div class="world-form-group">
+                                <label for="faction-enemies">Nemici</label>
+                                <textarea id="faction-enemies" rows="2" placeholder="Fazioni nemiche...">${escapeHtml(enemies)}</textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="world-form-group">
+                            <label for="faction-secrets">Segreti DM</label>
+                            <textarea id="faction-secrets" rows="3" placeholder="Informazioni segrete note solo al DM...">${escapeHtml(secrets)}</textarea>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="faction-leader">Leader:</label> <!-- Nuovo campo -->
-                        <input type="text" id="faction-leader" value="${escapeHtml(leader)}" placeholder="Es. Re Theron, il Mago Supremo">
+                    
+                    <div class="world-editor-actions">
+                        <button id="save-faction-btn" class="world-btn world-btn-primary">💾 Salva Fazione</button>
+                        <button id="cancel-edit-btn" class="world-btn world-btn-secondary">Annulla</button>
                     </div>
-                    <div class="form-group">
-                        <label for="faction-headquarters">Sede Operativa:</label> <!-- Nuovo campo -->
-                        <input type="text" id="faction-headquarters" value="${escapeHtml(headquarters)}" placeholder="Es. Torre Grigia, la città segreta di Luskan">
-                    </div>
-                    <div class="form-group">
-                        <label for="faction-description">Descrizione:</label>
-                        <textarea id="faction-description" rows="5">${escapeHtml(description)}</textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="faction-members">Membri Noti:</label>
-                        <textarea id="faction-members" rows="3">${escapeHtml(members)}</textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="faction-allies">Alleati:</label>
-                        <textarea id="faction-allies" rows="2">${escapeHtml(allies)}</textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="faction-enemies">Nemici:</label>
-                        <textarea id="faction-enemies" rows="2">${escapeHtml(enemies)}</textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="faction-secrets">Segreti DM:</label>
-                        <textarea id="faction-secrets" rows="3">${escapeHtml(secrets)}</textarea>
-                    </div>
-                </div>
-                <div class="editor-actions">
-                    <button id="save-faction-btn" class="action-btn">Salva Fazione</button>
-                    <button id="cancel-edit-btn" class="action-btn secondary">Annulla</button>
                 </div>
             `;
 
@@ -229,7 +260,7 @@ const FactionManager = {
             searchInput.addEventListener('input', () => renderFactionsList());
 
             savedList.addEventListener('click', (e) => {
-                const li = e.target.closest('.note-list-item');
+                const li = e.target.closest('.world-list-item');
                 if (!li) return;
                 const id = li.dataset.id;
                 const faction = factions.find(f => f.id === id);
@@ -242,10 +273,27 @@ const FactionManager = {
                         factions = factions.filter(f => f.id !== id);
                         saveFactions(factions);
                         renderFactionsList();
-                        editorContent.innerHTML = '<p style="text-align: center; color: #888; margin-top: 3rem;">Seleziona una fazione.</p>';
+                        mainContent.innerHTML = `
+                            <div class="world-empty-state">
+                                <div class="world-empty-icon">⚔️</div>
+                                <p>Fazione eliminata.</p>
+                            </div>
+                        `;
                     }
                 } else {
                     renderFactionViewer(faction);
+                }
+            });
+            
+            // Edit button in viewer
+            mainContent.addEventListener('click', (e) => {
+                if (e.target.classList.contains('edit-faction-btn')) {
+                    const id = e.target.dataset.id;
+                    const faction = factions.find(f => f.id === id);
+                    if (faction) {
+                        currentEditingId = id;
+                        renderFactionEditor(faction);
+                    }
                 }
             });
         };
@@ -254,7 +302,7 @@ const FactionManager = {
             const saveBtn = containerElement.querySelector('#save-faction-btn');
             const cancelBtn = containerElement.querySelector('#cancel-edit-btn');
 
-            // --- NUOVO: Inizializza l'autocompletamento su tutti i campi testuali ---
+            // Inizializza l'autocompletamento su tutti i campi testuali
             initAutocomplete(containerElement.querySelector('#faction-name'));
             initAutocomplete(containerElement.querySelector('#faction-leader'));
             initAutocomplete(containerElement.querySelector('#faction-headquarters'));
@@ -264,11 +312,16 @@ const FactionManager = {
             initAutocomplete(containerElement.querySelector('#faction-enemies'));
             initAutocomplete(containerElement.querySelector('#faction-secrets'));
             
-            containerElement.querySelector('#cancel-edit-btn').onclick = () => {
+            cancelBtn.addEventListener('click', () => {
                 const faction = factions.find(f => f.id === currentEditingId);
                 if(faction) renderFactionViewer(faction);
-                else editorContent.innerHTML = `<p style="text-align: center; color: #888; margin-top: 3rem;">Operazione annullata.</p>`;
-            };
+                else mainContent.innerHTML = `
+                    <div class="world-empty-state">
+                        <div class="world-empty-icon">⚔️</div>
+                        <p>Operazione annullata.</p>
+                    </div>
+                `;
+            });
 
             saveBtn.addEventListener('click', () => {
                 const name = containerElement.querySelector('#faction-name').value.trim();
@@ -282,8 +335,8 @@ const FactionManager = {
                     allies: containerElement.querySelector('#faction-allies').value.trim(),
                     enemies: containerElement.querySelector('#faction-enemies').value.trim(),
                     secrets: containerElement.querySelector('#faction-secrets').value.trim(),
-                    leader: containerElement.querySelector('#faction-leader').value.trim(), // Nuovo campo
-                    headquarters: containerElement.querySelector('#faction-headquarters').value.trim(), // Nuovo campo
+                    leader: containerElement.querySelector('#faction-leader').value.trim(),
+                    headquarters: containerElement.querySelector('#faction-headquarters').value.trim(),
                     lastModified: Date.now()
                 };
 

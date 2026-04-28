@@ -1,8 +1,172 @@
 /* ==========================================================================
-   FACTIONS.CSS - Stili per le Fazioni
+   _FACTIONS.CSS
+   Stili per il Gestore delle Fazioni
+   Tema CAMPAGNA unificato - Estende _world-modules.css
    ========================================================================== */
 
-.note-list-item.defunct-faction {
-    border-left: 4px solid #6c757d;
-    opacity: 0.7;
+/* ═══════════════════════════════════════════════════════════════
+   VARIABILI FAZIONI
+   ═══════════════════════════════════════════════════════════════ */
+
+.world-module-container:has(.faction-viewer),
+.world-module-container:has(.faction-editor) {
+    --faction-accent: #f0ad4e;
+    --faction-border-dark: #742307;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LIST ITEM STATI
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Fazione Sciolta */
+.world-list-item.faction-defunct {
+    border-left-color: var(--world-text-muted, #6c757d);
+    opacity: 0.6;
+}
+
+.world-list-item.faction-defunct .world-item-name {
+    text-decoration: line-through;
+}
+
+/* Fazione Segreta */
+.world-list-item.faction-hidden {
+    border-left-color: #a78bfa;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   VIEWER FAZIONI
+   ═══════════════════════════════════════════════════════════════ */
+
+.faction-viewer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 20px;
+    background: var(--world-panel, #2a2a2a);
+    border: 1px solid var(--world-border, #444);
+    border-radius: var(--world-radius, 8px);
+    color: var(--world-text, #f0e6d2);
+    overflow-y: auto;
+}
+
+.faction-viewer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--faction-border-dark, #742307);
+}
+
+.faction-viewer-title {
+    font-family: 'Cinzel Decorative', 'Cinzel', serif;
+    font-size: 1.5rem;
+    color: var(--faction-accent, #f0ad4e);
+    margin: 0;
+    line-height: 1.2;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Griglia dettagli */
+.faction-details-grid {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.faction-details-grid p {
+    margin: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+
+/* Sezioni contenuto */
+.faction-content-section {
+    margin-top: 16px;
+}
+
+.faction-content-section p {
+    margin: 0 0 8px 0;
+}
+
+/* Griglia alleati/nemici */
+.faction-relations-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 16px;
+}
+
+.faction-relation-column h4 {
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    color: var(--world-accent, #f0ad4e);
+    margin: 0 0 8px 0;
+    border-bottom: 1px solid var(--world-border, #444);
+    padding-bottom: 6px;
+}
+
+/* Box segreti DM */
+.faction-secrets-box {
+    margin-top: 24px;
+    padding: 16px;
+    border: 1px dashed var(--faction-border-dark, #742307);
+    background: rgba(116, 35, 7, 0.05);
+    border-radius: var(--world-radius, 8px);
+    position: relative;
+}
+
+.faction-secrets-box::before {
+    content: "SOLO DM";
+    position: absolute;
+    top: -8px;
+    right: 10px;
+    background: var(--world-accent, #f0ad4e);
+    color: var(--world-bg, #1a1a1a);
+    padding: 2px 8px;
+    font-size: 0.65rem;
+    border-radius: var(--world-radius-sm, 4px);
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+.faction-secrets-box p {
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   EDITOR FAZIONI
+   ═══════════════════════════════════════════════════════════════ */
+
+.faction-editor {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 20px;
+    background: var(--world-panel, #2a2a2a);
+    border: 1px solid var(--world-border, #444);
+    border-radius: var(--world-radius, 8px);
+    color: var(--world-text, #f0e6d2);
+    overflow-y: auto;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LABEL WIKI (compatibilità)
+   ═══════════════════════════════════════════════════════════════ */
+
+.wiki-label {
+    color: var(--world-accent, #f0ad4e) !important;
+    font-weight: 600;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+    .faction-relations-grid {
+        grid-template-columns: 1fr;
+    }
 }

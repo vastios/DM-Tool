@@ -2,7 +2,7 @@ import { getCurrentCampaignId } from '../../../stateManager.js';
 import { showToast } from '../../../utils/toast.js';
 import { escapeHtml } from '../../../utils/htmlHelpers.js';
 import { linkifyCampaignReferences } from '../../../utils/campaignLinker.js';
-import { initAutocomplete } from '../../../utils/autocomplete.js'; // <<< MODIFICA 1: Import aggiunto
+import { initAutocomplete } from '../../../utils/autocomplete.js';
 
 // --- FUNZIONI PER LA GESTIONE DEL LOCAL STORAGE ---
 function getStorageKey() {
@@ -40,28 +40,29 @@ function loadSecrets() {
 const SecretManager = {
     render(containerElement, itemIdToLoad = null) {
         containerElement.innerHTML = `
-            <div class="session-notes-container">
-                <!-- Pannello di Sinistra: Lista dei Segreti -->
-                <div class="notes-list-panel">
-                    <div class="panel-header">
-                        <h2>Segreti della Campagna</h2>
-                        <button id="new-secret-btn" class="action-btn">Nuovo Segreto</button>
+            <div class="world-module-container">
+                <aside class="world-sidebar">
+                    <div class="world-sidebar-header">
+                        <h2>🔒 Segreti</h2>
+                        <button id="new-secret-btn" class="world-btn world-btn-primary">+ Nuovo</button>
                     </div>
-                    <input type="text" id="secret-search" class="list-search" placeholder="Cerca un segreto...">
-                    <ul id="saved-secrets-list" class="saved-notes-list"></ul>
-                </div>
+                    <div class="world-search-box">
+                        <input type="text" id="secret-search" class="world-search-input" placeholder="Cerca un segreto...">
+                    </div>
+                    <ul id="saved-secrets-list" class="world-list"></ul>
+                </aside>
 
-                <!-- Pannello di Destra: Visualizzatore/Editor del Segreto -->
-                <div class="note-editor-panel">
-                    <div id="editor-content">
-                        <p style="text-align: center; color: #888; margin-top: 3rem;">Seleziona un segreto per visualizzarlo o creane uno nuovo.</p>
+                <main class="world-main" id="secret-main">
+                    <div class="world-empty-state">
+                        <div class="world-empty-icon">🔒</div>
+                        <p>Seleziona un segreto per visualizzarlo o creane uno nuovo.</p>
                     </div>
-                </div>
+                </main>
             </div>
         `;
 
         const savedList = containerElement.querySelector('#saved-secrets-list');
-        const editorContent = containerElement.querySelector('#editor-content');
+        const mainContent = containerElement.querySelector('#secret-main');
         const newSecretBtn = containerElement.querySelector('#new-secret-btn');
         const searchInput = containerElement.querySelector('#secret-search');
 
@@ -79,7 +80,7 @@ const SecretManager = {
 
             savedList.innerHTML = '';
             if (filteredSecrets.length === 0) {
-                savedList.innerHTML = '<li class="empty-list">Nessun segreto salvato per questa campagna.</li>';
+                savedList.innerHTML = '<li class="world-empty-list">Nessun segreto salvato per questa campagna.</li>';
                 return;
             }
 
@@ -92,22 +93,25 @@ const SecretManager = {
 
             sortedSecrets.forEach(secret => {
                 const li = document.createElement('li');
-                li.className = `note-list-item ${secret.isRevealed ? 'revealed' : 'unrevealed'}`;
+                const statusClass = secret.isRevealed ? 'revealed' : 'unrevealed';
+                li.className = `world-list-item ${statusClass}`;
                 li.dataset.id = secret.id;
                 
                 const statusIcon = secret.isRevealed ? '👁️' : '🔒';
                 const statusText = secret.isRevealed ? 'Rivelato' : 'Nascosto';
                 
                 li.innerHTML = `
-                    <div class="note-item-info">
-                        <h3>${statusIcon} ${escapeHtml(secret.title)}</h3>
+                    <div class="world-item-header">
+                        <span class="world-item-name">${statusIcon} ${escapeHtml(secret.title)}</span>
+                        <span class="world-tag ${secret.isRevealed ? 'world-tag-inactive' : 'world-tag-warning'}">${statusText}</span>
+                    </div>
+                    <div class="world-item-info">
                         <p><em>${escapeHtml(secret.linkedTo || 'Nessun collegamento')}</em></p>
-                        <p>${escapeHtml(secret.description.substring(0, 100))}${secret.description.length > 100 ? '...' : ''}</p>
-                        <small>Stato: ${statusText}</small>
-                </div>
-                    <div class="note-item-actions">
-                        <button class="edit-secret-btn">Modifica</button>
-                        <button class="delete-secret-btn">Elimina</button>
+                        <p>${escapeHtml(secret.description.substring(0, 80))}${secret.description.length > 80 ? '...' : ''}</p>
+                    </div>
+                    <div class="world-item-actions">
+                        <button class="world-action-btn edit-secret-btn">Modifica</button>
+                        <button class="world-action-btn danger delete-secret-btn">Elimina</button>
                     </div>
                 `;
                 savedList.appendChild(li);
@@ -117,29 +121,53 @@ const SecretManager = {
         const renderSecretViewer = (secret) => {
             const date = new Date(secret.lastModified).toLocaleString('it-IT');
             const statusText = secret.isRevealed ? 'Questo segreto è stato rivelato ai giocatori.' : 'Questo segreto è ancora sconosciuto ai giocatori.';
-            const statusClass = secret.isRevealed ? 'revealed-status' : 'unrevealed-status';
+            const statusIcon = secret.isRevealed ? '👁️' : '🔒';
             
             // Applica linkifyCampaignReferences a tutti i campi di testo
             const linkedTitle = linkifyCampaignReferences(secret.title);
             const linkedLinkedTo = linkifyCampaignReferences(secret.linkedTo || 'Nessun collegamento');
             const linkedDescription = linkifyCampaignReferences(secret.description);
 
-            editorContent.innerHTML = `
-                <div class="note-viewer">
-                    <div class="note-viewer-header">
-                        <h2 style="color: #f0ad4e;">${linkedTitle}</h2>
+            mainContent.innerHTML = `
+                <div class="world-viewer">
+                    <div class="world-viewer-header">
+                        <div>
+                            <h2 class="world-viewer-title">${statusIcon} ${linkedTitle}</h2>
+                        </div>
                     </div>
-                    <p class="${statusClass}"><strong style="color: #f0ad4e;">Stato:</strong> <span style="color: #ffffff;">${statusText}</span></p>
-                    <p><strong style="color: #f0ad4e;">Collegato a:</strong> <span style="color: #ffffff;">${linkedLinkedTo}</span></p>
-                    <p><strong style="color: #f0ad4e;">Descrizione:</strong></p>
-                    <p class="note-viewer-content" style="color: #ffffff;">${linkedDescription.replace(/\n/g, '<br>')}</p>
-                    <small class="note-viewer-date" style="color: #aaaaaa;">Ultima modifica: ${date}</small>
-                    ${!secret.isRevealed ? `<button id="reveal-secret-btn" class="action-btn" style="margin-top: 1rem;">Rivela Segreto</button>` : ''}
+                    
+                    <div class="world-info-grid">
+                        <div class="world-info-item">
+                            <div class="world-info-label">Stato</div>
+                            <div class="world-info-value ${secret.isRevealed ? 'world-status-revealed' : 'world-status-unrevealed'}">
+                                ${statusText}
+                            </div>
+                        </div>
+                        <div class="world-info-item">
+                            <div class="world-info-label">Collegato a</div>
+                            <div class="world-info-value">${linkedLinkedTo}</div>
+                        </div>
+                    </div>
+
+                    <div class="world-viewer-section">
+                        <h4>Descrizione</h4>
+                        <p>${linkedDescription.replace(/\n/g, '<br>')}</p>
+                    </div>
+                    
+                    ${!secret.isRevealed ? `
+                        <div class="world-editor-actions">
+                            <button id="reveal-secret-btn" class="world-btn world-btn-primary">👁️ Rivela Segreto</button>
+                        </div>
+                    ` : ''}
+                    
+                    <div class="world-timestamp">
+                        Ultima modifica: ${date}
+                    </div>
                 </div>
             `;
             
             // Listener per il pulsante "Rivela Segreto"
-            const revealBtn = editorContent.querySelector('#reveal-secret-btn');
+            const revealBtn = mainContent.querySelector('#reveal-secret-btn');
             if (revealBtn) {
                 revealBtn.addEventListener('click', () => {
                     if (confirm('Sei sicuro di voler segnare questo segreto come "rivelato"?')) {
@@ -157,35 +185,46 @@ const SecretManager = {
 
         const renderSecretEditor = (secret = null) => {
             const isNew = !secret;
-            // --- MODIFICA 2: Aggiunto fallback a stringa vuota per robustezza ---
             const title = isNew ? '' : (secret.title || '');
             const description = isNew ? '' : (secret.description || '');
             const linkedTo = isNew ? '' : (secret.linkedTo || '');
             const isRevealed = isNew ? false : secret.isRevealed;
 
-            editorContent.innerHTML = `
-                <div class="editor-form">
-                    <div class="form-group">
-                        <label for="secret-title">Titolo del Segreto:</label>
-                        <input type="text" id="secret-title" value="${escapeHtml(title)}" placeholder="Es. La vera identità del Re, il traditore nel consiglio...">
+            mainContent.innerHTML = `
+                <div class="world-editor">
+                    <div class="world-editor-header">
+                        <h3 class="world-editor-title">${isNew ? '✨ Nuovo Segreto' : '✏️ Modifica Segreto'}</h3>
                     </div>
-                    <div class="form-group">
-                        <label for="secret-linked-to">Collegato a (opzionale):</label>
-                        <input type="text" id="secret-linked-to" value="${escapeHtml(linkedTo)}" placeholder="Es. Re Theron, la Gilda dei Ladri, la città di Silverhaven...">
+                    
+                    <div class="world-form">
+                        <div class="world-form-row">
+                            <div class="world-form-group">
+                                <label for="secret-title">Titolo del Segreto</label>
+                                <input type="text" id="secret-title" value="${escapeHtml(title)}" placeholder="Es. La vera identità del Re, il traditore nel consiglio...">
+                            </div>
+                            <div class="world-form-group">
+                                <label for="secret-linked-to">Collegato a (opzionale)</label>
+                                <input type="text" id="secret-linked-to" value="${escapeHtml(linkedTo)}" placeholder="Es. Re Theron, la Gilda dei Ladri...">
+                            </div>
+                        </div>
+                        
+                        <div class="world-form-group">
+                            <label for="secret-description">Descrizione del Segreto</label>
+                            <textarea id="secret-description" rows="10" placeholder="Descrivi il segreto in dettaglio...">${escapeHtml(description)}</textarea>
+                        </div>
+                        
+                        <div class="world-form-group">
+                            <label class="world-checkbox-label">
+                                <input type="checkbox" id="secret-is-revealed" ${isRevealed ? 'checked' : ''}>
+                                Questo segreto è già stato rivelato ai giocatori
+                            </label>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="secret-description">Descrizione del Segreto:</label>
-                        <textarea id="secret-description" rows="10" placeholder="Descrivi il segreto in dettaglio...">${escapeHtml(description)}</textarea>
+                    
+                    <div class="world-editor-actions">
+                        <button id="save-secret-btn" class="world-btn world-btn-primary">💾 Salva Segreto</button>
+                        <button id="cancel-edit-btn" class="world-btn world-btn-secondary">Annulla</button>
                     </div>
-                    <div class="form-group">
-                        <label>
-                            <input type="checkbox" id="secret-is-revealed" ${isRevealed ? 'checked' : ''}>
-                            Questo segreto è già stato rivelato ai giocatori.
-                        </label>
-                    </div>
-                </div>
-                <div class="editor-actions">
-                    <button id="save-secret-btn" class="action-btn">Salva Segreto</button>
                 </div>
             `;
 
@@ -202,7 +241,7 @@ const SecretManager = {
             searchInput.addEventListener('input', () => renderSecretsList());
 
             savedList.addEventListener('click', (e) => {
-                const li = e.target.closest('.note-list-item');
+                const li = e.target.closest('.world-list-item');
                 if (!li) return;
                 const id = li.dataset.id;
 
@@ -219,7 +258,12 @@ const SecretManager = {
                         renderSecretsList();
                         if (currentEditingId === id) {
                             currentEditingId = null;
-                            editorContent.innerHTML = `<p style="text-align: center; color: #888; margin-top: 3rem;">Segreto eliminato.</p>`;
+                            mainContent.innerHTML = `
+                                <div class="world-empty-state">
+                                    <div class="world-empty-icon">🔒</div>
+                                    <p>Segreto eliminato.</p>
+                                </div>
+                            `;
                         }
                         showToast(`Segreto "${secretToDelete.title}" eliminato.`, 'warning');
                     }
@@ -237,11 +281,23 @@ const SecretManager = {
             const descriptionInput = containerElement.querySelector('#secret-description');
             const isRevealedInput = containerElement.querySelector('#secret-is-revealed');
             const saveBtn = containerElement.querySelector('#save-secret-btn');
+            const cancelBtn = containerElement.querySelector('#cancel-edit-btn');
 
-            // --- NUOVO: Inizializza l'autocompletamento su tutti i campi testuali ---
+            // Inizializza l'autocompletamento su tutti i campi testuali
             if (titleInput) initAutocomplete(titleInput);
             if (linkedToInput) initAutocomplete(linkedToInput);
             if (descriptionInput) initAutocomplete(descriptionInput);
+
+            cancelBtn.addEventListener('click', () => {
+                const secret = secrets.find(s => s.id === currentEditingId);
+                if (secret) renderSecretViewer(secret);
+                else mainContent.innerHTML = `
+                    <div class="world-empty-state">
+                        <div class="world-empty-icon">🔒</div>
+                        <p>Operazione annullata.</p>
+                    </div>
+                `;
+            });
 
             saveBtn.addEventListener('click', () => {
                 const title = titleInput.value.trim();
