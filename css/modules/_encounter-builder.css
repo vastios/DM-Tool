@@ -298,13 +298,29 @@
 
 .editor-layout {
     display: flex;
-    flex-direction: column;
     height: 100%;
     gap: 0;
 }
 
+/* Colonna Sinistra - Form e Selettore */
+.editor-left-column {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #444;
+    overflow: hidden;
+}
+
+/* Colonna Destra - Creature Selezionate */
+.editor-right-column {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
 .editor-header {
-    padding: 1rem;
+    padding: 0.75rem;
     background: rgba(0, 0, 0, 0.2);
     border-bottom: 1px solid #444;
 }
@@ -315,7 +331,7 @@
 }
 
 .form-group {
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
 }
 
 .form-group.flex-2 {
@@ -363,7 +379,7 @@
 
 /* --- Pannello Difficoltà Party --- */
 .party-difficulty-panel {
-    padding: 0.75rem 1rem;
+    padding: 0.5rem 0.75rem;
     background: linear-gradient(90deg, rgba(240, 173, 78, 0.05) 0%, rgba(0,0,0,0.1) 100%);
     border-bottom: 1px solid #444;
 }
@@ -439,25 +455,21 @@
     color: #666;
 }
 
-/* --- Layout a Due Colonne --- */
-.editor-columns {
-    display: flex;
+/* --- Colonna Selettore Creature --- */
+.creature-selector-column {
     flex: 1;
-    gap: 0;
-    min-height: 0;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
+    min-height: 0;
 }
 
-.creature-selector-column,
 .selected-creatures-column {
     flex: 1;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-}
-
-.creature-selector-column {
-    border-right: 1px solid #444;
+    min-height: 0;
 }
 
 .selector-header h3,
@@ -895,13 +907,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.75rem 1rem;
+    padding: 0.5rem 0.75rem;
     background: rgba(0, 0, 0, 0.3);
     border-top: 1px solid #444;
+    margin-top: auto;
 }
 
 .action-hint {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     color: #555;
 }
 
@@ -912,15 +925,15 @@
 .editor-actions .action-btn {
     display: flex;
     align-items: center;
-    gap: 0.4rem;
-    padding: 0.6rem 1.25rem;
+    gap: 0.35rem;
+    padding: 0.5rem 1rem;
     background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
     border: none;
     border-radius: 6px;
     color: #fff;
     font-weight: 600;
     font-family: 'Cinzel', serif;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     cursor: pointer;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -928,7 +941,6 @@
 }
 
 .editor-actions .action-btn:hover {
-    transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
 }
 
@@ -1036,18 +1048,19 @@
 
 /* --- Responsive --- */
 @media (max-width: 900px) {
-    .editor-columns {
+    .editor-layout {
         flex-direction: column;
     }
     
-    .creature-selector-column {
-        border-right: none;
-        border-bottom: 1px solid #444;
+    .editor-left-column,
+    .editor-right-column {
+        width: 100%;
         max-height: 50%;
     }
     
-    .selected-creatures-column {
-        max-height: 50%;
+    .editor-left-column {
+        border-right: none;
+        border-bottom: 1px solid #444;
     }
 }
 
