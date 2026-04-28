@@ -455,7 +455,9 @@ const EncounterBuilder = {
                 if (filterContainer) filterContainer.innerHTML = '';
                 return;
             }
-            const types = ['Tutti', ...new Set(monsterDatabase.map(m => m.type))].sort();
+            // "Tutti" sempre primo, poi gli altri tipi ordinati
+            const uniqueTypes = [...new Set(monsterDatabase.map(m => m.type))].sort();
+            const types = ['Tutti', ...uniqueTypes];
             filterContainer.innerHTML = types.map(t => `
                 <button class="filter-btn ${t === activeTypeFilter ? 'active' : ''}">${t}</button>
             `).join('');
@@ -465,12 +467,13 @@ const EncounterBuilder = {
         const updateSelectionList = () => {
             const list = containerElement.querySelector('#monster-selection-list');
             const searchInput = containerElement.querySelector('#monster-search');
-            const search = searchInput ? searchInput.value.toLowerCase() : '';
+            const search = searchInput ? searchInput.value.toLowerCase().trim() : '';
             if (!list) return;
 
             if (selectionMode === 'monster') {
+                const isFilterAll = activeTypeFilter.toLowerCase() === 'tutti';
                 const filtered = monsterDatabase.filter(m => 
-                    m.name.toLowerCase().includes(search) && (activeTypeFilter === 'Tutti' || m.type === activeTypeFilter)
+                    m.name.toLowerCase().includes(search) && (isFilterAll || m.type === activeTypeFilter)
                 ).slice(0, 30);
 
                 list.innerHTML = filtered.length === 0 
@@ -688,7 +691,7 @@ const EncounterBuilder = {
 
             // Filtri tipo
             if (e.target.classList.contains('filter-btn')) {
-                activeTypeFilter = e.target.textContent;
+                activeTypeFilter = e.target.textContent.trim();
                 renderTypeFilters();
                 updateSelectionList();
             }
