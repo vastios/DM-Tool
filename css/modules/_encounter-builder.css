@@ -77,6 +77,7 @@
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 20px;
     width: 100%;
+;
 }
 
 .encounter-card {
@@ -123,7 +124,7 @@
     font-family: 'Cinzel', serif;
 }
 
-/* --- Costruttore di Incontri (uniformato a PG Manager) --- */
+/* --- Costruttore di Incontri --- */
 .encounter-builder-container {
     display: flex;
     gap: 12px;
@@ -233,31 +234,24 @@
     font-family: 'Cinzel', serif;
 }
 
-.encounter-item-info p {
-    margin: 0 0 5px 0;
-    color: #888;
-    font-size: 0.8rem;
-    font-style: italic;
-}
-
 .encounter-item-info small {
-    color: #666;
+    color: #888;
     font-size: 0.75rem;
 }
 
 .encounter-item-actions {
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
+    gap: 0.25rem;
 }
 
 .encounter-item-actions button {
-    padding: 0.25rem 0.5rem;
+    padding: 0.35rem 0.5rem;
     border: 1px solid #444;
     background-color: #3a3a3a;
     color: #ccc;
-    border-radius: 3px;
-    font-size: 0.7rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
     cursor: pointer;
     transition: all 0.2s;
     white-space: nowrap;
@@ -266,6 +260,7 @@
 .encounter-item-actions button:hover {
     background-color: #4a4a4a;
     color: #fff;
+    transform: scale(1.05);
 }
 
 .encounter-item-actions button.primary {
@@ -295,37 +290,65 @@
     padding: 20px;
 }
 
-.editor-form {
-    padding: 1rem;
-}
-
+/* --- Editor Layout --- */
 .editor-content-wrapper {
     flex: 1;
     overflow-y: auto;
+    padding: 0;
+}
+
+.editor-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 0;
+}
+
+.editor-header {
     padding: 1rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid #444;
+}
+
+.form-row {
+    display: flex;
+    gap: 1rem;
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 0.75rem;
+}
+
+.form-group.flex-2 {
+    flex: 2;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 0.35rem;
     font-family: 'Cinzel', serif;
     color: #f0ad4e;
+    font-size: 0.85rem;
 }
 
 .form-group input,
 .form-group textarea {
     width: 100%;
-    padding: 8px;
-    border: 1px solid #555;
-    background-color: #333;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #444;
+    background-color: #1a1a1a;
     color: #ffffff;
-    border-radius: 4px;
+    border-radius: 6px;
     box-sizing: border-box;
     font-family: 'Lora', serif;
+    font-size: 0.9rem;
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #f0ad4e;
 }
 
 .form-group input::placeholder,
@@ -334,262 +357,59 @@
     font-style: italic;
 }
 
-.monster-selector-panel,
-.selected-monsters-panel {
-    background-color: rgba(0,0,0,0.2);
-    border: 1px solid #444;
-    border-radius: 6px;
-    padding: 1rem;
-    margin-bottom: 1rem;
+.form-group textarea {
+    resize: vertical;
+    min-height: 60px;
 }
-
-.monster-selector-panel h3,
-.selected-monsters-panel h3 {
-    margin: 0 0 0.5rem 0;
-    color: #f0ad4e;
-    font-family: 'Cinzel', serif;
-    font-size: 0.95rem;
-    border-bottom: 1px solid #444;
-    padding-bottom: 0.5rem;
-}
-
-.monster-selection-list,
-.selected-monsters-list {
-    list-style-type: none;
-    padding: 0;
-    margin: 10px 0 0 0;
-    max-height: 200px;
-    overflow-y: auto;
-    background-color: #333;
-    border-radius: 4px;
-}
-
-.monster-selection-list li {
-    padding: 8px 12px;
-    border-bottom: 1px solid #444;
-    color: #f0e6d2;
-    transition: background-color 0.2s;
-}
-
-.monster-selection-list li:hover {
-    background-color: #4a4a4a;
-}
-
-.monster-selection-list li:last-child {
-    border-bottom: none;
-}
-
-.selected-monsters-list li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 12px;
-    border-bottom: 1px solid #444;
-    color: #f0e6d2;
-    gap: 0.5rem;
-}
-
-.selected-monsters-list li:last-child {
-    border-bottom: none;
-}
-
-.selected-monsters-list .creature-name {
-    flex: 1;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.quantity-controls {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.quantity-btn {
-    background-color: #555;
-    border: 1px solid #666;
-    color: #fff;
-    width: 24px;
-    height: 24px;
-    border-radius: 3px;
-    cursor: pointer;
-    font-size: 0.8rem;
-}
-
-.quantity-btn:hover {
-    background-color: #666;
-}
-
-.remove-monster-btn {
-    background-color: #8b0000;
-    border: 1px solid #a52a2a;
-    color: #fff;
-    padding: 2px 6px;
-    border-radius: 3px;
-    cursor: pointer;
-    font-size: 0.7rem;
-}
-
-.remove-monster-btn:hover {
-    background-color: #a52a2a;
-}
-
-.editor-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.5rem;
-    padding: 1rem;
-    border-top: 1px solid #444;
-    background: rgba(0, 0, 0, 0.2);
-}
-
-.editor-actions .action-btn,
-.editor-actions .success {
-    padding: 0.5rem 1rem;
-    background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
-    border: none;
-    border-radius: 4px;
-    color: #fff;
-    font-weight: 600;
-    font-family: 'Cinzel', serif;
-    font-size: 0.85rem;
-    cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    transition: all 0.2s;
-}
-
-.editor-actions .action-btn:hover,
-.editor-actions .success:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
-}
-
-/* Toggle modalità Mostri/PNG */
-.selection-mode-toggle {
-    display: flex;
-    gap: 0.3rem;
-    margin-bottom: 0.5rem;
-}
-
-.mode-btn {
-    flex: 1;
-    padding: 0.4rem 0.5rem;
-    background: #3a3a3a;
-    border: 1px solid #444;
-    border-radius: 4px;
-    color: #888;
-    font-size: 0.8rem;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.mode-btn:hover {
-    background: #4a4a4a;
-    color: #ccc;
-}
-
-.mode-btn.active {
-    background: rgba(240, 173, 78, 0.2);
-    border-color: #f0ad4e;
-    color: #f0ad4e;
-}
-
-/* Filtri tipo compatti */
-.compact-filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem;
-    margin-bottom: 0.5rem;
-}
-
-.filter-btn {
-    padding: 0.2rem 0.5rem;
-    background: #333;
-    border: 1px solid #444;
-    border-radius: 3px;
-    color: #888;
-    font-size: 0.7rem;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.filter-btn:hover {
-    background: #444;
-    color: #ccc;
-}
-
-.filter-btn.active {
-    background: rgba(240, 173, 78, 0.2);
-    border-color: #f0ad4e;
-    color: #f0ad4e;
-}
-
-/* Campo ricerca mostri */
-#monster-search {
-    width: 100%;
-    padding: 0.5rem;
-    margin-bottom: 0.5rem;
-    background: #1a1a1a;
-    border: 1px solid #444;
-    border-radius: 4px;
-    color: #f0e6d2;
-    font-size: 0.85rem;
-}
-
-#monster-search:focus {
-    outline: none;
-    border-color: #f0ad4e;
-}
-
-/* ==========================================================================
-   NUOVI STILI - Funzionalità Avanzate
-   ========================================================================== */
 
 /* --- Pannello Difficoltà Party --- */
 .party-difficulty-panel {
-    background: linear-gradient(135deg, rgba(240, 173, 78, 0.1) 0%, rgba(0,0,0,0.2) 100%);
-    border: 1px solid rgba(240, 173, 78, 0.3);
-    border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 1rem;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(90deg, rgba(240, 173, 78, 0.05) 0%, rgba(0,0,0,0.1) 100%);
+    border-bottom: 1px solid #444;
 }
 
 .party-info {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
 }
 
 .party-icon {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
 }
 
 .party-stats {
-    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    color: #ccc;
+}
+
+.party-stats strong {
     color: #f0ad4e;
-    font-size: 0.95rem;
+}
+
+.party-stats em {
+    color: #888;
+    font-style: italic;
 }
 
 .thresholds-bar {
     display: flex;
-    height: 24px;
+    height: 20px;
     border-radius: 4px;
     overflow: hidden;
-    margin-top: 0.5rem;
+    margin-bottom: 0.25rem;
 }
 
 .threshold-segment {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    min-width: 0;
+    letter-spacing: 0.3px;
     flex: 1;
 }
 
@@ -613,35 +433,268 @@
     color: #fff;
 }
 
-/* --- Statistiche Incontro --- */
+.threshold-values {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.65rem;
+    color: #666;
+}
+
+/* --- Layout a Due Colonne --- */
+.editor-columns {
+    display: flex;
+    flex: 1;
+    gap: 0;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.creature-selector-column,
+.selected-creatures-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.creature-selector-column {
+    border-right: 1px solid #444;
+}
+
+.selector-header h3,
+.panel-header-row h3 {
+    margin: 0;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    color: #f0ad4e;
+    font-family: 'Cinzel', serif;
+    background: rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid #444;
+}
+
+/* --- Toggle Modalità --- */
+.selection-mode-toggle {
+    display: flex;
+    padding: 0.5rem;
+    gap: 0.5rem;
+    background: rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid #444;
+}
+
+.mode-btn {
+    flex: 1;
+    padding: 0.5rem;
+    background: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 6px;
+    color: #888;
+    font-size: 0.8rem;
+    font-family: 'Cinzel', serif;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+}
+
+.mode-btn:hover {
+    background: #3a3a3a;
+    color: #ccc;
+    border-color: #555;
+}
+
+.mode-btn.active {
+    background: linear-gradient(135deg, rgba(240, 173, 78, 0.2) 0%, rgba(240, 173, 78, 0.1) 100%);
+    border-color: #f0ad4e;
+    color: #f0ad4e;
+}
+
+.mode-icon {
+    font-size: 1rem;
+}
+
+/* --- Ricerca --- */
+.search-container {
+    padding: 0.5rem;
+    border-bottom: 1px solid #444;
+}
+
+.search-container input {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    background: #1a1a1a;
+    border: 1px solid #444;
+    border-radius: 6px;
+    color: #f0e6d2;
+    font-size: 0.85rem;
+    transition: border-color 0.2s;
+}
+
+.search-container input:focus {
+    outline: none;
+    border-color: #f0ad4e;
+}
+
+.search-container input::placeholder {
+    color: #555;
+}
+
+/* --- Filtri Tipo --- */
+.type-filters-scrollable {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    padding: 0.5rem;
+    border-bottom: 1px solid #444;
+    max-height: 80px;
+    overflow-y: auto;
+}
+
+.filter-btn {
+    padding: 0.25rem 0.5rem;
+    background: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 4px;
+    color: #888;
+    font-size: 0.7rem;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.filter-btn:hover {
+    background: #3a3a3a;
+    color: #ccc;
+}
+
+.filter-btn.active {
+    background: rgba(240, 173, 78, 0.15);
+    border-color: #f0ad4e;
+    color: #f0ad4e;
+}
+
+/* --- Lista Selezione --- */
+.selection-list-container,
+.selected-list-container {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+}
+
+.monster-selection-list,
+.selected-monsters-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* --- Card Creature --- */
+.creature-card {
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid #333;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: transparent;
+}
+
+.creature-card:hover {
+    background: rgba(240, 173, 78, 0.1);
+}
+
+.creature-card:active {
+    background: rgba(240, 173, 78, 0.2);
+}
+
+.creature-card.added {
+    animation: pulse-green 0.3s ease;
+}
+
+@keyframes pulse-green {
+    0% { background: rgba(76, 175, 80, 0.3); }
+    100% { background: transparent; }
+}
+
+.creature-card-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.25rem;
+}
+
+.creature-card-main .creature-name {
+    color: #f0e6d2;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.creature-type {
+    color: #666;
+    font-size: 0.7rem;
+    text-transform: capitalize;
+}
+
+.creature-card-stats {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.creature-cr-badge {
+    background: linear-gradient(135deg, #4a4a4a 0%, #3a3a3a 100%);
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #f0ad4e;
+}
+
+.creature-cr-badge.npc {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(59, 130, 246, 0.1) 100%);
+    color: #60a5fa;
+}
+
+.creature-xp {
+    color: #888;
+    font-size: 0.7rem;
+}
+
+.npc-card {
+    background: rgba(59, 130, 246, 0.05);
+}
+
+.npc-card:hover {
+    background: rgba(59, 130, 246, 0.1);
+}
+
+.empty-result {
+    color: #666;
+    text-align: center;
+    padding: 2rem;
+    font-style: italic;
+}
+
+/* --- Creature Selezionate --- */
 .panel-header-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.5rem;
+    background: rgba(0, 0, 0, 0.2);
     border-bottom: 1px solid #444;
-    padding-bottom: 0.5rem;
-}
-
-.panel-header-row h3 {
-    margin: 0;
-    color: #f0ad4e;
-    font-family: 'Cinzel', serif;
-    font-size: 0.95rem;
 }
 
 .encounter-stats {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.5rem;
+    padding-right: 1rem;
     flex-wrap: wrap;
 }
 
 .stat-item {
     display: flex;
     align-items: center;
-    gap: 0.25rem;
-    font-size: 0.75rem;
+    gap: 0.2rem;
+    font-size: 0.7rem;
 }
 
 .stat-label {
@@ -657,52 +710,37 @@
 .difficulty-badge {
     display: flex;
     align-items: center;
-    gap: 0.25rem;
-    padding: 0.25rem 0.5rem;
+    gap: 0.2rem;
+    padding: 0.2rem 0.4rem;
     border-radius: 4px;
     border: 1px solid;
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
 }
 
-.difficulty-icon {
-    font-size: 0.85rem;
-}
-
-/* --- Lista Creature Selezionate Avanzata --- */
-.add-creature {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-}
-
-.add-creature .creature-name {
-    color: #f0e6d2;
-}
-
-.add-creature .creature-info {
-    color: #888;
-    font-size: 0.75rem;
-}
-
+/* --- Lista Selezionati --- */
 .draggable-creature {
-    cursor: grab;
-    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid #333;
+    gap: 0.5rem;
+    transition: background 0.15s;
 }
 
-.draggable-creature:active {
-    cursor: grabbing;
+.draggable-creature:hover {
+    background: rgba(255, 255, 255, 0.02);
 }
 
 .drag-handle {
-    color: #555;
+    color: #444;
     cursor: grab;
-    font-size: 1rem;
-    padding-right: 0.5rem;
+    font-size: 0.9rem;
     user-select: none;
+    padding: 0.25rem;
+    transition: color 0.15s;
 }
 
 .draggable-creature:hover .drag-handle {
@@ -711,7 +749,7 @@
 
 .draggable-creature.dragging {
     opacity: 0.5;
-    background: rgba(240, 173, 78, 0.2);
+    background: rgba(240, 173, 78, 0.15);
 }
 
 .draggable-creature.drag-over {
@@ -719,11 +757,184 @@
     background: rgba(240, 173, 78, 0.1);
 }
 
-.draggable-creature .creature-cr {
-    color: #888;
+.selected-creature-info {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+}
+
+.selected-creature-info .creature-name {
+    color: #f0e6d2;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.npc-tag {
+    background: rgba(59, 130, 246, 0.2);
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+    font-size: 0.65rem;
+    color: #60a5fa;
+    margin-left: 0.25rem;
+}
+
+.selected-creature-info .creature-cr {
+    color: #666;
     font-size: 0.75rem;
-    min-width: 50px;
-    text-align: right;
+    white-space: nowrap;
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.qty-btn {
+    background: #3a3a3a;
+    border: 1px solid #555;
+    color: #ccc;
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+}
+
+.qty-btn:hover {
+    background: #4a4a4a;
+    color: #fff;
+}
+
+.qty-val {
+    color: #f0e6d2;
+    font-size: 0.85rem;
+    min-width: 24px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.remove-btn {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #f87171;
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    margin-left: 0.25rem;
+}
+
+.remove-btn:hover {
+    background: rgba(239, 68, 68, 0.25);
+    transform: scale(1.1);
+}
+
+.empty-selection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1rem;
+    color: #555;
+}
+
+.empty-selection-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    opacity: 0.5;
+}
+
+.empty-selection p {
+    margin: 0;
+    font-size: 0.85rem;
+}
+
+/* --- Empty State --- */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #555;
+    padding: 2rem;
+}
+
+.empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.4;
+}
+
+.empty-state h3 {
+    margin: 0 0 0.5rem 0;
+    color: #888;
+    font-family: 'Cinzel', serif;
+}
+
+.empty-state p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/* --- Footer Azioni --- */
+.editor-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-top: 1px solid #444;
+}
+
+.action-hint {
+    font-size: 0.75rem;
+    color: #555;
+}
+
+.action-hint span {
+    opacity: 0.7;
+}
+
+.editor-actions .action-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 1.25rem;
+    background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    font-weight: 600;
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+}
+
+.editor-actions .action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+}
+
+.btn-icon {
+    font-size: 1rem;
 }
 
 /* --- Modal di Conferma --- */
@@ -733,7 +944,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.85);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -824,36 +1035,42 @@
     box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
 }
 
-/* --- Pulsante Duplica --- */
-.duplicate-encounter-btn {
-    background-color: rgba(59, 130, 246, 0.15) !important;
-    border-color: rgba(59, 130, 246, 0.3) !important;
-    color: #60a5fa !important;
+/* --- Responsive --- */
+@media (max-width: 900px) {
+    .editor-columns {
+        flex-direction: column;
+    }
+    
+    .creature-selector-column {
+        border-right: none;
+        border-bottom: 1px solid #444;
+        max-height: 50%;
+    }
+    
+    .selected-creatures-column {
+        max-height: 50%;
+    }
 }
 
-.duplicate-encounter-btn:hover {
-    background-color: rgba(59, 130, 246, 0.25) !important;
-}
-
-/* --- Responsive adjustments --- */
-@media (max-width: 768px) {
+@media (max-width: 600px) {
+    .encounter-builder-container {
+        flex-direction: column;
+    }
+    
+    .encounter-list-panel {
+        width: 100%;
+        max-width: none;
+        max-height: 200px;
+    }
+    
+    .encounter-item-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    
     .encounter-stats {
         flex-direction: column;
         align-items: flex-start;
-        gap: 0.5rem;
-    }
-    
-    .panel-header-row {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-    }
-    
-    .thresholds-bar {
-        height: 32px;
-    }
-    
-    .threshold-segment span {
-        font-size: 0.6rem;
+        gap: 0.25rem;
     }
 }

@@ -135,6 +135,28 @@ function calculateAdjustedXp(creatures) {
     return Math.floor(totalXp * multiplier);
 }
 
+// --- FUNZIONE PER OTTENERE TIPO MOSTRO IN ITALIANO ---
+function getMonsterTypeItalian(type) {
+    const translations = {
+        'aberrazione': 'Aberrazione',
+        'bestia': 'Bestia',
+        'celeste': 'Celeste',
+        'costrutto': 'Costrutto',
+        'drago': 'Drago',
+        'elementale': 'Elementale',
+        'fata': 'Fata',
+        'fiend': 'Diavolo',
+        'gigante': 'Gigante',
+        'umanoide': 'Umanoide',
+        'mostruosità': 'Mostruosità',
+        'ooze': 'Ooze',
+        'pianta': 'Pianta',
+        'non-morto': 'Non-morto',
+        'vegetale': 'Vegetale'
+    };
+    return translations[type?.toLowerCase()] || type || 'Sconosciuto';
+}
+
 const EncounterBuilder = {
     render(containerElement) {
         let encounters = loadEncounters();
@@ -159,7 +181,11 @@ const EncounterBuilder = {
                 </div>
                 <div class="encounter-editor-panel">
                     <div id="editor-content" class="editor-content-wrapper">
-                        <p style="text-align: center; color: #888; margin-top: 3rem;">Seleziona un incontro o creane uno nuovo.</p>
+                        <div class="empty-state">
+                            <div class="empty-icon">⚔️</div>
+                            <h3>Nessun Incontro Selezionato</h3>
+                            <p>Seleziona un incontro dalla lista o creane uno nuovo per iniziare.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -195,87 +221,129 @@ const EncounterBuilder = {
                     <li class="encounter-list-item" data-id="${enc.id}">
                         <div class="encounter-item-info">
                             <h3>${enc.name}</h3>
-                            <small>${enc.monsters.length} tipi di creature</small>
+                            <small>${enc.monsters.reduce((sum, m) => sum + m.quantity, 0)} creature • ${enc.totalXp ? enc.totalXp.toLocaleString() + ' XP' : '—'}</small>
                         </div>
                         <div class="encounter-item-actions">
-                            <button class="edit-encounter-btn small">Modifica</button>
-                            <button class="duplicate-encounter-btn small">Duplica</button>
-                            <button class="import-encounter-btn small primary">Importa</button>
-                            <button class="delete-encounter-btn small danger">Elimina</button>
+                            <button class="edit-encounter-btn small" title="Modifica">✏️</button>
+                            <button class="duplicate-encounter-btn small" title="Duplica">📋</button>
+                            <button class="import-encounter-btn small primary" title="Importa nel Combat Tracker">▶️</button>
+                            <button class="delete-encounter-btn small danger" title="Elimina">🗑️</button>
                         </div>
                     </li>
                 `).join('');
         };
 
         // --- RENDERING EDITOR ---
-        const renderEditor = (encounter = null) => {
+        const renderEditor = (encounter = null, preserveMonsters = false) => {
             currentEditingId = encounter ? encounter.id : null;
-            selectedMonsters = encounter ? [...encounter.monsters] : [];
+            
+            // Solo se non stiamo preservando i mostri (es. cambio modalità), aggiorniamo la lista
+            if (!preserveMonsters) {
+                selectedMonsters = encounter ? [...encounter.monsters] : [];
+            }
             
             const partyInfo = getPartyInfo();
             const thresholds = getDifficultyThresholds(partyInfo.count, partyInfo.avgLevel);
             
             editorContent.innerHTML = `
-                <div class="editor-form">
-                    <div class="form-group">
-                        <label>Nome Incontro:</label>
-                        <input type="text" id="encounter-name-input" value="${encounter ? encounter.name : ''}" placeholder="Es. Ambascata dei Goblin">
-                    </div>
-                    <div class="form-group">
-                        <label>Descrizione:</label>
-                        <textarea id="encounter-desc-input" placeholder="Descrizione opzionale...">${encounter ? encounter.description : ''}</textarea>
-                    </div>
-                </div>
-
-                <!-- Pannello Difficoltà Party -->
-                <div class="party-difficulty-panel">
-                    <div class="party-info">
-                        <span class="party-icon">👥</span>
-                        <span class="party-stats">
-                            ${partyInfo.count > 0 
-                                ? `${partyInfo.count} PG - Livello medio ${partyInfo.avgLevel}` 
-                                : 'Nessun PG nella campagna'}
-                        </span>
-                    </div>
-                    ${thresholds ? `
-                        <div class="thresholds-bar">
-                            <div class="threshold-segment easy" title="Facile: ${thresholds.easy} XP">
-                                <span>Facile</span>
-                            </div>
-                            <div class="threshold-segment medium" title="Media: ${thresholds.medium} XP">
-                                <span>Media</span>
-                            </div>
-                            <div class="threshold-segment hard" title="Difficile: ${thresholds.hard} XP">
-                                <span>Difficile</span>
-                            </div>
-                            <div class="threshold-segment deadly" title="Mortale: ${thresholds.deadly} XP">
-                                <span>Mortale</span>
+                <div class="editor-layout">
+                    <!-- Header con nome e descrizione -->
+                    <div class="editor-header">
+                        <div class="form-row">
+                            <div class="form-group flex-2">
+                                <label>🏷️ Nome Incontro</label>
+                                <input type="text" id="encounter-name-input" value="${encounter ? encounter.name : ''}" placeholder="Es. Ambascata dei Goblin">
                             </div>
                         </div>
-                    ` : ''}
-                </div>
-
-                <div class="monster-selector-panel">
-                    <h3>Aggiungi Creature</h3>
-                    <div class="selection-mode-toggle">
-                        <button class="mode-btn ${selectionMode === 'monster' ? 'active' : ''}" data-mode="monster">Mostri</button>
-                        <button class="mode-btn ${selectionMode === 'npc' ? 'active' : ''}" data-mode="npc">PNG</button>
+                        <div class="form-group">
+                            <label>📝 Descrizione</label>
+                            <textarea id="encounter-desc-input" placeholder="Descrizione opzionale dell'incontro..." rows="2">${encounter ? encounter.description : ''}</textarea>
+                        </div>
                     </div>
-                    <input type="text" id="monster-search" placeholder="Cerca...">
-                    <div id="type-filters" class="compact-filters"></div>
-                    <ul id="monster-selection-list" class="monster-selection-list"></ul>
-                </div>
 
-                <div class="selected-monsters-panel">
-                    <div class="panel-header-row">
-                        <h3>Creature Selezionate</h3>
-                        <div id="encounter-stats" class="encounter-stats"></div>
+                    <!-- Pannello Difficoltà Party -->
+                    <div class="party-difficulty-panel">
+                        <div class="party-info">
+                            <span class="party-icon">👥</span>
+                            <span class="party-stats">
+                                ${partyInfo.count > 0 
+                                    ? `<strong>${partyInfo.count} PG</strong> • Livello medio <strong>${partyInfo.avgLevel}</strong>` 
+                                    : '<em>Nessun PG nella campagna</em>'}
+                            </span>
+                        </div>
+                        ${thresholds ? `
+                            <div class="thresholds-bar">
+                                <div class="threshold-segment easy" title="Facile: ${thresholds.easy} XP">
+                                    <span>Facile</span>
+                                </div>
+                                <div class="threshold-segment medium" title="Media: ${thresholds.medium} XP">
+                                    <span>Media</span>
+                                </div>
+                                <div class="threshold-segment hard" title="Difficile: ${thresholds.hard} XP">
+                                    <span>Difficile</span>
+                                </div>
+                                <div class="threshold-segment deadly" title="Mortale: ${thresholds.deadly} XP">
+                                    <span>Mortale</span>
+                                </div>
+                            </div>
+                            <div class="threshold-values">
+                                <span>${thresholds.easy}</span>
+                                <span>${thresholds.medium}</span>
+                                <span>${thresholds.hard}</span>
+                                <span>${thresholds.deadly} XP</span>
+                            </div>
+                        ` : ''}
                     </div>
-                    <ul id="selected-monsters-list" class="selected-monsters-list"></ul>
-                </div>
 
-                <div class="editor-actions">
-                    <button id="save-encounter-btn" class="action-btn success">Salva Incontro</button>
+                    <!-- Layout a due colonne per selettore e lista -->
+                    <div class="editor-columns">
+                        <!-- Colonna Selettore Creature -->
+                        <div class="creature-selector-column">
+                            <div class="selector-header">
+                                <h3>🔍 Aggiungi Creature</h3>
+                            </div>
+                            
+                            <div class="selection-mode-toggle">
+                                <button class="mode-btn ${selectionMode === 'monster' ? 'active' : ''}" data-mode="monster">
+                                    <span class="mode-icon">👹</span> Mostri
+                                </button>
+                                <button class="mode-btn ${selectionMode === 'npc' ? 'active' : ''}" data-mode="npc">
+                                    <span class="mode-icon">👤</span> PNG
+                                </button>
+                            </div>
+                            
+                            <div class="search-container">
+                                <input type="text" id="monster-search" placeholder="Cerca per nome...">
+                            </div>
+                            
+                            <div id="type-filters" class="type-filters-scrollable"></div>
+                            
+                            <div class="selection-list-container">
+                                <ul id="monster-selection-list" class="monster-selection-list"></ul>
+                            </div>
+                        </div>
+
+                        <!-- Colonna Creature Selezionate -->
+                        <div class="selected-creatures-column">
+                            <div class="panel-header-row">
+                                <h3>⚔️ Creature Selezionate</h3>
+                                <div id="encounter-stats" class="encounter-stats"></div>
+                            </div>
+                            <div class="selected-list-container">
+                                <ul id="selected-monsters-list" class="selected-monsters-list"></ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer con azioni -->
+                    <div class="editor-actions">
+                        <div class="action-hint">
+                            <span>💡 Trascina le creature per riordinarle</span>
+                        </div>
+                        <button id="save-encounter-btn" class="action-btn success">
+                            <span class="btn-icon">💾</span> Salva Incontro
+                        </button>
+                    </div>
                 </div>
             `;
 
@@ -307,22 +375,41 @@ const EncounterBuilder = {
             if (selectionMode === 'monster') {
                 const filtered = monsterDatabase.filter(m => 
                     m.name.toLowerCase().includes(search) && (activeTypeFilter === 'Tutti' || m.type === activeTypeFilter)
-                ).slice(0, 20);
+                ).slice(0, 30);
 
-                list.innerHTML = filtered.map(m => `
-                    <li class="add-creature" data-index="${m.index}" data-is-npc="false">
-                        <span class="creature-name">${m.name}</span>
-                        <span class="creature-info">CR ${m.challenge_rating} • ${(m.xp || getXpForCr(m.challenge_rating)).toLocaleString()} XP</span>
-                    </li>
-                `).join('');
+                list.innerHTML = filtered.length === 0 
+                    ? '<li class="empty-result">Nessun mostro trovato</li>'
+                    : filtered.map(m => {
+                        const cr = m.challenge_rating;
+                        const crDisplay = typeof cr === 'number' && cr < 1 ? (cr === 0.125 ? '1/8' : cr === 0.25 ? '1/4' : cr === 0.5 ? '1/2' : cr) : cr;
+                        return `
+                            <li class="add-creature creature-card" data-index="${m.index}" data-is-npc="false">
+                                <div class="creature-card-main">
+                                    <span class="creature-name">${m.name}</span>
+                                    <span class="creature-type">${getMonsterTypeItalian(m.type)}</span>
+                                </div>
+                                <div class="creature-card-stats">
+                                    <span class="creature-cr-badge">CR ${crDisplay}</span>
+                                    <span class="creature-xp">${(m.xp || getXpForCr(cr)).toLocaleString()} XP</span>
+                                </div>
+                            </li>
+                        `;
+                    }).join('');
             } else {
                 const npcs = loadNpcs().filter(n => n.name.toLowerCase().includes(search));
-                list.innerHTML = npcs.map(n => `
-                    <li class="add-creature" data-index="${n.id}" data-is-npc="true">
-                        <span class="creature-name">${n.name}</span>
-                        <span class="creature-info">PNG</span>
-                    </li>
-                `).join('');
+                list.innerHTML = npcs.length === 0 
+                    ? '<li class="empty-result">Nessun PNG trovato</li>'
+                    : npcs.map(n => `
+                        <li class="add-creature creature-card npc-card" data-index="${n.id}" data-is-npc="true">
+                            <div class="creature-card-main">
+                                <span class="creature-name">${n.name}</span>
+                                <span class="creature-type">PNG Campagna</span>
+                            </div>
+                            <div class="creature-card-stats">
+                                <span class="creature-cr-badge npc">👤</span>
+                            </div>
+                        </li>
+                    `).join('');
             }
         };
 
@@ -333,7 +420,11 @@ const EncounterBuilder = {
             if (!list) return;
 
             if (selectedMonsters.length === 0) {
-                list.innerHTML = '<li class="empty-list">Trascina qui le creature o clicca per aggiungere.</li>';
+                list.innerHTML = `
+                    <li class="empty-selection">
+                        <div class="empty-selection-icon">👆</div>
+                        <p>Clicca sulle creature per aggiungerle</p>
+                    </li>`;
                 if (statsContainer) statsContainer.innerHTML = '';
                 return;
             }
@@ -347,17 +438,20 @@ const EncounterBuilder = {
                 const name = data ? data.name : "Sconosciuto";
                 const cr = data && !sel.isNpc ? data.challenge_rating : '-';
                 const xp = sel.isNpc ? 0 : (data?.xp || getXpForCr(cr));
+                const crDisplay = typeof cr === 'number' && cr < 1 ? (cr === 0.125 ? '1/8' : cr === 0.25 ? '1/4' : cr === 0.5 ? '1/2' : cr) : cr;
                 
                 return `
                     <li data-index="${sel.index}" data-is-npc="${sel.isNpc}" data-order="${idx}" draggable="true" class="draggable-creature">
                         <span class="drag-handle" title="Trascina per riordinare">⋮⋮</span>
-                        <span class="creature-name">${name} ${sel.isNpc ? '(PNG)' : ''}</span>
-                        <span class="creature-cr">${cr !== '-' ? 'CR ' + cr : ''}</span>
+                        <div class="selected-creature-info">
+                            <span class="creature-name">${name} ${sel.isNpc ? '<small class="npc-tag">PNG</small>' : ''}</span>
+                            <span class="creature-cr">${cr !== '-' ? 'CR ' + crDisplay : ''}</span>
+                        </div>
                         <div class="quantity-controls">
-                            <button class="qty-btn minus">−</button>
+                            <button class="qty-btn minus" title="Riduci">−</button>
                             <span class="qty-val">${sel.quantity}</span>
-                            <button class="qty-btn plus">+</button>
-                            <button class="remove-btn danger">×</button>
+                            <button class="qty-btn plus" title="Aumenta">+</button>
+                            <button class="remove-btn danger" title="Rimuovi">×</button>
                         </div>
                     </li>
                 `;
@@ -377,7 +471,7 @@ const EncounterBuilder = {
                         <span class="stat-value">${totalXp.toLocaleString()}</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-label">XP Agg:</span>
+                        <span class="stat-label">Agg:</span>
                         <span class="stat-value">${adjustedXp.toLocaleString()}</span>
                     </div>
                     <div class="difficulty-badge" style="background-color: ${difficulty.color}20; border-color: ${difficulty.color}; color: ${difficulty.color}">
@@ -481,10 +575,19 @@ const EncounterBuilder = {
 
         // --- EVENT LISTENERS (DELEGATI) ---
         containerElement.addEventListener('click', (e) => {
-            // Cambio modalità Mostri/PNG
-            if (e.target.classList.contains('mode-btn')) {
-                selectionMode = e.target.dataset.mode;
-                renderEditor(currentEditingId ? encounters.find(enc => enc.id === currentEditingId) : null);
+            // Cambio modalità Mostri/PNG - FIX: non chiamare renderEditor completo
+            if (e.target.classList.contains('mode-btn') || e.target.closest('.mode-btn')) {
+                const btn = e.target.classList.contains('mode-btn') ? e.target : e.target.closest('.mode-btn');
+                selectionMode = btn.dataset.mode;
+                
+                // Aggiorna solo i pulsanti e la lista, NON resettare selectedMonsters
+                containerElement.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                activeTypeFilter = 'Tutti';
+                renderTypeFilters();
+                updateSelectionList();
+                return; // Importante: non proseguire con altri handler
             }
 
             // Filtri tipo
@@ -505,6 +608,10 @@ const EncounterBuilder = {
                 else selectedMonsters.push({ index, quantity: 1, isNpc });
                 
                 updateSelectedUI();
+                
+                // Feedback visivo
+                addLi.classList.add('added');
+                setTimeout(() => addLi.classList.remove('added'), 300);
             }
 
             // Controlli quantità
