@@ -233,6 +233,112 @@ const EncounterBuilder = {
                 `).join('');
         };
 
+        // --- RENDERING PREVIEW READ-ONLY ---
+        const renderPreview = (encounter) => {
+            if (!encounter) return;
+            
+            const allNpcs = loadNpcs();
+            const totalXp = encounter.totalXp || calculateEncounterXp(encounter.monsters);
+            const adjustedXp = encounter.adjustedXp || calculateAdjustedXp(encounter.monsters);
+            const partyInfo = getPartyInfo();
+            const thresholds = getDifficultyThresholds(partyInfo.count, partyInfo.avgLevel);
+            const difficulty = determineDifficulty(adjustedXp, thresholds);
+            const totalCreatures = encounter.monsters.reduce((sum, m) => sum + m.quantity, 0);
+            
+            editorContent.innerHTML = `
+                <div class="preview-layout">
+                    <!-- Header Preview -->
+                    <div class="preview-header">
+                        <div class="preview-title-row">
+                            <h2 class="preview-name">${encounter.name}</h2>
+                            <span class="difficulty-badge difficulty-large" style="background-color: ${difficulty.color}20; border-color: ${difficulty.color}; color: ${difficulty.color}">
+                                <span class="difficulty-icon">${difficulty.icon}</span>
+                                <span class="difficulty-text">${difficulty.level}</span>
+                            </span>
+                        </div>
+                        ${encounter.description ? `
+                            <div class="preview-description">
+                                <p>${encounter.description}</p>
+                            </div>
+                        ` : ''}
+                    </div>
+                    
+                    <!-- Statistiche XP -->
+                    <div class="preview-stats-row">
+                        <div class="preview-stat">
+                            <span class="stat-icon">👾</span>
+                            <span class="stat-number">${totalCreatures}</span>
+                            <span class="stat-label">Creature</span>
+                        </div>
+                        <div class="preview-stat">
+                            <span class="stat-icon">⭐</span>
+                            <span class="stat-number">${totalXp.toLocaleString()}</span>
+                            <span class="stat-label">XP Base</span>
+                        </div>
+                        <div class="preview-stat highlight">
+                            <span class="stat-icon">📊</span>
+                            <span class="stat-number">${adjustedXp.toLocaleString()}</span>
+                            <span class="stat-label">XP Agg.</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Lista Creature -->
+                    <div class="preview-creatures-section">
+                        <h3 class="section-title">👹 Creature nell'Incontro</h3>
+                        <ul class="preview-creatures-list">
+                            ${encounter.monsters.map(m => {
+                                const data = m.isNpc 
+                                    ? allNpcs.find(n => n.id === m.index)
+                                    : monsterDatabase.find(mon => mon.index === m.index);
+                                const name = data ? data.name : "Sconosciuto";
+                                const cr = data && !m.isNpc ? data.challenge_rating : null;
+                                const crDisplay = cr ? (typeof cr === 'number' && cr < 1 ? (cr === 0.125 ? '1/8' : cr === 0.25 ? '1/4' : cr === 0.5 ? '1/2' : cr) : cr) : null;
+                                const xp = m.isNpc ? 0 : (data?.xp || getXpForCr(cr));
+                                
+                                return `
+                                    <li class="preview-creature-item ${m.isNpc ? 'is-npc' : ''}">
+                                        <div class="creature-qty-badge">${m.quantity}</div>
+                                        <div class="creature-details">
+                                            <span class="creature-name">${name} ${m.isNpc ? '<small class="npc-tag">PNG</small>' : ''}</span>
+                                            <span class="creature-meta">
+                                                ${crDisplay ? `CR ${crDisplay}` : ''} 
+                                                ${xp > 0 ? `• ${xp.toLocaleString()} XP` : ''}
+                                            </span>
+                                        </div>
+                                    </li>
+                                `;
+                            }).join('')}
+                        </ul>
+                    </div>
+                    
+                    <!-- Azioni Preview -->
+                    <div class="preview-actions">
+                        <button id="preview-edit-btn" class="action-btn primary">
+                            <span>✏️</span> Modifica
+                        </button>
+                        <button id="preview-import-btn" class="action-btn success">
+                            <span>▶️</span> Importa nel Combat Tracker
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Event listeners per i pulsanti della preview
+            const editBtn = editorContent.querySelector('#preview-edit-btn');
+            const importBtn = editorContent.querySelector('#preview-import-btn');
+            
+            if (editBtn) {
+                editBtn.addEventListener('click', () => renderEditor(encounter));
+            }
+            
+            if (importBtn) {
+                importBtn.addEventListener('click', () => {
+                    importEncounter(encounter);
+                    showToast("Inviato al Combat Tracker!", "success");
+                });
+            }
+        };
+
         // --- RENDERING EDITOR ---
         const renderEditor = (encounter = null, preserveMonsters = false) => {
             currentEditingId = encounter ? encounter.id : null;
@@ -661,6 +767,13 @@ const EncounterBuilder = {
                 const id = listLi.dataset.id;
                 const enc = encounters.find(e => e.id === id);
 
+                // Click sul corpo dell'item → Preview
+                if (e.target.closest('.encounter-item-info')) {
+                    if (enc) renderPreview(enc);
+                    return;
+                }
+
+                // Click sui pulsanti → Azioni specifiche
                 if (e.target.classList.contains('edit-encounter-btn')) renderEditor(enc);
                 
                 if (e.target.classList.contains('duplicate-encounter-btn') && enc) {
