@@ -474,7 +474,7 @@ const EncounterBuilder = {
                 const isFilterAll = activeTypeFilter.toLowerCase() === 'tutti';
                 const filtered = monsterDatabase.filter(m => 
                     m.name.toLowerCase().includes(search) && (isFilterAll || m.type === activeTypeFilter)
-                ).slice(0, 30);
+                );
 
                 list.innerHTML = filtered.length === 0 
                     ? '<li class="empty-result">Nessun mostro trovato</li>'
