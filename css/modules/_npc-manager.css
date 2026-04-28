@@ -263,31 +263,55 @@
     background: rgba(239, 68, 68, 0.25);
 }
 
-/* Pulsante nuovo PNG */
-.npc-new-btn {
+/* Pulsanti sidebar (Nuovo + Quick Builder) */
+.npc-sidebar-buttons {
+    display: flex;
+    gap: 0.4rem;
     width: 100%;
-    padding: 12px;
-    margin-top: auto;
+}
+
+.npc-new-btn {
+    flex: 1;
+    padding: 0.4rem 0.5rem;
     background: linear-gradient(135deg, var(--npc-accent, #f0ad4e) 0%, #c89f60 100%);
     border: none;
-    border-radius: 8px;
+    border-radius: 4px;
     color: #1a1a1a;
-    font-weight: 700;
+    font-weight: 600;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
     transition: all 0.25s ease;
-    box-shadow: 0 4px 12px rgba(240, 173, 78, 0.3);
+    text-align: center;
+    font-family: 'Cinzel', serif;
 }
 
 .npc-new-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(240, 173, 78, 0.4);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(240, 173, 78, 0.4);
 }
 
-.npc-new-btn:active {
-    transform: translateY(0);
+.npc-quickbuilder-btn {
+    flex: 1;
+    padding: 0.4rem 0.5rem;
+    background: linear-gradient(135deg, #9b59b6 0%, #6c3483 100%);
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.25s ease;
+    text-align: center;
+    font-family: 'Cinzel', serif;
+}
+
+.npc-quickbuilder-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(155, 89, 182, 0.4);
 }
 
 /* ═══════════════════════════════════════════════════════════════

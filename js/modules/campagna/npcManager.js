@@ -873,20 +873,23 @@ ${this.getStyles()}
 
 .npc-sidebar-buttons {
     display: flex;
-    gap: 0.3rem;
+    gap: 0.4rem;
+    width: 100%;
 }
 
 .npc-new-btn {
-    padding: 0.25rem 0.6rem;
+    flex: 1;
+    padding: 0.4rem 0.5rem;
     background: linear-gradient(135deg, var(--accent-color, #d4af37) 0%, #8b6914 100%);
     border: none;
-    border-radius: 3px;
+    border-radius: 4px;
     color: #fff;
     font-family: 'Cinzel', serif;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
-    flex-shrink: 0;
+    text-align: center;
 }
 
 .npc-new-btn:hover {
@@ -895,16 +898,18 @@ ${this.getStyles()}
 }
 
 .npc-quickbuilder-btn {
-    padding: 0.25rem 0.6rem;
+    flex: 1;
+    padding: 0.4rem 0.5rem;
     background: linear-gradient(135deg, #9b59b6 0%, #6c3483 100%);
     border: none;
-    border-radius: 3px;
+    border-radius: 4px;
     color: #fff;
     font-family: 'Cinzel', serif;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
-    flex-shrink: 0;
+    text-align: center;
 }
 
 .npc-quickbuilder-btn:hover {
