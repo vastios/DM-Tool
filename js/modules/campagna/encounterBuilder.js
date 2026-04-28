@@ -68,7 +68,6 @@ function loadNpcs() {
 
 // --- FUNZIONI CALCOLO DIFFICOLTÀ ---
 function getXpForCr(cr) {
-    // Il database ha già xp, ma fallback alla tabella
     return CR_TO_XP[cr] || 0;
 }
 
@@ -126,7 +125,6 @@ function calculateAdjustedXp(creatures) {
     let totalXp = calculateEncounterXp(creatures);
     const creatureCount = creatures.reduce((sum, c) => sum + c.quantity, 0);
     
-    // Moltiplicatore per numero creature
     let multiplier = 1;
     if (creatureCount === 2) multiplier = 1.5;
     else if (creatureCount >= 3 && creatureCount <= 6) multiplier = 2;
@@ -141,10 +139,11 @@ const EncounterBuilder = {
     render(containerElement) {
         let encounters = loadEncounters();
         let currentEditingId = null;
-        let selectionMode = 'monster'; // 'monster' o 'npc'
+        let selectionMode = 'monster';
         let activeTypeFilter = 'Tutti';
-        let selectedMonsters = []; // Stato temporaneo dell'editor
-        let draggedItem = null; // Per drag & drop
+        let selectedMonsters = [];
+        let draggedItem = null;
+        let pendingDeleteId = null;
 
         // --- RENDERING STRUTTURA PRINCIPALE ---
         containerElement.innerHTML = `
@@ -187,8 +186,7 @@ const EncounterBuilder = {
         const modalConfirmBtn = containerElement.querySelector('#modal-confirm-btn');
         const modalText = containerElement.querySelector('#delete-modal-text');
 
-        // --- LOGICA DI RENDERING ---
-
+        // --- RENDERING LISTA INCONTRI ---
         const renderEncounterList = () => {
             encounters = loadEncounters();
             savedList.innerHTML = encounters.length === 0 
@@ -209,6 +207,7 @@ const EncounterBuilder = {
                 `).join('');
         };
 
+        // --- RENDERING EDITOR ---
         const renderEditor = (encounter = null) => {
             currentEditingId = encounter ? encounter.id : null;
             selectedMonsters = encounter ? [...encounter.monsters] : [];
@@ -224,7 +223,7 @@ const EncounterBuilder = {
                     </div>
                     <div class="form-group">
                         <label>Descrizione:</label>
-                        <textarea id="encounter-desc-input" placeholder="Descrizione opzionale dell'incontro...">${encounter ? encounter.description : ''}</textarea>
+                        <textarea id="encounter-desc-input" placeholder="Descrizione opzionale...">${encounter ? encounter.description : ''}</textarea>
                     </div>
                 </div>
 
@@ -240,16 +239,16 @@ const EncounterBuilder = {
                     </div>
                     ${thresholds ? `
                         <div class="thresholds-bar">
-                            <div class="threshold-segment easy" style="flex: ${thresholds.easy}">
+                            <div class="threshold-segment easy" title="Facile: ${thresholds.easy} XP">
                                 <span>Facile</span>
                             </div>
-                            <div class="threshold-segment medium" style="flex: ${thresholds.medium - thresholds.easy}">
+                            <div class="threshold-segment medium" title="Media: ${thresholds.medium} XP">
                                 <span>Media</span>
                             </div>
-                            <div class="threshold-segment hard" style="flex: ${thresholds.hard - thresholds.medium}">
+                            <div class="threshold-segment hard" title="Difficile: ${thresholds.hard} XP">
                                 <span>Difficile</span>
                             </div>
-                            <div class="threshold-segment deadly" style="flex: ${thresholds.deadly - thresholds.hard}">
+                            <div class="threshold-segment deadly" title="Mortale: ${thresholds.deadly} XP">
                                 <span>Mortale</span>
                             </div>
                         </div>
@@ -272,7 +271,7 @@ const EncounterBuilder = {
                         <h3>Creature Selezionate</h3>
                         <div id="encounter-stats" class="encounter-stats"></div>
                     </div>
-                    <ul id="selected-monsters-list" class="selected-monsters-list" data-droppable="true"></ul>
+                    <ul id="selected-monsters-list" class="selected-monsters-list"></ul>
                 </div>
 
                 <div class="editor-actions">
@@ -285,6 +284,7 @@ const EncounterBuilder = {
             updateSelectedUI();
         };
 
+        // --- RENDERING FILTRI TIPO ---
         const renderTypeFilters = () => {
             const filterContainer = containerElement.querySelector('#type-filters');
             if (!filterContainer || selectionMode === 'npc') {
@@ -297,6 +297,7 @@ const EncounterBuilder = {
             `).join('');
         };
 
+        // --- AGGIORNAMENTO LISTA SELEZIONE ---
         const updateSelectionList = () => {
             const list = containerElement.querySelector('#monster-selection-list');
             const searchInput = containerElement.querySelector('#monster-search');
@@ -306,12 +307,12 @@ const EncounterBuilder = {
             if (selectionMode === 'monster') {
                 const filtered = monsterDatabase.filter(m => 
                     m.name.toLowerCase().includes(search) && (activeTypeFilter === 'Tutti' || m.type === activeTypeFilter)
-                ).slice(0, 20); // Limite per performance
+                ).slice(0, 20);
 
                 list.innerHTML = filtered.map(m => `
                     <li class="add-creature" data-index="${m.index}" data-is-npc="false">
                         <span class="creature-name">${m.name}</span>
-                        <span class="creature-info">CR ${m.challenge_rating} • ${m.xp || getXpForCr(m.challenge_rating)} XP</span>
+                        <span class="creature-info">CR ${m.challenge_rating} • ${(m.xp || getXpForCr(m.challenge_rating)).toLocaleString()} XP</span>
                     </li>
                 `).join('');
             } else {
@@ -325,6 +326,7 @@ const EncounterBuilder = {
             }
         };
 
+        // --- AGGIORNAMENTO LISTA SELEZIONATI ---
         const updateSelectedUI = () => {
             const list = containerElement.querySelector('#selected-monsters-list');
             const statsContainer = containerElement.querySelector('#encounter-stats');
@@ -371,11 +373,11 @@ const EncounterBuilder = {
                 
                 statsContainer.innerHTML = `
                     <div class="stat-item">
-                        <span class="stat-label">XP Totali:</span>
+                        <span class="stat-label">XP:</span>
                         <span class="stat-value">${totalXp.toLocaleString()}</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-label">XP Aggiustati:</span>
+                        <span class="stat-label">XP Agg:</span>
                         <span class="stat-value">${adjustedXp.toLocaleString()}</span>
                     </div>
                     <div class="difficulty-badge" style="background-color: ${difficulty.color}20; border-color: ${difficulty.color}; color: ${difficulty.color}">
@@ -385,7 +387,6 @@ const EncounterBuilder = {
                 `;
             }
 
-            // Aggiungi event listeners per drag & drop
             initDragAndDrop();
         };
 
@@ -444,7 +445,6 @@ const EncounterBuilder = {
             const fromIndex = parseInt(draggedItem.dataset.order);
             const toIndex = parseInt(target.dataset.order);
 
-            // Riordina l'array
             const [moved] = selectedMonsters.splice(fromIndex, 1);
             selectedMonsters.splice(toIndex, 0, moved);
 
@@ -453,8 +453,6 @@ const EncounterBuilder = {
         };
 
         // --- MODAL DI CONFERMA ---
-        let pendingDeleteId = null;
-
         const showDeleteModal = (encounterName) => {
             modalText.textContent = `Sei sicuro di voler eliminare "${encounterName}"?`;
             deleteModal.style.display = 'flex';
@@ -482,7 +480,6 @@ const EncounterBuilder = {
         });
 
         // --- EVENT LISTENERS (DELEGATI) ---
-
         containerElement.addEventListener('click', (e) => {
             // Cambio modalità Mostri/PNG
             if (e.target.classList.contains('mode-btn')) {

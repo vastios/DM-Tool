@@ -328,6 +328,12 @@
     font-family: 'Lora', serif;
 }
 
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #555;
+    font-style: italic;
+}
+
 .monster-selector-panel,
 .selected-monsters-panel {
     background-color: rgba(0,0,0,0.2);
@@ -380,10 +386,18 @@
     padding: 8px 12px;
     border-bottom: 1px solid #444;
     color: #f0e6d2;
+    gap: 0.5rem;
 }
 
 .selected-monsters-list li:last-child {
     border-bottom: none;
+}
+
+.selected-monsters-list .creature-name {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .quantity-controls {
@@ -576,6 +590,7 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
     min-width: 0;
+    flex: 1;
 }
 
 .threshold-segment.easy {
@@ -818,25 +833,6 @@
 
 .duplicate-encounter-btn:hover {
     background-color: rgba(59, 130, 246, 0.25) !important;
-}
-
-/* --- Placeholder input migliorato --- */
-.form-group input::placeholder,
-.form-group textarea::placeholder {
-    color: #555;
-    font-style: italic;
-}
-
-/* --- Miglioramenti lista creature --- */
-.selected-monsters-list li {
-    gap: 0.5rem;
-}
-
-.selected-monsters-list .creature-name {
-    flex: 1;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 /* --- Responsive adjustments --- */
