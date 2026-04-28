@@ -1006,11 +1006,13 @@ ${this.getStyles()}
 /* Area principale - Card style (uniformato a PG Manager) */
 .npc-main {
     flex: 1;
-    overflow-y: auto;
+    overflow: hidden;
     padding: 0;
     background: var(--card-bg, #2a2a2a);
     border: 1px solid var(--border-color, #444);
     border-radius: 8px;
+    min-width: 0;
+    min-height: 0;
 }
 
 .npc-empty-state {
@@ -1036,6 +1038,9 @@ ${this.getStyles()}
     height: 100%;
     overflow: hidden;
     padding: 12px;
+    box-sizing: border-box;
+    min-width: 0;
+    min-height: 0;
 }
 
 /* Flip card - strutturata come PG Manager */
@@ -1045,6 +1050,7 @@ ${this.getStyles()}
     cursor: pointer;
     height: 100%;
     min-height: 0;
+    min-width: 0;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -1058,6 +1064,7 @@ ${this.getStyles()}
     width: 100%;
     flex: 1;
     min-height: 0;
+    min-width: 0;
     transition: transform 0.6s;
     transform-style: preserve-3d;
 }

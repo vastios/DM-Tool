@@ -320,10 +320,12 @@
 
 .npc-main {
     flex: 1;
-    overflow-y: auto;
+    overflow: hidden;
     padding: 0;
     background: transparent;
     border: none;
+    min-width: 0;
+    min-height: 0;
 }
 
 /* Card container */
@@ -331,8 +333,10 @@
     flex: 1;
     perspective: 1200px;
     min-width: 0;
+    min-height: 0;
     height: 100%;
     cursor: pointer;
+    overflow: hidden;
 }
 
 /* Flip card - struttura con wrapper inner come PG Manager */
@@ -342,6 +346,9 @@
     cursor: pointer;
     display: flex;
     flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
 }
 
 .npc-flip-card-inner {
@@ -349,6 +356,7 @@
     width: 100%;
     flex: 1;
     min-height: 0;
+    min-width: 0;
     transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     transform-style: preserve-3d;
 }
