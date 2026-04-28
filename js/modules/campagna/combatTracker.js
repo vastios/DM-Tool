@@ -988,9 +988,7 @@ const CombatTracker = {
         
         const resultText = success ? '✅ Riuscito' : '❌ Fallito';
         
-        this.addCombatLogEntry({
-            type: 'saving_throw',
-            round: this.currentRound,
+        this.logEvent('saving_throw', {
             attackerId: data.attackerId,
             targetId: data.targetId,
             attackName: data.attackName,
@@ -1031,9 +1029,7 @@ const CombatTracker = {
             showToast(`${effect.condition} applicato!`, 'warning');
             
             // Log
-            this.addCombatLogEntry({
-                type: 'condition_applied',
-                round: this.currentRound,
+            this.logEvent('condition_applied', {
                 targetId: data.targetId,
                 conditionName: effect.condition
             });
