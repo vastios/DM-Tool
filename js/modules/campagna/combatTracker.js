@@ -2805,6 +2805,35 @@ const CombatTracker = {
             const targetLabelHtml = target ? ` → <strong>${target.customName || target.name}</strong>` : 
                 (targetId === 'free' ? ' → Bersaglio Libero' : '');
             
+            // Analizza se l'attacco ha un effetto speciale
+            const specialEffect = this.parseSpecialEffect(attackData);
+            let specialEffectBtn = '';
+            if (specialEffect && target && isHit && !isFumble) {
+                const effectData = JSON.stringify({
+                    targetId: target.id,
+                    attackerId: attacker.id,
+                    attackName: attackData.name,
+                    effect: specialEffect
+                }).replace(/"/g, '&quot;');
+                specialEffectBtn = `
+                    <button class="trigger-saving-throw-btn" 
+                            data-effect-data="${effectData}"
+                            style="
+                                margin-top: 6px;
+                                margin-left: 4px;
+                                padding: 4px 10px;
+                                background: #9c27b0;
+                                border: none;
+                                border-radius: 4px;
+                                color: white;
+                                cursor: pointer;
+                                font-size: 0.8rem;
+                            ">
+                        🛡️ Tiro Salvezza (CD ${specialEffect.dc})
+                    </button>
+                `;
+            }
+            
             let resultHtml = `
                 <div class="attack-result ${isHit ? 'hit' : 'miss'}" style="
                     padding: 8px 12px;
@@ -2835,6 +2864,7 @@ const CombatTracker = {
                             💾 Applica ${damageTotal} danni
                         </button>
                     ` : ''}
+                    ${specialEffectBtn}
                 </div>
             `;
             
