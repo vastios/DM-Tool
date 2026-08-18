@@ -213,7 +213,7 @@ function generateNpcsPopupContent(searchTerm = '') {
     `;
 }
 
-function generateMonstersPopupContent(searchTerm = '', typeFilter = 'Tutti') {
+function generateMonstersPopupContent(searchTerm = '', typeFilter = 'Tutti', limit = 30) {
     const types = ['Tutti', ...new Set(monsterDatabase.map(m => m.type))].sort();
     
     let filtered = monsterDatabase;
@@ -225,11 +225,14 @@ function generateMonstersPopupContent(searchTerm = '', typeFilter = 'Tutti') {
         filtered = filtered.filter(m => m.type === typeFilter);
     }
     
-    filtered = filtered.slice(0, 30);
+    const totalCount = filtered.length;
+    const visibleCount = Math.min(limit, totalCount);
+    const visible = filtered.slice(0, visibleCount);
+    const hasMore = totalCount > visibleCount;
     
     return `
         <div class="popup-header">
-            <span>👹 Mostri dal Compendio</span>
+            <span>👹 Mostri dal Compendio (${totalCount})</span>
         </div>
         <div class="popup-search">
             <input type="text" class="popup-search-input" placeholder="Cerca mostro..." value="${searchTerm}">
@@ -238,7 +241,7 @@ function generateMonstersPopupContent(searchTerm = '', typeFilter = 'Tutti') {
             ${types.map(t => `<button class="popup-filter-btn ${t === typeFilter ? 'active' : ''}" data-type="${t}">${t}</button>`).join('')}
         </div>
         <div class="popup-list">
-            ${filtered.map(monster => `
+            ${visible.map(monster => `
                 <div class="popup-item" data-type="monster" data-index="${monster.index}">
                     <div class="popup-item-info">
                         <span class="popup-item-name">${monster.name}</span>
@@ -251,8 +254,23 @@ function generateMonstersPopupContent(searchTerm = '', typeFilter = 'Tutti') {
                     <button class="btn-add-source" data-type="monster" data-index="${monster.index}">➕</button>
                 </div>
             `).join('')}
-            ${filtered.length === 0 ? '<p class="popup-no-results">Nessun mostro trovato</p>' : ''}
-            ${filtered.length === 30 ? '<p class="popup-limited">Mostrati primi 30 risultati</p>' : ''}
+            ${visible.length === 0 ? '<p class="popup-no-results">Nessun mostro trovato</p>' : ''}
+            ${hasMore ? `
+                <button class="popup-show-more-btn" data-current-limit="${visibleCount}" style="
+                    display: block;
+                    width: 100%;
+                    padding: 8px;
+                    margin-top: 8px;
+                    background: rgba(33, 150, 243, 0.2);
+                    color: #64b5f6;
+                    border: 1px solid #2196f3;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    font-size: 0.85rem;
+                ">
+                    📥 Mostra altri (${totalCount - visibleCount} rimanenti)
+                </button>
+            ` : ''}
         </div>
     `;
 }
@@ -292,6 +310,7 @@ const CombatTracker = {
     initiativeOrder: [],
     activeTab: 'attacks', // Tab attivo: 'attacks' o 'spells'
     tabPreferences: {}, // Preferenze tab per combattente { combatantId: 'attacks'|'spells' }
+    monsterPopupLimit: 30, // Limite dinamico per paginazione mostri nel popup
     
     // Combat Log System
     combatLog: [],
@@ -617,6 +636,10 @@ const CombatTracker = {
         this.currentPopup = source;
         this.popupSearchTerm = '';
         this.popupTypeFilter = 'Tutti';
+        this.monsterPopupLimit = 30; // Reset paginazione mostri quando si apre il popup
+        
+        // Ricarica le fonti per avere dati aggiornati (NPC, incontri creati dopo l'apertura del modulo)
+        loadAllSources();
         
         const overlay = this.container.querySelector('#source-popup-overlay');
         const content = this.container.querySelector('#popup-content');
@@ -1253,7 +1276,7 @@ const CombatTracker = {
         switch (source) {
             case 'pcs': return generatePcsPopupContent();
             case 'npcs': return generateNpcsPopupContent(this.popupSearchTerm);
-            case 'monsters': return generateMonstersPopupContent(this.popupSearchTerm, this.popupTypeFilter);
+            case 'monsters': return generateMonstersPopupContent(this.popupSearchTerm, this.popupTypeFilter, this.monsterPopupLimit);
             case 'encounters': return generateEncountersPopupContent();
             default: return '';
         }
@@ -1265,15 +1288,15 @@ const CombatTracker = {
             if (content) {
                 // Salva il focus corrente e la posizione del cursore
                 const activeInput = content.querySelector('.popup-search-input');
-                const searchTerm = activeInput?.value || '';
+                const wasFocused = document.activeElement === activeInput;
                 const cursorPos = activeInput?.selectionStart || 0;
                 
                 // Aggiorna il contenuto
                 content.innerHTML = this.getPopupContent(this.currentPopup);
                 
-                // Ripristina il focus e la posizione del cursore
+                // Ripristina il focus e la posizione del cursore (anche se l'input è vuoto)
                 const newInput = content.querySelector('.popup-search-input');
-                if (newInput && searchTerm) {
+                if (newInput && wasFocused) {
                     newInput.focus();
                     newInput.setSelectionRange(cursorPos, cursorPos);
                 }
@@ -1321,6 +1344,14 @@ const CombatTracker = {
         // Type filter
         if (target.classList.contains('popup-filter-btn')) {
             this.popupTypeFilter = target.dataset.type;
+            this.monsterPopupLimit = 30; // Reset paginazione quando si cambia filtro
+            this.refreshPopup();
+            return;
+        }
+        
+        // Show more button (paginazione mostri)
+        if (target.classList.contains('popup-show-more-btn')) {
+            this.monsterPopupLimit += 30;
             this.refreshPopup();
             return;
         }
@@ -1328,8 +1359,19 @@ const CombatTracker = {
 
     handlePopupInput(e) {
         if (e.target.classList.contains('popup-search-input')) {
-            this.popupSearchTerm = e.target.value;
-            this.refreshPopup();
+            const newValue = e.target.value;
+            // Reset paginazione quando il search term cambia significativamente
+            if (this.popupSearchTerm && newValue.length < this.popupSearchTerm.length) {
+                this.monsterPopupLimit = 30;
+            } else if (!this.popupSearchTerm && newValue) {
+                this.monsterPopupLimit = 30;
+            }
+            this.popupSearchTerm = newValue;
+            // Debounce 250ms per evitare re-render eccessivi durante la digitazione
+            clearTimeout(this._popupSearchDebounce);
+            this._popupSearchDebounce = setTimeout(() => {
+                this.refreshPopup();
+            }, 250);
         }
     },
 
@@ -3153,14 +3195,21 @@ const CombatTracker = {
         const id = e.target.dataset.id;
         if (!id) return;
         
-        // Name input - update on every keystroke for responsiveness
+        // Name input - debounce 300ms per evitare re-render eccessivi durante la digitazione
         if (e.target.classList.contains('combatant-name-input')) {
             const combatantId = parseFloat(id);
             const newName = e.target.value;
-            // Salva la posizione del cursore prima dell'aggiornamento
-            this._nameInputCursorPos = e.target.selectionStart;
+            const cursorPos = e.target.selectionStart;
+            
+            // Salva la posizione del cursore per il ripristino dopo re-render
+            this._nameInputCursorPos = cursorPos;
             this._nameInputFocused = true;
-            updateMonsterProperty(combatantId, 'customName', newName);
+            
+            // Debounce: aggiorna lo stato solo dopo 300ms di inattività
+            clearTimeout(this._nameDebounce);
+            this._nameDebounce = setTimeout(() => {
+                updateMonsterProperty(combatantId, 'customName', newName);
+            }, 300);
         }
     },
 
@@ -3219,7 +3268,9 @@ const CombatTracker = {
     // --- STATE CHANGE HANDLER ---
 
     onStateChange(combatants, currentRound, currentTurnMonsterId, initiativeOrder) {
-        loadAllSources();
+        // NOTA: loadAllSources() NON viene chiamato qui per evitare letture
+        // sincrone da localStorage ad ogni state change (HP, nome, condizioni, ecc.).
+        // Le fonti vengono caricate all'apertura del modulo e ad ogni apertura del popup.
         
         // Log round_start quando il round cambia (escluso round 0 = non iniziato)
         if (currentRound > previousRound && currentRound > 0) {
