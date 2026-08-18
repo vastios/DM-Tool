@@ -49,6 +49,7 @@ import {
     setRound
 } from '../../../stateManager.js';
 import { monsterDatabase } from '../../../database/monsterDatabase.js';
+import { spellDatabase } from '../../../database/spells.js';
 import { conditionsDatabase } from '../../../database/conditions.js';
 import { rollDice } from '../../../utils/dice.js';
 import { showToast } from '../../../utils/toast.js';
@@ -993,12 +994,14 @@ const CombatTracker = {
         if (e.target.id === 'save-success-btn') {
             // Salvezza riuscita
             this.logSavingThrow(data, true);
+            // Applica comunque effetti parziali (es. danno dimezzato per success_type 'half')
+            this.applySpecialEffect({ ...data, success: true });
             showToast(`Tiro salvezza riuscito!`, 'success');
             this.closeSavingThrowPopup();
         } else if (e.target.id === 'save-fail-btn') {
-            // Salvezza fallita - applica condizione
+            // Salvezza fallita - applica condizione e danno completo
             this.logSavingThrow(data, false);
-            this.applySpecialEffect(data);
+            this.applySpecialEffect({ ...data, success: false });
             this.closeSavingThrowPopup();
         }
     },
@@ -1048,8 +1051,70 @@ const CombatTracker = {
         
         const effect = data.effect;
         
-        // Applica la condizione se specificata
-        if (effect.condition) {
+        // Applica il danno se specificato (con gestione success_type)
+        // Il popup tiro salvezza ha già determinato se successo o fallimento
+        // Qui applichiamo il danno in base al risultato passato in data.success
+        if (effect.damage && effect.damage.length > 0) {
+            let totalDamage = 0;
+            let damageTypes = [];
+            effect.damage.forEach(d => {
+                if (d.dice) {
+                    const dmgResult = rollDice(d.dice);
+                    const dmgValue = dmgResult.total || dmgResult;
+                    totalDamage += dmgValue;
+                    damageTypes.push(`${dmgValue} ${d.type}`);
+                }
+            });
+            
+            // Se la salvezza è riuscita e success_type è 'half', dimezza il danno
+            if (data.success === true && effect.successType === 'half') {
+                totalDamage = Math.floor(totalDamage / 2);
+                damageTypes = damageTypes.map(d => `(metà) ${d}`);
+            }
+            
+            // Se la salvezza è riuscita e success_type è 'none', nessun danno
+            if (data.success === true && effect.successType === 'none') {
+                totalDamage = 0;
+            }
+            
+            if (totalDamage > 0) {
+                // Applica il danno al bersaglio
+                const combatants = getCombatState();
+                const target = combatants.find(c => c.id === data.targetId);
+                if (target) {
+                    const oldHp = target.currentHp || 0;
+                    const newHp = Math.max(0, oldHp - totalDamage);
+                    updateMonsterProperty(data.targetId, 'currentHp', newHp);
+                    this.logEvent('damage', {
+                        attackerId: data.attackerId,
+                        targetId: data.targetId,
+                        damage: totalDamage,
+                        damageType: damageTypes[0]?.split(' ')[1] || 'physical'
+                    });
+                    
+                    // Mostra nel results box
+                    const resultsBox = this.container.querySelector('.results-box-mini');
+                    if (resultsBox) {
+                        const targetName = target.customName || target.name;
+                        const dmgHtml = `
+                            <div class="spell-damage-result" style="
+                                padding: 6px 10px;
+                                margin: 4px 0;
+                                background: rgba(244, 67, 54, 0.15);
+                                border-left: 3px solid #f44336;
+                                border-radius: 4px;
+                            ">
+                                💥 <strong>${data.attackName}</strong> → ${targetName}: ${totalDamage} danni (${damageTypes.join(' + ')})
+                            </div>
+                        `;
+                        resultsBox.innerHTML = dmgHtml + resultsBox.innerHTML;
+                    }
+                }
+            }
+        }
+        
+        // Applica la condizione se specificata (solo se salvezza fallita)
+        if (effect.condition && data.success !== true) {
             const duration = effect.duration || 0;
             addConditionToCombatant(data.targetId, effect.condition, duration);
             showToast(`${effect.condition} applicato!`, 'warning');
@@ -1062,7 +1127,7 @@ const CombatTracker = {
         }
         
         // Gestisci effetti speciali multi-step (come la Cockatrice)
-        if (effect.followUpSave) {
+        if (effect.followUpSave && data.success !== true) {
             // Memorizza che il bersaglio deve fare un altro tiro salvezza
             const combatants = getCombatState();
             const target = combatants.find(c => c.id === data.targetId);
@@ -1077,6 +1142,16 @@ const CombatTracker = {
                 updateMonsterProperty(data.targetId, 'pendingSaves', pendingSaves);
                 showToast(`${target.customName || target.name} deve ripetere il tiro salvezza al prossimo turno!`, 'info');
             }
+        }
+        
+        // Gestisci concentrazione per incantesimi
+        if (effect.concentration && data.attackerId) {
+            // Imposta la concentrazione sul combatant che ha lanciato l'incantesimo
+            setConcentration(data.attackerId, {
+                spellName: data.attackName,
+                duration: effect.duration || 10,
+                targetId: data.targetId
+            });
         }
     },
     
@@ -1107,10 +1182,55 @@ const CombatTracker = {
             duration: 0,
             followUpSave: null,
             damage: null,
-            successType: null
+            successType: null,
+            area: null,
+            targetType: null,
+            targetCount: 1,
+            concentration: false
         };
         
-        // --- 1. PRIORITÀ: dati strutturati (mostri con dc esplicito) ---
+        // --- 0. PRIORITÀ MASSIMA: metadati strutturati di spells.js ---
+        // Se actionData è un incantesimo con metadati strutturati (arricchito Fase B), usali direttamente
+        if (actionData.save) {
+            effect.saveType = this.normalizeSaveType(actionData.save.type) || actionData.save.type;
+            effect.successType = actionData.save.success_type || 'other';
+            // CD dinamica dal combatant (per incantesimi, CD = 8 + PB + abilityMod)
+            if (attacker?.spellState?.dc) {
+                effect.dc = attacker.spellState.dc;
+            }
+        }
+        if (actionData.damage && Array.isArray(actionData.damage)) {
+            effect.damage = actionData.damage.map(d => ({
+                dice: d.dice || d.damage_dice || null,
+                type: d.type || d.damage_type?.name || 'danni'
+            }));
+        }
+        if (actionData.condition) {
+            effect.condition = actionData.condition.name;
+            effect.duration = actionData.condition.duration || 0;
+            if (actionData.condition.repeat_save === 'end_of_turn') {
+                // Imposta followUpSave per ripetere il tiro al turno successivo
+                effect.followUpSave = {
+                    dc: effect.dc,
+                    saveType: effect.saveType,
+                    condition: effect.condition,
+                    duration: effect.duration || 24,
+                    description: 'Deve ripetere il tiro salvezza alla fine del turno'
+                };
+            }
+        }
+        if (actionData.target) {
+            effect.targetType = actionData.target.type;
+            effect.targetCount = actionData.target.count || 1;
+        }
+        if (actionData.area) {
+            effect.area = actionData.area;
+        }
+        if (actionData.concentration) {
+            effect.concentration = true;
+        }
+        
+        // --- 1. Dati strutturati del mostro (dc.dc_type, dc.dc_value, success_type) ---
         if (actionData.dc) {
             if (actionData.dc.dc_value) {
                 effect.dc = actionData.dc.dc_value;
@@ -1235,6 +1355,7 @@ const CombatTracker = {
                 const parts = [];
                 if (effect.condition) parts.push(`Se fallisce: ${effect.condition}`);
                 if (effect.damage) parts.push(`Danno: ${effect.damage.map(d => `${d.dice} ${d.type}`).join(' + ')}`);
+                if (effect.area) parts.push(`Area: ${effect.area.shape} ${effect.area.radius || effect.area.length}m`);
                 effect.description = parts.join(' | ') || 'Effetto speciale';
             }
             return effect;
@@ -1244,6 +1365,19 @@ const CombatTracker = {
         if (effect.damage && effect.damage.length > 0) {
             effect.description = `Danno: ${effect.damage.map(d => `${d.dice} ${d.type}`).join(' + ')}`;
             return effect;
+        }
+        
+        // --- 7. Se abbiamo solo condizione (incantesimi di solo condition senza CD strutturata) ---
+        // Ad esempio: incantesimi con condition estratta dal testo ma CD dinamica non ancora calcolata
+        if (effect.condition && !effect.dc && attacker?.spellState?.dc) {
+            effect.dc = attacker.spellState.dc;
+            if (!effect.saveType && attacker.spellState.ability) {
+                effect.saveType = this.abilityToSaveType(attacker.spellState.ability);
+            }
+            if (effect.saveType) {
+                effect.description = `Se fallisce: ${effect.condition}`;
+                return effect;
+            }
         }
         
         return null;
@@ -2573,10 +2707,40 @@ const CombatTracker = {
             });
             
             showToast(`✨ ${result.message}`, 'success');
+            
+            // Cerca i metadati completi dell'incantesimo nel database
+            const fullSpell = spellDatabase[spellData.name] || spellData;
+            
+            // Estrai effetto speciale usando la funzione unificata
+            const specialEffect = this.extractEffectFromAction(fullSpell, combatant);
+            
+            // Verifica bersaglio
+            const card = this.container.querySelector(`.combatant-card[data-id="${combatantId}"]`);
+            const targetSelect = card?.querySelector('.target-select');
+            const targetId = targetSelect?.value;
+            const target = targetId && targetId !== 'free' ? 
+                combatants.find(c => c.id === parseFloat(targetId)) : null;
+            
             // Log nel results box
             if (combatant) {
                 const resultsBox = this.container.querySelector('.results-box-mini');
                 if (resultsBox) {
+                    // Pulsante tiro salvezza se applicabile
+                    let specialEffectBtn = this.renderSpecialEffectButton(specialEffect, target, combatant, spellData.name);
+                    
+                    // Mostra info area/concentrazione se presenti
+                    let extraInfo = '';
+                    if (fullSpell.area) {
+                        const dim = fullSpell.area.radius || fullSpell.area.length;
+                        extraInfo += `<br><small style="color: var(--text-muted);">📍 Area: ${fullSpell.area.shape} ${dim}m</small>`;
+                    }
+                    if (fullSpell.concentration) {
+                        extraInfo += `<br><small style="color: var(--text-muted);">🔮 Richiede concentrazione</small>`;
+                    }
+                    if (fullSpell.target?.type === 'self') {
+                        extraInfo += `<br><small style="color: var(--text-muted);">🎯 Bersaglio: sé stesso</small>`;
+                    }
+                    
                     const spellHtml = `
                         <div class="spell-cast-result" style="
                             padding: 6px 10px;
@@ -2587,6 +2751,8 @@ const CombatTracker = {
                         ">
                             🔮 <strong>${spellData.name}</strong> lanciato!
                             <small style="color: var(--text-muted);">${result.message.includes('rimanenti') ? result.message.split('(')[1]?.replace(')', '') : ''}</small>
+                            ${extraInfo}
+                            ${specialEffectBtn}
                         </div>
                     `;
                     resultsBox.innerHTML = spellHtml + resultsBox.innerHTML;
