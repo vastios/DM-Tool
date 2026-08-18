@@ -1292,13 +1292,13 @@ const CombatTracker = {
         if (addBtn) {
             const type = addBtn.dataset.type;
             if (type === 'pc') {
-                const pc = availablePcs.find(p => p.id === addBtn.dataset.id);
+                const pc = availablePcs.find(p => String(p.id) === String(addBtn.dataset.id));
                 if (pc) addPcToCombat(pc);
             } else if (type === 'npc') {
-                const npc = availableNpcs.find(n => n.id === addBtn.dataset.id);
+                const npc = availableNpcs.find(n => String(n.id) === String(addBtn.dataset.id));
                 if (npc) addNpcToCombat(npc);
             } else if (type === 'monster') {
-                const monster = monsterDatabase.find(m => m.index === addBtn.dataset.index);
+                const monster = monsterDatabase.find(m => String(m.index) === String(addBtn.dataset.index));
                 if (monster) addMonsterToCombat(monster);
             }
             return;
@@ -2497,7 +2497,7 @@ const CombatTracker = {
      */
     showDeathTooltip(combatant) {
         const name = combatant.customName || combatant.name;
-        const isPc = combatant.isPc;
+        const isPc = combatant.sourceType === 'pc';
         
         // Crea il tooltip di morte
         const deathOverlay = document.createElement('div');
@@ -2559,7 +2559,7 @@ const CombatTracker = {
     },
     
     applyDamageOrHeal(combatantId, type) {
-        const input = this.container.querySelector(`.damage-input[data-id="${combatantId}"]`);
+        const input = this.container.querySelector(`.damage-input-compact[data-id="${combatantId}"]`);
         if (!input) return;
         
         const value = input.value.trim();
@@ -3280,6 +3280,9 @@ const CombatTracker = {
         } else if (e.target.classList.contains('ac-mini-input')) {
             // Aggiorna la CA del combatant
             updateMonsterProperty(combatantId, 'armor_class', parseInt(e.target.value, 10));
+        } else if (e.target.classList.contains('notes-compact')) {
+            // Salva le note del combatant (su change, non su input, per evitare re-render eccessivi)
+            updateMonsterProperty(combatantId, 'notes', e.target.value);
         }
     },
 
@@ -3317,6 +3320,39 @@ const CombatTracker = {
         }
     },
 
+    /**
+     * Controlla se il combatant il cui turno è iniziato ha pendingSaves da triggerare.
+     * Usato per effetti progressivi come il Morso della Cockatrice (2° tiro salvezza).
+     */
+    checkPendingSaves(combatantId) {
+        const combatants = getCombatState();
+        const combatant = combatants.find(c => c.id === combatantId);
+        if (!combatant) return;
+        
+        const pendingSaves = combatant.pendingSaves;
+        if (!Array.isArray(pendingSaves) || pendingSaves.length === 0) return;
+        
+        // Trova il primo pending save da triggerare (turno <= round corrente)
+        const toTrigger = pendingSaves.find(ps => (ps.turn || 0) <= this.currentRound);
+        if (!toTrigger) return;
+        
+        // Rimuovi il pending save dalla lista (lo stiamo per gestire)
+        const remainingSaves = pendingSaves.filter(ps => ps !== toTrigger);
+        updateMonsterProperty(combatantId, 'pendingSaves', remainingSaves);
+        
+        // Notifica il DM e apri il popup del tiro salvezza
+        const targetName = combatant.customName || combatant.name || 'Bersaglio';
+        showToast(`⚠️ ${targetName} deve ripetere il tiro salvezza!`, 'warning');
+        
+        // Apri il popup (usa lo stesso meccanismo del trigger manuale)
+        this.openSavingThrowPopup({
+            targetId: combatantId,
+            attackerId: toTrigger.source || combatantId,
+            attackName: toTrigger.attackName || 'Effetto progressivo',
+            effect: toTrigger.effect
+        });
+    },
+
     // --- STATE CHANGE HANDLER ---
 
     onStateChange(combatants, currentRound, currentTurnMonsterId, initiativeOrder) {
@@ -3347,6 +3383,13 @@ const CombatTracker = {
         const roundInput = this.container?.querySelector('#round-input');
         if (roundInput && document.activeElement !== roundInput) {
             roundInput.value = currentRound;
+        }
+
+        // Check pendingSaves: se il combatant attivo ha tiri salvezza pendenti (es. Cockatrice 2° tiro),
+        // apri automaticamente il popup del tiro salvezza
+        if (currentRound > 0 && currentTurnMonsterId && currentTurnMonsterId !== this._lastCheckedTurnId) {
+            this._lastCheckedTurnId = currentTurnMonsterId;
+            this.checkPendingSaves(currentTurnMonsterId);
         }
 
         // Render order list
