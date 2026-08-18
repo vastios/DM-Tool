@@ -11,6 +11,7 @@
 
 import { monsterDatabase } from '../../database/monsterDatabase.js';
 import { classDatabase } from '../../database/classDatabase.js';
+import { spellDatabase } from '../../database/spells.js';
 import { rollDice } from '../../utils/dice.js';
 import { getConditionSummaries } from '../../database/conditions.js';
 import { showToast } from '../../utils/toast.js';
@@ -566,11 +567,37 @@ function initializePcSpellState(pcData) {
     const abilityMod = getAbilityModifier(pcData.abilities?.[spellAbility] || 10);
     const profBonus = pcData.proficiencyBonus || Math.ceil(pgLevel / 4) + 1;
     
+    // --- NUOVO: Popola cantrips e preparedSpells dal pgData.spellcasting.spellsKnown ---
+    const knownSpells = pcData.spellcasting?.spellsKnown || [];
+    const cantrips = [];
+    const preparedSpells = [];
+    
+    knownSpells.forEach(spellName => {
+        // Cerca nel spellDatabase per ottenere il livello
+        const spell = spellDatabase[spellName];
+        if (spell) {
+            if (spell.level === 0) {
+                // Trucchetti (livello 0)
+                cantrips.push(spellName);
+            } else {
+                // Incantesimi preparati (livello > 0)
+                preparedSpells.push({
+                    name: spellName,
+                    level: spell.level
+                });
+            }
+        } else {
+            // Incantesimo non trovato nel database: assumi livello 1 (fallback)
+            console.warn(`⚠️ [CombatStateManager] Incantesimo non trovato nel database: ${spellName}`);
+            preparedSpells.push({ name: spellName, level: 1 });
+        }
+    });
+    
     return {
         remainingSlots: remainingSlots,
         maxSlots: maxSlots,
-        cantrips: [], // I PG non mostrano nomi incantesimi, solo slot
-        preparedSpells: [],
+        cantrips: cantrips,
+        preparedSpells: preparedSpells,
         dc: 8 + profBonus + abilityMod,
         attackBonus: profBonus + abilityMod,
         ability: spellAbility,

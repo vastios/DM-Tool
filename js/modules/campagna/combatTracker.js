@@ -2288,10 +2288,9 @@ const CombatTracker = {
             }
         }
         
-        // Per i PG incantatori, mostriamo SOLO gli slot (non i nomi degli incantesimi)
-        if (isPcCaster) {
-            return html || '<p class="no-spells">Nessuno slot disponibile</p>';
-        }
+        // NOTA: rimosso il corto-circuito isPcCaster che mostrava SOLO gli slot.
+        // Ora i PG vedono anche i bottoni dei loro incantesimi (cantrips + prepared)
+        // come PNG e mostri, permettendo di lanciarli con gli effetti speciali.
         
         // Mostra trucchetti (cliccabili) - TUTTI visibili
         if (cantrips && cantrips.length > 0) {
