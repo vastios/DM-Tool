@@ -1087,6 +1087,203 @@ const CombatTracker = {
      * @param {Object} attack - L'oggetto attacco con name, desc, ecc.
      * @returns {Object|null} Oggetto con dc, saveType, condition, description, duration, followUp
      */
+    /**
+     * Funzione UNIFICATA per estrarre effetti speciali da qualsiasi tipo di azione.
+     * Privilegia i dati strutturati (dc, damage) quando presenti, fallback al parser testuale.
+     * Supporta: attacchi, azioni speciali, azioni leggendarie, incantesimi.
+     * 
+     * @param {Object} actionData - L'oggetto azione con name, desc, dc, damage, ecc.
+     * @param {Object} attacker - Il combatant che esegue l'azione (per calcolare CD dinamica incantesimi)
+     * @returns {Object|null} Effetto { dc, saveType, condition, description, duration, followUpSave, damage, successType }
+     */
+    extractEffectFromAction(actionData, attacker = null) {
+        if (!actionData) return null;
+        
+        const effect = {
+            dc: null,
+            saveType: null,
+            condition: null,
+            description: null,
+            duration: 0,
+            followUpSave: null,
+            damage: null,
+            successType: null
+        };
+        
+        // --- 1. PRIORITÀ: dati strutturati (mostri con dc esplicito) ---
+        if (actionData.dc) {
+            if (actionData.dc.dc_value) {
+                effect.dc = actionData.dc.dc_value;
+            }
+            if (actionData.dc.dc_type?.name) {
+                effect.saveType = this.normalizeSaveType(actionData.dc.dc_type.name);
+            }
+            if (actionData.dc.success_type) {
+                effect.successType = actionData.dc.success_type; // 'half', 'none', 'other'
+            }
+        }
+        
+        // --- 2. Calcolo CD dinamica per incantesimi (CD = 8 + bonus competenza + mod caratteristica) ---
+        // Solo se non abbiamo già una CD strutturata e l'azione sembra un incantesimo
+        if (!effect.dc && attacker?.spellState) {
+            const spellState = attacker.spellState;
+            if (spellState.dc) {
+                effect.dc = spellState.dc;
+                if (spellState.ability) {
+                    effect.saveType = this.abilityToSaveType(spellState.ability);
+                }
+            }
+        }
+        
+        // --- 3. Estrai danno strutturato (per applica danno automatico) ---
+        if (actionData.damage && Array.isArray(actionData.damage)) {
+            effect.damage = actionData.damage.map(d => ({
+                dice: d.damage_dice || null,
+                type: d.damage_type?.name || 'danni'
+            }));
+        }
+        
+        // --- 4. FALLBACK: parser testuale per CD, saveType, condizione (se mancano) ---
+        const desc = actionData.desc || '';
+        if (desc) {
+            // CD dal testo (solo se non già estratta)
+            if (!effect.dc) {
+                const dcMatch = desc.match(/CD\s*(\d+)|tiro salvezza[^.]*CD\s*(\d+)/i);
+                if (dcMatch) {
+                    effect.dc = parseInt(dcMatch[1] || dcMatch[2], 10);
+                }
+            }
+            
+            // SaveType dal testo (solo se non già estratto)
+            if (!effect.saveType) {
+                const saveTypeMap = [
+                    { keywords: ['costituzione', 'cos', 'con'], type: 'Costituzione' },
+                    { keywords: ['destrezza', 'des', 'dex'], type: 'Destrezza' },
+                    { keywords: ['forza', 'for', 'str'], type: 'Forza' },
+                    { keywords: ['saggezza', 'sag', 'wis'], type: 'Saggezza' },
+                    { keywords: ['intelligenza', 'int'], type: 'Intelligenza' },
+                    { keywords: ['carisma', 'car', 'cha'], type: 'Carisma' }
+                ];
+                const descLower = desc.toLowerCase();
+                for (const sm of saveTypeMap) {
+                    if (sm.keywords.some(k => descLower.includes(k))) {
+                        effect.saveType = sm.type;
+                        break;
+                    }
+                }
+            }
+            
+            // Condizioni dal testo (con sinonimi)
+            const conditionPatterns = [
+                // Condizioni standard
+                { pattern: /pietrificato/i, condition: 'Pietrificato' },
+                { pattern: /avvelenato/i, condition: 'Avvelenato' },
+                { pattern: /stordito/i, condition: 'Stordito' },
+                { pattern: /paralizzato/i, condition: 'Paralizzato' },
+                { pattern: /trattenuto/i, condition: 'Trattenuto' },
+                { pattern: /afferrato|afferrata/i, condition: 'Afferrato' },
+                { pattern: /prono/i, condition: 'Prono' },
+                { pattern: /accecato|accecata/i, condition: 'Accecato' },
+                { pattern: /assordato|assordata/i, condition: 'Assordato' },
+                { pattern: /spaventato|spaventata/i, condition: 'Spaventato' },
+                { pattern: /inabile|incapacitata|incapacitato/i, condition: 'Inabile' },
+                { pattern: /svenuto|priva di sensi|privo di sensi/i, condition: 'Svenuto' },
+                // Sinonimi comuni
+                { pattern: /\baffascinato\b|incantato|incantata/i, condition: 'Affascinato' },
+                { pattern: /intralciato|intralciata/i, condition: 'Intralciato' },
+                { pattern: /invisibile|diventa invisibile/i, condition: 'Invisibile' },
+                // Indebolimento è un caso a parte (livelli), lo rileviamo ma è raro negli effetti
+                { pattern: /indebolimento|livelli di indebolimento/i, condition: 'Indebolimento' }
+            ];
+            
+            for (const cp of conditionPatterns) {
+                if (cp.pattern.test(desc)) {
+                    effect.condition = cp.condition;
+                    break;
+                }
+            }
+            
+            // Durata dal testo
+            const durationMatch = desc.match(/(\d+)\s*(?:turni?|ore?|minuti?|round)/i);
+            if (durationMatch) {
+                effect.duration = parseInt(durationMatch[1], 10);
+            }
+            
+            // Effetti multi-step (generalizzato, non solo Cockatrice)
+            // Pattern: "ripetere il tiro salvezza" + condizione finale
+            if (desc.includes('ripetere') || desc.includes('fine del suo turno successivo')) {
+                // Cerca la condizione finale (es. "è pietrificato", "è paralizzato")
+                const finalCondMatch = desc.match(/se lo fallisce[^.]*è\s+(\w+)/i);
+                if (finalCondMatch && effect.condition) {
+                    // La condizione attuale è quella "iniziale" (es. Trattenuto)
+                    // La condizione finale sarà quella grave dopo il 2° fallimento
+                    effect.followUpSave = {
+                        dc: effect.dc,
+                        saveType: effect.saveType,
+                        condition: effect.condition, // Stessa condizione, ma "definitiva"
+                        duration: effect.duration || 24,
+                        description: 'Deve ripetere il tiro salvezza'
+                    };
+                    effect.description = `Inizia: ${effect.condition} (effetto progressivo)`;
+                }
+            }
+        }
+        
+        // --- 5. Se abbiamo CD e saveType, ritorna l'effetto ---
+        if (effect.dc && effect.saveType) {
+            if (!effect.description) {
+                const parts = [];
+                if (effect.condition) parts.push(`Se fallisce: ${effect.condition}`);
+                if (effect.damage) parts.push(`Danno: ${effect.damage.map(d => `${d.dice} ${d.type}`).join(' + ')}`);
+                effect.description = parts.join(' | ') || 'Effetto speciale';
+            }
+            return effect;
+        }
+        
+        // --- 6. Se abbiamo solo danno strutturato (nessun TS), ritorna comunque per applicazione danno ---
+        if (effect.damage && effect.damage.length > 0) {
+            effect.description = `Danno: ${effect.damage.map(d => `${d.dice} ${d.type}`).join(' + ')}`;
+            return effect;
+        }
+        
+        return null;
+    },
+    
+    /**
+     * Normalizza il tipo di salvezza dal formato del database (es. "CON", "cos", "COS") 
+     * al formato italiano completo ("Costituzione").
+     */
+    normalizeSaveType(raw) {
+        if (!raw) return null;
+        const normalized = raw.toLowerCase().trim();
+        const map = {
+            'con': 'Costituzione', 'cos': 'Costituzione', 'costituzione': 'Costituzione',
+            'des': 'Destrezza', 'dex': 'Destrezza', 'destrezza': 'Destrezza',
+            'for': 'Forza', 'str': 'Forza', 'forza': 'Forza',
+            'sag': 'Saggezza', 'wis': 'Saggezza', 'saggezza': 'Saggezza',
+            'int': 'Intelligenza', 'intelligenza': 'Intelligenza',
+            'car': 'Carisma', 'cha': 'Carisma', 'carisma': 'Carisma'
+        };
+        return map[normalized] || null;
+    },
+    
+    /**
+     * Converte il tipo di caratteristica (INT, WIS, ecc.) nel tipo di tiro salvezza corrispondente.
+     */
+    abilityToSaveType(ability) {
+        if (!ability) return null;
+        const normalized = ability.toLowerCase().trim();
+        const map = {
+            'int': 'Intelligenza', 'intelligence': 'Intelligenza',
+            'wis': 'Saggezza', 'wisdom': 'Saggezza',
+            'cha': 'Carisma', 'charisma': 'Carisma',
+            'con': 'Costituzione', 'constitution': 'Costituzione',
+            'dex': 'Destrezza', 'dexterity': 'Destrezza',
+            'str': 'Forza', 'strength': 'Forza'
+        };
+        return map[normalized] || null;
+    },
+
     parseSpecialEffect(attack) {
         if (!attack || !attack.desc) return null;
         
@@ -2951,6 +3148,9 @@ const CombatTracker = {
         tracker.actionUsed = true;
         updateMonsterProperty(attacker.id, 'actionTracker', tracker);
         
+        // Estrai effetto speciale con la funzione unificata
+        const specialEffect = this.extractEffectFromAction(actionData, attacker);
+        
         // Mostra risultato
         const resultsBox = this.container.querySelector('.results-box-mini') || this.container.querySelector('.results-box');
         if (resultsBox) {
@@ -2973,6 +3173,9 @@ const CombatTracker = {
                 effectHtml += `<br><small style="color: var(--text-muted);">${shortDesc}${actionData.desc.length > 200 ? '...' : ''}</small>`;
             }
             
+            // Pulsante tiro salvezza se l'effetto è rilevabile e c'è un bersaglio
+            let specialEffectBtn = this.renderSpecialEffectButton(specialEffect, target, attacker, actionData.name);
+            
             cardResultsBox.innerHTML = `
                 <div class="special-action-result" style="
                     padding: 8px 12px;
@@ -2983,6 +3186,7 @@ const CombatTracker = {
                 ">
                     <strong>✨ ${actionData.name}</strong>${targetLabel}
                     ${effectHtml}
+                    ${specialEffectBtn}
                 </div>
             ` + cardResultsBox.innerHTML;
         }
@@ -3007,13 +3211,35 @@ const CombatTracker = {
         tracker.legendaryActionsUsed += cost;
         updateMonsterProperty(attacker.id, 'actionTracker', tracker);
         
+        // Estrai effetto speciale con la funzione unificata
+        const specialEffect = this.extractEffectFromAction(actionData, attacker);
+        
+        // Verifica bersaglio
+        const card = this.container.querySelector(`.combatant-card[data-id="${attacker.id}"]`);
+        const targetSelect = card?.querySelector('.target-select');
+        const targetId = targetSelect?.value;
+        const combatants = getCombatState();
+        const target = targetId && targetId !== 'free' ? 
+            combatants.find(c => c.id === parseFloat(targetId)) : null;
+        
         // Mostra risultato
         const resultsBox = this.container.querySelector('.results-box-mini') || this.container.querySelector('.results-box');
         if (resultsBox) {
-            const card = this.container.querySelector(`.combatant-card[data-id="${attacker.id}"]`);
             const cardResultsBox = card?.querySelector('.results-box-mini') || resultsBox;
             
             const newRemaining = tracker.legendaryActionsMax - tracker.legendaryActionsUsed;
+            const targetLabel = target ? ` → <strong>${target.customName || target.name}</strong>` : '';
+            
+            // Pulsante tiro salvezza se l'effetto è rilevabile
+            let specialEffectBtn = this.renderSpecialEffectButton(specialEffect, target, attacker, actionData.name);
+            
+            // Mostra CD/danno se presenti
+            let effectInfo = '';
+            if (actionData.dc) {
+                const dcType = actionData.dc.dc_type?.name || 'CD';
+                const dcValue = actionData.dc.dc_value || 15;
+                effectInfo = `<br><span style="color: var(--accent-color);">${dcType} ${dcValue}</span>`;
+            }
             
             cardResultsBox.innerHTML = `
                 <div class="legendary-action-result" style="
@@ -3023,13 +3249,57 @@ const CombatTracker = {
                     border-left: 3px solid #ffd700;
                     background: rgba(255, 215, 0, 0.1);
                 ">
-                    <strong>👑 ${actionData.name}</strong>
+                    <strong>👑 ${actionData.name}</strong>${targetLabel}
                     <small style="color: #ffd700;">(${newRemaining}/${tracker.legendaryActionsMax} azioni leggendarie rimanenti)</small>
+                    ${effectInfo}
+                    ${specialEffectBtn}
                 </div>
             ` + cardResultsBox.innerHTML;
         }
         
         showToast(`👑 ${attacker.customName} usa azione leggendaria: ${actionData.name}`, 'info');
+    },
+    
+    /**
+     * Renderizza il pulsante "🛡️ Tiro Salvezza" se l'effetto speciale è applicabile.
+     * Funzione helper unificata usata da handleAttackWithAC, handleSpecialAction, handleLegendaryAction.
+     * 
+     * @param {Object|null} specialEffect - Effetto estratto da extractEffectFromAction
+     * @param {Object|null} target - Bersaglio selezionato
+     * @param {Object} attacker - Chi esegue l'azione
+     * @param {string} actionName - Nome dell'azione
+     * @returns {string} HTML del pulsante, o stringa vuota se non applicabile
+     */
+    renderSpecialEffectButton(specialEffect, target, attacker, actionName) {
+        if (!specialEffect || !target) return '';
+        
+        const effectData = JSON.stringify({
+            targetId: target.id,
+            attackerId: attacker.id,
+            attackName: actionName,
+            effect: specialEffect
+        }).replace(/"/g, '&quot;');
+        
+        const dcLabel = specialEffect.dc ? ` (CD ${specialEffect.dc})` : '';
+        const damageLabel = specialEffect.damage ? ` 💥${specialEffect.damage.map(d => d.dice).join('+')}` : '';
+        
+        return `
+            <button class="trigger-saving-throw-btn" 
+                    data-effect-data="${effectData}"
+                    style="
+                        margin-top: 6px;
+                        margin-left: 4px;
+                        padding: 4px 10px;
+                        background: #9c27b0;
+                        border: none;
+                        border-radius: 4px;
+                        color: white;
+                        cursor: pointer;
+                        font-size: 0.8rem;
+                    ">
+                🛡️ Tiro Salvezza${dcLabel}${damageLabel}
+            </button>
+        `;
     },
     
     doubleDice(dice) {
