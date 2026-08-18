@@ -1,7 +1,52 @@
 /* ==========================================================================
    COMBAT-TRACKER.CSS - Stili per il Modulo Combat Tracker
-   Versione 3.1 - Ottimizzato e consolidato
+   Versione 3.2 - Ottimizzato e consolidato
    ========================================================================== */
+
+/* --- VARIABILI CSS ---
+   Definite qui per garantire valori coerenti anche se altri moduli
+   non definiscono queste variabili. Il tema dark è il default.
+   Per sovrascrivere con tema light, usare [data-theme="light"].
+*/
+:root {
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #222;
+    --bg-tertiary: #2a2a2a;
+    --card-bg: #252525;
+    --input-bg: #1a1a1a;
+    --hover-bg: #3a3a3a;
+    --border-color: #3a3a3a;
+    --text-primary: #fff;
+    --text-muted: #888;
+    --accent-color: #d4af37;
+    
+    /* Variabili semantiche per colori */
+    --color-danger: #f44336;
+    --color-success: #4caf50;
+    --color-info: #2196f3;
+    --color-warning: #ff9800;
+    --color-legendary: #ffd700;
+    --color-spell: #9c27b0;
+    
+    /* Scala spacing */
+    --sp-1: 4px;
+    --sp-2: 8px;
+    --sp-3: 12px;
+    --sp-4: 16px;
+    --sp-5: 20px;
+    
+    /* Scala border-radius */
+    --radius-sm: 4px;
+    --radius-md: 6px;
+    --radius-lg: 8px;
+    --radius-xl: 12px;
+    
+    /* Scala z-index */
+    --z-dropdown: 1000;
+    --z-popup: 1000;
+    --z-tooltip: 2000;
+    --z-modal: 3000;
+}
 
 /* Combat Tracker v3.1 Styles */
 .combat-tracker-container {
@@ -55,7 +100,6 @@
     background: var(--bg-tertiary, #333) !important;
 }
 
-.combat-active .dropdown-container .dropdown-menu,
 .combat-active .popup-container,
 .combat-active .conditions-popup-container,
 .combat-active .spells-popup-container {
@@ -113,6 +157,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    min-width: 0;
 }
 
 .header-left h2 {
@@ -127,6 +172,20 @@
     align-items: center;
     gap: 4px;
     font-size: 0.8rem;
+}
+
+.header-center {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    min-width: 0;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
 }
 
 .round-counter input {
@@ -301,6 +360,7 @@
     cursor: pointer;
     border-left: 3px solid transparent;
     transition: all 0.15s;
+    position: relative; /* Necessario per posizionare pseudo-elementi come .not-acted::after */
 }
 
 .combatant-order-item:hover {
@@ -322,6 +382,7 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 4px;
+    min-width: 0;
 }
 
 .order-item-name {
@@ -330,6 +391,10 @@
     display: flex;
     align-items: center;
     gap: 6px;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .source-badge {
@@ -400,6 +465,7 @@
     border: none;
     color: var(--text-primary, #fff);
     flex: 1;
+    min-width: 0;
     padding: 4px;
     border-radius: 4px;
 }
@@ -1205,6 +1271,10 @@
     align-items: center;
     justify-content: center;
     gap: 6px;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .tab-btn:hover {
@@ -2629,4 +2699,172 @@
 .trigger-saving-throw-btn:hover {
     background: #ab47bc !important;
     transform: scale(1.05);
+}
+
+/* ==========================================================================
+   ACCESSIBILITÀ: Riduzione animazioni per utenti con vestibolari/ADHD
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    
+    /* Disabilita animazioni infinite specifiche */
+    .combat-tracker-container.combat-active {
+        animation: none !important;
+    }
+    .condition-tag.expiring,
+    .combatant-order-item.stunned,
+    .multiattack-active-indicator,
+    .trigger-saving-throw-btn {
+        animation: none !important;
+    }
+}
+
+/* ==========================================================================
+   RESPONSIVE: Layout per tablet e mobile
+   ========================================================================== */
+@media (max-width: 1024px) {
+    .combatant-left-column {
+        flex: 0 0 280px;
+        min-width: 250px;
+    }
+    
+    .combatant-order-column {
+        flex: 0 0 180px;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Layout principale: le colonne vanno a capo */
+    .combat-main-layout {
+        flex-direction: column;
+        overflow-y: auto;
+    }
+    
+    .combatant-order-column {
+        flex: 0 0 auto;
+        max-height: 200px;
+    }
+    
+    /* Detail a larghezza piena */
+    .combatant-detail-column {
+        flex: 1 1 auto;
+        min-height: 300px;
+    }
+    
+    /* Layout 2 colonne del combatant: va a singola colonna */
+    .combatant-two-column-layout {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .combatant-left-column {
+        flex: 1 1 100%;
+        min-width: 0;
+    }
+    
+    .combatant-right-column {
+        flex: 1 1 100%;
+        min-width: 0;
+    }
+    
+    /* Header più compatto */
+    .tracker-header {
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 6px 8px;
+    }
+    
+    .header-left,
+    .header-center,
+    .header-right {
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+    
+    .header-left h2 {
+        font-size: 0.9rem;
+    }
+    
+    .action-btn, .reset-btn, .end-btn, .source-btn {
+        padding: 4px 8px;
+        font-size: 0.7rem;
+    }
+    
+    /* Popup a larghezza piena su mobile */
+    .popup-container,
+    .conditions-popup-container,
+    .spells-popup-container,
+    .saving-throw-popup-container {
+        width: 95%;
+        max-width: none;
+        max-height: 90vh;
+    }
+    
+    /* Combatant card padding ridotto */
+    .combatant-card {
+        padding: 10px;
+    }
+    
+    .combatant-card-header-fixed {
+        margin: -10px -10px 8px -10px;
+        padding: 6px 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Mobile molto piccolo: nascondi il titolo h2 per risparmiare spazio */
+    .header-left h2 {
+        display: none;
+    }
+    
+    /* Riduci ancora i bottoni */
+    .action-btn, .reset-btn, .end-btn, .source-btn {
+        padding: 3px 6px;
+        font-size: 0.65rem;
+    }
+    
+    .round-counter input {
+        width: 35px;
+    }
+    
+    /* Stat row su singola colonna */
+    .stat-row {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+
+/* ==========================================================================
+   SCROLLBAR personalizzata per tema scuro
+   ========================================================================== */
+.combat-tracker-container ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.combat-tracker-container ::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
+.combat-tracker-container ::-webkit-scrollbar-thumb {
+    background: var(--border-color, #3a3a3a);
+    border-radius: 4px;
+}
+
+.combat-tracker-container ::-webkit-scrollbar-thumb:hover {
+    background: var(--hover-bg, #3a3a3a);
+}
+
+/* Firefox */
+.combat-tracker-container * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-color, #3a3a3a) rgba(0, 0, 0, 0.2);
 }
