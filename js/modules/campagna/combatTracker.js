@@ -47,8 +47,7 @@ import {
     resetActionsForTurn
 } from '../../../stateManager.js';
 import { monsterDatabase } from '../../../database/monsterDatabase.js';
-import { spellDatabase } from '../../../database/spells.js';
-import { conditionsDatabase, getConditionDescription } from '../../../database/conditions.js';
+import { conditionsDatabase } from '../../../database/conditions.js';
 import { rollDice } from '../../../utils/dice.js';
 import { showToast } from '../../../utils/toast.js';
 import { getCurrentCampaignId } from '../../../js/services/campaignManager.js';
@@ -140,45 +139,6 @@ function getSourceBadge(combatant) {
         return `<span class="source-badge npc" style="background: ${color}">${label}</span>`;
     }
     return `<span class="source-badge monster" style="background: ${SOURCE_COLORS.monster}">Mostro</span>`;
-}
-
-function formatSpellsForCombat(combatant) {
-    if (!combatant.spellState) return '';
-    const { cantrips, preparedSpells, remainingSlots } = combatant.spellState;
-    let html = '<div class="combatant-spells"><h5>Incantesimi</h5>';
-
-    const findSpell = (name) => {
-        const key = name.trim().toLowerCase();
-        return Object.values(spellDatabase).find(s => s.name?.toLowerCase() === key || s.name?.toLowerCase().includes(key));
-    };
-
-    if (cantrips?.length > 0) {
-        html += '<div class="spell-section"><h6>Trucchetti</h6>';
-        html += cantrips.map(c => {
-            const spellName = typeof c === 'string' ? c : c.name;
-            const s = findSpell(spellName);
-            if (!s) return `<span class="spell-tag">${spellName}</span>`;
-            const cleanDesc = (s.description || s.desc || '').replace(/'/g, "&apos;");
-            return `<span class="special-action-link" data-name="${s.name}" data-desc="${cleanDesc}">${s.name}</span>`;
-        }).filter(Boolean).join(', ');
-        html += '</div>';
-    }
-
-    if (preparedSpells?.length > 0) {
-        html += '<div class="spell-section"><h6>Preparati</h6>';
-        if (remainingSlots && Object.keys(remainingSlots).length > 0) {
-            html += `<div class="spell-slots-info">Slots: ${Object.entries(remainingSlots).filter(([l, c]) => l > 0).map(([l, c]) => `L${l}: ${c}`).join(' | ')}</div>`;
-        }
-        html += '<div class="spell-buttons">';
-        preparedSpells.forEach(p => {
-            const spellName = typeof p === 'string' ? p : p.name;
-            const spellLevel = typeof p === 'object' ? p.level : 1;
-            const isDisabled = remainingSlots && remainingSlots[spellLevel] <= 0;
-            html += `<button class="spell-btn ${isDisabled ? 'disabled' : ''}" data-monster-id="${combatant.id}" data-spell-level="${spellLevel}" title="${spellName}">${spellName}</button>`;
-        });
-        html += '</div></div>';
-    }
-    return html + '</div>';
 }
 
 // --- GENERAZIONE CONTENUTO POPUP ---
@@ -1648,13 +1608,6 @@ const CombatTracker = {
         return count;
     },
     
-    getSourceTag(combatant) {
-        const sourceType = combatant.sourceType || 'monster';
-        if (sourceType === 'pc') return 'PG';
-        if (sourceType === 'npc') return combatant.tag || 'PNG';
-        return 'Mostro';
-    },
-    
     /**
      * Renderizza il contatore azioni disponibili.
      */
@@ -2034,28 +1987,6 @@ const CombatTracker = {
         return target?.customName || target?.name || 'Sconosciuto';
     },
     
-    renderActiveConditions(combatant) {
-        if (!combatant.conditions || combatant.conditions.length === 0) {
-            return '';
-        }
-        
-        return combatant.conditions.map(cond => {
-            const condName = typeof cond === 'string' ? cond : cond.name;
-            const duration = typeof cond === 'object' ? cond.duration : 0;
-            const durationText = duration > 0 ? `${duration} turni` : '∞';
-            const isExpiring = duration > 0 && duration <= 1;
-            
-            return `
-                <span class="active-condition-badge ${isExpiring ? 'expiring' : ''}" 
-                      data-condition="${condName}" data-combatant="${combatant.id}">
-                    ${condName}
-                    <span class="duration" title="Durata rimanente">${durationText}</span>
-                    <span class="remove-btn" data-condition="${condName}">×</span>
-                </span>
-            `;
-        }).join('');
-    },
-    
     renderConcentration(combatant) {
         if (!combatant.concentration?.spellName) {
             return '';
@@ -2368,26 +2299,6 @@ const CombatTracker = {
             }
         } else {
             showToast(`❌ ${result.message}`, 'error');
-        }
-    },
-    
-    setTarget(combatantId) {
-        const combatants = getCombatState();
-        const target = combatants.find(c => c.id === combatantId);
-        
-        // Toggle: se già selezionato, deseleziona
-        if (this.targetCombatant === combatantId) {
-            this.targetCombatant = null;
-            showToast('Bersaglio rimosso', 'info');
-        } else {
-            this.targetCombatant = combatantId;
-            showToast(`${target?.customName || target?.name} impostato come bersaglio`, 'success');
-        }
-        
-        // Re-render per aggiornare l'indicatore
-        const currentCombatant = combatants.find(c => c.id === selectedCombatantId);
-        if (currentCombatant) {
-            this.renderCombatantDetail(currentCombatant);
         }
     },
     
@@ -3015,121 +2926,6 @@ const CombatTracker = {
         }
         
         showToast(`👑 ${attacker.customName} usa azione leggendaria: ${actionData.name}`, 'info');
-    },
-    
-    /**
-     * Gestisce l'uso di un'azione generica (non attacco).
-     */
-    handleActionUse(btn, attacker, isLegendary = false) {
-        const actionData = JSON.parse(btn.dataset.action.replace(/&apos;/g, "'"));
-        
-        // Mostra risultato
-        const resultsBox = this.container.querySelector('.results-box-mini') || this.container.querySelector('.results-box');
-        if (resultsBox) {
-            const legendaryLabel = isLegendary ? '👑 ' : '';
-            const targetLabel = this.targetCombatant ? ` → ${this.getTargetName()}` : '';
-            
-            // Se ha un DC o effetto, mostra info
-            let effectHtml = '';
-            if (actionData.dc) {
-                const dcType = actionData.dc.dc_type?.name || 'CD';
-                const dcValue = actionData.dc.dc_value || 15;
-                effectHtml = `<br><small style="color: var(--text-muted);">${dcType} ${dcValue}</small>`;
-            }
-            if (actionData.desc) {
-                const shortDesc = actionData.desc.substring(0, 150);
-                effectHtml += `<br><small style="color: var(--accent-color);">${shortDesc}${actionData.desc.length > 150 ? '...' : ''}</small>`;
-            }
-            
-            const card = this.container.querySelector(`.combatant-card[data-id="${attacker.id}"]`);
-            const cardResultsBox = card?.querySelector('.results-box-mini') || resultsBox;
-            
-            cardResultsBox.innerHTML = `
-                <p class="action-used">
-                    ${legendaryLabel}<strong>${actionData.name}</strong>${targetLabel}
-                    ${effectHtml}
-                </p>
-            ` + cardResultsBox.innerHTML;
-        }
-        
-        showToast(`${attacker.customName} usa: ${actionData.name}`, 'info');
-    },
-    
-    handleAttackRoll(btn, attacker) {
-        const attackData = JSON.parse(btn.dataset.attack.replace(/&apos;/g, "'"));
-        
-        // Roll to hit
-        const rollResult = rollDice('1d20');
-        const d20Roll = rollResult.rolls?.[0] || rollResult;
-        const attackBonus = attackData.attack_bonus || 0;
-        const toHit = d20Roll + attackBonus;
-        const isCritical = d20Roll === 20;
-        const isFumble = d20Roll === 1;
-        
-        // Roll damage
-        let damage = '';
-        let damageTotal = 0;
-        if (attackData.damage) {
-            attackData.damage.forEach(d => {
-                let dice = d.damage_dice || '1d6';
-                if (isCritical) {
-                    // Double dice on crit
-                    dice = this.doubleDice(dice);
-                }
-                const dmgResult = rollDice(dice);
-                const dmgValue = dmgResult.total || dmgResult;
-                damageTotal += dmgValue;
-                damage += `${dmgValue} ${d.damage_type?.name || 'danni'}`;
-                if (attackData.damage.indexOf(d) < attackData.damage.length - 1) damage += ' + ';
-            });
-        }
-        
-        // Analizza se l'attacco ha un effetto speciale
-        const specialEffect = this.parseSpecialEffect(attackData);
-        
-        // Show result - cerca sia .results-box che .results-box-mini
-        const resultsBox = this.container.querySelector('.results-box-mini') || this.container.querySelector('.results-box');
-        if (resultsBox) {
-            const critLabel = isCritical ? '🎯 **CRITICO!** ' : isFumble ? '❌ **FALLIMENTO!** ' : '';
-            const targetLabel = this.targetCombatant ? ` → ${this.getTargetName()}` : '';
-            const damageLabel = damageTotal > 0 ? ` | 💥 ${damage}` : '';
-            
-            const card = this.container.querySelector(`.combatant-card[data-id="${attacker.id}"]`);
-            const cardResultsBox = card?.querySelector('.results-box-mini') || resultsBox;
-            
-            // Pulsante per effetto speciale
-            let specialEffectBtn = '';
-            if (specialEffect && this.targetCombatant && !isFumble) {
-                const effectData = JSON.stringify({
-                    targetId: this.targetCombatant,
-                    attackerId: attacker.id,
-                    attackName: attackData.name,
-                    effect: specialEffect
-                }).replace(/"/g, '&quot;');
-                specialEffectBtn = `
-                    <button class="trigger-saving-throw-btn" 
-                            data-effect-data="${effectData}"
-                            style="background: #9c27b0; color: white; border: none; padding: 2px 8px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; margin-left: 4px;">
-                        🛡️ Tiro Salvezza
-                    </button>
-                `;
-            }
-            
-            cardResultsBox.innerHTML = `
-                <p class="${isCritical ? 'critical' : isFumble ? 'fumble' : ''}">
-                    ${critLabel}<strong>${attackData.name}</strong>${targetLabel}: 
-                    🎯 ${toHit} (${d20Roll}${attackBonus >= 0 ? '+' : ''}${attackBonus})${damageLabel}
-                    ${this.targetCombatant && damageTotal > 0 ? `
-                        <button class="apply-attack-damage-btn" 
-                                data-target="${this.targetCombatant}" 
-                                data-damage="${damageTotal}">
-                            💾 Applica Danno
-                        </button>
-                    ` : ''}
-                    ${specialEffectBtn}
-                </p>
-            ` + cardResultsBox.innerHTML;
-        }
     },
     
     doubleDice(dice) {
