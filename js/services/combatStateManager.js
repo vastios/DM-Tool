@@ -1783,6 +1783,34 @@ export function getCurrentRound() {
 }
 
 /**
+ * Imposta manualmente il round corrente (per editing da UI).
+ * Solo se il combattimento è attivo (currentRound > 0).
+ * @param {number} newRound - Il nuovo round (deve essere >= 0)
+ */
+export function setRound(newRound) {
+    const round = Math.max(0, parseInt(newRound, 10) || 0);
+    if (round === currentRound) return;
+    
+    const wasInRound = currentRound > 0;
+    currentRound = round;
+    
+    console.log(`🔢 [CombatStateManager] Round impostato manualmente a: ${currentRound}`);
+    
+    // Se siamo usciti dal combattimento (round = 0), resetta il turno
+    if (round === 0) {
+        currentTurnMonsterId = null;
+    } else if (!wasInRound) {
+        // Se eravamo fuori combattimento e ora entriamo, ripristina il primo turno
+        if (initiativeOrder.length > 0) {
+            currentTurnMonsterId = initiativeOrder[0];
+        }
+    }
+    
+    saveState();
+    notifySubscribers();
+}
+
+/**
  * Ottiene l'ID del mostro nel turno corrente.
  * @returns {string|null} L'ID del mostro o null
  */

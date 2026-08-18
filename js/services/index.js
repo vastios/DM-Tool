@@ -58,6 +58,7 @@ export {
     getInitiativeOrder,
     getCurrentRound,
     getCurrentTurnMonsterId,
+    setRound,
     getDebugConditionSummaries,
     addConditionToCombatant,
     removeConditionFromCombatant,

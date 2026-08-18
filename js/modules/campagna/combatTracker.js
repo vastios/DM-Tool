@@ -44,7 +44,9 @@ import {
     getActiveSpells,
     // Tracciamento azioni
     useAction,
-    resetActionsForTurn
+    resetActionsForTurn,
+    // Editing round manuale
+    setRound
 } from '../../../stateManager.js';
 import { monsterDatabase } from '../../../database/monsterDatabase.js';
 import { conditionsDatabase } from '../../../database/conditions.js';
@@ -71,9 +73,6 @@ const TAG_COLORS = {
 };
 
 // --- CACHE E STATO LOCALE ---
-const resistancesCache = {};
-const savesCache = {};
-const speedCache = {};
 let previousRound = 0;
 
 // Dati locali per le fonti
@@ -452,6 +451,19 @@ const CombatTracker = {
             nextTurn();
         });
 
+        // Round input editing manuale
+        container.querySelector('#round-input')?.addEventListener('change', (e) => {
+            const newRound = parseInt(e.target.value, 10);
+            if (isNaN(newRound) || newRound < 0) {
+                showToast('Valore round non valido', 'warning');
+                e.target.value = this.currentRound;
+                return;
+            }
+            if (newRound === this.currentRound) return;
+            setRound(newRound);
+            showToast(`Round impostato a ${newRound}`, 'info');
+        });
+
         container.querySelector('#end-combat-btn')?.addEventListener('click', () => {
             if (confirm('Terminare il combattimento?\n\nI combattenti rimarranno nella lista con le condizioni azzerate. Potrai ricominciare ritirando l\'iniziativa.')) {
                 endCombat();
@@ -663,7 +675,8 @@ const CombatTracker = {
                 <span style="font-size: 0.9rem;">🩹 ${combatant?.customName || combatant?.name || 'Combattente'}</span>
             </div>
             <p style="color: var(--text-muted, #888); font-size: 0.75rem; margin-bottom: 6px;">
-                Clicca per selezionare. Durata: 0 = permanente.
+                Clicca per selezionare nuove condizioni. Durata: 0 = permanente.<br>
+                Per rimuovere una condizione attiva, clicca il pulsante "✕" in rosso.
             </p>
             <div class="conditions-list">
                 ${allConditions.map(condName => {
@@ -675,7 +688,14 @@ const CombatTracker = {
                              data-has="${alreadyHas}">
                             <h4>${condName}</h4>
                             <p>${cond?.summary || ''}</p>
-                            ${alreadyHas ? '<small style="color: #4caf50; font-size: 0.6rem;">✓</small>' : ''}
+                            ${alreadyHas ? `
+                                <small style="color: #4caf50; font-size: 0.6rem;">✓ Attiva</small>
+                                <button class="remove-condition-btn" 
+                                        data-condition="${condName}"
+                                        style="background: rgba(244, 67, 54, 0.2); color: #e57373; border: 1px solid #f44336; padding: 2px 8px; border-radius: 3px; cursor: pointer; font-size: 0.65rem; margin-top: 4px;">
+                                    ✕ Rimuovi
+                                </button>
+                            ` : ''}
                         </div>
                     `;
                 }).join('')}
@@ -692,7 +712,30 @@ const CombatTracker = {
     },
     
     handleConditionsPopupClick(e) {
+        // Rimuovi condizione esistente
+        const removeBtn = e.target.closest('.remove-condition-btn');
+        if (removeBtn) {
+            const condName = removeBtn.dataset.condition;
+            const combatantId = this.conditionsPopupCombatantId;
+            if (condName && combatantId) {
+                removeConditionFromCombatant(combatantId, condName);
+                // Log evento condition_removed
+                this.logEvent('condition_removed', {
+                    targetId: combatantId,
+                    conditionName: condName
+                });
+                showToast(`${condName} rimossa`, 'info');
+                // Aggiorna il popup
+                const content = this.container.querySelector('#conditions-popup-content');
+                if (content) {
+                    content.innerHTML = this.getConditionsPopupContent(combatantId);
+                }
+            }
+            return;
+        }
+        
         const card = e.target.closest('.condition-card');
+        // Solo le card NON già attive possono essere selezionate per l'aggiunta
         if (card && card.dataset.has !== 'true') {
             const condName = card.dataset.condition;
             
@@ -2219,6 +2262,11 @@ const CombatTracker = {
             const condName = e.target.dataset.condition;
             if (condName) {
                 removeConditionFromCombatant(combatantId, condName);
+                // Log evento condition_removed
+                this.logEvent('condition_removed', {
+                    targetId: combatantId,
+                    conditionName: condName
+                });
             }
         } else if (e.target.classList.contains('remove-btn') && e.target.closest('.active-spell-badge')) {
             // Remove active spell
@@ -2276,6 +2324,14 @@ const CombatTracker = {
         if (result.success) {
             // Consuma l'azione
             useAction(combatantId, 'action', spellData.name);
+            
+            // Log evento spell_cast
+            this.logEvent('spell_cast', {
+                casterId: combatantId,
+                spellName: spellData.name,
+                spellType: spellType,
+                level: spellData.level
+            });
             
             showToast(`✨ ${result.message}`, 'success');
             // Log nel results box
@@ -2517,6 +2573,12 @@ const CombatTracker = {
         } else {
             newHp = Math.min(combatant.maxHp, oldHp + amount);
             this.logHpChange(combatant, +amount, newHp);
+            // Log evento cura
+            this.logEvent('heal', {
+                targetId: combatantId,
+                amount: amount,
+                newHp: newHp
+            });
         }
         
         updateMonsterProperty(combatantId, 'currentHp', newHp);
@@ -3034,6 +3096,11 @@ const CombatTracker = {
         updateMonsterProperty(combatantId, 'currentHp', 1);
         updateMonsterProperty(combatantId, 'deathSaves', { successes: 0, failures: 0, stabilized: false });
         showToast(`${combatant.customName} è tornato in vita con 1 PF!`, 'success');
+        
+        // Log evento revive
+        this.logEvent('revive', {
+            targetId: combatantId
+        });
     },
 
     handleDetailChange(e) {
@@ -3154,6 +3221,22 @@ const CombatTracker = {
     onStateChange(combatants, currentRound, currentTurnMonsterId, initiativeOrder) {
         loadAllSources();
         
+        // Log round_start quando il round cambia (escluso round 0 = non iniziato)
+        if (currentRound > previousRound && currentRound > 0) {
+            this.logEvent('round_start', { round: currentRound });
+        }
+        
+        // Log turn_start quando il turno cambia (escluso null = combattimento non attivo)
+        if (currentTurnMonsterId && currentTurnMonsterId !== this._lastLoggedTurnId) {
+            this._lastLoggedTurnId = currentTurnMonsterId;
+            if (currentRound > 0) {
+                this.logEvent('turn_start', {
+                    combatantId: currentTurnMonsterId,
+                    round: currentRound
+                });
+            }
+        }
+        
         // Round notification
         if (currentRound > previousRound && currentRound > 1) {
             showToast(`Round ${currentRound}`, 'info');
@@ -3225,6 +3308,12 @@ const CombatTracker = {
             const sorted = [...combatants].sort((a, b) => (b.initiative || 0) - (a.initiative || 0));
             selectedCombatantId = sorted[0].id;
             this.renderCombatantDetail(sorted[0]);
+        } else {
+            // Empty state: nessun combattente presente
+            const detailView = this.container?.querySelector('#combatant-detail-view');
+            if (detailView) {
+                detailView.innerHTML = '<p class="empty-state">Seleziona un combattente o aggiungi creature al combattimento.</p>';
+            }
         }
     },
 
