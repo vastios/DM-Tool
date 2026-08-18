@@ -1932,13 +1932,42 @@ const CombatTracker = {
                             <div class="actions-tab-content">
                                 ${multiattackMode ? this.renderMultiattackIndicator(combatant, multiattackMode) : ''}
                                 
-                                <!-- Target Selector -->
-                                <div class="target-selector">
-                                    <label>🎯 Bersaglio:</label>
-                                    <select class="target-select" data-attacker-id="${combatant.id}">
-                                        <option value="free">🆓 Libero</option>
-                                        ${targetOptions}
-                                    </select>
+                                <!-- Target Selector (Multi-mode: Singolo/AoE) -->
+                                <div class="target-selector-multi" data-attacker-id="${combatant.id}">
+                                    <div class="target-mode-tabs">
+                                        <button class="target-mode-btn active" data-mode="single" data-attacker-id="${combatant.id}">🎯 Singolo</button>
+                                        <button class="target-mode-btn" data-mode="aoe" data-attacker-id="${combatant.id}">💥 AoE</button>
+                                    </div>
+                                    <div class="target-single-mode">
+                                        <select class="target-select" data-attacker-id="${combatant.id}">
+                                            <option value="free">🆓 Libero</option>
+                                            ${targetOptions}
+                                        </select>
+                                    </div>
+                                    <div class="target-aoe-mode hidden">
+                                        <div class="aoe-controls">
+                                            <button class="aoe-select-all-btn" data-attacker-id="${combatant.id}" title="Seleziona tutti">☑️ Tutti</button>
+                                            <button class="aoe-select-none-btn" data-attacker-id="${combatant.id}" title="Deseleziona tutti">🔲 Nessuno</button>
+                                            <button class="aoe-select-enemies-btn" data-attacker-id="${combatant.id}" title="Solo nemici">⚔️ Nemici</button>
+                                            <button class="aoe-select-allies-btn" data-attacker-id="${combatant.id}" title="Solo alleati">🛡️ Alleati</button>
+                                        </div>
+                                        <div class="aoe-targets-list">
+                                            ${this.combatants
+                                                .filter(c => c.id !== combatant.id)
+                                                .map(c => {
+                                                    const ac = c.armor_class?.[0]?.value || c.armor_class || 10;
+                                                    const isEnemy = c.sourceType === 'monster' || c.sourceType === 'npc_enemy';
+                                                    const tag = isEnemy ? '🔴' : '🟢';
+                                                    return `
+                                                        <label class="aoe-target-item ${isEnemy ? 'enemy' : 'ally'}">
+                                                            <input type="checkbox" class="aoe-target-checkbox" data-target-id="${c.id}" data-attacker-id="${combatant.id}">
+                                                            <span class="aoe-target-name">${tag} ${c.customName || c.name}</span>
+                                                            <span class="aoe-target-ac">CA ${ac}</span>
+                                                        </label>
+                                                    `;
+                                                }).join('')}
+                                        </div>
+                                    </div>
                                 </div>
                                 
                                 <!-- Actions Counter -->
@@ -2563,6 +2592,51 @@ const CombatTracker = {
             
             return;
         }
+        
+        // Gestione target mode switch (Single / AoE)
+        if (e.target.classList.contains('target-mode-btn')) {
+            const mode = e.target.dataset.mode;
+            const attackerId = e.target.dataset.attackerId;
+            const selector = e.target.closest('.target-selector-multi');
+            if (!selector) return;
+            
+            // Aggiorna pulsanti attivi
+            selector.querySelectorAll('.target-mode-btn').forEach(btn => btn.classList.remove('active'));
+            e.target.classList.add('active');
+            
+            // Mostra/nascondi i pannelli
+            selector.querySelector('.target-single-mode')?.classList.toggle('hidden', mode !== 'single');
+            selector.querySelector('.target-aoe-mode')?.classList.toggle('hidden', mode !== 'aoe');
+            return;
+        }
+        
+        // Gestione pulsanti AoE (Tutti/Nessuno/Nemici/Alleati)
+        if (e.target.classList.contains('aoe-select-all-btn')) {
+            const selector = e.target.closest('.target-selector-multi');
+            selector?.querySelectorAll('.aoe-target-checkbox').forEach(cb => cb.checked = true);
+            return;
+        }
+        if (e.target.classList.contains('aoe-select-none-btn')) {
+            const selector = e.target.closest('.target-selector-multi');
+            selector?.querySelectorAll('.aoe-target-checkbox').forEach(cb => cb.checked = false);
+            return;
+        }
+        if (e.target.classList.contains('aoe-select-enemies-btn')) {
+            const selector = e.target.closest('.target-selector-multi');
+            selector?.querySelectorAll('.aoe-target-item').forEach(item => {
+                const cb = item.querySelector('.aoe-target-checkbox');
+                if (cb) cb.checked = item.classList.contains('enemy');
+            });
+            return;
+        }
+        if (e.target.classList.contains('aoe-select-allies-btn')) {
+            const selector = e.target.closest('.target-selector-multi');
+            selector?.querySelectorAll('.aoe-target-item').forEach(item => {
+                const cb = item.querySelector('.aoe-target-checkbox');
+                if (cb) cb.checked = item.classList.contains('ally');
+            });
+            return;
+        }
 
         if (e.target.classList.contains('remove-combatant-btn')) {
             // Conferma rimozione
@@ -2714,19 +2788,42 @@ const CombatTracker = {
             // Estrai effetto speciale usando la funzione unificata
             const specialEffect = this.extractEffectFromAction(fullSpell, combatant);
             
-            // Verifica bersaglio
+            // Trova la card e usa il selettore multi-mode
             const card = this.container.querySelector(`.combatant-card[data-id="${combatantId}"]`);
-            const targetSelect = card?.querySelector('.target-select');
-            const targetId = targetSelect?.value;
-            const target = targetId && targetId !== 'free' ? 
-                combatants.find(c => c.id === parseFloat(targetId)) : null;
+            
+            // Gestione self-cast: se l'incantesimo è self, il bersaglio è il caster stesso
+            let targets = [];
+            if (fullSpell.target?.type === 'self') {
+                targets = [combatant];
+            } else {
+                targets = this.getSelectedTargets(card);
+            }
             
             // Log nel results box
             if (combatant) {
                 const resultsBox = this.container.querySelector('.results-box-mini');
                 if (resultsBox) {
-                    // Pulsante tiro salvezza se applicabile
-                    let specialEffectBtn = this.renderSpecialEffectButton(specialEffect, target, combatant, spellData.name);
+                    // Genera label per bersagli multipli
+                    let targetLabel = '';
+                    if (targets.length === 1) {
+                        targetLabel = ` → <strong>${targets[0].customName || targets[0].name}</strong>`;
+                    } else if (targets.length > 1) {
+                        targetLabel = ` → <strong>${targets.length} bersagli</strong>`;
+                    }
+                    
+                    // Genera pulsanti tiro salvezza per ogni bersaglio (se AoE)
+                    let specialEffectBtns = '';
+                    if (specialEffect && targets.length > 0) {
+                        if (targets.length === 1) {
+                            specialEffectBtns = this.renderSpecialEffectButton(specialEffect, targets[0], combatant, spellData.name);
+                        } else {
+                            specialEffectBtns = '<div style="margin-top: 6px;"><small style="color: var(--text-muted);">Tiri salvezza per bersaglio:</small><br>';
+                            targets.forEach(t => {
+                                specialEffectBtns += this.renderSpecialEffectButton(specialEffect, t, combatant, spellData.name);
+                            });
+                            specialEffectBtns += '</div>';
+                        }
+                    }
                     
                     // Mostra info area/concentrazione se presenti
                     let extraInfo = '';
@@ -2749,10 +2846,10 @@ const CombatTracker = {
                             border-left: 3px solid #9c27b0;
                             border-radius: 4px;
                         ">
-                            🔮 <strong>${spellData.name}</strong> lanciato!
+                            🔮 <strong>${spellData.name}</strong> lanciato!${targetLabel}
                             <small style="color: var(--text-muted);">${result.message.includes('rimanenti') ? result.message.split('(')[1]?.replace(')', '') : ''}</small>
                             ${extraInfo}
-                            ${specialEffectBtn}
+                            ${specialEffectBtns}
                         </div>
                     `;
                     resultsBox.innerHTML = spellHtml + resultsBox.innerHTML;
@@ -3041,6 +3138,56 @@ const CombatTracker = {
     },
     
     /**
+     * Estrae i bersagli selezionati dal selettore multi-mode di un combatant.
+     * Ritorna un array di oggetti combatant (vuoto se nessuno selezionato).
+     * 
+     * @param {HTMLElement} card - La card del combatant attaccante
+     * @returns {Array} Array di combatant bersagli
+     */
+    getSelectedTargets(card) {
+        if (!card) return [];
+        
+        const selector = card.querySelector('.target-selector-multi');
+        if (!selector) {
+            // Fallback: vecchio selettore singolo
+            const targetSelect = card.querySelector('.target-select');
+            const targetId = targetSelect?.value;
+            if (!targetId || targetId === 'free') return [];
+            const combatants = getCombatState();
+            const target = combatants.find(c => c.id === parseFloat(targetId));
+            return target ? [target] : [];
+        }
+        
+        // Verifica quale mode è attivo
+        const activeModeBtn = selector.querySelector('.target-mode-btn.active');
+        const mode = activeModeBtn?.dataset.mode || 'single';
+        
+        const combatants = getCombatState();
+        
+        if (mode === 'single') {
+            const targetSelect = selector.querySelector('.target-select');
+            const targetId = targetSelect?.value;
+            if (!targetId || targetId === 'free') return [];
+            const target = combatants.find(c => c.id === parseFloat(targetId));
+            return target ? [target] : [];
+        }
+        
+        if (mode === 'aoe') {
+            // Raccogli tutti i checkbox selezionati
+            const checkboxes = selector.querySelectorAll('.aoe-target-checkbox:checked');
+            const targets = [];
+            checkboxes.forEach(cb => {
+                const targetId = parseFloat(cb.dataset.targetId);
+                const target = combatants.find(c => c.id === targetId);
+                if (target) targets.push(target);
+            });
+            return targets;
+        }
+        
+        return [];
+    },
+    
+    /**
      * Gestisce il click su un attacco (singolo o parte di multiattacco).
      */
     handleAttackClick(btn, attacker) {
@@ -3049,11 +3196,12 @@ const CombatTracker = {
         
         // Trova la card partendo dal bottone (più affidabile del selettore globale)
         const card = btn.closest('.combatant-card');
-        const targetSelect = card?.querySelector('.target-select');
-        const targetId = targetSelect?.value;
         
-        if (!targetId) {
-            showToast('⚠️ Seleziona un bersaglio prima di attaccare!', 'warning');
+        // Usa la nuova funzione helper che supporta single + AoE
+        const targets = this.getSelectedTargets(card);
+        
+        if (targets.length === 0) {
+            showToast('⚠️ Seleziona almeno un bersaglio prima di attaccare!', 'warning');
             return;
         }
         
@@ -3082,8 +3230,10 @@ const CombatTracker = {
             updateMonsterProperty(attacker.id, 'actionTracker', tracker);
         }
         
-        // Esegui il tiro attacco con confronto CA
-        this.handleAttackWithAC(btn, attacker, targetId, multiattackMode);
+        // Esegui il tiro attacco per ogni bersaglio (supporta AoE)
+        targets.forEach(target => {
+            this.handleAttackWithAC(btn, attacker, target.id, multiattackMode);
+        });
     },
     
     /**
@@ -3300,10 +3450,9 @@ const CombatTracker = {
     handleSpecialAction(btn, attacker) {
         const actionData = JSON.parse(btn.dataset.action.replace(/&apos;/g, "'"));
         
-        // Verifica se abbiamo un bersaglio (per alcune azioni è richiesto)
+        // Trova la card e usa il selettore multi-mode
         const card = this.container.querySelector(`.combatant-card[data-id="${attacker.id}"]`);
-        const targetSelect = card?.querySelector('.target-select');
-        const targetId = targetSelect?.value;
+        const targets = this.getSelectedTargets(card);
         
         // Consuma l'azione
         const tracker = attacker.actionTracker || {};
@@ -3320,13 +3469,15 @@ const CombatTracker = {
         // Mostra risultato
         const resultsBox = this.container.querySelector('.results-box-mini') || this.container.querySelector('.results-box');
         if (resultsBox) {
-            const card = this.container.querySelector(`.combatant-card[data-id="${attacker.id}"]`);
             const cardResultsBox = card?.querySelector('.results-box-mini') || resultsBox;
             
-            const combatants = getCombatState();
-            const target = targetId && targetId !== 'free' ? 
-                combatants.find(c => c.id === parseFloat(targetId)) : null;
-            const targetLabel = target ? ` → <strong>${target.customName || target.name}</strong>` : '';
+            // Genera label per bersagli multipli
+            let targetLabel = '';
+            if (targets.length === 1) {
+                targetLabel = ` → <strong>${targets[0].customName || targets[0].name}</strong>`;
+            } else if (targets.length > 1) {
+                targetLabel = ` → <strong>${targets.length} bersagli</strong>`;
+            }
             
             let effectHtml = '';
             if (actionData.dc) {
@@ -3339,8 +3490,20 @@ const CombatTracker = {
                 effectHtml += `<br><small style="color: var(--text-muted);">${shortDesc}${actionData.desc.length > 200 ? '...' : ''}</small>`;
             }
             
-            // Pulsante tiro salvezza se l'effetto è rilevabile e c'è un bersaglio
-            let specialEffectBtn = this.renderSpecialEffectButton(specialEffect, target, attacker, actionData.name);
+            // Genera pulsanti tiro salvezza per ogni bersaglio (se AoE)
+            let specialEffectBtns = '';
+            if (specialEffect && targets.length > 0) {
+                if (targets.length === 1) {
+                    specialEffectBtns = this.renderSpecialEffectButton(specialEffect, targets[0], attacker, actionData.name);
+                } else {
+                    // AoE: genera un pulsante per ogni bersaglio
+                    specialEffectBtns = '<div style="margin-top: 6px;"><small style="color: var(--text-muted);">Tiri salvezza per bersaglio:</small><br>';
+                    targets.forEach(t => {
+                        specialEffectBtns += this.renderSpecialEffectButton(specialEffect, t, attacker, actionData.name);
+                    });
+                    specialEffectBtns += '</div>';
+                }
+            }
             
             cardResultsBox.innerHTML = `
                 <div class="special-action-result" style="
@@ -3352,7 +3515,7 @@ const CombatTracker = {
                 ">
                     <strong>✨ ${actionData.name}</strong>${targetLabel}
                     ${effectHtml}
-                    ${specialEffectBtn}
+                    ${specialEffectBtns}
                 </div>
             ` + cardResultsBox.innerHTML;
         }
@@ -3380,13 +3543,9 @@ const CombatTracker = {
         // Estrai effetto speciale con la funzione unificata
         const specialEffect = this.extractEffectFromAction(actionData, attacker);
         
-        // Verifica bersaglio
+        // Trova la card e usa il selettore multi-mode
         const card = this.container.querySelector(`.combatant-card[data-id="${attacker.id}"]`);
-        const targetSelect = card?.querySelector('.target-select');
-        const targetId = targetSelect?.value;
-        const combatants = getCombatState();
-        const target = targetId && targetId !== 'free' ? 
-            combatants.find(c => c.id === parseFloat(targetId)) : null;
+        const targets = this.getSelectedTargets(card);
         
         // Mostra risultato
         const resultsBox = this.container.querySelector('.results-box-mini') || this.container.querySelector('.results-box');
@@ -3394,10 +3553,28 @@ const CombatTracker = {
             const cardResultsBox = card?.querySelector('.results-box-mini') || resultsBox;
             
             const newRemaining = tracker.legendaryActionsMax - tracker.legendaryActionsUsed;
-            const targetLabel = target ? ` → <strong>${target.customName || target.name}</strong>` : '';
             
-            // Pulsante tiro salvezza se l'effetto è rilevabile
-            let specialEffectBtn = this.renderSpecialEffectButton(specialEffect, target, attacker, actionData.name);
+            // Genera label per bersagli multipli
+            let targetLabel = '';
+            if (targets.length === 1) {
+                targetLabel = ` → <strong>${targets[0].customName || targets[0].name}</strong>`;
+            } else if (targets.length > 1) {
+                targetLabel = ` → <strong>${targets.length} bersagli</strong>`;
+            }
+            
+            // Genera pulsanti tiro salvezza per ogni bersaglio (se AoE)
+            let specialEffectBtns = '';
+            if (specialEffect && targets.length > 0) {
+                if (targets.length === 1) {
+                    specialEffectBtns = this.renderSpecialEffectButton(specialEffect, targets[0], attacker, actionData.name);
+                } else {
+                    specialEffectBtns = '<div style="margin-top: 6px;"><small style="color: var(--text-muted);">Tiri salvezza per bersaglio:</small><br>';
+                    targets.forEach(t => {
+                        specialEffectBtns += this.renderSpecialEffectButton(specialEffect, t, attacker, actionData.name);
+                    });
+                    specialEffectBtns += '</div>';
+                }
+            }
             
             // Mostra CD/danno se presenti
             let effectInfo = '';
@@ -3418,7 +3595,7 @@ const CombatTracker = {
                     <strong>👑 ${actionData.name}</strong>${targetLabel}
                     <small style="color: #ffd700;">(${newRemaining}/${tracker.legendaryActionsMax} azioni leggendarie rimanenti)</small>
                     ${effectInfo}
-                    ${specialEffectBtn}
+                    ${specialEffectBtns}
                 </div>
             ` + cardResultsBox.innerHTML;
         }
