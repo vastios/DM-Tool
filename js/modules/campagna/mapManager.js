@@ -20,6 +20,7 @@ import { escapeHtml } from '../../../utils/htmlHelpers.js';
 import { monsterDatabase } from '../../../database/monsterDatabase.js';
 import { generateMonsterTokenHTML, buildTokenFromMonster, buildTokensFromEncounter, getColorForMonsterType } from './mapManager/monsterTokenGenerator.js';
 import { MAP_TEMPLATES, loadTemplateAsBase64, getTemplateCategories, getTemplatesByCategory } from './mapManager/mapTemplates.js';
+import { checkAIServerStatus, generateMapWithAI, AI_MAP_SIZES, PROMPT_SUGGESTIONS } from './mapManager/aiMapClient.js';
 
 // ═══════════════════════════════════════════════════════════════
 // COSTANTI E CONFIGURAZIONE
@@ -352,6 +353,24 @@ ${this.getStyles()}
                         </div>
                     `).join('')}
                 </div>
+            </div>
+            <div class="map-form-group">
+                <label>oppure genera con AI personalizzata <span id="ai-server-status" class="ai-server-badge checking">verifica...</span></label>
+                <div class="ai-generate-section" id="ai-generate-section">
+                    <input type="text" id="ai-prompt-input" class="ai-prompt-input" placeholder="Es: forest battlemap with ancient ruins and river" list="prompt-suggestions">
+                    <datalist id="prompt-suggestions">
+                        ${PROMPT_SUGGESTIONS.map(p => `<option value="${escapeHtml(p)}">`).join('')}
+                    </datalist>
+                    <select id="ai-size-select" class="ai-size-select">
+                        ${AI_MAP_SIZES.map(s => `<option value="${s.value}">${escapeHtml(s.label)}</option>`).join('')}
+                    </select>
+                    <button class="ai-generate-btn" id="ai-generate-btn" disabled>🎨 Genera AI</button>
+                </div>
+                <div class="ai-progress" id="ai-progress" style="display: none;">
+                    <div class="ai-progress-spinner"></div>
+                    <span id="ai-progress-text">Generazione in corso...</span>
+                </div>
+                <p class="ai-hint">Richiede il server AI attivo: <code>node server/server.js</code></p>
             </div>
             <div class="map-form-group">
                 <label>Note (opzionale)</label>
@@ -1480,6 +1499,119 @@ ${this.getStyles()}
     color: var(--text-primary, #fff);
     background: rgba(0,0,0,0.5);
 }
+
+/* === AI GENERATION === */
+.ai-server-badge {
+    font-size: 0.65rem;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: 600;
+    margin-left: 4px;
+}
+.ai-server-badge.checking {
+    background: rgba(255, 193, 7, 0.2);
+    color: #ffb74d;
+}
+.ai-server-badge.online {
+    background: rgba(76, 175, 80, 0.2);
+    color: #81c784;
+}
+.ai-server-badge.offline {
+    background: rgba(244, 67, 54, 0.15);
+    color: #e57373;
+}
+
+.ai-generate-section {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.ai-prompt-input {
+    flex: 1;
+    min-width: 200px;
+    padding: 6px 10px;
+    background: var(--bg-secondary, #1a1a1a);
+    border: 1px solid var(--border-color, #3a3a3a);
+    border-radius: 4px;
+    color: var(--text-primary, #fff);
+    font-size: 0.8rem;
+}
+.ai-prompt-input:focus {
+    outline: none;
+    border-color: #9c27b0;
+}
+
+.ai-size-select {
+    padding: 6px 8px;
+    background: var(--bg-secondary, #1a1a1a);
+    border: 1px solid var(--border-color, #3a3a3a);
+    border-radius: 4px;
+    color: var(--text-primary, #fff);
+    font-size: 0.75rem;
+}
+
+.ai-generate-btn {
+    padding: 6px 14px;
+    background: linear-gradient(135deg, #9c27b0 0%, #6a1b9a 100%);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: all 0.15s;
+}
+.ai-generate-btn:hover:not(:disabled) {
+    box-shadow: 0 0 10px rgba(156, 39, 176, 0.5);
+    transform: translateY(-1px);
+}
+.ai-generate-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.ai-progress {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    margin-top: 8px;
+    background: rgba(156, 39, 176, 0.1);
+    border-radius: 6px;
+    border: 1px solid rgba(156, 39, 176, 0.3);
+}
+
+.ai-progress-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(156, 39, 176, 0.3);
+    border-top-color: #9c27b0;
+    border-radius: 50%;
+    animation: aiSpin 0.8s linear infinite;
+}
+@keyframes aiSpin {
+    to { transform: rotate(360deg); }
+}
+
+.ai-progress span {
+    font-size: 0.8rem;
+    color: #ce93d8;
+}
+
+.ai-hint {
+    font-size: 0.7rem;
+    color: var(--text-muted, #666);
+    margin-top: 6px;
+}
+.ai-hint code {
+    background: var(--bg-tertiary, #2a2a2a);
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-size: 0.65rem;
+}
         `;
     },
 
@@ -1747,6 +1879,30 @@ ${this.getStyles()}
             });
         });
 
+        // AI generation - check server status on modal open
+        this.checkAIServer();
+        
+        // AI generate button
+        this.container.querySelector('#ai-generate-btn')?.addEventListener('click', async () => {
+            await this.handleAIGenerate();
+        });
+        
+        // AI prompt input - enable button on type
+        this.container.querySelector('#ai-prompt-input')?.addEventListener('input', (e) => {
+            const btn = this.container.querySelector('#ai-generate-btn');
+            const status = this.container.querySelector('#ai-server-status');
+            const isOnline = status?.classList.contains('online');
+            if (btn) btn.disabled = !isOnline || e.target.value.trim().length < 5;
+        });
+        
+        // Enter key to generate
+        this.container.querySelector('#ai-prompt-input')?.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const btn = this.container.querySelector('#ai-generate-btn');
+                if (btn && !btn.disabled) btn.click();
+            }
+        });
+
         // Pin modal
         const pinModal = this.container.querySelector('#pin-modal');
         const pinOverlay = this.container.querySelector('#pin-modal-overlay');
@@ -1804,6 +1960,90 @@ ${this.getStyles()}
         this.renderTokenList();
 
         console.log(`🗺️ [MapManager] Mappa selezionata: ${map.name}`);
+    },
+
+    // ═══════════════════════════════════════════════════════════════
+    // AI MAP GENERATION
+    // ═══════════════════════════════════════════════════════════════
+
+    async checkAIServer() {
+        const badge = this.container.querySelector('#ai-server-status');
+        const btn = this.container.querySelector('#ai-generate-btn');
+        if (!badge) return;
+        
+        badge.className = 'ai-server-badge checking';
+        badge.textContent = 'verifica...';
+        
+        const isOnline = await checkAIServerStatus();
+        
+        if (isOnline) {
+            badge.className = 'ai-server-badge online';
+            badge.textContent = '● online';
+            if (btn) btn.disabled = false;
+        } else {
+            badge.className = 'ai-server-badge offline';
+            badge.textContent = '● offline';
+            if (btn) btn.disabled = true;
+        }
+    },
+
+    async handleAIGenerate() {
+        const promptInput = this.container.querySelector('#ai-prompt-input');
+        const sizeSelect = this.container.querySelector('#ai-size-select');
+        const progress = this.container.querySelector('#ai-progress');
+        const progressText = this.container.querySelector('#ai-progress-text');
+        const btn = this.container.querySelector('#ai-generate-btn');
+        
+        if (!promptInput || !promptInput.value.trim()) {
+            showToast('Inserisci un prompt per la mappa', 'warning');
+            return;
+        }
+        
+        const prompt = promptInput.value.trim();
+        const size = sizeSelect?.value || '1344x768';
+        
+        // Show progress
+        if (progress) progress.style.display = 'flex';
+        if (btn) btn.disabled = true;
+        if (progressText) progressText.textContent = 'Invio richiesta al server AI...';
+        
+        try {
+            const imageDataUrl = await generateMapWithAI(prompt, size, (p) => {
+                if (progressText && p.message) progressText.textContent = p.message;
+            });
+            
+            // Set the generated image as pending
+            this.pendingImageData = imageDataUrl;
+            
+            // Show preview
+            const preview = this.container.querySelector('#map-preview-img');
+            const placeholder = this.container.querySelector('.upload-placeholder');
+            if (preview) {
+                preview.src = imageDataUrl;
+                preview.style.display = 'block';
+            }
+            if (placeholder) {
+                placeholder.style.display = 'none';
+            }
+            
+            // Auto-fill name if empty
+            const nameInput = this.container.querySelector('#map-name-input');
+            if (nameInput && !nameInput.value.trim()) {
+                nameInput.value = prompt.substring(0, 40) + (prompt.length > 40 ? '...' : '');
+            }
+            
+            showToast('🎨 Mappa AI generata con successo!', 'success', 5000);
+        } catch (e) {
+            showToast(`❌ Errore generazione AI: ${e.message}`, 'error', 5000);
+            console.error(e);
+        } finally {
+            if (progress) progress.style.display = 'none';
+            // Re-enable button if server is still online
+            const status = this.container.querySelector('#ai-server-status');
+            if (btn && status?.classList.contains('online')) {
+                btn.disabled = promptInput.value.trim().length < 5;
+            }
+        }
     },
 
     openMapModal(mapId = null) {

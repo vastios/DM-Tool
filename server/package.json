@@ -1,0 +1,12 @@
+{
+  "name": "dm-tool-ai-server",
+  "version": "1.0.0",
+  "description": "Server Node.js per generazione AI on-demand di mappe D&D",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "z-ai-web-dev-sdk": "latest"
+  }
+}
