@@ -319,6 +319,15 @@ export const ROLES = {
     'domestico': 'Servo',
     'staffiere': 'Staffiere',
     'scudiero': 'Scudiero',
+    'luogotenente': 'Luogotenente',
+    'braccio destro': 'Luogotenente',
+    'vice': 'Vice',
+    'aiutante': 'Aiutante',
+    'compagno': 'Compagno',
+    'compagna': 'Compagno',
+    'consigliere': 'Consigliere',
+    'consigliera': 'Consigliere',
+    'ambasciatore': 'Ambasciatore',
     'paggio': 'Paggio',
     'ambasciatore': 'Ambasciatore',
     'emissario': 'Ambasciatore',
@@ -1346,8 +1355,11 @@ export const NAME_PATTERNS = {
     
     // Pattern: trova nome proprio preceduto da ruolo
     // es. "re Aldric", "mago Elaria", "capitano Thordin"
-    // Gruppo 1: ruolo, Gruppo 2: nome
-    ROLE_NAME: /\b(capo|capitano|comandante|generale|re|regina|principe|principessa|duca|duchessa|conte|contessa|barone|baronessa|marchese|marchesa|signore|signora|lord|lady|sir|cavaliere|paladino|sacerdote|sacerdotessa|chierico|mago|maga|stregone|strega|incantatore|incantatrice|warlock|druido|bardo|monaco|ladro|guerriero|barbaro|ranger|esploratore|mercante|barista|oste|locandiere|fabbro|carpentiere|macellaio|panettiere|contadino|pescatore|cacciatore|guardia|soldato|capoguardia|sceriffo|magistrato|giudice|avvocato|notaio|scriba|studioso|saggio|eremita|erudito|bibliotecario|medico|guaritore|erborista|alchimista|artigiano|artista|poeta|musicista|menestrello|giullare|assassino|sicario|spia|informatore|contrabbandiere|pirata|marinaio|ammiraglio|filosofo|matematico|astronomo|astrologo|indovino|veggente|oracolo|profeta|santo|martire|eretico|inquisitore|custode|sagrestano|novizio|frate|suora|abate|badessa|vescovo|arcivescovo|cardinale|papa|pontefice|sommo sacerdote|somma sacerdotessa|cultista|adepto|iniziato|discepolo|apprendista|maestro|mentore|tutore|prigioniero|carcerato|schiavo|servo|servitore|ancella|staffiere|scudiero|paggio|ambasciatore|emissario|inviato|messaggero|corriere|bandito|fuorilegge|brigante|predone|razziatore|nomade|vagabondo|mendicante|orfano|bambino|ragazzo|giovane|anziano|vecchio|sciamano|divinatore|cartomante|chiromante|negromante|evocatore|illusionista|prestigiatore)\s+([A-ZÀ-Ý][a-zà-ÿ]+(?:\s+[A-ZÀ-Ý][a-zà-ÿ]+)?)/gi,
+    // IMPORTANTE: case-sensitive (no flag 'i') perché la parte del nome
+    // DEVE iniziare con maiuscola. Il ruolo viene matchato case-insensitive
+    // tramite pre-processing lowercase del testo in extractors.js.
+    // Gruppo 1: ruolo (lowercase), Gruppo 2: nome proprio
+    ROLE_NAME: /\b(capo|capitano|comandante|generale|re|regina|principe|principessa|duca|duchessa|conte|contessa|barone|baronessa|marchese|marchesa|signore|signora|lord|lady|sir|cavaliere|paladino|sacerdote|sacerdotessa|chierico|mago|maga|stregone|strega|incantatore|incantatrice|warlock|druido|bardo|monaco|ladro|guerriero|barbaro|ranger|esploratore|mercante|barista|oste|locandiere|fabbro|carpentiere|macellaio|panettiere|contadino|pescatore|cacciatore|guardia|soldato|capoguardia|sceriffo|magistrato|giudice|avvocato|notaio|scriba|studioso|saggio|eremita|erudito|bibliotecario|medico|guaritore|erborista|alchimista|artigiano|artista|poeta|musicista|menestrello|giullare|assassino|sicario|spia|informatore|contrabbandiere|pirata|marinaio|ammiraglio|filosofo|matematico|astronomo|astrologo|indovino|veggente|oracolo|profeta|santo|martire|eretico|inquisitore|custode|sagrestano|novizio|frate|suora|abate|badessa|vescovo|arcivescovo|cardinale|papa|pontefice|cultista|adepto|iniziato|discepolo|apprendista|maestro|mentore|tutore|prigioniero|carcerato|schiavo|servo|servitore|ancella|staffiere|scudiero|paggio|ambasciatore|emissario|inviato|messaggero|corriere|bandito|fuorilegge|brigante|predone|razziatore|nomade|vagabondo|mendicante|orfano|bambino|ragazzo|giovane|anziano|vecchio|sciamano|divinatore|cartomante|chiromante|negromante|evocatore|illusionista|prestigiatore|luogotenente|braccio destro|vice|compagno|compagna|aiutante|sgambetto|scudiero|paggio)\s+([A-ZÀ-Ý][a-zà-ÿ]+(?:\s+[A-ZÀ-Ý][a-zà-ÿ]+)?)/g,
 };
 
 /**
