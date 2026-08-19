@@ -189,7 +189,7 @@ function loadTokens() {
 // ═══════════════════════════════════════════════════════════════
 
 const MapManager = {
-    render(containerElement) {
+    render(containerElement, itemToLoad = null, itemData = null) {
         this.container = containerElement;
         this.maps = loadMaps();
         this.pins = loadPins();
@@ -209,9 +209,25 @@ const MapManager = {
         this.container.innerHTML = this.getMainLayout();
         this.bindEvents();
 
+        // Ascolta eventi HP dal Combat Tracker per sync token
+        this._hpUpdateHandler = (e) => this.syncTokenWithCombatant(e.detail);
+        document.addEventListener('combatTracker:hpUpdate', this._hpUpdateHandler);
+        this._conditionsUpdateHandler = (e) => this.syncTokenConditions(e.detail);
+        document.addEventListener('combatTracker:conditionsUpdate', this._conditionsUpdateHandler);
+
         // Se ci sono mappe, seleziona la prima
         if (this.maps.length > 0) {
             this.selectMap(this.maps[0].id);
+        }
+
+        // Se riceve token dal Combat Tracker, aggiungili alla mappa corrente
+        if (itemData && itemData.tokens && Array.isArray(itemData.tokens)) {
+            // Se non c'è una mappa, avvisa
+            if (!this.currentMapId) {
+                showToast('Crea prima una mappa, poi usa "Invia sulla Mappa" dal Combat Tracker', 'warning', 5000);
+            } else {
+                this.receiveTokensFromCombatTracker(itemData);
+            }
         }
 
         console.log('🗺️ [MapManager] Modulo inizializzato v1.0');
@@ -413,6 +429,7 @@ ${this.getStyles()}
         <div class="pin-modal-footer">
             <button class="map-btn secondary" id="token-close-btn">Chiudi</button>
             <button class="map-btn danger" id="token-remove-btn">Rimuovi Token</button>
+            <button class="map-btn primary" id="token-combat-btn" style="display: none;">⚔️ Apri in Combat Tracker</button>
         </div>
     </div>
 </div>
@@ -1963,6 +1980,137 @@ ${this.getStyles()}
     },
 
     // ═══════════════════════════════════════════════════════════════
+    // COMBAT TRACKER INTEGRATION
+    // ═══════════════════════════════════════════════════════════════
+
+    /**
+     * Sincronizza l'HP di un token quando cambia nel Combat Tracker.
+     * Cerca tutti i token collegati al combatantId su tutte le mappe.
+     */
+    syncTokenWithCombatant(data) {
+        if (!data || !data.combatantId) return;
+        
+        let updated = false;
+        
+        // Cerca su tutte le mappe
+        Object.keys(this.tokens).forEach(mapId => {
+            const mapTokens = this.tokens[mapId] || [];
+            mapTokens.forEach(token => {
+                if (token.combatantId === data.combatantId) {
+                    token.hp = { current: data.currentHp, max: data.maxHp };
+                    if (data.conditions) {
+                        token.conditions = data.conditions.map(c => 
+                            typeof c === 'string' ? c : c.name
+                        );
+                    }
+                    updated = true;
+                }
+            });
+        });
+        
+        if (updated) {
+            saveTokens(this.tokens);
+            // Re-render solo se la mappa corrente ha token aggiornati
+            this.renderTokens();
+            this.renderTokenList();
+            console.log(`🔗 [MapManager] Token sincronizzato con combat tracker: ${data.name} HP=${data.currentHp}/${data.maxHp}`);
+        }
+    },
+
+    /**
+     * Sincronizza le condizioni di un token.
+     */
+    syncTokenConditions(data) {
+        if (!data || !data.combatantId) return;
+        
+        let updated = false;
+        Object.keys(this.tokens).forEach(mapId => {
+            const mapTokens = this.tokens[mapId] || [];
+            mapTokens.forEach(token => {
+                if (token.combatantId === data.combatantId) {
+                    token.conditions = (data.conditions || []).map(c => 
+                        typeof c === 'string' ? c : c.name
+                    );
+                    updated = true;
+                }
+            });
+        });
+        
+        if (updated) {
+            saveTokens(this.tokens);
+            this.renderTokens();
+        }
+    },
+
+    /**
+     * Riceve token dal Combat Tracker tramite evento openModuleWithItem.
+     * Crea token per ogni combattente sulla mappa corrente.
+     */
+    receiveTokensFromCombatTracker(tokenData) {
+        if (!this.currentMapId) {
+            // Se nessuna mappa selezionata, crea una nuova o mostra warning
+            showToast('Seleziona prima una mappa, poi riprova', 'warning');
+            return;
+        }
+        
+        if (!tokenData || !tokenData.tokens || !Array.isArray(tokenData.tokens)) return;
+        
+        if (!this.tokens[this.currentMapId]) {
+            this.tokens[this.currentMapId] = [];
+        }
+        
+        let added = 0;
+        tokenData.tokens.forEach(t => {
+            // Evita duplicati con stesso combatantId
+            const exists = this.tokens[this.currentMapId].some(existing => 
+                existing.combatantId === t.combatantId
+            );
+            if (!exists) {
+                this.tokens[this.currentMapId].push(t);
+                added++;
+            }
+        });
+        
+        saveTokens(this.tokens);
+        this.renderTokens();
+        this.renderTokenList();
+        showToast(`${added} token aggiunti alla mappa dal Combat Tracker`, 'success');
+    },
+
+    /**
+     * Collega un token esistente a un combattente del Combat Tracker.
+     */
+    linkTokenToCombatant(tokenId, combatantId) {
+        if (!this.currentMapId || !this.tokens[this.currentMapId]) return;
+        
+        const token = this.tokens[this.currentMapId].find(t => t.id === tokenId);
+        if (token) {
+            token.combatantId = combatantId;
+            saveTokens(this.tokens);
+            showToast('Token collegato al combattente', 'success');
+        }
+    },
+
+    /**
+     * Apre il Combat Tracker con il combattente selezionato.
+     */
+    openInCombatTracker(combatantId) {
+        if (!combatantId) {
+            showToast('Token non collegato a un combattente', 'warning');
+            return;
+        }
+        
+        const event = new CustomEvent('openModuleWithItem', {
+            detail: {
+                moduleId: 'combatTracker',
+                itemId: combatantId,
+                section: 'combat',
+            }
+        });
+        document.dispatchEvent(event);
+    },
+
+    // ═══════════════════════════════════════════════════════════════
     // AI MAP GENERATION
     // ═══════════════════════════════════════════════════════════════
 
@@ -2556,6 +2704,17 @@ ${this.getStyles()}
             showToast('HP aggiornato', 'success');
             this.closeTokenModal();
         });
+        
+        // Show/hide "Apri in Combat Tracker" button based on linkage
+        const combatBtn = this.container.querySelector('#token-combat-btn');
+        if (combatBtn) {
+            if (token.combatantId) {
+                combatBtn.style.display = 'inline-block';
+                combatBtn.onclick = () => this.openInCombatTracker(token.combatantId);
+            } else {
+                combatBtn.style.display = 'none';
+            }
+        }
     },
 
     closeTokenModal() {
@@ -2945,6 +3104,9 @@ ${this.getStyles()}
     destroy() {
         // Remove keyboard listener
         document.removeEventListener('keydown', this.handleKeyDown);
+        // Remove combat tracker sync listeners
+        if (this._hpUpdateHandler) document.removeEventListener('combatTracker:hpUpdate', this._hpUpdateHandler);
+        if (this._conditionsUpdateHandler) document.removeEventListener('combatTracker:conditionsUpdate', this._conditionsUpdateHandler);
         console.log('🗺️ [MapManager] Modulo distrutto');
     }
 };

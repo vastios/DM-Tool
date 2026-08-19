@@ -974,6 +974,7 @@ export function updateMonsterProperty(monsterId, property, value) {
     const monster = combatState.find(m => m.id === monsterId);
     
     if (monster) {
+        const oldValue = monster[property];
         monster[property] = value;
         
         // Riordina iniziativa se è stata modificata durante il combattimento
@@ -983,6 +984,28 @@ export function updateMonsterProperty(monsterId, property, value) {
                 if (b.initiative === null) return -1;
                 return b.initiative - a.initiative;
             });
+        }
+        
+        // Emetti evento custom per HP/conditions cambiati (per sync con Map Manager)
+        if (property === 'currentHp' && oldValue !== value) {
+            document.dispatchEvent(new CustomEvent('combatTracker:hpUpdate', {
+                detail: {
+                    combatantId: monsterId,
+                    name: monster.customName || monster.name,
+                    currentHp: value,
+                    maxHp: monster.maxHp || monster.hit_points || 1,
+                    conditions: monster.conditions || [],
+                }
+            }));
+        }
+        if (property === 'conditions' && JSON.stringify(oldValue) !== JSON.stringify(value)) {
+            document.dispatchEvent(new CustomEvent('combatTracker:conditionsUpdate', {
+                detail: {
+                    combatantId: monsterId,
+                    name: monster.customName || monster.name,
+                    conditions: value || [],
+                }
+            }));
         }
         
         console.log(`🧾 [CombatStateManager] Proprietà aggiornata.`);

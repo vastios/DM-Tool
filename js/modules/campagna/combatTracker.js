@@ -390,6 +390,7 @@ const CombatTracker = {
         </div>
         <div class="header-right">
             <button id="combat-log-btn" class="log-btn" title="Log Combattimento">📜 Log</button>
+            <button id="send-to-map-btn" class="log-btn" title="Invia combattenti sulla mappa">🗺️ Mappa</button>
             <button class="source-btn" data-source="pcs" title="Aggiungi Personaggi Giocanti">
                 👤 PG
             </button>
@@ -646,6 +647,10 @@ const CombatTracker = {
         // Combat Log events
         const logBtn = container.querySelector('#combat-log-btn');
         logBtn?.addEventListener('click', () => this.openCombatLog());
+        
+        // Send to Map button
+        const sendToMapBtn = container.querySelector('#send-to-map-btn');
+        sendToMapBtn?.addEventListener('click', () => this.sendToMap());
         
         const logOverlay = container.querySelector('#combat-log-overlay');
         logOverlay?.addEventListener('click', (e) => {
@@ -3524,6 +3529,62 @@ const CombatTracker = {
         console.log(`⚔️ [CombatTracker] ${attacker.customName} attacca con ${attackData.name}: ${hitStatus}${damageLabel}`);
     },
     
+    /**
+     * Invia tutti i combattenti come token sulla mappa del Map Manager.
+     * Crea token con combatantId per sync HP bidirezionale.
+     */
+    sendToMap() {
+        const combatants = getCombatState();
+        if (combatants.length === 0) {
+            showToast('Nessun combattente da inviare', 'warning');
+            return;
+        }
+        
+        // Costruisci token per ogni combattente
+        const tokens = combatants.map(c => {
+            const monsterType = c.type || '';
+            const monsterSize = c.size || 'Media';
+            const hp = c.currentHp !== undefined ? c.currentHp : (c.hit_points || 10);
+            const maxHp = c.maxHp || c.hit_points || 10;
+            const conditions = (c.conditions || []).map(cond => 
+                typeof cond === 'string' ? cond : cond.name
+            );
+            
+            // Determina colore in base al tipo
+            let color = '#6b7280';
+            if (c.sourceType === 'pc') color = '#4caf50';
+            else if (c.sourceType === 'npc') color = '#2196f3';
+            else if (c.sourceType === 'monster' || c.sourceType === 'npc_enemy') color = '#ef4444';
+            
+            return {
+                id: `tok_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
+                type: c.sourceType === 'pc' ? 'pc' : (c.sourceType === 'npc' ? 'npc' : 'monster'),
+                combatantId: c.id, // Link per sync HP
+                refId: c.index || c.id,
+                name: c.customName || c.name || 'Sconosciuto',
+                monsterType: monsterType,
+                monsterSize: monsterSize,
+                color: color,
+                pixelSize: 32, // Default Media
+                hp: { current: hp, max: maxHp },
+                conditions: conditions,
+                x: 30 + Math.random() * 40,
+                y: 30 + Math.random() * 40,
+            };
+        });
+        
+        // Emetti evento per aprire Map Manager con i token
+        const event = new CustomEvent('openModuleWithItem', {
+            detail: {
+                moduleId: 'mapManager',
+                itemData: { tokens: tokens },
+            }
+        });
+        document.dispatchEvent(event);
+        
+        showToast(`🗺️ ${tokens.length} combattenti inviati alla mappa`, 'success');
+    },
+
     /**
      * Gestisce il tiro di nuova iniziativa per tutti i combattenti.
      * Visibile solo quando il combattimento è sospeso.
