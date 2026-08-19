@@ -2,12 +2,18 @@
 // ─────────────────────────────────────────────────────────────
 // Lore Extractor - Modulo principale con UI.
 // Editor testo libero + estrazione su bottone + anteprima + integrazione.
+// Supporto doppia modalità: parser regole (offline) + WebLLM (AI opzionale).
 
 import { parseLore } from './parser.js';
 import {
     integrateNpcs, integrateFactions, integrateLocations,
     integrateItems, integrateEvents
 } from './integrators.js';
+import {
+    isWebGPUAvailable, isWebLLMReady, isWebLLMLoading,
+    initWebLLM, destroyWebLLM, extractWithAI, extractWithFallback,
+    getAvailableModels, getRecommendedModel
+} from './webLLMAdapter.js';
 import { showToast } from '../../../../utils/toast.js';
 import { getCurrentCampaignId } from '../../../../stateManager.js';
 
@@ -50,10 +56,13 @@ function loadNote() {
 
 const LoreExtractor = {
     lastExtraction: null,
+    useAIMode: false,
+    aiProgressCallback: null,
     
     render(containerElement) {
         this.container = containerElement;
         const savedNote = loadNote();
+        const webgpuAvailable = isWebGPUAvailable();
         
         containerElement.innerHTML = `
 <div class="lore-extractor-container">
@@ -73,7 +82,23 @@ const LoreExtractor = {
             <button id="lore-clear-btn" class="lore-btn lore-btn-danger" title="Cancella testo">
                 🗑️ Pulisci
             </button>
+            <div class="lore-ai-toggle-container">
+                <button id="lore-ai-toggle-btn" class="lore-btn lore-btn-ai ${webgpuAvailable ? '' : 'disabled'}" title="${webgpuAvailable ? 'Attiva modalità AI (richiede download modello ~2GB, poi funziona offline)' : 'WebGPU non disponibile. Usa Chrome/Edge 113+'}" ${webgpuAvailable ? '' : 'disabled'}>
+                    🤖 <span class="lore-ai-toggle-label">AI</span>
+                </button>
+                <span id="lore-ai-status" class="lore-ai-status ${webgpuAvailable ? '' : 'unavailable'}">
+                    ${webgpuAvailable ? 'Off' : 'N/A'}
+                </span>
+            </div>
         </div>
+    </div>
+    
+    <!-- AI Progress bar (nascosta di default) -->
+    <div id="lore-ai-progress" class="lore-ai-progress hidden">
+        <div class="lore-ai-progress-bar">
+            <div id="lore-ai-progress-fill" class="lore-ai-progress-fill"></div>
+        </div>
+        <span id="lore-ai-progress-text" class="lore-ai-progress-text">Inizializzazione...</span>
     </div>
     
     <!-- Layout principale: editor + pannello estrazione -->
@@ -196,6 +221,118 @@ const LoreExtractor = {
                 this.handleImportSingle(e.target.dataset.category, parseInt(e.target.dataset.index, 10));
             }
         });
+        
+        // AI Toggle
+        container.querySelector('#lore-ai-toggle-btn')?.addEventListener('click', () => {
+            this.handleAIToggle();
+        });
+    },
+    
+    /**
+     * Gestisce l'attivazione/disattivazione della modalità AI.
+     */
+    async handleAIToggle() {
+        if (!isWebGPUAvailable()) {
+            showToast('WebGPU non disponibile. Usa Chrome 113+ o Edge 113+.', 'warning', 5000);
+            return;
+        }
+        
+        if (this.useAIMode) {
+            // Disattiva AI
+            this.useAIMode = false;
+            this.updateAIStatus('Off');
+            this.updateAIToggleButton(false);
+            showToast('Modalità AI disattivata. Uso parser regole.', 'info');
+            return;
+        }
+        
+        // Attiva AI: se già pronto, attiva subito
+        if (isWebLLMReady()) {
+            this.useAIMode = true;
+            this.updateAIStatus('Pronto');
+            this.updateAIToggleButton(true);
+            showToast('✅ Modalità AI attiva! Estrazione con intelligenza artificiale.', 'success');
+            return;
+        }
+        
+        // Se in caricamento, ignora
+        if (isWebLLMLoading()) {
+            showToast('Caricamento modello già in corso...', 'warning');
+            return;
+        }
+        
+        // Altrimenti: avvia caricamento modello
+        const recommended = getRecommendedModel();
+        const confirmMsg = `L'attivazione della modalità AI richiede il download del modello "${recommended.name}" (${recommended.size}).\n\n` +
+            `Una volta scaricato, funzionerà completamente offline.\n` +
+            `Vuoi procedere?`;
+        
+        if (!confirm(confirmMsg)) return;
+        
+        try {
+            this.updateAIStatus('Caricamento...');
+            this.showAIProgress(true);
+            this.updateAIToggleButton(true, true); // loading state
+            
+            await initWebLLM(null, (progress) => {
+                this.updateAIProgress(progress);
+            });
+            
+            this.useAIMode = true;
+            this.updateAIStatus('Pronto');
+            this.updateAIToggleButton(true);
+            this.showAIProgress(false);
+            showToast('🎉 Modello AI caricato! Modalità AI attiva.', 'success', 5000);
+        } catch (e) {
+            console.error('Errore caricamento AI:', e);
+            this.updateAIStatus('Errore');
+            this.updateAIToggleButton(false);
+            this.showAIProgress(false);
+            showToast(`❌ Errore: ${e.message}`, 'error', 5000);
+        }
+    },
+    
+    updateAIStatus(text) {
+        const status = this.container.querySelector('#lore-ai-status');
+        if (status) {
+            status.textContent = text;
+            status.className = 'lore-ai-status';
+            if (text === 'Pronto') status.classList.add('ready');
+            else if (text === 'Caricamento...') status.classList.add('loading');
+            else if (text === 'Errore') status.classList.add('error');
+            else if (text === 'N/A') status.classList.add('unavailable');
+        }
+    },
+    
+    updateAIToggleButton(active, loading = false) {
+        const btn = this.container.querySelector('#lore-ai-toggle-btn');
+        const label = this.container.querySelector('.lore-ai-toggle-label');
+        if (!btn) return;
+        btn.classList.toggle('active', active);
+        btn.classList.toggle('loading', loading);
+        if (label) {
+            label.textContent = loading ? '...' : 'AI';
+        }
+    },
+    
+    showAIProgress(show) {
+        const progress = this.container.querySelector('#lore-ai-progress');
+        if (progress) {
+            progress.classList.toggle('hidden', !show);
+        }
+    },
+    
+    updateAIProgress(progress) {
+        const fill = this.container.querySelector('#lore-ai-progress-fill');
+        const text = this.container.querySelector('#lore-ai-progress-text');
+        if (!fill || !text) return;
+        
+        if (progress.progress !== undefined) {
+            fill.style.width = `${Math.round(progress.progress * 100)}%`;
+        }
+        if (progress.message) {
+            text.textContent = progress.message;
+        }
     },
     
     updateWordCount() {
@@ -206,17 +343,58 @@ const LoreExtractor = {
         wordCount.textContent = `${words} parol${words === 1 ? 'a' : 'e'}`;
     },
     
-    handleExtract() {
+    async handleExtract() {
         const textInput = this.container.querySelector('#lore-text-input');
         if (!textInput || !textInput.value.trim()) {
             showToast('Inserisci del testo da analizzare', 'warning');
             return;
         }
         
+        const text = textInput.value;
+        
+        // Se AI attiva, usa estrazione async con fallback
+        if (this.useAIMode) {
+            showToast('🤖 AI sta analizzando il testo...', 'info');
+            this.showAIProgress(true);
+            this.updateAIProgress({ progress: 0, message: 'AI in elaborazione...' });
+            
+            try {
+                const result = await extractWithFallback(text, {
+                    useAI: true,
+                    progressCallback: (progress) => {
+                        if (progress.stage === 'thinking') {
+                            this.updateAIProgress({ progress: 0.5, message: progress.message });
+                        }
+                    }
+                });
+                
+                this.showAIProgress(false);
+                this.lastExtraction = result;
+                this.updateExtractionStats(result.stats);
+                this.updateTabBadges(result);
+                this.currentCategory = 'npcs';
+                this.container.querySelectorAll('.lore-tab-btn').forEach(b => {
+                    b.classList.toggle('active', b.dataset.category === 'npcs');
+                });
+                this.renderEntities();
+                this.container.querySelector('#lore-extraction-actions').style.display = 'flex';
+                saveNote(text);
+                
+                const source = result.stats.source === 'ai' ? '🤖 AI' : '📋 Regole';
+                const msg = `${result.stats.totalEntities} entità trovate (${source}, ${result.stats.parseTime}ms): ${result.npcs.length} PNG, ${result.factions.length} fazioni, ${result.locations.length} luoghi, ${result.items.length} oggetti, ${result.events.length} eventi`;
+                showToast(msg, 'success', 6000);
+            } catch (e) {
+                this.showAIProgress(false);
+                showToast(`❌ Errore estrazione AI: ${e.message}`, 'error', 5000);
+                console.error(e);
+            }
+            return;
+        }
+        
+        // Parser regole (sincrono, veloce, offline)
         showToast('🔍 Analisi testo in corso...', 'info');
         
-        // Parsing (sincrono, veloce)
-        const result = parseLore(textInput.value);
+        const result = parseLore(text);
         this.lastExtraction = result;
         
         // Aggiorna UI
@@ -232,7 +410,7 @@ const LoreExtractor = {
         this.container.querySelector('#lore-extraction-actions').style.display = 'flex';
         
         // Salva nota
-        saveNote(textInput.value);
+        saveNote(text);
         
         const msg = `${result.stats.totalEntities} entità trovate (${result.stats.parseTime}ms): ${result.npcs.length} PNG, ${result.factions.length} fazioni, ${result.locations.length} luoghi, ${result.items.length} oggetti, ${result.events.length} eventi`;
         showToast(msg, 'success', 5000);

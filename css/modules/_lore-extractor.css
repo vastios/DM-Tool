@@ -441,6 +441,126 @@
     justify-content: center;
 }
 
+/* --- AI TOGGLE --- */
+
+.lore-ai-toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-left: 8px;
+    border-left: 1px solid var(--border-color, #3a3a3a);
+    margin-left: 4px;
+}
+
+.lore-btn-ai {
+    background: rgba(156, 39, 176, 0.2);
+    color: #ce93d8;
+    border: 1px solid #9c27b0;
+    font-weight: 600;
+}
+
+.lore-btn-ai:hover:not(:disabled):not(.loading) {
+    background: rgba(156, 39, 176, 0.3);
+    color: #fff;
+}
+
+.lore-btn-ai.active {
+    background: linear-gradient(135deg, #9c27b0 0%, #6a1b9a 100%);
+    color: #fff;
+    border-color: #9c27b0;
+    box-shadow: 0 0 8px rgba(156, 39, 176, 0.5);
+}
+
+.lore-btn-ai.loading {
+    background: rgba(156, 39, 176, 0.1);
+    color: #ce93d8;
+    cursor: wait;
+    animation: lore-ai-pulse 1.5s infinite;
+}
+
+.lore-btn-ai.disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+@keyframes lore-ai-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.lore-ai-status {
+    font-size: 0.7rem;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: var(--bg-tertiary, #2a2a2a);
+    color: var(--text-muted, #888);
+    min-width: 50px;
+    text-align: center;
+}
+
+.lore-ai-status.ready {
+    background: rgba(76, 175, 80, 0.2);
+    color: #81c784;
+    font-weight: 600;
+}
+
+.lore-ai-status.loading {
+    background: rgba(255, 193, 7, 0.2);
+    color: #ffb74d;
+}
+
+.lore-ai-status.error {
+    background: rgba(244, 67, 54, 0.2);
+    color: #e57373;
+}
+
+.lore-ai-status.unavailable {
+    background: rgba(244, 67, 54, 0.1);
+    color: #666;
+    opacity: 0.5;
+}
+
+/* --- AI PROGRESS BAR --- */
+
+.lore-ai-progress {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--card-bg, #252525);
+    border-radius: 6px;
+    border: 1px solid var(--border-color, #3a3a3a);
+}
+
+.lore-ai-progress.hidden {
+    display: none;
+}
+
+.lore-ai-progress-bar {
+    flex: 1;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.lore-ai-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #9c27b0, #ba68c8);
+    border-radius: 4px;
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.lore-ai-progress-text {
+    font-size: 0.75rem;
+    color: var(--text-muted, #888);
+    white-space: nowrap;
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 /* --- RESPONSIVE --- */
 
 @media (max-width: 1024px) {
