@@ -36,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { id: 'campaignWiki', name: 'Wiki della Campagna', modulePath: './modules/campagna/campaignWiki.js', requiresCampaign: true },
             { id: 'ChapterPlanner', name: 'Pianificatore di Campagna', modulePath: './modules/campagna/chapterPlanner.js', requiresCampaign: true },
             { id: 'session-notes', name: 'Note di Sessione', modulePath: './modules/campagna/sessionNotes.js', requiresCampaign: true }, 
+            { id: 'loreExtractor', name: 'Lore Extractor', modulePath: './modules/campagna/loreExtractor/index.js', requiresCampaign: true },
         ],
         // SEZIONE: PERSONAGGI
         characters: [
