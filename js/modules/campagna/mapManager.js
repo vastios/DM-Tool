@@ -17,6 +17,8 @@
 import { getCurrentCampaignId } from '../../../stateManager.js';
 import { showToast } from '../../../utils/toast.js';
 import { escapeHtml } from '../../../utils/htmlHelpers.js';
+import { monsterDatabase } from '../../../database/monsterDatabase.js';
+import { generateMonsterTokenHTML, buildTokenFromMonster, buildTokensFromEncounter, getColorForMonsterType } from './mapManager/monsterTokenGenerator.js';
 
 // ═══════════════════════════════════════════════════════════════
 // COSTANTI E CONFIGURAZIONE
@@ -150,6 +152,36 @@ function loadLocations() {
     }
 }
 
+// --- TOKEN STORAGE (mostri/NPC/PG sulla mappa) ---
+
+function getTokensStorageKey() {
+    const campaignId = getCurrentCampaignId();
+    if (!campaignId) return null;
+    return `dungeonMasterToolMapTokens_${campaignId}`;
+}
+
+function saveTokens(tokens) {
+    const key = getTokensStorageKey();
+    if (!key) return;
+    try {
+        localStorage.setItem(key, JSON.stringify(tokens));
+    } catch (e) {
+        console.error('Errore salvataggio token:', e);
+        showToast('Errore salvataggio token (spazio esaurito?)', 'error');
+    }
+}
+
+function loadTokens() {
+    const key = getTokensStorageKey();
+    if (!key) return {};
+    try {
+        const data = localStorage.getItem(key);
+        return data ? JSON.parse(data) : {};
+    } catch {
+        return {};
+    }
+}
+
 // ═══════════════════════════════════════════════════════════════
 // MODULO PRINCIPALE
 // ═══════════════════════════════════════════════════════════════
@@ -160,9 +192,11 @@ const MapManager = {
         this.maps = loadMaps();
         this.pins = loadPins();
         this.partyPositions = loadPartyPositions();
+        this.tokens = loadTokens();
         this.locations = loadLocations();
         this.currentMapId = null;
         this.selectedPinId = null;
+        this.selectedTokenId = null;
         this.isDragging = false;
         this.dragTarget = null;
         this.zoom = 1;
@@ -218,6 +252,21 @@ ${this.getStyles()}
             </div>
             <p class="map-pin-hint">Clicca sulla mappa per posizionare il party</p>
         </div>
+
+        <div class="map-sidebar-section">
+            <h3>👹 Token Mostri</h3>
+            <div class="token-controls">
+                <input type="text" id="token-search-input" class="token-search-input" placeholder="Cerca mostro..." list="monster-list-datalist">
+                <datalist id="monster-list-datalist">
+                    ${this.renderMonsterDatalist()}
+                </datalist>
+                <button class="token-add-btn" id="add-token-btn" disabled>➕ Aggiungi</button>
+            </div>
+            <div class="token-list" id="token-list">
+                <p class="token-list-empty">Nessun token sulla mappa</p>
+            </div>
+            <p class="map-pin-hint">I token appaiono sulla mappa e sono trascinabili</p>
+        </div>
     </div>
 
     <!-- Area Mappa Principale -->
@@ -248,6 +297,7 @@ ${this.getStyles()}
                 <img id="map-image" class="map-image" src="" alt="Mappa">
                 <div class="map-pins-layer" id="map-pins-layer"></div>
                 <div class="map-party-layer" id="map-party-layer"></div>
+                <div class="map-tokens-layer" id="map-tokens-layer"></div>
             </div>
         </div>
     </div>
@@ -311,6 +361,22 @@ ${this.getStyles()}
             <button class="map-btn secondary" id="pin-close-btn">Chiudi</button>
             <button class="map-btn danger" id="pin-remove-btn">Rimuovi Pin</button>
             <button class="map-btn primary" id="pin-goto-btn">Vai al Luogo</button>
+        </div>
+    </div>
+
+    <!-- Modal: Dettagli Token -->
+    <div class="pin-modal-overlay" id="token-modal-overlay"></div>
+    <div class="pin-modal" id="token-modal">
+        <div class="pin-modal-header">
+            <h3 id="token-modal-title">👹 Dettagli Token</h3>
+            <button class="pin-modal-close" id="close-token-modal">✕</button>
+        </div>
+        <div class="pin-modal-content" id="token-modal-content">
+            <!-- Contenuto dinamico -->
+        </div>
+        <div class="pin-modal-footer">
+            <button class="map-btn secondary" id="token-close-btn">Chiudi</button>
+            <button class="map-btn danger" id="token-remove-btn">Rimuovi Token</button>
         </div>
     </div>
 </div>
@@ -1017,6 +1083,307 @@ ${this.getStyles()}
     font-size: 0.7rem;
     color: #fff;
 }
+
+/* === TOKEN LAYER === */
+.map-tokens-layer {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 15;
+}
+
+.map-token-wrapper {
+    position: absolute;
+    pointer-events: auto;
+    cursor: grab;
+    z-index: 20;
+    transition: filter 0.2s;
+}
+.map-token-wrapper:hover {
+    filter: brightness(1.3) drop-shadow(0 0 6px rgba(255,255,255,0.5));
+    z-index: 25;
+}
+.map-token-wrapper:active {
+    cursor: grabbing;
+}
+.map-token-wrapper.flash {
+    animation: tokenFlash 1s ease;
+}
+@keyframes tokenFlash {
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(2) drop-shadow(0 0 10px #fff); }
+}
+
+.monster-token {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.monster-token-circle {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 3px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    position: relative;
+}
+
+.monster-token-initial {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+    text-transform: uppercase;
+}
+
+.monster-token-hp-bar {
+    position: absolute;
+    bottom: -6px;
+    left: 10%;
+    width: 80%;
+    height: 5px;
+    background: rgba(0,0,0,0.6);
+    border-radius: 3px;
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,0.8);
+}
+
+.monster-token-hp-fill {
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+.monster-token-label {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-size: 0.65rem;
+    color: #fff;
+    background: rgba(0,0,0,0.75);
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-top: 8px;
+    pointer-events: none;
+}
+
+.token-condition-badge {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6rem;
+    border: 1px solid rgba(255,255,255,0.3);
+    transform: translate(-50%, -50%);
+}
+
+/* === SIDEBAR TOKEN CONTROLS === */
+.token-controls {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 6px;
+}
+
+.token-search-input {
+    flex: 1;
+    min-width: 0;
+    padding: 5px 8px;
+    background: var(--bg-secondary, #1a1a1a);
+    border: 1px solid var(--border-color, #3a3a3a);
+    border-radius: 4px;
+    color: var(--text-primary, #fff);
+    font-size: 0.8rem;
+}
+
+.token-search-input:focus {
+    outline: none;
+    border-color: var(--accent-color, #0891b2);
+}
+
+.token-add-btn {
+    padding: 5px 10px;
+    background: var(--accent-color, #0891b2);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    white-space: nowrap;
+}
+.token-add-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+.token-add-btn:not(:disabled):hover {
+    background: #0e7490;
+}
+
+.token-list {
+    max-height: 200px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-bottom: 6px;
+}
+
+.token-list-empty {
+    color: var(--text-muted, #666);
+    font-size: 0.75rem;
+    text-align: center;
+    padding: 10px;
+    font-style: italic;
+}
+
+.token-list-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 8px;
+    background: var(--bg-tertiary, #2a2a2a);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.token-list-item:hover {
+    background: var(--hover-bg, #3a3a3a);
+}
+
+.token-list-color {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.token-list-name {
+    flex: 1;
+    font-size: 0.75rem;
+    color: var(--text-primary, #fff);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.token-list-hp {
+    font-size: 0.65rem;
+    color: var(--text-muted, #888);
+    background: rgba(0,0,0,0.3);
+    padding: 1px 4px;
+    border-radius: 3px;
+}
+
+.token-list-remove {
+    background: none;
+    border: none;
+    color: var(--text-muted, #666);
+    cursor: pointer;
+    font-size: 0.8rem;
+    padding: 0 2px;
+}
+.token-list-remove:hover {
+    color: #ef4444;
+}
+
+/* === TOKEN MODAL === */
+.token-detail-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.token-detail-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+    border: 3px solid rgba(0,0,0,0.3);
+}
+
+.token-detail-header h4 {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--text-primary, #fff);
+}
+
+.token-detail-header p {
+    margin: 2px 0 0;
+    font-size: 0.8rem;
+    color: var(--text-muted, #888);
+}
+
+.token-detail-section {
+    margin-bottom: 14px;
+}
+
+.token-detail-section h5 {
+    margin: 0 0 6px;
+    font-size: 0.85rem;
+    color: var(--accent-color, #0891b2);
+}
+
+.token-hp-display {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.token-hp-display input {
+    padding: 4px 8px;
+    background: var(--bg-secondary, #1a1a1a);
+    border: 1px solid var(--border-color, #3a3a3a);
+    border-radius: 4px;
+    color: var(--text-primary, #fff);
+    text-align: center;
+}
+
+.token-hp-bar-large {
+    width: 100%;
+    height: 10px;
+    background: rgba(0,0,0,0.4);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.token-hp-fill-large {
+    height: 100%;
+    border-radius: 5px;
+    transition: width 0.3s ease;
+}
+
+.token-conditions-list {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.token-condition-tag {
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    background: rgba(255, 152, 0, 0.2);
+    border: 1px solid rgba(255, 152, 0, 0.4);
+    border-radius: 10px;
+    color: #ffb74d;
+}
         `;
     },
 
@@ -1106,6 +1473,67 @@ ${this.getStyles()}
 
         this.container.querySelector('#clear-party-btn').addEventListener('click', () => {
             this.clearPartyPosition();
+        });
+
+        // Token management events
+        const tokenSearchInput = this.container.querySelector('#token-search-input');
+        const addTokenBtn = this.container.querySelector('#add-token-btn');
+        
+        tokenSearchInput?.addEventListener('input', (e) => {
+            const name = e.target.value.trim();
+            // Verifica se il mostro esiste nel database
+            const found = name.length >= 2 && monsterDatabase.some(m => 
+                m.name.toLowerCase().includes(name.toLowerCase())
+            );
+            if (addTokenBtn) addTokenBtn.disabled = !found;
+        });
+        
+        addTokenBtn?.addEventListener('click', () => {
+            const name = tokenSearchInput.value.trim();
+            if (name) {
+                // Trova il mostro esatto
+                const monster = monsterDatabase.find(m => 
+                    m.name.toLowerCase() === name.toLowerCase()
+                );
+                if (monster) {
+                    this.addToken(monster.name);
+                    tokenSearchInput.value = '';
+                    addTokenBtn.disabled = true;
+                } else {
+                    // Cerca il primo match parziale
+                    const partial = monsterDatabase.find(m => 
+                        m.name.toLowerCase().includes(name.toLowerCase())
+                    );
+                    if (partial) {
+                        this.addToken(partial.name);
+                        tokenSearchInput.value = '';
+                        addTokenBtn.disabled = true;
+                    }
+                }
+            }
+        });
+        
+        tokenSearchInput?.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !addTokenBtn.disabled) {
+                addTokenBtn.click();
+            }
+        });
+
+        // Token modal events
+        this.container.querySelector('#close-token-modal')?.addEventListener('click', () => {
+            this.closeTokenModal();
+        });
+        this.container.querySelector('#token-close-btn')?.addEventListener('click', () => {
+            this.closeTokenModal();
+        });
+        this.container.querySelector('#token-modal-overlay')?.addEventListener('click', () => {
+            this.closeTokenModal();
+        });
+        this.container.querySelector('#token-remove-btn')?.addEventListener('click', () => {
+            if (this.selectedTokenId) {
+                this.removeToken(this.selectedTokenId);
+                this.closeTokenModal();
+            }
         });
 
         // Canvas interactions
@@ -1212,6 +1640,10 @@ ${this.getStyles()}
 
         // Render party
         this.renderPartyToken();
+
+        // Render tokens
+        this.renderTokens();
+        this.renderTokenList();
 
         console.log(`🗺️ [MapManager] Mappa selezionata: ${map.name}`);
     },
@@ -1347,6 +1779,10 @@ ${this.getStyles()}
         // Remove party position
         delete this.partyPositions[this.currentMapId];
         savePartyPosition(this.currentMapId, null);
+
+        // Remove tokens for this map
+        delete this.tokens[this.currentMapId];
+        saveTokens(this.tokens);
 
         // Update UI
         this.container.querySelector('#map-list').innerHTML = this.renderMapsList();
@@ -1509,6 +1945,272 @@ ${this.getStyles()}
         });
 
         layer.appendChild(token);
+    },
+
+    // ═══════════════════════════════════════════════════════════════
+    // TOKEN MANAGEMENT (Mostri/NPC sulla mappa)
+    // ═══════════════════════════════════════════════════════════════
+
+    renderMonsterDatalist() {
+        // Mostra solo i primi 100 mostri per non appesantire il DOM
+        return monsterDatabase.slice(0, 100).map(m => 
+            `<option value="${escapeHtml(m.name)}">${m.size} ${m.type}, CR ${m.challenge_rating}</option>`
+        ).join('');
+    },
+
+    renderTokens() {
+        const layer = this.container.querySelector('#map-tokens-layer');
+        if (!layer) return;
+        layer.innerHTML = '';
+
+        if (!this.currentMapId || !this.tokens[this.currentMapId]) return;
+
+        const mapTokens = this.tokens[this.currentMapId];
+        mapTokens.forEach(token => {
+            const tokenEl = document.createElement('div');
+            tokenEl.className = 'map-token-wrapper';
+            tokenEl.dataset.tokenId = token.id;
+            tokenEl.style.left = `${token.x}%`;
+            tokenEl.style.top = `${token.y}%`;
+            tokenEl.style.transform = 'translate(-50%, -50%)';
+            tokenEl.innerHTML = generateMonsterTokenHTML({
+                name: token.name,
+                type: token.monsterType,
+                size: token.monsterSize,
+                color: token.color,
+                hp: token.hp?.current,
+                maxHp: token.hp?.max,
+                conditions: token.conditions || []
+            });
+
+            // Click to show details
+            tokenEl.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.showTokenDetails(token.id);
+            });
+
+            // Drag to move
+            tokenEl.addEventListener('mousedown', (e) => {
+                e.stopPropagation();
+                this.startTokenDrag(e, token.id);
+            });
+
+            layer.appendChild(tokenEl);
+        });
+    },
+
+    renderTokenList() {
+        const list = this.container.querySelector('#token-list');
+        if (!list) return;
+
+        if (!this.currentMapId || !this.tokens[this.currentMapId] || this.tokens[this.currentMapId].length === 0) {
+            list.innerHTML = '<p class="token-list-empty">Nessun token sulla mappa</p>';
+            return;
+        }
+
+        const mapTokens = this.tokens[this.currentMapId];
+        list.innerHTML = mapTokens.map(token => `
+            <div class="token-list-item" data-token-id="${token.id}">
+                <div class="token-list-color" style="background: ${token.color};"></div>
+                <span class="token-list-name">${escapeHtml(token.name)}</span>
+                <span class="token-list-hp">${token.hp?.current || '?'}/${token.hp?.max || '?'}</span>
+                <button class="token-list-remove" data-token-id="${token.id}" title="Rimuovi">✕</button>
+            </div>
+        `).join('');
+
+        // Bind remove buttons
+        list.querySelectorAll('.token-list-remove').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.removeToken(btn.dataset.tokenId);
+            });
+        });
+
+        // Click to select token on map
+        list.querySelectorAll('.token-list-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const tokenId = item.dataset.tokenId;
+                // Flash the token on the map
+                const tokenEl = this.container.querySelector(`.map-token-wrapper[data-token-id="${tokenId}"]`);
+                if (tokenEl) {
+                    tokenEl.classList.add('flash');
+                    setTimeout(() => tokenEl.classList.remove('flash'), 1000);
+                }
+            });
+        });
+    },
+
+    addToken(monsterName) {
+        if (!this.currentMapId) {
+            showToast('Seleziona prima una mappa', 'warning');
+            return;
+        }
+
+        // Cerca il mostro nel database per nome
+        const monster = monsterDatabase.find(m => 
+            m.name.toLowerCase() === monsterName.toLowerCase()
+        );
+        
+        if (!monster) {
+            showToast(`Mostro "${monsterName}" non trovato`, 'error');
+            return;
+        }
+
+        // Crea il token
+        const token = buildTokenFromMonster(monster.index, {
+            x: 50 + (Math.random() - 0.5) * 20,
+            y: 50 + (Math.random() - 0.5) * 20,
+        });
+
+        if (!token) {
+            showToast('Errore creazione token', 'error');
+            return;
+        }
+
+        // Aggiungi alla mappa corrente
+        if (!this.tokens[this.currentMapId]) {
+            this.tokens[this.currentMapId] = [];
+        }
+        this.tokens[this.currentMapId].push(token);
+        saveTokens(this.tokens);
+
+        // Re-render
+        this.renderTokens();
+        this.renderTokenList();
+        showToast(`${token.name} aggiunto alla mappa`, 'success');
+    },
+
+    removeToken(tokenId) {
+        if (!this.currentMapId || !this.tokens[this.currentMapId]) return;
+
+        this.tokens[this.currentMapId] = this.tokens[this.currentMapId].filter(t => t.id !== tokenId);
+        saveTokens(this.tokens);
+
+        this.renderTokens();
+        this.renderTokenList();
+        showToast('Token rimosso', 'info');
+    },
+
+    showTokenDetails(tokenId) {
+        if (!this.currentMapId || !this.tokens[this.currentMapId]) return;
+        
+        const token = this.tokens[this.currentMapId].find(t => t.id === tokenId);
+        if (!token) return;
+
+        this.selectedTokenId = tokenId;
+
+        const modal = this.container.querySelector('#token-modal');
+        const overlay = this.container.querySelector('#token-modal-overlay');
+        const content = this.container.querySelector('#token-modal-content');
+        const title = this.container.querySelector('#token-modal-title');
+
+        title.textContent = `👹 ${token.name}`;
+
+        const hpPercent = token.hp?.max > 0 ? Math.round((token.hp.current / token.hp.max) * 100) : 100;
+        
+        content.innerHTML = `
+            <div class="token-detail-header">
+                <div class="token-detail-icon" style="background: ${token.color};">
+                    ${escapeHtml(token.name.charAt(0).toUpperCase())}
+                </div>
+                <div>
+                    <h4>${escapeHtml(token.name)}</h4>
+                    <p>${token.monsterType || 'Tipo sconosciuto'} • ${token.monsterSize || 'Media'}</p>
+                </div>
+            </div>
+            <div class="token-detail-section">
+                <h5>❤️ Punti Ferita</h5>
+                <div class="token-hp-display">
+                    <input type="number" id="token-hp-current" value="${token.hp?.current || 0}" min="0" max="${token.hp?.max || 999}" style="width: 60px;">
+                    <span>/</span>
+                    <input type="number" id="token-hp-max" value="${token.hp?.max || 0}" min="1" style="width: 60px;">
+                    <button class="map-btn primary" id="token-update-hp-btn" style="margin-left: 10px;">Aggiorna</button>
+                </div>
+                <div class="token-hp-bar-large">
+                    <div class="token-hp-fill-large" style="width: ${hpPercent}%; background: ${hpPercent <= 25 ? '#ef4444' : hpPercent <= 50 ? '#f59e0b' : '#22c55e'};"></div>
+                </div>
+            </div>
+            ${token.conditions && token.conditions.length > 0 ? `
+                <div class="token-detail-section">
+                    <h5>⚠️ Condizioni</h5>
+                    <div class="token-conditions-list">
+                        ${token.conditions.map(c => `<span class="token-condition-tag">${escapeHtml(c)}</span>`).join('')}
+                    </div>
+                </div>
+            ` : ''}
+            <div class="token-detail-section">
+                <h5>📍 Posizione</h5>
+                <p>X: ${token.x.toFixed(1)}% • Y: ${token.y.toFixed(1)}%</p>
+            </div>
+        `;
+
+        overlay.classList.add('show');
+        modal.classList.add('show');
+
+        // Bind HP update
+        this.container.querySelector('#token-update-hp-btn')?.addEventListener('click', () => {
+            const currentHp = parseInt(this.container.querySelector('#token-hp-current').value, 10) || 0;
+            const maxHp = parseInt(this.container.querySelector('#token-hp-max').value, 10) || 1;
+            token.hp = { current: currentHp, max: maxHp };
+            saveTokens(this.tokens);
+            this.renderTokens();
+            this.renderTokenList();
+            showToast('HP aggiornato', 'success');
+            this.closeTokenModal();
+        });
+    },
+
+    closeTokenModal() {
+        this.container.querySelector('#token-modal-overlay')?.classList.remove('show');
+        this.container.querySelector('#token-modal')?.classList.remove('show');
+        this.selectedTokenId = null;
+    },
+
+    startTokenDrag(e, tokenId) {
+        e.preventDefault();
+        this.isDragging = true;
+        this.dragTarget = { type: 'token', id: tokenId };
+        
+        const wrapper = this.container.querySelector('#map-canvas-wrapper');
+        const img = this.container.querySelector('#map-image');
+        if (!wrapper || !img) return;
+
+        const onMove = (e) => {
+            if (!this.isDragging || this.dragTarget?.type !== 'token') return;
+            const rect = img.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            const clampedX = Math.max(0, Math.min(100, x));
+            const clampedY = Math.max(0, Math.min(100, y));
+            
+            // Update token position
+            if (this.tokens[this.currentMapId]) {
+                const token = this.tokens[this.currentMapId].find(t => t.id === tokenId);
+                if (token) {
+                    token.x = clampedX;
+                    token.y = clampedY;
+                    // Update DOM directly for smooth dragging
+                    const tokenEl = this.container.querySelector(`.map-token-wrapper[data-token-id="${tokenId}"]`);
+                    if (tokenEl) {
+                        tokenEl.style.left = `${clampedX}%`;
+                        tokenEl.style.top = `${clampedY}%`;
+                    }
+                }
+            }
+        };
+
+        const onUp = () => {
+            if (this.isDragging && this.dragTarget?.type === 'token') {
+                saveTokens(this.tokens);
+            }
+            this.isDragging = false;
+            this.dragTarget = null;
+            document.removeEventListener('mousemove', onMove);
+            document.removeEventListener('mouseup', onUp);
+        };
+
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onUp);
     },
 
     getPinColor(location) {
