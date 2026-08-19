@@ -19,6 +19,7 @@ import { showToast } from '../../../utils/toast.js';
 import { escapeHtml } from '../../../utils/htmlHelpers.js';
 import { monsterDatabase } from '../../../database/monsterDatabase.js';
 import { generateMonsterTokenHTML, buildTokenFromMonster, buildTokensFromEncounter, getColorForMonsterType } from './mapManager/monsterTokenGenerator.js';
+import { MAP_TEMPLATES, loadTemplateAsBase64 } from './mapManager/mapTemplates.js';
 
 // ═══════════════════════════════════════════════════════════════
 // COSTANTI E CONFIGURAZIONE
@@ -334,6 +335,17 @@ ${this.getStyles()}
                         <span>Trascina un'immagine o clicca per selezionare</span>
                     </div>
                     <img id="map-preview-img" class="map-preview-img" style="display: none;">
+                </div>
+            </div>
+            <div class="map-form-group">
+                <label>oppure usa un Template AI</label>
+                <div class="map-template-gallery" id="map-template-gallery">
+                    ${MAP_TEMPLATES.map(t => `
+                        <div class="map-template-card" data-template-id="${t.id}" data-template-image="${t.image}" data-template-type="${t.type}" title="${escapeHtml(t.description)}">
+                            <img src="${t.image}" alt="${escapeHtml(t.name)}" class="map-template-thumb">
+                            <span class="map-template-name">${escapeHtml(t.name)}</span>
+                        </div>
+                    `).join('')}
                 </div>
             </div>
             <div class="map-form-group">
@@ -1384,6 +1396,56 @@ ${this.getStyles()}
     border-radius: 10px;
     color: #ffb74d;
 }
+
+/* === TEMPLATE GALLERY === */
+.map-template-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 4px;
+    background: var(--bg-secondary, #1a1a1a);
+    border-radius: 6px;
+    border: 1px solid var(--border-color, #3a3a3a);
+}
+
+.map-template-card {
+    position: relative;
+    cursor: pointer;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 2px solid transparent;
+    transition: all 0.15s;
+    background: var(--bg-tertiary, #2a2a2a);
+}
+
+.map-template-card:hover {
+    border-color: var(--accent-color, #0891b2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.map-template-card.selected {
+    border-color: var(--accent-color, #0891b2);
+    box-shadow: 0 0 10px rgba(8, 145, 178, 0.5);
+}
+
+.map-template-thumb {
+    width: 100%;
+    height: 60px;
+    object-fit: cover;
+    display: block;
+}
+
+.map-template-name {
+    display: block;
+    font-size: 0.65rem;
+    text-align: center;
+    padding: 3px 2px;
+    color: var(--text-primary, #fff);
+    background: rgba(0,0,0,0.5);
+}
         `;
     },
 
@@ -1587,6 +1649,50 @@ ${this.getStyles()}
             if (file) {
                 this.handleImageFile(file);
             }
+        });
+
+        // Template gallery - click to select a template
+        this.container.querySelectorAll('.map-template-card').forEach(card => {
+            card.addEventListener('click', async () => {
+                // Remove selected from all
+                this.container.querySelectorAll('.map-template-card').forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+                
+                const imagePath = card.dataset.templateImage;
+                const templateType = card.dataset.templateType;
+                
+                // Auto-set the map type based on template
+                const typeSelect = this.container.querySelector('#map-type-select');
+                if (typeSelect) typeSelect.value = templateType;
+                
+                // Load template image as base64
+                try {
+                    showToast('Caricamento template...', 'info');
+                    const base64 = await loadTemplateAsBase64(imagePath);
+                    this.pendingImageData = base64;
+                    
+                    // Show preview
+                    const preview = this.container.querySelector('#map-preview-img');
+                    const placeholder = this.container.querySelector('.upload-placeholder');
+                    if (preview) {
+                        preview.src = base64;
+                        preview.style.display = 'block';
+                    }
+                    if (placeholder) {
+                        placeholder.style.display = 'none';
+                    }
+                    
+                    // Auto-fill name if empty
+                    const nameInput = this.container.querySelector('#map-name-input');
+                    if (nameInput && !nameInput.value.trim()) {
+                        nameInput.value = card.querySelector('.map-template-name')?.textContent || 'Nuova Mappa';
+                    }
+                    
+                    showToast('Template caricato!', 'success');
+                } catch (e) {
+                    showToast(`Errore: ${e.message}`, 'error');
+                }
+            });
         });
 
         // Pin modal
