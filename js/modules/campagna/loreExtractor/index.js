@@ -52,6 +52,71 @@ function loadNote() {
     }
 }
 
+// --- STORAGE PER LA CRONOLOGIA ESTRAZIONI ---
+
+function getHistoryStorageKey() {
+    const campaignId = getCurrentCampaignId();
+    return campaignId ? `dungeonMasterToolLoreHistory_${campaignId}` : null;
+}
+
+function loadHistory() {
+    const key = getHistoryStorageKey();
+    if (!key) return [];
+    try {
+        const data = localStorage.getItem(key);
+        return data ? JSON.parse(data) : [];
+    } catch (e) {
+        console.error('Errore caricamento cronologia:', e);
+        return [];
+    }
+}
+
+function saveToHistory(extraction) {
+    const key = getHistoryStorageKey();
+    if (!key) return false;
+    try {
+        const history = loadHistory();
+        // Aggiungi in cima
+        history.unshift({
+            id: Date.now(),
+            timestamp: new Date().toISOString(),
+            source: extraction.stats?.source || 'rules',
+            totalEntities: extraction.stats?.totalEntities || 0,
+            parseTime: extraction.stats?.parseTime || 0,
+            npcsCount: extraction.npcs?.length || 0,
+            factionsCount: extraction.factions?.length || 0,
+            locationsCount: extraction.locations?.length || 0,
+            itemsCount: extraction.items?.length || 0,
+            eventsCount: extraction.events?.length || 0,
+            // Salva solo i nomi per risparmiare spazio
+            summary: {
+                npcs: (extraction.npcs || []).map(n => n.name).slice(0, 10),
+                factions: (extraction.factions || []).map(f => f.name).slice(0, 10),
+                locations: (extraction.locations || []).map(l => l.name).slice(0, 10),
+                items: (extraction.items || []).map(i => i.name).slice(0, 10),
+                events: (extraction.events || []).map(e => e.name).slice(0, 10),
+            },
+        });
+        // Mantieni solo le ultime 20 estrazioni
+        if (history.length > 20) history.length = 20;
+        localStorage.setItem(key, JSON.stringify(history));
+        return true;
+    } catch (e) {
+        console.error('Errore salvataggio cronologia:', e);
+        return false;
+    }
+}
+
+function clearHistory() {
+    const key = getHistoryStorageKey();
+    if (!key) return;
+    try {
+        localStorage.removeItem(key);
+    } catch (e) {
+        console.error('Errore cancellazione cronologia:', e);
+    }
+}
+
 // --- MODULO ---
 
 const LoreExtractor = {
@@ -75,6 +140,9 @@ const LoreExtractor = {
         <div class="lore-header-right">
             <button id="lore-save-note-btn" class="lore-btn lore-btn-secondary" title="Salva nota">
                 💾 Salva
+            </button>
+            <button id="lore-history-btn" class="lore-btn lore-btn-secondary" title="Cronologia estrazioni">
+                📚 Cronologia
             </button>
             <button id="lore-extract-btn" class="lore-btn lore-btn-primary" title="Estrai entità dal testo">
                 🪄 Estrai dati
@@ -107,7 +175,21 @@ const LoreExtractor = {
         <div class="lore-editor-panel">
             <div class="lore-editor-header">
                 <h3>📝 Testo libero</h3>
-                <span id="lore-word-count" class="lore-word-count">0 parole</span>
+                <span id="lore-word-count" class="lore-word-count">0 parole • 0 caratteri</span>
+            </div>
+            <!-- Toolbar formattazione -->
+            <div class="lore-editor-toolbar">
+                <button class="lore-toolbar-btn" data-action="h1" title="Titolo 1">H1</button>
+                <button class="lore-toolbar-btn" data-action="h2" title="Titolo 2">H2</button>
+                <button class="lore-toolbar-btn" data-action="h3" title="Titolo 3">H3</button>
+                <span class="lore-toolbar-divider"></span>
+                <button class="lore-toolbar-btn" data-action="bold" title="Grassetto"><b>B</b></button>
+                <button class="lore-toolbar-btn" data-action="italic" title="Corsivo"><i>I</i></button>
+                <span class="lore-toolbar-divider"></span>
+                <button class="lore-toolbar-btn" data-action="list" title="Lista">•</button>
+                <button class="lore-toolbar-btn" data-action="quote" title="Citazione">"</button>
+                <span class="lore-toolbar-divider"></span>
+                <button class="lore-toolbar-btn" data-action="separator" title="Separatore">―</button>
             </div>
             <textarea id="lore-text-input" class="lore-text-input" placeholder="Es: Il capo dei goblin Grishnak guida la tribù Fango Nero. Vive nella caverna di Pietra Nera insieme al suo luogotenente, l'orco Grom. Il regno è governato dal re Aldric dal Castello Veliero. Durante la battaglia delle Acque Rosse, l'esercito del regno fu distrutto da un'antica spada chiamata Distruttrice...">${savedNote}</textarea>
         </div>
@@ -142,6 +224,20 @@ const LoreExtractor = {
                 <button id="lore-select-all-btn" class="lore-btn lore-btn-small">☑️ Seleziona tutti</button>
                 <button id="lore-deselect-all-btn" class="lore-btn lore-btn-small">🔲 Deseleziona tutti</button>
                 <button id="lore-import-btn" class="lore-btn lore-btn-primary">📥 Importa selezionati</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- History Popup Overlay -->
+    <div id="lore-history-overlay" class="popup-overlay hidden" role="dialog" aria-modal="true" aria-label="Cronologia estrazioni">
+        <div class="lore-history-popup-container">
+            <button class="popup-close" title="Chiudi" aria-label="Chiudi popup">×</button>
+            <div class="lore-history-content">
+                <div class="lore-history-header">
+                    <h3>📚 Cronologia Estrazioni</h3>
+                    <button id="lore-clear-history-btn" class="lore-btn lore-btn-danger lore-btn-small">🗑️ Cancella cronologia</button>
+                </div>
+                <div id="lore-history-list" class="lore-history-list"></div>
             </div>
         </div>
     </div>
@@ -226,6 +322,174 @@ const LoreExtractor = {
         container.querySelector('#lore-ai-toggle-btn')?.addEventListener('click', () => {
             this.handleAIToggle();
         });
+        
+        // Toolbar formattazione
+        container.querySelectorAll('.lore-toolbar-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                this.handleToolbarAction(btn.dataset.action);
+            });
+        });
+        
+        // Cronologia
+        container.querySelector('#lore-history-btn')?.addEventListener('click', () => {
+            this.openHistory();
+        });
+        container.querySelector('#lore-history-overlay')?.addEventListener('click', (e) => {
+            if (e.target.id === 'lore-history-overlay') {
+                this.closeHistory();
+            }
+        });
+        container.querySelector('#lore-history-overlay .popup-close')?.addEventListener('click', () => {
+            this.closeHistory();
+        });
+        container.querySelector('#lore-clear-history-btn')?.addEventListener('click', () => {
+            this.handleClearHistory();
+        });
+    },
+    
+    /**
+     * Gestisce le azioni della toolbar di formattazione.
+     * Inserisce marker markdown nella posizione del cursore.
+     */
+    handleToolbarAction(action) {
+        const textInput = this.container.querySelector('#lore-text-input');
+        if (!textInput) return;
+        
+        const start = textInput.selectionStart;
+        const end = textInput.selectionEnd;
+        const selectedText = textInput.value.substring(start, end);
+        const before = textInput.value.substring(0, start);
+        const after = textInput.value.substring(end);
+        
+        let insertion = '';
+        let newCursorPos = start;
+        
+        switch (action) {
+            case 'h1':
+                insertion = `# ${selectedText || 'Titolo'}\n`;
+                newCursorPos = start + insertion.length;
+                break;
+            case 'h2':
+                insertion = `## ${selectedText || 'Sottotitolo'}\n`;
+                newCursorPos = start + insertion.length;
+                break;
+            case 'h3':
+                insertion = `### ${selectedText || 'Sezione'}\n`;
+                newCursorPos = start + insertion.length;
+                break;
+            case 'bold':
+                insertion = `**${selectedText || 'testo in grassetto'}**`;
+                newCursorPos = start + insertion.length;
+                break;
+            case 'italic':
+                insertion = `*${selectedText || 'testo in corsivo'}*`;
+                newCursorPos = start + insertion.length;
+                break;
+            case 'list':
+                insertion = `- ${selectedText || 'elemento lista'}\n`;
+                newCursorPos = start + insertion.length;
+                break;
+            case 'quote':
+                insertion = `> ${selectedText || 'citazione'}\n`;
+                newCursorPos = start + insertion.length;
+                break;
+            case 'separator':
+                insertion = `\n---\n`;
+                newCursorPos = start + insertion.length;
+                break;
+        }
+        
+        textInput.value = before + insertion + after;
+        textInput.focus();
+        textInput.setSelectionRange(newCursorPos, newCursorPos);
+        this.updateWordCount();
+        // Auto-save
+        clearTimeout(this._autoSaveTimer);
+        this._autoSaveTimer = setTimeout(() => {
+            saveNote(textInput.value);
+        }, 2000);
+    },
+    
+    /**
+     * Apre il popup cronologia estrazioni.
+     */
+    openHistory() {
+        const overlay = this.container.querySelector('#lore-history-overlay');
+        const list = this.container.querySelector('#lore-history-list');
+        if (!overlay || !list) return;
+        
+        const history = loadHistory();
+        
+        if (history.length === 0) {
+            list.innerHTML = `
+                <div class="lore-empty-state">
+                    <div class="lore-empty-icon">📭</div>
+                    <p>Nessuna estrazione nella cronologia</p>
+                    <p class="lore-empty-hint">Le estrazioni verranno salvate automaticamente qui dopo ogni analisi</p>
+                </div>
+            `;
+        } else {
+            list.innerHTML = history.map(entry => this.renderHistoryEntry(entry)).join('');
+        }
+        
+        overlay.classList.remove('hidden');
+    },
+    
+    closeHistory() {
+        const overlay = this.container.querySelector('#lore-history-overlay');
+        if (overlay) overlay.classList.add('hidden');
+    },
+    
+    renderHistoryEntry(entry) {
+        const date = new Date(entry.timestamp);
+        const dateStr = date.toLocaleString('it-IT', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+        });
+        const sourceIcon = entry.source === 'ai' ? '🤖' : '📋';
+        const sourceLabel = entry.source === 'ai' ? 'AI' : 'Regole';
+        
+        const summaryParts = [];
+        if (entry.summary?.npcs?.length > 0) {
+            summaryParts.push(`🧙 ${entry.summary.npcs.slice(0, 3).join(', ')}${entry.summary.npcs.length > 3 ? '...' : ''}`);
+        }
+        if (entry.summary?.factions?.length > 0) {
+            summaryParts.push(`🏛️ ${entry.summary.factions.slice(0, 2).join(', ')}`);
+        }
+        if (entry.summary?.locations?.length > 0) {
+            summaryParts.push(`📍 ${entry.summary.locations.slice(0, 2).join(', ')}`);
+        }
+        
+        return `
+            <div class="lore-history-entry">
+                <div class="lore-history-entry-header">
+                    <span class="lore-history-date">${dateStr}</span>
+                    <span class="lore-history-source">${sourceIcon} ${sourceLabel}</span>
+                    <span class="lore-history-count">${entry.totalEntities} entità • ${entry.parseTime}ms</span>
+                </div>
+                <div class="lore-history-summary">
+                    ${summaryParts.length > 0 ? summaryParts.join(' • ') : '<em>Nessuna entità estratta</em>'}
+                </div>
+                <div class="lore-history-breakdown">
+                    ${entry.npcsCount > 0 ? `<span class="lore-history-tag">🧙 ${entry.npcsCount} PNG</span>` : ''}
+                    ${entry.factionsCount > 0 ? `<span class="lore-history-tag">🏛️ ${entry.factionsCount} Fazioni</span>` : ''}
+                    ${entry.locationsCount > 0 ? `<span class="lore-history-tag">📍 ${entry.locationsCount} Luoghi</span>` : ''}
+                    ${entry.itemsCount > 0 ? `<span class="lore-history-tag">⚔️ ${entry.itemsCount} Oggetti</span>` : ''}
+                    ${entry.eventsCount > 0 ? `<span class="lore-history-tag">⚡ ${entry.eventsCount} Eventi</span>` : ''}
+                </div>
+            </div>
+        `;
+    },
+    
+    handleClearHistory() {
+        if (confirm('Cancellare tutta la cronologia delle estrazioni?')) {
+            clearHistory();
+            this.openHistory(); // Refresh
+            showToast('Cronologia cancellata', 'info');
+        }
     },
     
     /**
@@ -339,8 +603,11 @@ const LoreExtractor = {
         const textInput = this.container.querySelector('#lore-text-input');
         const wordCount = this.container.querySelector('#lore-word-count');
         if (!textInput || !wordCount) return;
-        const words = textInput.value.trim() ? textInput.value.trim().split(/\s+/).length : 0;
-        wordCount.textContent = `${words} parol${words === 1 ? 'a' : 'e'}`;
+        const text = textInput.value;
+        const chars = text.length;
+        const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+        const lines = text ? text.split('\n').length : 0;
+        wordCount.textContent = `${words} parol${words === 1 ? 'a' : 'e'} • ${chars} caratteri • ${lines} rig${lines === 1 ? 'a' : 'he'}`;
     },
     
     async handleExtract() {
@@ -370,6 +637,7 @@ const LoreExtractor = {
                 
                 this.showAIProgress(false);
                 this.lastExtraction = result;
+                saveToHistory(result);
                 this.updateExtractionStats(result.stats);
                 this.updateTabBadges(result);
                 this.currentCategory = 'npcs';
@@ -396,6 +664,7 @@ const LoreExtractor = {
         
         const result = parseLore(text);
         this.lastExtraction = result;
+        saveToHistory(result);
         
         // Aggiorna UI
         this.updateExtractionStats(result.stats);
