@@ -19,7 +19,7 @@ import { showToast } from '../../../utils/toast.js';
 import { escapeHtml } from '../../../utils/htmlHelpers.js';
 import { monsterDatabase } from '../../../database/monsterDatabase.js';
 import { generateMonsterTokenHTML, buildTokenFromMonster, buildTokensFromEncounter, getColorForMonsterType } from './mapManager/monsterTokenGenerator.js';
-import { MAP_TEMPLATES, loadTemplateAsBase64 } from './mapManager/mapTemplates.js';
+import { MAP_TEMPLATES, loadTemplateAsBase64, getTemplateCategories, getTemplatesByCategory } from './mapManager/mapTemplates.js';
 
 // ═══════════════════════════════════════════════════════════════
 // COSTANTI E CONFIGURAZIONE
@@ -338,11 +338,16 @@ ${this.getStyles()}
                 </div>
             </div>
             <div class="map-form-group">
-                <label>oppure usa un Template AI</label>
+                <label>oppure usa un Template AI (56 mappe)</label>
+                <div class="map-template-filters" id="map-template-filters">
+                    ${['Tutti', ...getTemplateCategories()].map(cat => 
+                        `<button class="map-template-filter-btn ${cat === 'Tutti' ? 'active' : ''}" data-category="${cat}">${cat}</button>`
+                    ).join('')}
+                </div>
                 <div class="map-template-gallery" id="map-template-gallery">
                     ${MAP_TEMPLATES.map(t => `
-                        <div class="map-template-card" data-template-id="${t.id}" data-template-image="${t.image}" data-template-type="${t.type}" title="${escapeHtml(t.description)}">
-                            <img src="${t.image}" alt="${escapeHtml(t.name)}" class="map-template-thumb">
+                        <div class="map-template-card" data-template-id="${t.id}" data-template-image="${t.image}" data-template-type="${t.type}" data-template-category="${t.category}" title="${escapeHtml(t.description)}">
+                            <img src="${t.image}" alt="${escapeHtml(t.name)}" class="map-template-thumb" loading="lazy">
                             <span class="map-template-name">${escapeHtml(t.name)}</span>
                         </div>
                     `).join('')}
@@ -1398,6 +1403,35 @@ ${this.getStyles()}
 }
 
 /* === TEMPLATE GALLERY === */
+.map-template-filters {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+}
+
+.map-template-filter-btn {
+    padding: 3px 10px;
+    background: var(--bg-tertiary, #2a2a2a);
+    border: 1px solid var(--border-color, #3a3a3a);
+    border-radius: 4px;
+    color: var(--text-muted, #888);
+    cursor: pointer;
+    font-size: 0.7rem;
+    transition: all 0.15s;
+}
+
+.map-template-filter-btn:hover {
+    background: var(--hover-bg, #3a3a3a);
+    color: var(--text-primary, #fff);
+}
+
+.map-template-filter-btn.active {
+    background: var(--accent-color, #0891b2);
+    color: #fff;
+    border-color: var(--accent-color, #0891b2);
+}
+
 .map-template-gallery {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
@@ -1692,6 +1726,24 @@ ${this.getStyles()}
                 } catch (e) {
                     showToast(`Errore: ${e.message}`, 'error');
                 }
+            });
+        });
+        
+        // Template category filters
+        this.container.querySelectorAll('.map-template-filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const category = btn.dataset.category;
+                this.container.querySelectorAll('.map-template-filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // Show/hide cards based on category
+                this.container.querySelectorAll('.map-template-card').forEach(card => {
+                    if (category === 'Tutti' || card.dataset.templateCategory === category) {
+                        card.style.display = '';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
             });
         });
 
