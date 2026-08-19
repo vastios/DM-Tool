@@ -477,6 +477,9 @@ const CombatTracker = {
 
         this.bindEvents();
         
+        // Carica combat log persistente (se esiste da sessione precedente)
+        this.loadCombatLogFromStorage();
+        
         // Sottoscrizione allo stato (salva la funzione di unsubscribe per cleanup)
         this._unsubscribe = subscribe((combatants, currentRound, currentTurnMonsterId, initiativeOrder) => {
             this.onStateChange(combatants, currentRound, currentTurnMonsterId, initiativeOrder);
@@ -3068,38 +3071,29 @@ const CombatTracker = {
     showDeathTooltip(combatant) {
         const name = combatant.customName || combatant.name;
         const isPc = combatant.sourceType === 'pc';
+        const message = isPc ? 
+            'È caduto! Tiri Salvezza contro Morte necessari.' : 
+            'È morto!';
         
-        // Crea il tooltip di morte
-        const deathOverlay = document.createElement('div');
-        deathOverlay.className = 'death-tooltip-overlay';
-        deathOverlay.innerHTML = `
-            <div class="death-tooltip">
-                <div class="death-icon">💀</div>
-                <div class="death-title">${name}</div>
-                <div class="death-message">${isPc ? 
-                    'È caduto! Tiri Salvezza contro Morte necessari.' : 
-                    'È morto!'}</div>
-                <button class="death-close-btn">Chiudi</button>
-            </div>
-        `;
+        // Invece di un overlay, mostra un banner inline nel results-box del combatant
+        const card = this.container.querySelector(`.combatant-card[data-id="${combatant.id}"]`);
+        const resultsBox = card?.querySelector('.results-box-mini') || 
+                          card?.querySelector('.results-box-tab') ||
+                          this.container.querySelector('.results-box-mini');
         
-        document.body.appendChild(deathOverlay);
+        if (resultsBox) {
+            const deathBanner = document.createElement('div');
+            deathBanner.className = 'death-banner-inline';
+            deathBanner.innerHTML = `
+                <span class="death-banner-icon">💀</span>
+                <span class="death-banner-text"><strong>${name}</strong> — ${message}</span>
+            `;
+            resultsBox.innerHTML = '';
+            resultsBox.appendChild(deathBanner);
+        }
         
-        // Event per chiudere
-        deathOverlay.querySelector('.death-close-btn').addEventListener('click', () => {
-            deathOverlay.remove();
-        });
-        
-        deathOverlay.addEventListener('click', (e) => {
-            if (e.target === deathOverlay) {
-                deathOverlay.remove();
-            }
-        });
-        
-        // Auto-close dopo 5 secondi
-        setTimeout(() => {
-            deathOverlay?.remove();
-        }, 5000);
+        // Mantieni anche il toast per feedback immediato
+        showToast(`💀 ${name}: ${message}`, isPc ? 'warning' : 'error', 4000);
     },
     
     handleConcentrationCheck(combatantId, damage) {
@@ -3613,6 +3607,12 @@ const CombatTracker = {
         const card = this.container.querySelector(`.combatant-card[data-id="${attacker.id}"]`);
         const targets = this.getSelectedTargets(card);
         
+        // Avvisa se non c'è un bersaglio selezionato
+        if (targets.length === 0) {
+            showToast('⚠️ Seleziona un bersaglio prima di usare questa azione!', 'warning');
+            return;
+        }
+        
         // Consuma l'azione
         const tracker = attacker.actionTracker || {};
         if (tracker.actionUsed) {
@@ -3975,7 +3975,7 @@ const CombatTracker = {
             // Aggiorna la CA del combatant
             updateMonsterProperty(combatantId, 'armor_class', newAc);
         } else if (e.target.classList.contains('notes-compact')) {
-            // Salva le note del combatant (su change, non su input, per evitare re-render eccessivi)
+            // Salva le note del combatant (su change per blur, e anche su input con debounce)
             updateMonsterProperty(combatantId, 'notes', e.target.value);
         }
     },
@@ -3984,21 +3984,28 @@ const CombatTracker = {
         const id = e.target.dataset.id;
         if (!id) return;
         
-        // Name input - debounce 300ms per evitare re-render eccessivi durante la digitazione
+        // Name input - debounce 300ms
         if (e.target.classList.contains('combatant-name-input')) {
             const combatantId = parseFloat(id);
             const newName = e.target.value;
-            const cursorPos = e.target.selectionStart;
-            
-            // Salva la posizione del cursore per il ripristino dopo re-render
-            this._nameInputCursorPos = cursorPos;
+            this._nameInputCursorPos = e.target.selectionStart;
             this._nameInputFocused = true;
             
-            // Debounce: aggiorna lo stato solo dopo 300ms di inattività
             clearTimeout(this._nameDebounce);
             this._nameDebounce = setTimeout(() => {
                 updateMonsterProperty(combatantId, 'customName', newName);
             }, 300);
+        }
+        
+        // Notes input - debounce 500ms per persistenza anche senza blur
+        if (e.target.classList.contains('notes-compact')) {
+            const combatantId = parseFloat(id);
+            const notesValue = e.target.value;
+            
+            clearTimeout(this._notesDebounce);
+            this._notesDebounce = setTimeout(() => {
+                updateMonsterProperty(combatantId, 'notes', notesValue);
+            }, 500);
         }
     },
 

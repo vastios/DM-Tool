@@ -538,7 +538,9 @@ export function addNpcToCombat(npcData) {
  */
 function initializePcSpellState(pcData) {
     // Verifica se la classe è un incantatore
-    const className = pcData.className || pcData.class?.name || '';
+    // pcData.class contiene l'index della classe (es. "wizard")
+    // pcData.className contiene il nome italiano (es. "Mago") - se disponibile
+    const className = pcData.className || pcData.class?.name || pcData.class || '';
     const pgLevel = pcData.level || pcData.classLevel || 1;
     
     // Trova la classe nel database
