@@ -82,6 +82,36 @@ let availableNpcs = [];
 let savedEncounters = [];
 let selectedCombatantId = null;
 
+// --- FUNZIONI HELPER ---
+
+/**
+ * Parse sicuro di un attributo data-* con replacement preventivo.
+ * Ritorna null in caso di errore invece di lanciare un'eccezione.
+ * @param {string} raw - Il valore grezzo dell'attributo
+ * @param {string} from - Carattere da sostituire (default: &apos;)
+ * @param {string} to - Carattere sostitutivo (default: ')
+ * @returns {Object|null} Oggetto parseato o null se errore
+ */
+function parseDataAttr(raw, from = '&apos;', to = "'") {
+    if (!raw) return null;
+    try {
+        return JSON.parse(raw.replace(new RegExp(from, 'g'), to));
+    } catch (e) {
+        console.error('❌ [CombatTracker] Errore parsing data attribute:', e, raw);
+        showToast('Dato non valido (malformato)', 'error');
+        return null;
+    }
+}
+
+/**
+ * Parse sicuro di un attributo data-* con sostituzione &quot; → " (per incantesimi).
+ * @param {string} raw - Il valore grezzo dell'attributo
+ * @returns {Object|null} Oggetto parseato o null se errore
+ */
+function parseDataAttrQuot(raw) {
+    return parseDataAttr(raw, '&quot;', '"');
+}
+
 // --- FUNZIONI HELPER STORAGE ---
 
 function getNpcStorageKey() {
@@ -389,33 +419,33 @@ const CombatTracker = {
     </div>
     
     <!-- Popup Overlay -->
-    <div id="source-popup-overlay" class="popup-overlay hidden">
+    <div id="source-popup-overlay" class="popup-overlay hidden" role="dialog" aria-modal="true" aria-label="Popup selezione fonte">
         <div class="popup-container">
-            <button class="popup-close" title="Chiudi">×</button>
+            <button class="popup-close" title="Chiudi" aria-label="Chiudi popup">×</button>
             <div id="popup-content" class="popup-content"></div>
         </div>
     </div>
     
     <!-- Conditions Popup Overlay -->
-    <div id="conditions-popup-overlay" class="popup-overlay hidden">
+    <div id="conditions-popup-overlay" class="popup-overlay hidden" role="dialog" aria-modal="true" aria-label="Popup condizioni">
         <div class="conditions-popup-container">
-            <button class="popup-close" title="Chiudi">×</button>
+            <button class="popup-close" title="Chiudi" aria-label="Chiudi popup">×</button>
             <div id="conditions-popup-content" class="popup-content"></div>
         </div>
     </div>
     
     <!-- Spells Popup Overlay -->
-    <div id="spells-popup-overlay" class="popup-overlay hidden">
+    <div id="spells-popup-overlay" class="popup-overlay hidden" role="dialog" aria-modal="true" aria-label="Popup incantesimi attivi">
         <div class="spells-popup-container">
-            <button class="popup-close" title="Chiudi">×</button>
+            <button class="popup-close" title="Chiudi" aria-label="Chiudi popup">×</button>
             <div id="spells-popup-content" class="popup-content"></div>
         </div>
     </div>
     
     <!-- Combat Log Popup Overlay -->
-    <div id="combat-log-overlay" class="popup-overlay hidden">
+    <div id="combat-log-overlay" class="popup-overlay hidden" role="dialog" aria-modal="true" aria-label="Popup log combattimento">
         <div class="combat-log-popup-container">
-            <button class="popup-close" title="Chiudi">×</button>
+            <button class="popup-close" title="Chiudi" aria-label="Chiudi popup">×</button>
             <div class="combat-log-content">
                 <div class="log-header">
                     <h3>📜 Log Combattimento</h3>
@@ -432,9 +462,9 @@ const CombatTracker = {
     </div>
     
     <!-- Saving Throw Popup Overlay -->
-    <div id="saving-throw-overlay" class="popup-overlay hidden">
+    <div id="saving-throw-overlay" class="popup-overlay hidden" role="dialog" aria-modal="true" aria-label="Popup tiro salvezza">
         <div class="saving-throw-popup-container">
-            <button class="popup-close" title="Chiudi">×</button>
+            <button class="popup-close" title="Chiudi" aria-label="Chiudi popup">×</button>
             <div id="saving-throw-content" class="popup-content"></div>
         </div>
     </div>
@@ -446,10 +476,32 @@ const CombatTracker = {
 
         this.bindEvents();
         
-        // Sottoscrizione allo stato
-        subscribe((combatants, currentRound, currentTurnMonsterId, initiativeOrder) => {
+        // Sottoscrizione allo stato (salva la funzione di unsubscribe per cleanup)
+        this._unsubscribe = subscribe((combatants, currentRound, currentTurnMonsterId, initiativeOrder) => {
             this.onStateChange(combatants, currentRound, currentTurnMonsterId, initiativeOrder);
         });
+    },
+    
+    /**
+     * Cleanup del modulo: rimuove la sottoscrizione allo state manager
+     * per evitare memory leak quando il modulo viene distrutto o re-renderizzato.
+     */
+    destroy() {
+        if (this._unsubscribe) {
+            this._unsubscribe();
+            this._unsubscribe = null;
+        }
+        // Rimuovi handler Escape globale
+        if (this._escapeHandler) {
+            document.removeEventListener('keydown', this._escapeHandler);
+            this._escapeHandler = null;
+        }
+        // Pulisci tooltip e overlay orfani
+        document.querySelectorAll('.condition-tooltip, .ability-tooltip, .death-tooltip-overlay').forEach(el => el.remove());
+        // Pulisci debouncer pendenti
+        if (this._popupSearchDebounce) clearTimeout(this._popupSearchDebounce);
+        if (this._nameDebounce) clearTimeout(this._nameDebounce);
+        if (this._logSaveThrottle) clearTimeout(this._logSaveThrottle);
     },
 
     bindEvents() {
@@ -629,6 +681,25 @@ const CombatTracker = {
         
         const savingThrowContent = container.querySelector('#saving-throw-content');
         savingThrowContent?.addEventListener('click', (e) => this.handleSavingThrowPopupClick(e));
+        
+        // Handler globale per chiudere i popup con tasto Escape (accessibilità)
+        this._escapeHandler = (e) => {
+            if (e.key === 'Escape') {
+                // Chiude il primo popup aperto trovato (ordine di priorità)
+                if (!container.querySelector('#saving-throw-overlay')?.classList.contains('hidden')) {
+                    this.closeSavingThrowPopup();
+                } else if (!container.querySelector('#conditions-popup-overlay')?.classList.contains('hidden')) {
+                    this.closeConditionsPopup();
+                } else if (!container.querySelector('#spells-popup-overlay')?.classList.contains('hidden')) {
+                    this.closeSpellsPopup();
+                } else if (!container.querySelector('#combat-log-overlay')?.classList.contains('hidden')) {
+                    this.closeCombatLog();
+                } else if (!container.querySelector('#source-popup-overlay')?.classList.contains('hidden')) {
+                    this.closePopup();
+                }
+            }
+        };
+        document.addEventListener('keydown', this._escapeHandler);
     },
 
     // --- POPUP MANAGEMENT ---
@@ -2106,7 +2177,8 @@ const CombatTracker = {
      */
     renderActionsList(combatant) {
         const actions = combatant.actions || [];
-        if (actions.length === 0) {
+        const specialAbilities = combatant.special_abilities || [];
+        if (actions.length === 0 && specialAbilities.length === 0) {
             return '<p class="no-actions">Nessuna azione</p>';
         }
         
@@ -2127,6 +2199,14 @@ const CombatTracker = {
             !a.name?.toLowerCase().includes('multiattacco') && 
             !a.name?.toLowerCase().includes('multiattack')
         );
+        // Filtra le special_abilities con effetti attivi (dc strutturato o menzione di TS/danni nella desc)
+        // Esclude trait passivi come "Immunità ai danni" o "Sensi"
+        const activeSpecialAbilities = specialAbilities.filter(a => {
+            if (a.dc) return true;
+            if (a.desc && /tiro salvezza|deve superare|salvezza su/i.test(a.desc)) return true;
+            if (a.desc && /\d+d\d+\s*danni/i.test(a.desc)) return true;
+            return false;
+        });
         
         let html = '<div class="actions-list">';
         
@@ -2171,6 +2251,21 @@ const CombatTracker = {
                 const usesInfo = this.getUsesInfo(tracker, a.name);
                 const hasTooltip = a.desc ? `title="${a.desc.substring(0, 100)}..."` : '';
                 html += `<button class="special-action-btn ${disabled}" data-action='${JSON.stringify(a).replace(/'/g, "&apos;")}' data-attacker-id="${combatant.id}" data-action-type="action" ${disabled} ${hasTooltip}>✨ ${a.name}${usesInfo}</button>`;
+            });
+            html += '</div></div>';
+        }
+        
+        // Capacità Speciali (special_abilities con effetti attivi, es. Sguardo del Basilisco)
+        // Sono trait che richiedono un'azione per essere usate (o reazioni)
+        if (activeSpecialAbilities.length > 0) {
+            html += '<div class="action-category"><small class="category-label">👁️ Capacità Speciali</small><div class="attack-buttons-grid">';
+            activeSpecialAbilities.forEach(a => {
+                // Le capacità speciali NON consumano l'azione standard (sono spesso passive o reazioni)
+                // ma le disabilitiamo comunque se l'azione è usata per evitare abuse
+                const disabled = actionUsed ? 'disabled' : '';
+                const usesInfo = this.getUsesInfo(tracker, a.name);
+                const hasTooltip = a.desc ? `title="${a.desc.substring(0, 100)}..."` : '';
+                html += `<button class="special-action-btn special-ability-btn ${disabled}" data-action='${JSON.stringify(a).replace(/'/g, "&apos;")}' data-attacker-id="${combatant.id}" data-action-type="action" ${disabled} ${hasTooltip}>👁️ ${a.name}${usesInfo}</button>`;
             });
             html += '</div></div>';
         }
@@ -2729,11 +2824,13 @@ const CombatTracker = {
             this.applyDamageToTarget(targetId, damage, damageType);
         } else if (e.target.classList.contains('trigger-saving-throw-btn')) {
             // Apri popup per il tiro salvezza
-            const effectData = JSON.parse(e.target.dataset.effectData.replace(/&quot;/g, '"'));
+            const effectData = parseDataAttrQuot(e.target.dataset.effectData);
+            if (!effectData) return;
             this.openSavingThrowPopup(effectData);
         } else if (e.target.classList.contains('spell-btn-mini')) {
             // Click su un incantesimo per lanciarlo
-            const spellData = JSON.parse(e.target.dataset.spell.replace(/&quot;/g, '"'));
+            const spellData = parseDataAttrQuot(e.target.dataset.spell);
+            if (!spellData) return;
             const spellType = e.target.dataset.spellType;
             this.handleSpellClick(combatantId, spellData, spellType);
         } else if (e.target.classList.contains('slot-badge-btn')) {
@@ -3239,7 +3336,8 @@ const CombatTracker = {
      * Esegue un tiro attacco con confronto alla CA del bersaglio.
      */
     handleAttackWithAC(btn, attacker, targetId, multiattackMode) {
-        const attackData = JSON.parse(btn.dataset.attack.replace(/&apos;/g, "'"));
+        const attackData = parseDataAttr(btn.dataset.attack);
+        if (!attackData) return;
         const combatants = getCombatState();
         
         // Trova il bersaglio
@@ -3447,7 +3545,8 @@ const CombatTracker = {
      * Gestisce un'azione speciale.
      */
     handleSpecialAction(btn, attacker) {
-        const actionData = JSON.parse(btn.dataset.action.replace(/&apos;/g, "'"));
+        const actionData = parseDataAttr(btn.dataset.action);
+        if (!actionData) return;
         
         // Trova la card e usa il selettore multi-mode
         const card = this.container.querySelector(`.combatant-card[data-id="${attacker.id}"]`);
@@ -3526,7 +3625,8 @@ const CombatTracker = {
      * Gestisce un'azione leggendaria.
      */
     handleLegendaryAction(btn, attacker, cost) {
-        const actionData = JSON.parse(btn.dataset.action.replace(/&apos;/g, "'"));
+        const actionData = parseDataAttr(btn.dataset.action);
+        if (!actionData) return;
         const tracker = attacker.actionTracker || { legendaryActionsUsed: 0, legendaryActionsMax: 3 };
         
         const remaining = tracker.legendaryActionsMax - tracker.legendaryActionsUsed;
@@ -3786,6 +3886,12 @@ const CombatTracker = {
             const oldHp = combatant?.currentHp || 0;
             const newHp = parseInt(e.target.value, 10);
             
+            // Validazione: se NaN o negativo, ignora l'aggiornamento
+            if (isNaN(newHp) || newHp < 0) {
+                showToast('Valore HP non valido', 'warning');
+                return;
+            }
+            
             updateMonsterProperty(combatantId, 'currentHp', newHp);
             
             // Death tooltip - mostra quando un combattente muore (HP raggiunge 0)
@@ -3793,10 +3899,20 @@ const CombatTracker = {
                 this.showDeathTooltip(combatant);
             }
         } else if (e.target.classList.contains('init-input') || e.target.classList.contains('init-mini-input')) {
-            updateMonsterProperty(combatantId, 'initiative', parseInt(e.target.value, 10));
+            const newInit = parseInt(e.target.value, 10);
+            if (isNaN(newInit)) {
+                showToast('Valore iniziativa non valido', 'warning');
+                return;
+            }
+            updateMonsterProperty(combatantId, 'initiative', newInit);
         } else if (e.target.classList.contains('ac-mini-input')) {
+            const newAc = parseInt(e.target.value, 10);
+            if (isNaN(newAc) || newAc < 0) {
+                showToast('Valore CA non valido', 'warning');
+                return;
+            }
             // Aggiorna la CA del combatant
-            updateMonsterProperty(combatantId, 'armor_class', parseInt(e.target.value, 10));
+            updateMonsterProperty(combatantId, 'armor_class', newAc);
         } else if (e.target.classList.contains('notes-compact')) {
             // Salva le note del combatant (su change, non su input, per evitare re-render eccessivi)
             updateMonsterProperty(combatantId, 'notes', e.target.value);
@@ -3883,6 +3999,16 @@ const CombatTracker = {
         // NOTA: loadAllSources() NON viene chiamato qui per evitare letture
         // sincrone da localStorage ad ogni state change (HP, nome, condizioni, ecc.).
         // Le fonti vengono caricate all'apertura del modulo e ad ogni apertura del popup.
+        
+        // --- Validazione selectedTarget: se il bersaglio salvato non è più in lista, resetta ---
+        combatants.forEach(c => {
+            if (c.selectedTarget != null) {
+                const targetExists = combatants.some(t => t.id === parseFloat(c.selectedTarget));
+                if (!targetExists) {
+                    updateMonsterProperty(c.id, 'selectedTarget', null);
+                }
+            }
+        });
         
         // Log round_start quando il round cambia (escluso round 0 = non iniziato)
         if (currentRound > previousRound && currentRound > 0) {
@@ -4095,6 +4221,14 @@ const CombatTracker = {
         
         // Aggiorna statistiche
         this.updateStats(eventType, data);
+        
+        // Persisti nel localStorage (con throttle per evitare scritture eccessive)
+        if (!this._logSaveThrottle) {
+            this._logSaveThrottle = setTimeout(() => {
+                this.saveCombatLogToStorage();
+                this._logSaveThrottle = null;
+            }, 1000);
+        }
         
         return entry;
     },
@@ -4395,6 +4529,9 @@ const CombatTracker = {
         };
         this.actedThisTurn.clear();
         
+        // Pulisci anche dal localStorage
+        this.clearCombatLogFromStorage();
+        
         showToast('Log cancellato', 'info');
         
         // Aggiorna UI se il popup è aperto
@@ -4408,6 +4545,14 @@ const CombatTracker = {
      * Reset del log all'inizio del combattimento.
      */
     startCombatLog() {
+        // Prova a caricare log esistente (per ripristino dopo refresh)
+        const restored = this.loadCombatLogFromStorage();
+        if (restored) {
+            console.log('📜 [CombatTracker] Log combattimento ripristinato da storage');
+            this.actedThisTurn.clear();
+            return;
+        }
+        
         this.combatLog = [];
         this.combatStats = {
             startTime: new Date().toISOString(),
@@ -4427,6 +4572,68 @@ const CombatTracker = {
     },
     
     /**
+     * Salva il combat log e le stats nel localStorage per persistenza.
+     */
+    saveCombatLogToStorage() {
+        try {
+            const campaignId = getCurrentCampaignId();
+            if (!campaignId) return;
+            const key = `dungeonMasterToolCombatLog_${campaignId}`;
+            const data = JSON.stringify({
+                log: this.combatLog,
+                stats: this.combatStats,
+                timestamp: Date.now()
+            });
+            localStorage.setItem(key, data);
+        } catch (e) {
+            console.error('Errore salvataggio combat log:', e);
+        }
+    },
+    
+    /**
+     * Carica il combat log dal localStorage se esiste e non è scaduto.
+     * @returns {boolean} true se ripristinato con successo
+     */
+    loadCombatLogFromStorage() {
+        try {
+            const campaignId = getCurrentCampaignId();
+            if (!campaignId) return false;
+            const key = `dungeonMasterToolCombatLog_${campaignId}`;
+            const data = localStorage.getItem(key);
+            if (!data) return false;
+            
+            const parsed = JSON.parse(data);
+            // Scade dopo 24 ore
+            const ageHours = (Date.now() - (parsed.timestamp || 0)) / (1000 * 60 * 60);
+            if (ageHours > 24) {
+                localStorage.removeItem(key);
+                return false;
+            }
+            
+            this.combatLog = parsed.log || [];
+            this.combatStats = parsed.stats || this.combatStats;
+            return true;
+        } catch (e) {
+            console.error('Errore caricamento combat log:', e);
+            return false;
+        }
+    },
+    
+    /**
+     * Rimuove il combat log dal localStorage.
+     */
+    clearCombatLogFromStorage() {
+        try {
+            const campaignId = getCurrentCampaignId();
+            if (!campaignId) return;
+            const key = `dungeonMasterToolCombatLog_${campaignId}`;
+            localStorage.removeItem(key);
+        } catch (e) {
+            console.error('Errore rimozione combat log da storage:', e);
+        }
+    },
+    
+    /**
      * Finalizza il log alla fine del combattimento.
      */
     endCombatLog() {
@@ -4434,6 +4641,9 @@ const CombatTracker = {
         this.combatStats.roundsPlayed = this.currentRound;
         
         this.logEvent('combat_end');
+        
+        // Salva finale nel localStorage
+        this.saveCombatLogToStorage();
         
         // Mostra statistiche riepilogative
         this.showCombatSummary();

@@ -2833,6 +2833,18 @@
     border-radius: 3px;
 }
 
+/* Capacità Speciali (special_abilities come Sguardo del Basilisco) */
+.special-ability-btn {
+    background: rgba(33, 150, 243, 0.15) !important;
+    border-color: #2196f3 !important;
+    color: #64b5f6 !important;
+}
+
+.special-ability-btn:hover:not(:disabled) {
+    background: rgba(33, 150, 243, 0.3) !important;
+    color: #fff !important;
+}
+
 /* ==========================================================================
    ACCESSIBILITÀ: Riduzione animazioni per utenti con vestibolari/ADHD
    ========================================================================== */

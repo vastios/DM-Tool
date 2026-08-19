@@ -188,6 +188,15 @@ export function subscribe(callback) {
     subscribers.push(callback);
     // Chiama immediatamente la callback con lo stato corrente
     callback(combatState, currentRound, currentTurnMonsterId, initiativeOrder);
+    
+    // Ritorna la funzione di unsubscribe per permettere cleanup
+    return function unsubscribe() {
+        const idx = subscribers.indexOf(callback);
+        if (idx !== -1) {
+            subscribers.splice(idx, 1);
+            console.log("🔴 [CombatStateManager] Sottoscrittore rimosso.");
+        }
+    };
 }
 
 /**
