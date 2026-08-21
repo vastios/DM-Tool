@@ -126,119 +126,125 @@ export function renderStep1Identity(pgData, databases, traitsHtml = '') {
     
     return `
         <div class="wizard-form">
-            <div class="form-section">
-                <h3>Dati Anagrafici</h3>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="pg-name">Nome Personaggio *</label>
-                        <input type="text" id="pg-name" value="${escapeHtml(pgData.name || '')}" 
-                               placeholder="Nome del personaggio" class="form-control">
+            <div class="step3-two-column">
+                <!-- COLONNA SINISTRA: Dati Anagrafici -->
+                <div class="form-section">
+                    <h3>Dati Anagrafici</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="pg-name">Nome Personaggio *</label>
+                            <input type="text" id="pg-name" value="${escapeHtml(pgData.name || '')}" 
+                                   placeholder="Nome del personaggio" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="pg-player">Nome Giocatore</label>
+                            <input type="text" id="pg-player" value="${escapeHtml(pgData.playerName || '')}" 
+                                   placeholder="Chi gioca questo PG?" class="form-control">
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="pg-player">Nome Giocatore</label>
-                        <input type="text" id="pg-player" value="${escapeHtml(pgData.playerName || '')}" 
-                               placeholder="Chi gioca questo PG?" class="form-control">
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="pg-race">Razza *</label>
+                            <select id="pg-race" class="form-control">
+                                <option value="">-- Seleziona --</option>
+                                ${(races || []).map(r => `
+                                    <option value="${r.index}" ${pgData.race === r.index ? 'selected' : ''}>${r.classe || r.name}</option>
+                                `).join('')}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="pg-class">Classe *</label>
+                            <select id="pg-class" class="form-control">
+                                <option value="">-- Seleziona --</option>
+                                ${(classes || []).map(c => `
+                                    <option value="${c.index}" ${pgData.class === c.index ? 'selected' : ''}>${c.classe || c.name}</option>
+                                `).join('')}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="pg-subclass">Sottoclasse</label>
+                            ${renderSubclassSelect(pgData, databases)}
+                        </div>
+                        <div class="form-group">
+                            <label for="pg-level">Livello *</label>
+                            <input type="number" id="pg-level" value="${pgData.level || 1}" min="1" max="20" class="form-control">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="pg-background">Background</label>
+                            <select id="pg-background" class="form-control">
+                                <option value="">-- Seleziona --</option>
+                                ${(backgrounds || []).map(b => `
+                                    <option value="${b.index}" ${pgData.background === b.index ? 'selected' : ''}>${b.nome}</option>
+                                `).join('')}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="pg-alignment">Allineamento</label>
+                            <select id="pg-alignment" class="form-control">
+                                <option value="">-- Seleziona --</option>
+                                ${Object.keys(alignments || {}).map(a => `
+                                    <option value="${a}" ${pgData.alignment === a ? 'selected' : ''}>${a}</option>
+                                `).join('')}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="pg-gender">Sesso</label>
+                            <select id="pg-gender" class="form-control">
+                                <option value="random" ${pgData.gender === 'random' ? 'selected' : ''}>Casuale</option>
+                                <option value="male" ${pgData.gender === 'male' ? 'selected' : ''}>Maschio</option>
+                                <option value="female" ${pgData.gender === 'female' ? 'selected' : ''}>Femmina</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="display: flex; align-items: flex-end;">
+                            <button type="button" id="btn-generate-descriptions" class="btn btn-secondary" style="width: 100%; background: linear-gradient(135deg, #9b59b6 0%, #6c3483 100%); color: #fff; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">
+                                🎲 Genera Aspetto & Personalità
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Aspetto Fisico -->
+                    <div class="form-section" style="margin-top: 1rem;">
+                        <h4 style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>👤 Aspetto Fisico</span>
+                            <button type="button" id="btn-regen-appearance" class="btn btn-small" style="font-size: 0.75rem; padding: 0.25rem 0.5rem; background: rgba(155, 89, 182, 0.3); border: 1px solid #9b59b6; color: #d4a5e8; border-radius: 3px; cursor: pointer;" title="Rigenera solo aspetto">🔄</button>
+                        </h4>
+                        <div class="form-group">
+                            <textarea id="pg-appearance" class="form-control tag-autocomplete" rows="3" 
+                                placeholder="Descrivi l'aspetto fisico del personaggio o usa il pulsante per generarlo casualmente...">${escapeHtml(pgData.appearance || '')}</textarea>
+                            <div id="autocomplete-pg-appearance" class="autocomplete-dropdown"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Personalità -->
+                    <div class="form-section" style="margin-top: 0.75rem;">
+                        <h4 style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>🎭 Personalità</span>
+                            <button type="button" id="btn-regen-personality" class="btn btn-small" style="font-size: 0.75rem; padding: 0.25rem 0.5rem; background: rgba(155, 89, 182, 0.3); border: 1px solid #9b59b6; color: #d4a5e8; border-radius: 3px; cursor: pointer;" title="Rigenera solo personalità">🔄</button>
+                        </h4>
+                        <div class="form-group">
+                            <textarea id="pg-personality" class="form-control tag-autocomplete" rows="3" 
+                                placeholder="Descrivi i tratti caratteriali del personaggio o usa il pulsante per generarli casualmente...">${escapeHtml(pgData.personality || '')}</textarea>
+                            <div id="autocomplete-pg-personality" class="autocomplete-dropdown"></div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="pg-race">Razza *</label>
-                        <select id="pg-race" class="form-control">
-                            <option value="">-- Seleziona --</option>
-                            ${(races || []).map(r => `
-                                <option value="${r.index}" ${pgData.race === r.index ? 'selected' : ''}>${r.classe || r.name}</option>
-                            `).join('')}
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="pg-class">Classe *</label>
-                        <select id="pg-class" class="form-control">
-                            <option value="">-- Seleziona --</option>
-                            ${(classes || []).map(c => `
-                                <option value="${c.index}" ${pgData.class === c.index ? 'selected' : ''}>${c.classe || c.name}</option>
-                            `).join('')}
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="pg-subclass">Sottoclasse</label>
-                        ${renderSubclassSelect(pgData, databases)}
-                    </div>
-                    <div class="form-group">
-                        <label for="pg-level">Livello *</label>
-                        <input type="number" id="pg-level" value="${pgData.level || 1}" min="1" max="20" class="form-control">
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="pg-background">Background</label>
-                        <select id="pg-background" class="form-control">
-                            <option value="">-- Seleziona --</option>
-                            ${(backgrounds || []).map(b => `
-                                <option value="${b.index}" ${pgData.background === b.index ? 'selected' : ''}>${b.nome}</option>
-                            `).join('')}
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="pg-alignment">Allineamento</label>
-                        <select id="pg-alignment" class="form-control">
-                            <option value="">-- Seleziona --</option>
-                            ${Object.keys(alignments || {}).map(a => `
-                                <option value="${a}" ${pgData.alignment === a ? 'selected' : ''}>${a}</option>
-                            `).join('')}
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="pg-gender">Sesso</label>
-                        <select id="pg-gender" class="form-control">
-                            <option value="random" ${pgData.gender === 'random' ? 'selected' : ''}>Casuale</option>
-                            <option value="male" ${pgData.gender === 'male' ? 'selected' : ''}>Maschio</option>
-                            <option value="female" ${pgData.gender === 'female' ? 'selected' : ''}>Femmina</option>
-                        </select>
-                    </div>
-                    <div class="form-group" style="display: flex; align-items: flex-end;">
-                        <button type="button" id="btn-generate-descriptions" class="btn btn-secondary" style="width: 100%; background: linear-gradient(135deg, #9b59b6 0%, #6c3483 100%); color: #fff; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">
-                            🎲 Genera Aspetto & Personalità
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Aspetto Fisico -->
-                <div class="form-section" style="margin-top: 1rem;">
-                    <h4 style="display: flex; justify-content: space-between; align-items: center;">
-                        <span>👤 Aspetto Fisico</span>
-                        <button type="button" id="btn-regen-appearance" class="btn btn-small" style="font-size: 0.75rem; padding: 0.25rem 0.5rem; background: rgba(155, 89, 182, 0.3); border: 1px solid #9b59b6; color: #d4a5e8; border-radius: 3px; cursor: pointer;" title="Rigenera solo aspetto">🔄</button>
-                    </h4>
-                    <div class="form-group">
-                        <textarea id="pg-appearance" class="form-control tag-autocomplete" rows="3" 
-                            placeholder="Descrivi l'aspetto fisico del personaggio o usa il pulsante per generarlo casualmente...">${escapeHtml(pgData.appearance || '')}</textarea>
-                        <div id="autocomplete-pg-appearance" class="autocomplete-dropdown"></div>
-                    </div>
-                </div>
-                
-                <!-- Personalità -->
-                <div class="form-section" style="margin-top: 0.75rem;">
-                    <h4 style="display: flex; justify-content: space-between; align-items: center;">
-                        <span>🎭 Personalità</span>
-                        <button type="button" id="btn-regen-personality" class="btn btn-small" style="font-size: 0.75rem; padding: 0.25rem 0.5rem; background: rgba(155, 89, 182, 0.3); border: 1px solid #9b59b6; color: #d4a5e8; border-radius: 3px; cursor: pointer;" title="Rigenera solo personalità">🔄</button>
-                    </h4>
-                    <div class="form-group">
-                        <textarea id="pg-personality" class="form-control tag-autocomplete" rows="3" 
-                            placeholder="Descrivi i tratti caratteriali del personaggio o usa il pulsante per generarli casualmente...">${escapeHtml(pgData.personality || '')}</textarea>
-                        <div id="autocomplete-pg-personality" class="autocomplete-dropdown"></div>
-                    </div>
+                <!-- COLONNA DESTRA: Tratti e Privilegi -->
+                <div>
+                    ${renderRaceClassInfo(pgData, databases, traitsHtml)}
                 </div>
             </div>
-            
-            ${renderRaceClassInfo(pgData, databases, traitsHtml)}
         </div>
     `;
 }

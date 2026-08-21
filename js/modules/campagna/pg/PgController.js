@@ -544,11 +544,8 @@ export class PgController {
                     this.wizardData.extraLanguagesArray.push(lang);
                     // Aggiorna anche il campo extraLanguages per compatibilità
                     this.wizardData.extraLanguages = this.wizardData.extraLanguagesArray.join(', ');
-                    // Aggiorna l'input nascosto
-                    const hiddenInput = this.container.querySelector('#pg-extra-languages');
-                    if (hiddenInput) hiddenInput.value = this.wizardData.extraLanguages;
-                    // Re-render Step 3
-                    this.viewManager.renderStep(this.currentStep);
+                    // Re-render
+                    this.render();
                 }
             }
             return;
@@ -560,9 +557,7 @@ export class PgController {
             if (this.wizardData.extraLanguagesArray) {
                 this.wizardData.extraLanguagesArray.splice(idx, 1);
                 this.wizardData.extraLanguages = (this.wizardData.extraLanguagesArray || []).join(', ');
-                const hiddenInput = this.container.querySelector('#pg-extra-languages');
-                if (hiddenInput) hiddenInput.value = this.wizardData.extraLanguages;
-                this.viewManager.renderStep(this.currentStep);
+                this.render();
             }
             return;
         }

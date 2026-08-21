@@ -371,7 +371,7 @@
    ============================================================================ */
 
 .pg-wizard {
-    max-width: 900px;
+    max-width: 100%;
     margin: 0 auto;
 }
 
@@ -2463,12 +2463,12 @@ textarea.form-control {
    TRAIT TAG - BACKGROUND
    ============================================================================ */
 
-.trait-tag.background {
+.pg-sheet .trait-tag.background {
     background: rgba(33, 150, 243, 0.15);
     border-color: #2196f3;
 }
 
-.trait-tag.background:hover {
+.pg-sheet .trait-tag.background:hover {
     background: rgba(33, 150, 243, 0.25);
 }
 
@@ -4948,7 +4948,7 @@ label.spell-cb input {
     gap: 0.3rem;
 }
 
-.trait-tag {
+.pg-sheet .trait-tag {
     display: inline-block;
     padding: 0.2rem 0.5rem;
     background: rgba(255, 255, 255, 0.4);
@@ -4959,17 +4959,17 @@ label.spell-cb input {
     position: relative;
 }
 
-.trait-tag.racial {
+.pg-sheet .trait-tag.racial {
     background: rgba(76, 175, 80, 0.15);
     border-color: rgba(76, 175, 80, 0.4);
 }
 
-.trait-tag.class {
+.pg-sheet .trait-tag.class {
     background: rgba(212, 175, 55, 0.15);
     border-color: rgba(212, 175, 55, 0.4);
 }
 
-.trait-tag.subclass {
+.pg-sheet .trait-tag.subclass {
     background: rgba(156, 39, 176, 0.15);
     border-color: rgba(156, 39, 176, 0.4);
 }
@@ -5705,7 +5705,7 @@ label.spell-cb input {
     gap: 0.2rem;
 }
 
-.trait-tag {
+.pg-sheet .trait-tag {
     display: inline-block;
     padding: 0.15rem 0.4rem;
     background: rgba(255, 255, 255, 0.4);
@@ -5716,17 +5716,17 @@ label.spell-cb input {
     position: relative;
 }
 
-.trait-tag.racial {
+.pg-sheet .trait-tag.racial {
     background: rgba(76, 175, 80, 0.15);
     border-color: rgba(76, 175, 80, 0.4);
 }
 
-.trait-tag.class {
+.pg-sheet .trait-tag.class {
     background: rgba(212, 175, 55, 0.15);
     border-color: rgba(212, 175, 55, 0.4);
 }
 
-.trait-tag.subclass {
+.pg-sheet .trait-tag.subclass {
     background: rgba(156, 39, 176, 0.15);
     border-color: rgba(156, 39, 176, 0.4);
 }
