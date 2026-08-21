@@ -1116,7 +1116,11 @@ export class PgController {
     nextStep() {
         // Passa i dati di contesto per la validazione prima di validare
         if (this.currentStep === 3) {
-            this.wizardData._classNumSkillChoices = this.databases.selectedClass?.proficiency_choices?.[0]?.choose || 2;
+            // Usa il nuovo parser per ottenere il numero corretto di scelte
+            const classSkillsData = this.parseClassSkillsForController();
+            const bgSkills = this.wizardData._bgSkills || [];
+            const bgOverlappingClass = bgSkills.filter(s => classSkillsData.availableSkills.includes(s));
+            this.wizardData._classNumSkillChoices = classSkillsData.numChoices + bgOverlappingClass.length;
         }
         if (this.currentStep === 4) {
             this.wizardData._maxCantrips = this.getMaxCantrips();
@@ -1463,37 +1467,8 @@ export class PgController {
             this.wizardData.skills = this.wizardData.skills.filter(s => s !== skillName);
         }
         
-        // Aggiorna il contatore visivo
-        const counterBox = this.container.querySelector('.skill-counter-box');
-        if (counterBox) {
-            // Ricalcola il limite effettivo
-            const classSkillsData = this.parseClassSkillsForController();
-            const numChoices = classSkillsData.numChoices;
-            const availableSkills = classSkillsData.availableSkills;
-            const bgOverlappingClass = bgSkills.filter(s => availableSkills.includes(s));
-            const effectiveNumChoices = numChoices + bgOverlappingClass.length;
-            
-            const userSelectedCount = this.wizardData.skills.filter(s => !bgSkills.includes(s)).length;
-            const isOverLimit = userSelectedCount > effectiveNumChoices;
-            
-            counterBox.className = `skill-counter-box ${isOverLimit ? 'over-limit' : ''}`;
-            
-            const selectedNum = counterBox.querySelector('.selected-num');
-            if (selectedNum) selectedNum.textContent = userSelectedCount;
-            
-            // Aggiorna il warning
-            let warningEl = counterBox.querySelector('.counter-warning');
-            if (isOverLimit) {
-                if (!warningEl) {
-                    warningEl = document.createElement('span');
-                    warningEl.className = 'counter-warning';
-                    counterBox.appendChild(warningEl);
-                }
-                warningEl.textContent = `⚠️ ${userSelectedCount - effectiveNumChoices} oltre il limite`;
-            } else if (warningEl) {
-                warningEl.remove();
-            }
-        }
+        // Re-render completo per aggiornare evidenziazione abilità
+        this.render();
     }
     
     parseClassSkillsForController() {
