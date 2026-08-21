@@ -532,6 +532,41 @@ export class PgController {
             return; 
         }
         
+        // Aggiungi lingua (Step 3)
+        if (button.id === 'add-language-btn') {
+            const select = this.container.querySelector('#pg-language-select');
+            if (select && select.value) {
+                const lang = select.value;
+                if (!this.wizardData.extraLanguagesArray) {
+                    this.wizardData.extraLanguagesArray = [];
+                }
+                if (!this.wizardData.extraLanguagesArray.includes(lang)) {
+                    this.wizardData.extraLanguagesArray.push(lang);
+                    // Aggiorna anche il campo extraLanguages per compatibilità
+                    this.wizardData.extraLanguages = this.wizardData.extraLanguagesArray.join(', ');
+                    // Aggiorna l'input nascosto
+                    const hiddenInput = this.container.querySelector('#pg-extra-languages');
+                    if (hiddenInput) hiddenInput.value = this.wizardData.extraLanguages;
+                    // Re-render Step 3
+                    this.viewManager.renderStep(this.currentStep);
+                }
+            }
+            return;
+        }
+        
+        // Rimuovi lingua (click sul tag)
+        if (target.dataset.removeLang !== undefined) {
+            const idx = parseInt(target.dataset.removeLang, 10);
+            if (this.wizardData.extraLanguagesArray) {
+                this.wizardData.extraLanguagesArray.splice(idx, 1);
+                this.wizardData.extraLanguages = (this.wizardData.extraLanguagesArray || []).join(', ');
+                const hiddenInput = this.container.querySelector('#pg-extra-languages');
+                if (hiddenInput) hiddenInput.value = this.wizardData.extraLanguages;
+                this.viewManager.renderStep(this.currentStep);
+            }
+            return;
+        }
+        
         // Generazione caratteristiche
         if (button.id === 'btn-roll-abilities') { this.rollAbilities(); return; }
         if (button.id === 'btn-standard-array') { this.applyStandardArray(); return; }

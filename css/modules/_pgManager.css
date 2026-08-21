@@ -447,14 +447,24 @@
     padding: 1.25rem;
     border: 1px solid var(--border-color, #333);
     min-height: 300px;
+    flex: 1;
+    overflow-y: auto;
 }
 
-/* Wizard footer */
+/* Wizard footer - sticky per mantenere bottoni sempre visibili */
 .wizard-footer {
     display: flex;
     justify-content: space-between;
-    margin-top: 1.5rem;
+    margin-top: 1rem;
     gap: 0.5rem;
+    flex-shrink: 0;
+    padding: 0.75rem 1rem;
+    background: var(--card-bg, #2a2a2a);
+    border-radius: 8px;
+    border: 1px solid var(--border-color, #333);
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
 }
 
 /* Error box */
@@ -564,8 +574,9 @@ textarea.form-control {
 
 .info-section p {
     margin: 0;
-    font-size: 0.85rem;
-    color: var(--text-secondary, #ccc);
+    font-size: 0.9rem;
+    color: var(--text-primary, #fff);
+    line-height: 1.5;
 }
 
 /* ============================================================================
@@ -574,50 +585,51 @@ textarea.form-control {
 
 .abilities-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    gap: 0.75rem;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
     margin-bottom: 1rem;
 }
 
 .ability-box {
     background: var(--card-bg, #333);
     border: 1px solid var(--border-color, #444);
-    border-radius: 6px;
-    padding: 0.6rem;
+    border-radius: 8px;
+    padding: 1rem;
     text-align: center;
 }
 
 .ability-label {
     display: block;
     font-weight: 600;
-    font-size: 0.85rem;
-    margin-bottom: 0.4rem;
-    color: var(--text-primary, #fff);
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: #ffffff;
 }
 
 .ability-input-group {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 0.2rem;
-    margin-bottom: 0.3rem;
+    gap: 0.4rem;
+    margin-bottom: 0.4rem;
 }
 
 .ability-input {
-    width: 45px;
+    width: 60px;
     text-align: center;
-    padding: 0.3rem;
+    padding: 0.5rem;
     background: var(--input-bg, #252525);
     border: 1px solid var(--border-color, #444);
     border-radius: 4px;
-    color: var(--text-primary, #fff);
-    font-size: 1rem;
+    color: #ffffff;
+    font-size: 1.25rem;
+    font-weight: bold;
 }
 
 .racial-bonus {
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     color: var(--success-color, #4caf50);
-    margin-bottom: 0.2rem;
+    margin-bottom: 0.3rem;
 }
 
 /* ASI - Ability Score Improvement */
@@ -633,8 +645,8 @@ textarea.form-control {
 .asi-bonus {
     display: flex;
     align-items: center;
-    gap: 0.15rem;
-    font-size: 0.75rem;
+    gap: 0.25rem;
+    font-size: 0.85rem;
     color: var(--accent-color, #2196f3);
 }
 
@@ -710,12 +722,13 @@ textarea.form-control {
 .ability-result {
     display: flex;
     justify-content: space-around;
-    padding-top: 0.3rem;
+    padding-top: 0.5rem;
     border-top: 1px solid var(--border-color, #333);
-    font-size: 0.8rem;
+    font-size: 0.95rem;
+    font-weight: 600;
 }
 
-.ability-result .total { color: var(--text-primary, #fff); }
+.ability-result .total { color: #ffffff; }
 .ability-result .mod.pos { color: var(--success-color, #4caf50); }
 .ability-result .mod.neg { color: var(--error-text, #f44336); }
 
@@ -2084,7 +2097,7 @@ textarea.form-control {
     border: 1px solid var(--border-color, #555);
     border-radius: 4px;
     font-size: 0.85rem;
-    color: var(--text-primary, #fff);
+    color: #ffffff;
     cursor: help;
     transition: all 0.2s;
 }
@@ -7872,4 +7885,144 @@ label.spell-cb input {
     .pg-qb-combat-grid {
         grid-template-columns: repeat(2, 1fr);
     }
+}
+
+/* ==========================================================================
+   STEP 3 FIX: Legenda colori, layout 2 colonne, classi mancanti
+   ========================================================================== */
+
+/* Legenda abilità */
+.skill-legend {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin: 0.75rem 0;
+    padding: 0.5rem 0.75rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    font-size: 0.8rem;
+}
+
+.legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: #ccc;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.dot.green { background: #4caf50; }
+.dot.blue { background: #2196f3; }
+.dot.purple { background: #9c27b0; }
+.dot.orange { background: #ff9800; }
+
+/* Layout 2 colonne per Step 3 */
+.step3-two-column {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .step3-two-column {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Classi mancanti per sezioni proficiencies */
+.prof-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 0.5rem;
+}
+
+.prof-list.inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+}
+
+.prof-subsection {
+    margin-bottom: 0.5rem;
+}
+
+.sub-label {
+    font-size: 0.8rem;
+    color: #aaa;
+    margin-bottom: 0.3rem;
+    font-weight: 600;
+}
+
+.bg-skills-info {
+    margin-bottom: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    background: rgba(33, 150, 243, 0.1);
+    border-left: 3px solid #2196f3;
+    border-radius: 4px;
+}
+
+.bg-label {
+    font-size: 0.8rem;
+    color: #64b5f6;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.bg-skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+}
+
+.prof-tag.background {
+    background: rgba(33, 150, 243, 0.2);
+    border-color: #2196f3;
+    color: #64b5f6;
+}
+
+.no-prof {
+    color: #666;
+    font-style: italic;
+    font-size: 0.85rem;
+}
+
+.skills-grid.with-bonus {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+}
+
+/* Bottone aggiungi lingua */
+.add-language-btn {
+    padding: 0.4rem 0.8rem;
+    background: var(--accent-color, #d4af37);
+    color: #000;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: all 0.15s;
+}
+
+.add-language-btn:hover {
+    background: #e5c355;
+    transform: translateY(-1px);
+}
+
+.language-select {
+    padding: 0.4rem 0.6rem;
+    background: var(--input-bg, #252525);
+    border: 1px solid var(--border-color, #444);
+    border-radius: 4px;
+    color: #fff;
+    font-size: 0.85rem;
+    min-width: 150px;
 }
