@@ -184,8 +184,6 @@ export function renderStep3Proficiencies(pgData, databases) {
     
     // Skill selezionate dall'utente (solo quelle scelte, NON quelle del background)
     const allSelectedSkills = pgData.skills || [];
-    const bgSkills = Array.isArray(selectedBackground?.competenze?.abilita) 
-        ? selectedBackground.competenze.abilita : [];
     
     // Le skill del background sono sempre competenti e non contano verso il limite
     // Le skill scelte dall'utente sono quelle in pgData.skills che NON sono del background
