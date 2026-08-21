@@ -35,15 +35,119 @@ function renderProfList(items) {
 }
 
 /**
- * Estrae le abilità disponibili dalla scelta di competenza della classe
- * @param {Object} proficiencyChoice - Oggetto proficiency_choices della classe
- * @returns {Array} Lista di abilità disponibili
+ * Estrae il numero di scelte e la lista di abilità disponibili dalla stringa
+ * "competenze.abilita" della classe.
+ * 
+ * Esempi di formato nel database:
+ * - "Scegli quattro abilità tra Acrobazia, Atletica, Furtività, ..."
+ * - "Scegli due abilità tra: Addestrare Animali, Atletica, ..."
+ * - "Scegli tre abilità qualsiasi" (Bardo → tutte)
+ * - ["Atletica","Intimidire","Intuizione","Medicina","Persuasione","Religione"] (Paladino, array)
+ * - ["Scegli due tra Intuizione, Medicina, Persuasione, Religione e Storia"] (Chierico, array con stringa)
+ * 
+ * @param {Object} selectedClass - La classe selezionata
+ * @returns {Object} { numChoices: number, availableSkills: string[] }
  */
-function extractAvailableSkills(proficiencyChoice) {
-    if (!proficiencyChoice?.from?.options) return ALL_SKILLS;
-    return proficiencyChoice.from.options
-        .map(opt => (opt.item?.name || '').replace('Abilità: ', '').trim())
-        .filter(name => name && SKILL_ABILITY_MAP[name]);
+function parseClassSkills(selectedClass) {
+    const abilita = selectedClass.competenze?.abilita;
+    
+    // Default: 2 scelte tra tutte le abilità
+    if (!abilita) {
+        return { numChoices: 2, availableSkills: ALL_SKILLS };
+    }
+    
+    let text = '';
+    
+    // Gestione array (Paladino = array di stringhe, Chierico = array con una stringa)
+    if (Array.isArray(abilita)) {
+        if (abilita.length === 1 && typeof abilita[0] === 'string') {
+            // Chierico: ["Scegli due tra Intuizione, Medicina, ..."]
+            text = abilita[0];
+        } else {
+            // Paladino: ["Atletica","Intimidire",...] → scegli 2 tra queste
+            return { numChoices: 2, availableSkills: abilita };
+        }
+    } else if (typeof abilita === 'string') {
+        text = abilita;
+    } else {
+        return { numChoices: 2, availableSkills: ALL_SKILLS };
+    }
+    
+    // Parse numero di scelte
+    const numberWords = {
+        'una': 1, 'uno': 1, 'un': 1, 'due': 2, 'tre': 3, 'quattro': 4, 'cinque': 5, 'sei': 6
+    };
+    
+    let numChoices = 2; // default
+    const numMatch = text.match(/scegli\s+(\w+)/i);
+    if (numMatch) {
+        const word = numMatch[1].toLowerCase();
+        if (numberWords[word]) {
+            numChoices = numberWords[word];
+        } else if (/^\d+$/.test(word)) {
+            numChoices = parseInt(word, 10);
+        }
+    }
+    
+    // Se dice "qualsiasi" (Bardo), usa tutte le abilità
+    if (/qualsiasi|a tua scelta/i.test(text)) {
+        return { numChoices, availableSkills: ALL_SKILLS };
+    }
+    
+    // Estrai la lista di abilità dopo "tra" o "tra:"
+    // Pattern: "Scegli N abilità tra: A, B, C, D"
+    // o: "Scegli N tra A, B, C, D"
+    const listMatch = text.match(/tra:?\s+(.+)$/i);
+    if (!listMatch) {
+        return { numChoices, availableSkills: ALL_SKILLS };
+    }
+    
+    let listText = listMatch[1].trim();
+    // Rimuovi "e " finale prima dell'ultima abilità
+    listText = listText.replace(/\s+e\s+/g, ', ');
+    // Dividi per virgola
+    const skills = listText.split(/,\s*/)
+        .map(s => s.trim())
+        .filter(s => s && s.length > 2);
+    
+    // Normalizza nomi: mappa varianti al nome standard in SKILL_ABILITY_MAP
+    const normalizedSkills = skills.map(s => normalizeSkillName(s)).filter(s => s);
+    
+    return { numChoices, availableSkills: normalizedSkills };
+}
+
+/**
+ * Normalizza il nome di un'abilità per matchare SKILL_ABILITY_MAP.
+ * Gestisce varianti come "Arcana" → "Arcano", "Indagine" → "Indagare",
+ * "Intrattenere" → "Esibizione", "Addestrare animali" → "Addestrare Animali"
+ */
+function normalizeSkillName(name) {
+    const nameLower = name.toLowerCase().trim();
+    
+    // Mappa varianti comuni
+    const variants = {
+        'arcana': 'Arcano',
+        'indagine': 'Indagare',
+        'intrattenere': 'Esibizione',
+        'rapidità di mano': 'Rapidità di Mano',
+        'addestrare animali': 'Addestrare Animali',
+        'rapidita di mano': 'Rapidità di Mano',
+    };
+    
+    if (variants[nameLower]) return variants[nameLower];
+    
+    // Cerca match case-insensitive nella mappa standard
+    const match = ALL_SKILLS.find(s => s.toLowerCase() === nameLower);
+    if (match) return match;
+    
+    // Cerca match parziale (es. "Arcana" matcha "Arcano")
+    const partial = ALL_SKILLS.find(s => 
+        s.toLowerCase().startsWith(nameLower.substring(0, 4)) ||
+        s.toLowerCase().includes(nameLower)
+    );
+    if (partial) return partial;
+    
+    return null;
 }
 
 /**
@@ -74,13 +178,24 @@ export function renderStep3Proficiencies(pgData, databases) {
         ? selectedClass.competenze.strumenti : [];
     
     // Competenze abilità dalla classe (da selezionare)
-    const numChoices = selectedClass.proficiency_choices?.[0]?.choose || 2;
-    const availableSkills = extractAvailableSkills(selectedClass.proficiency_choices?.[0]);
+    const classSkillsData = parseClassSkills(selectedClass);
+    const numChoices = classSkillsData.numChoices;
+    const availableSkills = classSkillsData.availableSkills;
     
-    // Skill selezionate dall'utente
-    const selectedSkills = pgData.skills || [];
-    // Escludi le skill del background dal conteggio classe
-    const userSelectedCount = selectedSkills.filter(s => !bgSkills.includes(s)).length;
+    // Skill selezionate dall'utente (solo quelle scelte, NON quelle del background)
+    const allSelectedSkills = pgData.skills || [];
+    const bgSkills = Array.isArray(selectedBackground?.competenze?.abilita) 
+        ? selectedBackground.competenze.abilita : [];
+    
+    // Le skill del background sono sempre competenti e non contano verso il limite
+    // Le skill scelte dall'utente sono quelle in pgData.skills che NON sono del background
+    const userSelectedSkills = allSelectedSkills.filter(s => !bgSkills.includes(s));
+    const userSelectedCount = userSelectedSkills.length;
+    
+    // Per SRD 5e: se un'abilità del background è anche nella lista di classe,
+    // il pg può scegliere un'abilità aggiuntiva dalla lista di classe
+    const bgOverlappingClass = bgSkills.filter(s => availableSkills.includes(s));
+    const effectiveNumChoices = numChoices + bgOverlappingClass.length;
     
     // Calcola bonus competenza
     const profBonus = pgData.proficiencyBonus || 2;
@@ -159,22 +274,20 @@ export function renderStep3Proficiencies(pgData, databases) {
                             </div>
                         ` : ''}
                         
-                        <div class="skill-counter-box ${userSelectedCount > numChoices ? 'over-limit' : ''}">
-                            <div class="counter-label">Competenze da classe (scegli ${numChoices}):</div>
+                        <div class="skill-counter-box ${userSelectedCount > effectiveNumChoices ? 'over-limit' : ''}">
+                            <div class="counter-label">Competenze da classe (scegli ${effectiveNumChoices}${bgOverlappingClass.length > 0 ? ` (${numChoices} + ${bgOverlappingClass.length} dal background)` : ''}):</div>
                             <div class="counter-value">
                                 <span class="selected-num">${userSelectedCount}</span>
                                 <span class="separator">/</span>
-                                <span class="max-num">${numChoices}</span>
+                                <span class="max-num">${effectiveNumChoices}</span>
                             </div>
-                            ${userSelectedCount > numChoices ? `<span class="counter-warning">⚠️ ${userSelectedCount - numChoices} oltre il limite</span>` : ''}
+                            ${userSelectedCount > effectiveNumChoices ? `<span class="counter-warning">⚠️ ${userSelectedCount - effectiveNumChoices} oltre il limite</span>` : ''}
                         </div>
                         
                         <div class="skills-grid with-bonus">
                             ${availableSkills.map(skill => {
-                                const skillIndex = selectedSkills.indexOf(skill);
-                                const isSelectedByUser = skillIndex !== -1;
+                                const isSelectedByUser = userSelectedSkills.includes(skill);
                                 const isFromBackground = bgSkills.includes(skill);
-                                const isDoubleProf = isFromBackground && isSelectedByUser;
                                 
                                 const ability = SKILL_ABILITY_MAP[skill];
                                 const abilityKey = PROPERTY_TO_ABILITY_KEY[ability];
@@ -187,11 +300,9 @@ export function renderStep3Proficiencies(pgData, databases) {
                                 const totalBonus = abilityMod + (isProficient ? profBonus : 0);
                                 
                                 let skillClass = '';
-                                if (isDoubleProf) {
-                                    skillClass = 'double-prof';
-                                } else if (isFromBackground) {
+                                if (isFromBackground) {
                                     skillClass = 'from-background';
-                                } else if (isSelectedByUser && skillIndex >= numChoices) {
+                                } else if (isSelectedByUser && userSelectedCount > effectiveNumChoices) {
                                     skillClass = 'over-limit';
                                 } else if (isSelectedByUser) {
                                     skillClass = 'selected';
@@ -214,9 +325,8 @@ export function renderStep3Proficiencies(pgData, databases) {
                         </div>
                         
                         <div class="skill-legend">
-                            <span class="legend-item"><span class="dot green"></span> Da classe</span>
-                            <span class="legend-item"><span class="dot blue"></span> Da background</span>
-                            <span class="legend-item"><span class="dot purple"></span> Doppia competenza</span>
+                            <span class="legend-item"><span class="dot green"></span> Da classe (scelta)</span>
+                            <span class="legend-item"><span class="dot blue"></span> Dal background</span>
                             <span class="legend-item"><span class="dot orange"></span> Oltre limite</span>
                         </div>
                     </div>

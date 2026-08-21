@@ -32,7 +32,8 @@ import {
     INPUT_DEBOUNCE_MS,
     debounce,
     getSubclassMinLevel,
-    escapeHtml
+    escapeHtml,
+    SKILL_ABILITY_MAP
 } from './PgConstants.js';
 import { addMonsterToCombat } from '../../../../stateManager.js';
 import { showToast } from '../../../../utils/toast.js';
@@ -1196,6 +1197,12 @@ export class PgController {
             this.wizardData.subclass = '';
             // Calcola il livello minimo per la sottoclasse
             this.wizardData.subclassMinLevel = getSubclassMinLevel(this.databases.selectedClass);
+            
+            // Reset delle abilità utente quando cambia classe
+            // Mantieni solo le abilità del background (se già selezionate)
+            const bgSkills = this.wizardData._bgSkills || [];
+            this.wizardData.skills = [...bgSkills];
+            
             this.recalculateHp();
         }
         
@@ -1208,20 +1215,23 @@ export class PgController {
         
         if (this.databases.selectedBackground) {
             this.wizardData.backgroundName = this.databases.selectedBackground.nome;
-            // Salva le abilità del background separatamente per escluderle dal conteggio classe
+            // Le abilità del background sono tracciate separatamente in _bgSkills
+            // Vengono unite a pgData.skills solo al salvataggio finale
             const bgSkills = this.databases.selectedBackground.competenze?.abilita || [];
-            // Rimuovi vecchie abilità del background prima di aggiungere le nuove
+            
+            // Rimuovi le vecchie abilità del background da pgData.skills
             const oldBgSkills = this.wizardData._bgSkills || [];
             if (this.wizardData.skills && oldBgSkills.length > 0) {
                 this.wizardData.skills = this.wizardData.skills.filter(s => !oldBgSkills.includes(s));
             }
+            
+            // Salva le nuove abilità del background
             this.wizardData._bgSkills = bgSkills;
-            if (!this.wizardData.skills) this.wizardData.skills = [];
-            bgSkills.forEach(skill => {
-                if (!this.wizardData.skills.includes(skill)) {
-                    this.wizardData.skills.push(skill);
-                }
-            });
+            
+            // NON aggiungere le bg skills a pgData.skills qui.
+            // Verranno mostrate come "checked + disabled" nel render,
+            // ma non conteggiate come scelte dell'utente.
+            // Vengono aggiunte a pgData.skills solo al salvataggio finale.
         }
         
         this.render();
@@ -1440,8 +1450,10 @@ export class PgController {
     toggleSkill(skillName, isChecked) {
         if (!this.wizardData.skills) this.wizardData.skills = [];
         
-        const numChoices = this.databases.selectedClass?.proficiency_choices?.[0]?.choose || 2;
         const bgSkills = this.wizardData._bgSkills || [];
+        
+        // Le abilità del background non possono essere toggle
+        if (bgSkills.includes(skillName)) return;
         
         if (isChecked) {
             if (!this.wizardData.skills.includes(skillName)) {
@@ -1451,11 +1463,18 @@ export class PgController {
             this.wizardData.skills = this.wizardData.skills.filter(s => s !== skillName);
         }
         
-        // Aggiorna il contatore visivo (escludi le skill del background dal conteggio)
+        // Aggiorna il contatore visivo
         const counterBox = this.container.querySelector('.skill-counter-box');
         if (counterBox) {
+            // Ricalcola il limite effettivo
+            const classSkillsData = this.parseClassSkillsForController();
+            const numChoices = classSkillsData.numChoices;
+            const availableSkills = classSkillsData.availableSkills;
+            const bgOverlappingClass = bgSkills.filter(s => availableSkills.includes(s));
+            const effectiveNumChoices = numChoices + bgOverlappingClass.length;
+            
             const userSelectedCount = this.wizardData.skills.filter(s => !bgSkills.includes(s)).length;
-            const isOverLimit = userSelectedCount > numChoices;
+            const isOverLimit = userSelectedCount > effectiveNumChoices;
             
             counterBox.className = `skill-counter-box ${isOverLimit ? 'over-limit' : ''}`;
             
@@ -1470,14 +1489,54 @@ export class PgController {
                     warningEl.className = 'counter-warning';
                     counterBox.appendChild(warningEl);
                 }
-                warningEl.textContent = `⚠️ ${userSelectedCount - numChoices} abilità oltre il limite`;
+                warningEl.textContent = `⚠️ ${userSelectedCount - effectiveNumChoices} oltre il limite`;
             } else if (warningEl) {
                 warningEl.remove();
             }
         }
+    },
+    
+    parseClassSkillsForController() {
+        const selectedClass = this.databases.selectedClass;
+        if (!selectedClass) return { numChoices: 2, availableSkills: [] };
         
-        // Aggiorna TUTTE le skill labels per riflettere lo stato corretto
-        this.updateAllSkillLabels(numChoices);
+        const abilita = selectedClass.competenze?.abilita;
+        if (!abilita) return { numChoices: 2, availableSkills: [] };
+        
+        let text = '';
+        if (Array.isArray(abilita)) {
+            if (abilita.length === 1 && typeof abilita[0] === 'string') {
+                text = abilita[0];
+            } else {
+                return { numChoices: 2, availableSkills: abilita };
+            }
+        } else if (typeof abilita === 'string') {
+            text = abilita;
+        } else {
+            return { numChoices: 2, availableSkills: [] };
+        }
+        
+        const numberWords = {'una':1,'uno':1,'un':1,'due':2,'tre':3,'quattro':4,'cinque':5,'sei':6};
+        let numChoices = 2;
+        const numMatch = text.match(/scegli\s+(\w+)/i);
+        if (numMatch) {
+            const word = numMatch[1].toLowerCase();
+            if (numberWords[word]) numChoices = numberWords[word];
+            else if (/^\d+$/.test(word)) numChoices = parseInt(word, 10);
+        }
+        
+        if (/qualsiasi|a tua scelta/i.test(text)) {
+            return { numChoices, availableSkills: Object.keys(SKILL_ABILITY_MAP) };
+        }
+        
+        const listMatch = text.match(/tra:?\s+(.+)$/i);
+        if (!listMatch) return { numChoices, availableSkills: [] };
+        
+        let listText = listMatch[1].trim();
+        listText = listText.replace(/\s+e\s+/g, ', ');
+        const skills = listText.split(/,\s*/).map(s => s.trim()).filter(s => s && s.length > 2);
+        
+        return { numChoices, availableSkills: skills };
     }
     
     /**
@@ -3100,8 +3159,16 @@ export class PgController {
             return;
         }
         
-        // calculateFinalStats() viene chiamato in nextStep() quando si arriva allo step 7.
-        // Non va richiamato qui per evitare double-apply dei bonus razziali/ASI.
+        // Unisci le abilità del background in pgData.skills prima del salvataggio
+        const bgSkills = this.wizardData._bgSkills || [];
+        if (bgSkills.length > 0) {
+            if (!this.wizardData.skills) this.wizardData.skills = [];
+            bgSkills.forEach(skill => {
+                if (!this.wizardData.skills.includes(skill)) {
+                    this.wizardData.skills.push(skill);
+                }
+            });
+        }
         
         // Assicurati che l'inventario sia un array
         if (!this.wizardData.inventory) {
