@@ -1494,7 +1494,7 @@ export class PgController {
                 warningEl.remove();
             }
         }
-    },
+    }
     
     parseClassSkillsForController() {
         const selectedClass = this.databases.selectedClass;
