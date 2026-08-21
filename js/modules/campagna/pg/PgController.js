@@ -2212,8 +2212,16 @@ export class PgController {
             }
         });
         
+        // In D&D 5e, ogni PG inizia con una scarsella contenente 10 MO
+        // Aggiungi le 10 MO al contatore se non sono già state aggiunte
+        if (!this.wizardData._startingGoldAdded) {
+            if (!this.wizardData.treasure) this.wizardData.treasure = {};
+            this.wizardData.treasure.gp = (this.wizardData.treasure.gp || 0) + 10;
+            this.wizardData._startingGoldAdded = true;
+        }
+        
         this.render();
-        showToast('Equipaggiamento aggiunto!', 'success');
+        showToast('Equipaggiamento aggiunto! (+10 MO scarsella)', 'success');
     }
     
     /**

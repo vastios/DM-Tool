@@ -148,7 +148,7 @@
 }
 
 .tooltip-type {
-    font-size: 0.65rem;
+    font-size: 1.05rem;
     padding: 0.2rem 0.5rem;
     border-radius: 3px;
     text-transform: uppercase;
@@ -185,7 +185,7 @@
 .trait-tooltip-body {
     flex: 1;
     padding: 1rem;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     line-height: 1.7;
     color: var(--text-secondary, #ccc);
     white-space: pre-wrap;
@@ -220,7 +220,7 @@
 }
 
 .sidebar-empty .hint {
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     margin-top: 0.5rem;
 }
 
@@ -265,7 +265,7 @@
 
 .card-name {
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 1.15rem;
     color: var(--campagna-text, #f0e6d2);
     white-space: nowrap;
     overflow: hidden;
@@ -273,12 +273,12 @@
 }
 
 .card-class {
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: var(--campagna-accent, #f0ad4e);
 }
 
 .card-player {
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     color: var(--campagna-text-muted, #888);
     margin-bottom: 0.4rem;
 }
@@ -314,7 +314,7 @@
     background: transparent;
     color: var(--text-muted, #888);
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size: 1rem;
     border-radius: 3px;
     display: flex;
     align-items: center;
@@ -414,7 +414,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.8rem;
+    font-size: 1rem;
     font-weight: bold;
     border: 2px solid var(--border-color, #444);
 }
@@ -432,7 +432,7 @@
 }
 
 .step-label {
-    font-size: 0.7rem;
+    font-size: 1.1rem;
     color: var(--text-muted, #888);
 }
 
@@ -485,7 +485,7 @@
     margin: 0.5rem 0 0;
     padding-left: 1.25rem;
     color: var(--error-text, #ff6b6b);
-    font-size: 0.9rem;
+    font-size: 1.1rem;
 }
 
 /* ============================================================================
@@ -510,7 +510,7 @@
 
 .form-description {
     color: var(--text-muted, #888);
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     margin-bottom: 1rem;
 }
 
@@ -528,7 +528,7 @@
 }
 
 .form-group label {
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: var(--text-secondary, #ccc);
 }
 
@@ -538,7 +538,7 @@
     border: 1px solid var(--border-color, #444);
     border-radius: 4px;
     color: var(--text-primary, #fff);
-    font-size: 0.9rem;
+    font-size: 1.1rem;
 }
 
 .form-control:focus {
@@ -569,12 +569,12 @@ textarea.form-control {
 .info-section h4 {
     margin: 0 0 0.25rem;
     color: var(--accent-color, #d4af37);
-    font-size: 0.9rem;
+    font-size: 1.1rem;
 }
 
 .info-section p {
     margin: 0;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     color: var(--text-primary, #fff);
     line-height: 1.5;
 }
@@ -627,7 +627,7 @@ textarea.form-control {
 }
 
 .racial-bonus {
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     color: var(--success-color, #4caf50);
     margin-bottom: 0.3rem;
 }
@@ -646,7 +646,7 @@ textarea.form-control {
     display: flex;
     align-items: center;
     gap: 0.25rem;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     color: var(--accent-color, #2196f3);
 }
 
@@ -661,7 +661,7 @@ textarea.form-control {
 }
 
 .btn-asi {
-    font-size: 0.7rem !important;
+    font-size: 1.1rem !important;
     padding: 0.1rem 0.3rem !important;
     line-height: 1;
 }
@@ -678,11 +678,11 @@ textarea.form-control {
 .asi-panel h4 {
     margin: 0 0 0.3rem 0;
     color: var(--accent-color, #2196f3);
-    font-size: 0.95rem;
+    font-size: 1.15rem;
 }
 
 .asi-description {
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: var(--text-secondary, #aaa);
     margin: 0 0 0.4rem 0;
 }
@@ -695,7 +695,7 @@ textarea.form-control {
 }
 
 .asi-points-label {
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     font-weight: 600;
 }
 
@@ -713,7 +713,7 @@ textarea.form-control {
 }
 
 .asi-hint {
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     color: var(--text-secondary, #888);
     margin: 0;
     font-style: italic;
@@ -724,7 +724,7 @@ textarea.form-control {
     justify-content: space-around;
     padding-top: 0.5rem;
     border-top: 1px solid var(--border-color, #333);
-    font-size: 0.95rem;
+    font-size: 1.15rem;
     font-weight: 600;
 }
 
@@ -745,7 +745,7 @@ textarea.form-control {
 .hp-preview h4 {
     margin: 0 0 0.75rem;
     color: var(--hp-color, #ff6b6b);
-    font-size: 0.9rem;
+    font-size: 1.1rem;
 }
 
 .hp-edit-row {
@@ -762,7 +762,7 @@ textarea.form-control {
 }
 
 .hp-formula {
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     color: var(--text-muted, #888);
 }
 
@@ -773,7 +773,7 @@ textarea.form-control {
 }
 
 .hp-manual label {
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: var(--text-secondary, #ccc);
     white-space: nowrap;
 }
@@ -817,7 +817,7 @@ textarea.form-control {
     padding: 0.2rem 0.5rem;
     background: var(--tag-bg, #333);
     border-radius: 4px;
-    font-size: 0.8rem;
+    font-size: 1rem;
 }
 
 .prof-tag.auto {
@@ -827,7 +827,7 @@ textarea.form-control {
 
 .skill-count {
     margin-bottom: 0.5rem;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     color: var(--text-muted, #888);
 }
 
@@ -846,7 +846,7 @@ textarea.form-control {
     border: 1px solid transparent;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size: 1rem;
     transition: all 0.2s;
 }
 
@@ -891,14 +891,14 @@ textarea.form-control {
 
 .skill-cb input { display: none; }
 .sk-name { flex: 1; color: var(--text-primary, #fff); }
-.sk-abbr { font-size: 0.7rem; color: var(--text-muted, #888); }
+.sk-abbr { font-size: 1.1rem; color: var(--text-muted, #888); }
 
 .languages-row {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 0.4rem;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
 }
 
 /* ============================================================================
@@ -920,12 +920,12 @@ textarea.form-control {
     padding: 0.5rem 0.75rem;
     cursor: pointer;
     font-weight: bold;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     list-style: none;
 }
 
 .spells-details summary::-webkit-details-marker { display: none; }
-.spells-details summary::before { content: '▶ '; font-size: 0.7rem; }
+.spells-details summary::before { content: '▶ '; font-size: 1.1rem; }
 .spells-details[open] summary::before { content: '▼ '; }
 
 .spells-details .spells-grid {
@@ -956,7 +956,7 @@ textarea.form-control {
     border: 1px solid transparent;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     transition: all 0.2s;
 }
 
@@ -1065,7 +1065,7 @@ textarea.form-control {
 .sum-section h4 {
     margin: 0 0 0.5rem;
     color: var(--accent-color, #d4af37);
-    font-size: 0.9rem;
+    font-size: 1.1rem;
 }
 
 .sum-abilities {
@@ -1074,9 +1074,9 @@ textarea.form-control {
     gap: 0.25rem;
 }
 
-.sum-ab { font-size: 0.85rem; }
+.sum-ab { font-size: 1.05rem; }
 
-.sum-section p { margin: 0.25rem 0; font-size: 0.85rem; }
+.sum-section p { margin: 0.25rem 0; font-size: 1.05rem; }
 
 /* Tratti e privilegi nel riepilogo - font bianco su sfondo scuro */
 .traits-privileges-panel,
@@ -1099,7 +1099,7 @@ textarea.form-control {
     padding: 0.25rem 0.5rem;
     background: rgba(0, 0, 0, 0.3);
     border-radius: 4px;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     color: #fff;
     border: 1px solid rgba(255, 255, 255, 0.2);
     cursor: help;
@@ -1177,7 +1177,7 @@ textarea.form-control {
 }
 
 .sheet-item label {
-    font-size: 0.7rem;
+    font-size: 1.1rem;
     color: var(--text-muted, #888);
     text-transform: uppercase;
 }
@@ -1207,7 +1207,7 @@ textarea.form-control {
 }
 
 .ab-name {
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: var(--accent-color, #d4af37);
     margin: 0.15rem 0;
 }
@@ -1218,7 +1218,7 @@ textarea.form-control {
 }
 
 .ab-save {
-    font-size: 0.7rem;
+    font-size: 1.1rem;
     color: var(--text-muted, #888);
     margin-top: 0.15rem;
 }
@@ -1239,7 +1239,7 @@ textarea.form-control {
 
 .combat-stat label {
     display: block;
-    font-size: 0.7rem;
+    font-size: 1.1rem;
     color: var(--text-muted, #888);
     text-transform: uppercase;
     margin-bottom: 0.25rem;
@@ -1271,7 +1271,7 @@ textarea.form-control {
 
 .hp-input-group .temp {
     color: var(--temp-hp-color, #64b5f6);
-    font-size: 0.8rem;
+    font-size: 1rem;
 }
 
 /* Conditions */
@@ -1286,7 +1286,7 @@ textarea.form-control {
 }
 
 .conditions-row label {
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     color: var(--text-muted, #888);
 }
 
@@ -1304,7 +1304,7 @@ textarea.form-control {
     padding: 0.2rem 0.4rem;
     background: var(--condition-bg, #8b0000);
     border-radius: 4px;
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: #fff;
 }
 
@@ -1337,7 +1337,7 @@ textarea.form-control {
     align-items: center;
     gap: 0.3rem;
     padding: 0.2rem 0.4rem;
-    font-size: 0.8rem;
+    font-size: 1rem;
 }
 
 .skill-item.proficient {
@@ -1345,19 +1345,19 @@ textarea.form-control {
     border-radius: 3px;
 }
 
-.sk-dot { font-size: 0.6rem; color: var(--success-color, #4caf50); }
+.sk-dot { font-size: 1rem; color: var(--success-color, #4caf50); }
 .sk-name { flex: 1; color: var(--text-primary, #fff); }
-.sk-abbr { font-size: 0.7rem; color: var(--text-muted, #888); }
+.sk-abbr { font-size: 1.1rem; color: var(--text-muted, #888); }
 .sk-val { font-weight: bold; color: var(--text-primary, #fff); }
 
 /* Spell block */
-.spell-info { font-size: 0.9rem; margin-bottom: 0.5rem; }
+.spell-info { font-size: 1.1rem; margin-bottom: 0.5rem; }
 .spells-known-list { display: flex; flex-wrap: wrap; gap: 0.3rem; }
 .spell-tag {
     padding: 0.2rem 0.4rem;
     background: var(--tag-bg, #444);
     border-radius: 3px;
-    font-size: 0.8rem;
+    font-size: 1rem;
 }
 
 /* Note block */
@@ -1365,7 +1365,7 @@ textarea.form-control {
 .note-block p {
     margin: 0.25rem 0 0;
     white-space: pre-wrap;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     color: var(--text-secondary, #ccc);
 }
 
@@ -1382,7 +1382,7 @@ textarea.form-control {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     transition: background 0.2s;
 }
 
@@ -1408,14 +1408,14 @@ textarea.form-control {
 
 .btn-sm {
     padding: 0.25rem 0.5rem;
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     white-space: nowrap;
     flex-shrink: 0;
 }
 
 .btn-mini {
     padding: 0.15rem 0.4rem;
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     background: var(--btn-secondary-bg, #444);
     color: var(--text-primary, #fff);
     border: none;
@@ -1601,7 +1601,7 @@ textarea.form-control {
 /* Riga 3: Giocato da - font e colore invariati */
 .pg-sheet .char-player {
     font-family: 'Cinzel', serif;
-    font-size: 0.95rem;
+    font-size: 1.15rem;
     color: var(--parchment-gold);
     margin: 0.2rem 0 0;
     font-weight: 500;
@@ -1698,7 +1698,7 @@ textarea.form-control {
 
 .pg-sheet .id-label {
     font-family: 'Cinzel', serif;
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: var(--parchment-accent);
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -1738,7 +1738,7 @@ textarea.form-control {
 
 .pg-sheet .ab-name {
     font-family: 'Cinzel', serif;
-    font-size: 0.95rem;
+    font-size: 1.15rem;
     font-weight: 600;
     color: var(--parchment-text);
     min-width: 35px;
@@ -1785,7 +1785,7 @@ textarea.form-control {
 
 .pg-sheet .combat-stat label {
     font-family: 'Cinzel', serif;
-    font-size: 0.7rem;
+    font-size: 1.1rem;
     color: var(--parchment-accent);
     text-transform: uppercase;
     letter-spacing: 0.03em;
@@ -1836,7 +1836,7 @@ textarea.form-control {
 
 .pg-sheet .hp-input-group .temp {
     color: var(--parchment-accent);
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     font-family: 'Cinzel', serif;
 }
 
@@ -1862,7 +1862,7 @@ textarea.form-control {
     gap: 0.4rem;
     padding: 0.25rem 0.4rem;
     font-family: 'Cinzel', serif;
-    font-size: 0.95rem;
+    font-size: 1.15rem;
     color: var(--parchment-text);
     border-radius: 3px;
     transition: background 0.2s;
@@ -1878,7 +1878,7 @@ textarea.form-control {
 }
 
 .pg-sheet .sk-icon {
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     color: var(--parchment-gold);
     width: 16px;
     text-align: center;
@@ -1892,18 +1892,18 @@ textarea.form-control {
     flex: 1;
     color: var(--parchment-accent);
     font-weight: 500;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
 }
 
 .pg-sheet .sk-abbr {
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     color: var(--parchment-gold);
     opacity: 0.8;
 }
 
 .pg-sheet .sk-val {
     font-family: 'Cinzel', serif;
-    font-size: 0.95rem;
+    font-size: 1.15rem;
     font-weight: 600;
     color: var(--parchment-text);
     min-width: 28px;
@@ -1923,7 +1923,7 @@ textarea.form-control {
     padding: 0.3rem 0.6rem;
     border-radius: 3px;
     font-family: 'Cinzel', serif;
-    font-size: 0.95rem;
+    font-size: 1.15rem;
     color: var(--parchment-text);
     display: inline-block;
     margin: 0.2rem;
@@ -2037,7 +2037,7 @@ textarea.form-control {
     color: #fff;
     padding: 0.5rem 0.75rem;
     border-radius: 4px;
-    font-size: 0.8rem;
+    font-size: 1rem;
     font-weight: normal;
     white-space: pre-wrap;
     max-width: 250px;
@@ -2078,7 +2078,7 @@ textarea.form-control {
 .tp-section h4 {
     margin: 0 0 0.5rem;
     color: var(--accent-color, #d4af37);
-    font-size: 0.95rem;
+    font-size: 1.15rem;
     font-weight: 600;
 }
 
@@ -2096,7 +2096,7 @@ textarea.form-control {
     background: var(--input-bg, #333);
     border: 1px solid var(--border-color, #555);
     border-radius: 4px;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     color: #ffffff;
     cursor: help;
     transition: all 0.2s;
@@ -2178,7 +2178,7 @@ textarea.form-control {
 .no-traits {
     font-style: italic;
     color: var(--text-muted, #666);
-    font-size: 0.85rem;
+    font-size: 1.05rem;
 }
 
 /* Responsive */
@@ -2188,7 +2188,7 @@ textarea.form-control {
     }
     
     .trait-tag {
-        font-size: 0.8rem;
+        font-size: 1rem;
         padding: 0.25rem 0.5rem;
     }
 }
@@ -2215,7 +2215,7 @@ textarea.form-control {
 }
 
 .skill-counter-box .counter-label {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     color: var(--text-secondary, #aaa);
 }
 
@@ -2247,7 +2247,7 @@ textarea.form-control {
 }
 
 .skill-counter-box .counter-warning {
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: var(--warning-color, #ff9800);
     margin-left: auto;
 }
@@ -2272,11 +2272,11 @@ textarea.form-control {
 
 .spells-summary p {
     margin: 0.25rem 0;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
 }
 
 .spells-summary .hint {
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: var(--text-muted, #888);
 }
 
@@ -2304,12 +2304,12 @@ textarea.form-control {
 
 .spells-level-header h4 {
     margin: 0;
-    font-size: 0.95rem;
+    font-size: 1.15rem;
     color: var(--accent-color, #d4af37);
 }
 
 .spells-counter {
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     color: var(--text-muted, #888);
 }
 
@@ -2318,7 +2318,7 @@ textarea.form-control {
 }
 
 .spells-locked-hint {
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: var(--text-muted, #666);
     font-style: italic;
 }
@@ -2389,12 +2389,12 @@ textarea.form-control {
 
 .autocomplete-name {
     flex: 1;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     color: var(--text-primary, #fff);
 }
 
 .autocomplete-type {
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     color: var(--text-muted, #888);
     background: var(--bg-secondary, #333);
     padding: 0.15rem 0.4rem;
@@ -2493,7 +2493,7 @@ textarea.form-control {
 }
 
 .subclass-hint {
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     color: var(--warning-color, #ff9800);
     font-style: italic;
 }
@@ -2569,7 +2569,7 @@ textarea.form-control {
 }
 
 .counter-title {
-    font-size: 0.95rem;
+    font-size: 1.15rem;
     font-weight: 600;
     color: var(--text-secondary, #ccc);
     text-transform: uppercase;
@@ -2615,27 +2615,27 @@ textarea.form-control {
     color: var(--danger-color, #ff6b6b);
     padding: 0.4rem 0.6rem;
     border-radius: 4px;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     font-weight: 600;
     margin-top: 0.5rem;
 }
 
 .counter-ok {
     color: var(--success-color, #4caf50);
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     font-weight: 600;
 }
 
 .counter-hint {
     color: var(--text-muted, #888);
-    font-size: 0.8rem;
+    font-size: 1rem;
 }
 
 .counter-sub {
     margin-top: 0.5rem;
     padding-top: 0.5rem;
     border-top: 1px solid var(--border-color, #333);
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     color: var(--text-secondary, #aaa);
 }
 
@@ -2656,13 +2656,13 @@ textarea.form-control {
     padding: 0.4rem 1rem;
     border-radius: 20px;
     font-weight: 700;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     margin-bottom: 0.5rem;
 }
 
 .caster-desc {
     color: var(--text-secondary, #aaa);
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     margin: 0;
     line-height: 1.5;
 }
@@ -2698,7 +2698,7 @@ textarea.form-control {
 
 /* Counter per livello */
 .level-counter {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     color: var(--text-secondary, #ccc);
 }
 
@@ -2726,7 +2726,7 @@ textarea.form-control {
     background: rgba(220, 53, 69, 0.15);
     color: var(--danger-color, #ff6b6b);
     padding: 0.5rem 1rem;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     font-weight: 600;
 }
 
@@ -2753,7 +2753,7 @@ textarea.form-control {
 
 /* Hint livelli bloccati */
 .spells-locked-hint {
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: var(--text-muted, #666);
     font-style: italic;
 }
@@ -2769,12 +2769,12 @@ textarea.form-control {
 
 .spells-summary p {
     margin: 0.25rem 0;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     color: var(--text-secondary, #ccc);
 }
 
 .spells-summary .hint {
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: var(--text-muted, #888);
 }
 
@@ -2784,7 +2784,7 @@ textarea.form-control {
     color: #000;
     padding: 0.2rem 0.5rem;
     border-radius: 4px;
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     font-weight: 600;
 }
 
@@ -2815,7 +2815,7 @@ textarea.form-control {
 .prepared-info-box li {
     margin-bottom: 0.5rem;
     color: var(--text-secondary, #ccc);
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     line-height: 1.4;
 }
 
@@ -2835,7 +2835,7 @@ textarea.form-control {
 }
 
 .spells-hint {
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     color: var(--text-muted, #888);
     margin-bottom: 1rem;
     font-style: italic;
@@ -2870,7 +2870,7 @@ details.spells-details summary::-webkit-details-marker {
 
 details.spells-details summary::before {
     content: '▶';
-    font-size: 0.7rem;
+    font-size: 1.1rem;
     transition: transform 0.2s;
 }
 
@@ -2888,7 +2888,7 @@ details.spells-details summary:hover {
 
 details.spells-details summary .cantrips-count {
     margin-left: auto;
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: var(--text-muted, #888);
     font-weight: normal;
 }
@@ -2908,7 +2908,7 @@ details.spells-details summary .cantrips-count {
     border: 1px solid var(--border-color, #444);
     border-radius: 4px;
     padding: 0.3rem 0.6rem;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     color: var(--text-primary, #fff);
     display: inline-block;
 }
@@ -2929,7 +2929,7 @@ details.spells-details summary .cantrips-count {
 /* Messaggio informativo */
 .info-box p {
     margin: 0;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     color: var(--text-secondary, #ccc);
     line-height: 1.5;
 }
@@ -2970,7 +2970,7 @@ details.spells-details summary .cantrips-count {
 
 .auto-known-content p {
     margin: 0.4rem 0;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     color: var(--text-secondary, #ccc);
     line-height: 1.5;
 }
@@ -2992,7 +2992,7 @@ details.spells-details summary .cantrips-count {
 
 .level-counter.auto-known {
     color: var(--success-color, #4caf50);
-    font-size: 0.85rem;
+    font-size: 1.05rem;
 }
 
 /* Tag incantesimo in sola lettura */
@@ -3003,7 +3003,7 @@ details.spells-details summary .cantrips-count {
     border-radius: 4px;
     padding: 0.3rem 0.6rem;
     margin: 0.2rem;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     color: var(--text-primary, #fff);
     transition: all 0.2s;
 }
@@ -3105,7 +3105,7 @@ details.spells-details summary .cantrips-count {
 }
 
 .counter-title {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     font-weight: 600;
     color: var(--text-secondary, #ccc);
     text-transform: uppercase;
@@ -3151,7 +3151,7 @@ details.spells-details summary .cantrips-count {
 /* Messaggi contatore */
 .counter-hint {
     color: var(--text-muted, #888);
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     font-style: italic;
 }
 
@@ -3160,14 +3160,14 @@ details.spells-details summary .cantrips-count {
     color: var(--danger-color, #ff6b6b);
     padding: 0.4rem 0.8rem;
     border-radius: 20px;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     font-weight: 600;
     margin-top: 0.5rem;
 }
 
 .counter-ok {
     color: var(--success-color, #4caf50);
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     font-weight: 600;
 }
 
@@ -3183,12 +3183,12 @@ details.spells-details summary .cantrips-count {
 
 .spells-summary p {
     margin: 0.25rem 0;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     color: var(--text-secondary, #ccc);
 }
 
 .spells-summary .hint {
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: var(--text-muted, #888);
 }
 
@@ -3229,7 +3229,7 @@ details.spells-details summary .cantrips-count {
 
 /* Counter livello */
 .level-counter {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     color: var(--text-secondary, #ccc);
     padding: 0.2rem 0.5rem;
     border-radius: 4px;
@@ -3257,7 +3257,7 @@ details.spells-details summary .cantrips-count {
     background: rgba(220, 53, 69, 0.15);
     color: var(--danger-color, #ff6b6b);
     padding: 0.5rem 1rem;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     font-weight: 600;
     border-bottom: 1px solid rgba(220, 53, 69, 0.3);
 }
@@ -3282,7 +3282,7 @@ label.spell-cb {
     border: 1px solid transparent;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     transition: all 0.2s;
 }
 
@@ -3318,7 +3318,7 @@ label.spell-cb input {
 
 /* Hint livelli bloccati */
 .spells-locked-hint {
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: var(--text-muted, #666);
     font-style: italic;
 }
@@ -3392,7 +3392,7 @@ label.spell-cb input {
 
 .inventory-summary-box .stat-label {
     display: block;
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     color: var(--text-muted, #888);
     text-transform: uppercase;
     margin-bottom: 0.25rem;
@@ -3408,7 +3408,7 @@ label.spell-cb input {
 .inventory-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     margin-bottom: 1rem;
 }
 
@@ -3417,7 +3417,7 @@ label.spell-cb input {
     padding: 0.5rem;
     background: var(--bg-header, #222);
     color: var(--text-secondary, #aaa);
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     text-transform: uppercase;
     border-bottom: 1px solid var(--border-color, #444);
 }
@@ -3453,7 +3453,7 @@ label.spell-cb input {
 }
 
 .custom-badge {
-    font-size: 0.65rem;
+    font-size: 1.05rem;
     padding: 0.1rem 0.3rem;
     background: rgba(33, 150, 243, 0.3);
     border-radius: 3px;
@@ -3469,13 +3469,13 @@ label.spell-cb input {
     border: 1px solid var(--border-color, #444);
     border-radius: 3px;
     color: var(--text-primary, #fff);
-    font-size: 0.85rem;
+    font-size: 1.05rem;
 }
 
 .item-weight,
 .item-cost {
     color: var(--text-muted, #888);
-    font-size: 0.8rem;
+    font-size: 1rem;
 }
 
 .item-actions {
@@ -3486,7 +3486,7 @@ label.spell-cb input {
     background: transparent;
     border: none;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     padding: 0.25rem;
     opacity: 0.6;
     transition: opacity 0.2s;
@@ -3504,7 +3504,7 @@ label.spell-cb input {
 }
 
 .inventory-empty .hint {
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     margin-top: 0.5rem;
 }
 
@@ -3518,7 +3518,7 @@ label.spell-cb input {
 .custom-item-section h4 {
     margin: 0 0 0.75rem;
     color: var(--text-secondary, #aaa);
-    font-size: 0.9rem;
+    font-size: 1.1rem;
 }
 
 .custom-item-form {
@@ -3545,7 +3545,7 @@ label.spell-cb input {
 .suggested-equipment-section h4 {
     margin: 0 0 0.5rem;
     color: var(--text-secondary, #aaa);
-    font-size: 0.9rem;
+    font-size: 1.1rem;
 }
 
 .suggested-equipment-list {
@@ -3562,7 +3562,7 @@ label.spell-cb input {
     background: var(--input-bg, #252525);
     border-radius: 4px;
     margin-bottom: 0.3rem;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
 }
 
 .suggested-text {
@@ -3577,7 +3577,7 @@ label.spell-cb input {
     border-radius: 3px;
     padding: 0.2rem 0.5rem;
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size: 1rem;
     font-weight: bold;
 }
 
@@ -3594,7 +3594,7 @@ label.spell-cb input {
 }
 
 .choice-label {
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     color: var(--accent-color, #d4af37);
     margin-bottom: 0.4rem;
     font-weight: 600;
@@ -3621,7 +3621,7 @@ label.spell-cb input {
 .choice-text {
     flex: 1;
     color: var(--text-primary, #fff);
-    font-size: 0.85rem;
+    font-size: 1.05rem;
 }
 
 .btn-select-choice {
@@ -3631,7 +3631,7 @@ label.spell-cb input {
     border-radius: 3px;
     padding: 0.25rem 0.6rem;
     cursor: pointer;
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     font-weight: bold;
     transition: all 0.2s;
 }
@@ -3659,7 +3659,7 @@ label.spell-cb input {
     border-radius: 3px;
     padding: 0.2rem 0.4rem;
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size: 1rem;
 }
 
 .btn-reset-choice:hover {
@@ -3668,7 +3668,7 @@ label.spell-cb input {
 
 /* Badge per oggetti da dotazione */
 .pack-badge {
-    font-size: 0.65rem;
+    font-size: 1.05rem;
     padding: 0.1rem 0.3rem;
     background: rgba(156, 39, 176, 0.3);
     border-radius: 3px;
@@ -3688,7 +3688,7 @@ label.spell-cb input {
 .database-search-section h4 {
     margin: 0 0 0.75rem;
     color: var(--text-secondary, #aaa);
-    font-size: 0.9rem;
+    font-size: 1.1rem;
 }
 
 .item-filters {
@@ -3705,7 +3705,7 @@ label.spell-cb input {
     border-radius: 4px;
     color: var(--text-secondary, #aaa);
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size: 1rem;
     transition: all 0.2s;
 }
 
@@ -3731,7 +3731,7 @@ label.spell-cb input {
     border: 1px solid var(--border-color, #444);
     border-radius: 4px;
     color: var(--text-primary, #fff);
-    font-size: 0.9rem;
+    font-size: 1.1rem;
 }
 
 .item-search-box input:focus {
@@ -3753,7 +3753,7 @@ label.spell-cb input {
     gap: 0.5rem;
     padding: 0.4rem 0.6rem;
     border-bottom: 1px solid var(--border-color, #333);
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     transition: background 0.2s;
 }
 
@@ -3766,7 +3766,7 @@ label.spell-cb input {
 }
 
 .item-result-row .item-icon {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
 }
 
 .item-result-row .item-name {
@@ -3776,7 +3776,7 @@ label.spell-cb input {
 
 .item-result-row .item-weight,
 .item-result-row .item-cost {
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     color: var(--text-muted, #666);
     min-width: 50px;
     text-align: right;
@@ -3789,7 +3789,7 @@ label.spell-cb input {
     border-radius: 3px;
     padding: 0.2rem 0.5rem;
     cursor: pointer;
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     font-weight: bold;
 }
 
@@ -3816,7 +3816,7 @@ label.spell-cb input {
 .coins-section h4 {
     margin: 0 0 0.75rem;
     color: var(--accent-color, #d4af37);
-    font-size: 0.95rem;
+    font-size: 1.15rem;
 }
 
 .coins-inputs {
@@ -3830,7 +3830,7 @@ label.spell-cb input {
     align-items: center;
     gap: 0.5rem;
     color: var(--text-secondary, #aaa);
-    font-size: 0.9rem;
+    font-size: 1.1rem;
 }
 
 .coins-inputs input {
@@ -3851,7 +3851,7 @@ label.spell-cb input {
     }
     
     .inventory-table {
-        font-size: 0.8rem;
+        font-size: 1rem;
     }
     
     .inventory-table th:nth-child(3),
@@ -3894,7 +3894,7 @@ label.spell-cb input {
     padding-bottom: 0.5rem;
     border-bottom: 1px solid var(--border-color, #333);
     color: var(--accent-color, #d4af37);
-    font-size: 0.95rem;
+    font-size: 1.15rem;
 }
 
 .suggested-equipment-list {
@@ -3913,7 +3913,7 @@ label.spell-cb input {
     border: 1px solid var(--border-color, #444);
     border-radius: 4px;
     margin-bottom: 0.4rem;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     transition: all 0.2s;
 }
 
@@ -3961,7 +3961,7 @@ label.spell-cb input {
     background: var(--input-bg, #2a2a2a);
     border: 1px solid var(--border-color, #555);
     border-radius: 3px;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     color: var(--text-primary, #fff);
 }
 
@@ -3978,7 +3978,7 @@ label.spell-cb input {
     border-radius: 4px;
     padding: 0.35rem 0.75rem;
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size: 1rem;
     font-weight: 600;
     transition: all 0.2s;
 }
@@ -4003,7 +4003,7 @@ label.spell-cb input {
 }
 
 .choice-label {
-    font-size: 0.8rem;
+    font-size: 1rem;
     font-weight: 600;
     color: var(--accent-color, #d4af37);
     margin-bottom: 0.5rem;
@@ -4029,13 +4029,13 @@ label.spell-cb input {
     font-weight: bold;
     color: var(--accent-color, #d4af37);
     min-width: 24px;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
 }
 
 .choice-text {
     flex: 1;
     color: var(--text-primary, #fff);
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     margin-left: 0.5rem;
 }
 
@@ -4047,7 +4047,7 @@ label.spell-cb input {
     border-radius: 4px;
     padding: 0.25rem 0.6rem;
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size: 1rem;
     font-weight: 700;
     transition: all 0.2s;
 }
@@ -4075,7 +4075,7 @@ label.spell-cb input {
     border-radius: 4px;
     padding: 0.25rem 0.5rem;
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size: 1rem;
     transition: background 0.2s;
 }
 
@@ -4091,7 +4091,7 @@ label.spell-cb input {
     border-radius: 4px;
     padding: 0.25rem 0.6rem;
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size: 1rem;
     font-weight: 600;
     transition: all 0.2s;
 }
@@ -4108,7 +4108,7 @@ label.spell-cb input {
 
 /* Badge per oggetti da pack/dotazione */
 .pack-badge {
-    font-size: 0.65rem;
+    font-size: 1.05rem;
     padding: 0.1rem 0.3rem;
     background: rgba(156, 39, 176, 0.3);
     border-radius: 3px;
@@ -4208,7 +4208,7 @@ label.spell-cb input {
 .dynamic-selector-subtitle {
     margin: 0 0 0.5rem;
     color: var(--text-secondary, #aaa);
-    font-size: 0.95rem;
+    font-size: 1.15rem;
 }
 
 .dynamic-selector-category {
@@ -4216,7 +4216,7 @@ label.spell-cb input {
     padding: 0.2rem 0.6rem;
     background: rgba(33, 150, 243, 0.2);
     border-radius: 4px;
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: var(--info-color, #2196f3);
     text-transform: capitalize;
 }
@@ -4234,7 +4234,7 @@ label.spell-cb input {
     border: 1px solid var(--border-color, #444);
     border-radius: 6px;
     color: var(--text-primary, #fff);
-    font-size: 0.95rem;
+    font-size: 1.15rem;
 }
 
 .dynamic-selector-search input:focus {
@@ -4246,7 +4246,7 @@ label.spell-cb input {
 .dynamic-selector-info {
     padding: 0.5rem 1rem;
     background: var(--bg-secondary, #222);
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     color: var(--text-secondary, #aaa);
     text-align: center;
 }
@@ -4310,13 +4310,13 @@ label.spell-cb input {
 
 .dynamic-item-name {
     color: var(--text-primary, #fff);
-    font-size: 0.9rem;
+    font-size: 1.1rem;
 }
 
 .dynamic-item-details {
     display: flex;
     gap: 0.75rem;
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: var(--text-muted, #888);
 }
 
@@ -4373,7 +4373,7 @@ label.spell-cb input {
 }
 
 .dynamic-hint {
-    font-size: 0.8rem;
+    font-size: 1rem;
     margin-left: 0.25rem;
     opacity: 0.8;
 }
@@ -4404,7 +4404,7 @@ label.spell-cb input {
     border: 1px solid rgba(33, 150, 243, 0.3);
     border-radius: 4px;
     padding: 0.25rem 0.5rem;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     color: var(--text-primary, #e0e0e0);
 }
 
@@ -4415,7 +4415,7 @@ label.spell-cb input {
     border: 1px solid rgba(76, 175, 80, 0.3);
     border-radius: 4px;
     padding: 0.25rem 0.5rem;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     color: var(--text-primary, #e0e0e0);
 }
 
@@ -4451,7 +4451,7 @@ label.spell-cb input {
 
 .section-inventory h4 {
     margin: 1rem 0 0.5rem 0;
-    font-size: 0.95rem;
+    font-size: 1.15rem;
     color: var(--text-secondary, #b0b0b0);
 }
 
@@ -4465,7 +4465,7 @@ label.spell-cb input {
 }
 
 .inv-stat {
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     color: var(--text-muted, #888);
 }
 
@@ -4483,7 +4483,7 @@ label.spell-cb input {
     background: var(--bg-tertiary, #16213e);
     border-radius: 4px;
     border-left: 3px solid var(--border-color, #333);
-    font-size: 0.9rem;
+    font-size: 1.1rem;
 }
 
 .inventory-item.from-pack {
@@ -4501,19 +4501,18 @@ label.spell-cb input {
 .inventory-item .item-name {
     flex: 1;
     color: var(--text-primary, #e0e0e0);
-    white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;
+    word-wrap: break-word;
 }
 
 .inventory-item .pack-badge {
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     opacity: 0.7;
 }
 
 .inventory-item .item-weight,
 .inventory-item .item-cost {
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     color: var(--text-muted, #888);
     white-space: nowrap;
 }
@@ -4534,7 +4533,7 @@ label.spell-cb input {
 
 .extra-equipment p {
     margin: 0;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     color: var(--text-secondary, #b0b0b0);
     white-space: pre-wrap;
 }
@@ -4560,7 +4559,7 @@ label.spell-cb input {
     padding: 0.25rem 0.5rem;
     background: var(--bg-tertiary, #16213e);
     border-radius: 4px;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     font-weight: 500;
 }
 
@@ -4651,7 +4650,7 @@ label.spell-cb input {
     position: absolute;
     bottom: 0.5rem;
     right: 0.75rem;
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     color: var(--parchment-gold);
     opacity: 0.6;
 }
@@ -4697,14 +4696,14 @@ label.spell-cb input {
 }
 
 .id-item .id-label {
-    font-size: 0.7rem;
+    font-size: 1.1rem;
     color: var(--parchment-accent);
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
 
 .id-item .id-value {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     color: var(--parchment-text);
     font-weight: 500;
 }
@@ -4730,7 +4729,7 @@ label.spell-cb input {
 
 .abilities-grid-sheet .ab-name {
     display: block;
-    font-size: 0.8rem;
+    font-size: 1rem;
     font-weight: 600;
     color: var(--parchment-text);
 }
@@ -4744,7 +4743,7 @@ label.spell-cb input {
 
 .abilities-grid-sheet .ab-mod {
     display: block;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     font-weight: 600;
     color: var(--crimson-red);
     background: rgba(255, 255, 255, 0.5);
@@ -4770,7 +4769,7 @@ label.spell-cb input {
 
 .combat-grid-sheet .combat-stat label {
     display: block;
-    font-size: 0.65rem;
+    font-size: 1.05rem;
     color: var(--parchment-accent);
     text-transform: uppercase;
     letter-spacing: 0.03em;
@@ -4804,12 +4803,12 @@ label.spell-cb input {
 }
 
 .hp-display .hp-max {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     color: var(--parchment-text);
 }
 
 .hp-display .hp-temp {
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     color: var(--parchment-accent);
 }
 
@@ -4825,13 +4824,13 @@ label.spell-cb input {
 }
 
 .saves-label {
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     font-weight: 600;
     color: var(--parchment-accent);
 }
 
 .save-item {
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     padding: 0.15rem 0.35rem;
     background: rgba(255, 255, 255, 0.3);
     border-radius: 3px;
@@ -4863,7 +4862,7 @@ label.spell-cb input {
     align-items: center;
     gap: 0.3rem;
     padding: 0.2rem 0.35rem;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     border-radius: 3px;
 }
 
@@ -4874,7 +4873,7 @@ label.spell-cb input {
 
 .skills-section .sk-icon {
     width: 12px;
-    font-size: 0.7rem;
+    font-size: 1.1rem;
     color: var(--parchment-gold);
 }
 
@@ -4884,18 +4883,18 @@ label.spell-cb input {
 
 .skills-section .sk-name {
     flex: 1;
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: var(--parchment-accent);
 }
 
 .skills-section .sk-abbr {
-    font-size: 0.65rem;
+    font-size: 1.05rem;
     color: var(--parchment-gold);
     opacity: 0.7;
 }
 
 .skills-section .sk-val {
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     font-weight: 600;
     min-width: 24px;
     text-align: right;
@@ -4903,7 +4902,7 @@ label.spell-cb input {
 
 /* Note e backstory */
 .note-content {
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     line-height: 1.4;
     color: var(--parchment-text);
     max-height: 120px;
@@ -4935,7 +4934,7 @@ label.spell-cb input {
 }
 
 .traits-label {
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     font-weight: 600;
     color: var(--parchment-accent);
     display: block;
@@ -4954,7 +4953,7 @@ label.spell-cb input {
     background: rgba(255, 255, 255, 0.4);
     border: 1px solid var(--parchment-border);
     border-radius: 4px;
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: var(--parchment-text);
     position: relative;
 }
@@ -4975,7 +4974,7 @@ label.spell-cb input {
 }
 
 .more-hint {
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     font-style: italic;
     color: var(--parchment-gold);
 }
@@ -4984,7 +4983,7 @@ label.spell-cb input {
 .inventory-summary {
     display: flex;
     gap: 1rem;
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: var(--parchment-accent);
     margin-bottom: 0.4rem;
 }
@@ -5000,7 +4999,7 @@ label.spell-cb input {
     padding: 0.15rem 0.4rem;
     background: rgba(255, 255, 255, 0.4);
     border-radius: 3px;
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     color: var(--parchment-text);
 }
 
@@ -5008,7 +5007,7 @@ label.spell-cb input {
     font-style: italic;
     color: var(--parchment-gold);
     opacity: 0.7;
-    font-size: 0.8rem;
+    font-size: 1rem;
 }
 
 /* Incantesimi */
@@ -5105,7 +5104,7 @@ label.spell-cb input {
 
 .sheet-header-split .char-class-info {
     font-family: 'Cinzel', serif;
-    font-size: 0.95rem;
+    font-size: 1.15rem;
     font-weight: 600;
     color: #1a1a1a;
     margin: 0;
@@ -5113,7 +5112,7 @@ label.spell-cb input {
 
 .sheet-header-split .char-player {
     font-family: 'Cinzel', serif;
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: var(--parchment-gold);
     margin: 0.1rem 0 0;
 }
@@ -5133,7 +5132,7 @@ label.spell-cb input {
 .flex-third h3 {
     flex-shrink: 0;
     margin: 0 0 0.3rem;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     padding-bottom: 0.2rem;
 }
 
@@ -5141,7 +5140,7 @@ label.spell-cb input {
     flex: 1;
     overflow-y: auto;
     max-height: none;
-    font-size: 0.8rem;
+    font-size: 1rem;
     line-height: 1.35;
 }
 
@@ -5180,7 +5179,7 @@ label.spell-cb input {
 
 .ap-item h4 {
     margin: 0 0 0.25rem;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     color: var(--parchment-accent);
     font-family: 'Cinzel', serif;
     font-weight: 600;
@@ -5188,7 +5187,7 @@ label.spell-cb input {
 
 .ap-text {
     margin: 0;
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     line-height: 1.4;
     color: var(--parchment-text);
 }
@@ -5218,7 +5217,7 @@ label.spell-cb input {
     align-items: center;
     gap: 0.3rem;
     padding: 0.2rem 0.3rem;
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: #1a1a1a;
     border-radius: 3px;
     background: rgba(255, 255, 255, 0.3);
@@ -5231,7 +5230,7 @@ label.spell-cb input {
 
 .skill-item .sk-icon {
     width: 12px;
-    font-size: 0.6rem;
+    font-size: 1rem;
     color: var(--parchment-gold);
     text-align: center;
 }
@@ -5242,18 +5241,18 @@ label.spell-cb input {
 
 .skill-item .sk-name {
     flex: 1;
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     color: #1a1a1a;
 }
 
 .skill-item .sk-abbr {
-    font-size: 0.6rem;
+    font-size: 1rem;
     color: #666;
     opacity: 0.7;
 }
 
 .skill-item .sk-val {
-    font-size: 0.8rem;
+    font-size: 1rem;
     font-weight: 600;
     color: #1a1a1a;
     min-width: 22px;
@@ -5288,7 +5287,7 @@ label.spell-cb input {
     border: 1px solid rgba(46, 134, 171, 0.3);
     border-radius: 3px;
     padding: 1px 4px;
-    font-size: 0.6rem;
+    font-size: 1rem;
     font-weight: 600;
     text-align: center;
 }
@@ -5317,7 +5316,7 @@ label.spell-cb input {
 
 .abilities-grid-sheet .ab-name {
     display: block;
-    font-size: 0.7rem;
+    font-size: 1.1rem;
     font-weight: 600;
     color: var(--parchment-text);
     margin-bottom: 0.1rem;
@@ -5333,7 +5332,7 @@ label.spell-cb input {
 
 .abilities-grid-sheet .ab-mod {
     display: block;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     font-weight: 600;
     color: var(--crimson-red);
     background: rgba(255, 255, 255, 0.5);
@@ -5361,14 +5360,14 @@ label.spell-cb input {
 }
 
 .id-item .id-label {
-    font-size: 0.65rem;
+    font-size: 1.05rem;
     color: var(--parchment-accent);
     text-transform: uppercase;
     letter-spacing: 0.03em;
 }
 
 .id-item .id-value {
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     color: var(--parchment-text);
     font-weight: 500;
 }
@@ -5394,7 +5393,7 @@ label.spell-cb input {
 
 .combat-stat label {
     display: block;
-    font-size: 0.6rem;
+    font-size: 1rem;
     color: var(--parchment-accent);
     text-transform: uppercase;
     letter-spacing: 0.03em;
@@ -5424,17 +5423,17 @@ label.spell-cb input {
     border-radius: 3px;
     color: var(--parchment-text);
     font-family: 'Cinzel', serif;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     font-weight: 600;
 }
 
 .hp-display .hp-max {
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     color: var(--parchment-text);
 }
 
 .hp-display .hp-temp {
-    font-size: 0.7rem;
+    font-size: 1.1rem;
     color: var(--parchment-accent);
 }
 
@@ -5452,7 +5451,7 @@ label.spell-cb input {
     padding: 0.2rem 0.4rem;
     background: rgba(255, 255, 255, 0.3);
     border-radius: 3px;
-    font-size: 0.75rem;
+    font-size: 1.15rem;
 }
 
 .save-item.prof {
@@ -5484,7 +5483,7 @@ label.spell-cb input {
 }
 
 .spell-level-label {
-    font-size: 0.7rem;
+    font-size: 1.1rem;
     font-weight: 700;
     color: var(--parchment-gold);
     min-width: 70px;
@@ -5502,7 +5501,7 @@ label.spell-cb input {
     background: rgba(107, 68, 35, 0.2);
     border: 1px solid var(--parchment-border);
     border-radius: 3px;
-    font-size: 0.7rem;
+    font-size: 1.1rem;
     color: var(--parchment-text);
 }
 
@@ -5526,7 +5525,7 @@ label.spell-cb input {
     border: 1px solid var(--parchment-border);
     border-radius: 3px;
     padding: 0.1rem 0.3rem;
-    font-size: 0.65rem;
+    font-size: 1.05rem;
     cursor: pointer;
     transition: all 0.2s;
 }
@@ -5563,7 +5562,7 @@ label.spell-cb input {
     border: 1px solid var(--parchment-border);
     border-radius: 3px;
     cursor: pointer;
-    font-size: 0.75rem;
+    font-size: 1.15rem;
 }
 
 .ac-modal .btn-save {
@@ -5586,14 +5585,14 @@ label.spell-cb input {
 }
 
 .saves-row .saves-label {
-    font-size: 0.7rem;
+    font-size: 1.1rem;
     font-weight: 600;
     color: var(--parchment-accent);
     margin-right: 0.2rem;
 }
 
 .save-item {
-    font-size: 0.7rem;
+    font-size: 1.1rem;
     padding: 0.1rem 0.3rem;
     background: rgba(255, 255, 255, 0.4);
     border-radius: 3px;
@@ -5610,7 +5609,7 @@ label.spell-cb input {
    ============================================================================ */
 
 .spells-section .spell-info {
-    font-size: 0.8rem;
+    font-size: 1rem;
     margin-bottom: 0.4rem;
     color: var(--parchment-text);
 }
@@ -5623,7 +5622,7 @@ label.spell-cb input {
 }
 
 .spells-level-label {
-    font-size: 0.7rem;
+    font-size: 1.1rem;
     font-weight: 600;
     color: var(--parchment-accent);
     display: block;
@@ -5648,7 +5647,7 @@ label.spell-cb input {
     background: rgba(107, 68, 35, 0.2);
     border: 1px solid var(--parchment-border);
     border-radius: 3px;
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     color: var(--parchment-text);
 }
 
@@ -5658,7 +5657,7 @@ label.spell-cb input {
 
 .card-section h3 {
     margin: 0 0 0.3rem;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     padding-bottom: 0.2rem;
     border-bottom: 1px solid var(--parchment-border);
     color: #1a1a1a;
@@ -5675,7 +5674,7 @@ label.spell-cb input {
 }
 
 .flip-hint {
-    font-size: 0.7rem;
+    font-size: 1.1rem;
     color: var(--parchment-gold);
     opacity: 0.6;
     text-align: center;
@@ -5692,7 +5691,7 @@ label.spell-cb input {
 }
 
 .traits-label {
-    font-size: 0.7rem;
+    font-size: 1.1rem;
     font-weight: 600;
     color: var(--parchment-accent);
     display: block;
@@ -5711,7 +5710,7 @@ label.spell-cb input {
     background: rgba(255, 255, 255, 0.4);
     border: 1px solid var(--parchment-border);
     border-radius: 4px;
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     color: var(--parchment-text);
     position: relative;
 }
@@ -5732,7 +5731,7 @@ label.spell-cb input {
 }
 
 .more-hint {
-    font-size: 0.7rem;
+    font-size: 1.1rem;
     font-style: italic;
     color: var(--parchment-gold);
 }
@@ -5744,7 +5743,7 @@ label.spell-cb input {
 .inventory-summary {
     display: flex;
     gap: 0.8rem;
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     color: var(--parchment-accent);
     margin-bottom: 0.3rem;
 }
@@ -5760,7 +5759,7 @@ label.spell-cb input {
     padding: 0.12rem 0.35rem;
     background: rgba(255, 255, 255, 0.4);
     border-radius: 3px;
-    font-size: 0.7rem;
+    font-size: 1.1rem;
     color: var(--parchment-text);
 }
 
@@ -5768,7 +5767,7 @@ label.spell-cb input {
     font-style: italic;
     color: var(--parchment-gold);
     opacity: 0.7;
-    font-size: 0.75rem;
+    font-size: 1.15rem;
 }
 
 /* ============================================================================
@@ -5817,7 +5816,7 @@ label.spell-cb input {
     background: transparent;
     color: var(--text-muted, #888);
     cursor: pointer;
-    font-size: 0.7rem;
+    font-size: 1.1rem;
     border-radius: 3px;
     transition: all 0.2s;
     display: flex;
@@ -5856,7 +5855,7 @@ label.spell-cb input {
     border: 1px solid var(--border-color, #444);
     border-radius: 4px;
     color: var(--text-primary, #fff);
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     text-align: center;
 }
 .ac-modal input[type="number"]:focus {
@@ -5873,7 +5872,7 @@ label.spell-cb input {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size: 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -5901,7 +5900,7 @@ label.spell-cb input {
 .inventory-summary {
     display: flex;
     gap: 0.8rem;
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     color: #fff;
     margin-bottom: 0.3rem;
     padding: 0.25rem 0;
@@ -5935,7 +5934,7 @@ label.spell-cb input {
 }
 .spell-level-label {
     font-weight: 600;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     color: var(--parchment-accent);
     margin-right: 0.5rem;
 }
@@ -5977,7 +5976,7 @@ label.spell-cb input {
 
 .identity-half h3 {
     font-family: 'Cinzel', serif;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     font-weight: 700;
     color: #1a1a1a;
     border-bottom: 1px solid var(--parchment-border);
@@ -6002,13 +6001,13 @@ label.spell-cb input {
 }
 
 .identity-grid-split .id-label {
-    font-size: 0.7rem;
+    font-size: 1.1rem;
     color: var(--parchment-accent);
     text-transform: uppercase;
 }
 
 .identity-grid-split .id-value {
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     font-weight: 600;
     color: #1a1a1a;
 }
@@ -6024,7 +6023,7 @@ label.spell-cb input {
 
 .combat-half h3 {
     font-family: 'Cinzel', serif;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     font-weight: 700;
     color: #1a1a1a;
     border-bottom: 1px solid var(--parchment-border);
@@ -6051,7 +6050,7 @@ label.spell-cb input {
 }
 
 .combat-stat-mini label {
-    font-size: 0.7rem;
+    font-size: 1.1rem;
     color: var(--parchment-accent);
     text-transform: uppercase;
     margin-bottom: 0.1rem;
@@ -6077,18 +6076,18 @@ label.spell-cb input {
     background: rgba(255, 255, 255, 0.6);
     border: 1px solid var(--parchment-border);
     border-radius: 3px;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     font-weight: 700;
     color: #1a1a1a;
 }
 
 .hp-display .hp-max {
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     color: var(--parchment-accent);
 }
 
 .hp-display .hp-temp {
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     color: #1565c0;
 }
 
@@ -6118,7 +6117,7 @@ label.spell-cb input {
 }
 
 .saves-grid-back .save-icon {
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     color: var(--parchment-gold);
 }
 
@@ -6128,13 +6127,13 @@ label.spell-cb input {
 
 .saves-grid-back .save-name {
     flex: 1;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     font-weight: 600;
     color: var(--parchment-accent);
 }
 
 .saves-grid-back .save-val {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     font-weight: 700;
     color: var(--parchment-text);
 }
@@ -6221,7 +6220,7 @@ label.spell-cb input {
 /* Nome caratteristica */
 .abe-name {
     font-family: 'Cinzel', serif;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     font-weight: 700;
     color: var(--parchment-accent);
     text-transform: uppercase;
@@ -6253,12 +6252,12 @@ label.spell-cb input {
     align-items: center;
     justify-content: center;
     gap: 0.25rem;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
 }
 
 .abe-label {
     font-family: 'Cinzel', serif;
-    font-size: 0.7rem;
+    font-size: 1.1rem;
     color: var(--parchment-accent);
     font-weight: 600;
 }
@@ -6266,7 +6265,7 @@ label.spell-cb input {
 .abe-value {
     font-family: 'Cinzel', serif;
     font-weight: 700;
-    font-size: 0.95rem;
+    font-size: 1.15rem;
 }
 
 .abe-value.positive {
@@ -6283,14 +6282,14 @@ label.spell-cb input {
 }
 
 .abe-save-icon {
-    font-size: 0.6rem;
+    font-size: 1rem;
     color: var(--parchment-gold);
 }
 
 .abe-save-value {
     font-family: 'Cinzel', serif;
     font-weight: 700;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     color: var(--parchment-text);
 }
 
@@ -6321,7 +6320,7 @@ label.spell-cb input {
 
 /* Indicatore ✨ accanto al punteggio */
 .abe-item-indicator {
-    font-size: 0.7rem;
+    font-size: 1.1rem;
     position: absolute;
     top: 2px;
     right: 4px;
@@ -6334,7 +6333,7 @@ label.spell-cb input {
 
 /* Bonus TS da oggetti */
 .abe-save-item-bonus {
-    font-size: 0.7rem;
+    font-size: 1.1rem;
     color: #e74c3c;
     font-weight: 600;
     margin-left: 2px;
@@ -6343,7 +6342,7 @@ label.spell-cb input {
 /* Tag bonus oggetto sotto la CA */
 .item-bonus-tag {
     display: block;
-    font-size: 0.65rem;
+    font-size: 1.05rem;
     color: #e74c3c;
     text-align: center;
     margin-top: 1px;
@@ -6380,7 +6379,7 @@ label.spell-cb input {
 }
 
 .empty-section .empty-hint {
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     color: rgba(61, 41, 20, 0.6);
     max-width: 300px;
 }
@@ -6518,7 +6517,7 @@ label.spell-cb input {
 
 .pg-sheet .spells-section-full .empty-hint {
     font-family: 'Cinzel', serif;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     color: rgba(61, 41, 20, 0.6);
 }
 
@@ -6570,7 +6569,7 @@ label.spell-cb input {
     gap: 0.75rem;
     margin: 0;
     font-family: 'Cinzel', serif;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     color: var(--parchment-text);
 }
 
@@ -6584,7 +6583,7 @@ label.spell-cb input {
     color: #fff;
     padding: 0.15rem 0.5rem;
     border-radius: 10px;
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     font-weight: 600;
 }
 
@@ -6636,13 +6635,13 @@ label.spell-cb input {
 }
 
 .spell-level-icon {
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     line-height: 1;
 }
 
 .spell-level-name {
     flex: 1;
-    font-size: 0.8rem;
+    font-size: 1rem;
     font-weight: 600;
     color: var(--parchment-text);
     text-transform: uppercase;
@@ -6652,7 +6651,7 @@ label.spell-cb input {
 .spell-level-count {
     background: var(--parchment-gold);
     color: #fff;
-    font-size: 0.7rem;
+    font-size: 1.1rem;
     font-weight: 700;
     padding: 0.1rem 0.35rem;
     border-radius: 8px;
@@ -6686,7 +6685,7 @@ label.spell-cb input {
     border: 1px solid var(--parchment-border);
     border-radius: 3px;
     font-family: 'Cinzel', serif;
-    font-size: 0.7rem;
+    font-size: 1.1rem;
     color: var(--parchment-text);
     white-space: nowrap;
     transition: all 0.15s;
@@ -6717,7 +6716,7 @@ label.spell-cb input {
 /* Indicatore vuoto */
 .spell-empty {
     font-family: 'Cinzel', serif;
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     color: rgba(61, 41, 20, 0.3);
     font-style: italic;
     width: 100%;
@@ -6750,7 +6749,7 @@ label.spell-cb input {
 
 .spells-empty-state .empty-hint {
     font-family: 'Cinzel', serif;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     color: rgba(61, 41, 20, 0.5);
     max-width: 280px;
 }
@@ -6882,7 +6881,7 @@ label.spell-cb input {
     border: 1px solid #a67c00;
     border-radius: 4px;
     color: #f4e4bc;
-    font-size: 0.8rem;
+    font-size: 1rem;
     cursor: pointer;
     transition: all 0.2s;
     font-family: 'Cinzel', serif;
@@ -6965,7 +6964,7 @@ label.spell-cb input {
 
 .level-up-subtitle {
     margin: 0;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     color: var(--text-secondary, #aaa);
 }
 
@@ -7011,12 +7010,12 @@ label.spell-cb input {
 
 .lu-section h4 {
     margin: 0 0 0.5rem;
-    font-size: 0.95rem;
+    font-size: 1.15rem;
     color: var(--accent-color, #d4af37);
 }
 
 .lu-desc {
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: var(--text-secondary, #aaa);
     margin: 0 0 0.5rem;
 }
@@ -7047,7 +7046,7 @@ label.spell-cb input {
 }
 
 .lu-hp-result {
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     color: var(--text-secondary, #aaa);
     padding-top: 0.5rem;
     border-top: 1px dashed var(--border-color, #444);
@@ -7061,7 +7060,7 @@ label.spell-cb input {
 
 .lu-asi-points {
     margin-bottom: 0.5rem;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
 }
 
 .lu-asi-remaining {
@@ -7086,7 +7085,7 @@ label.spell-cb input {
 }
 
 .lu-asi-name {
-    font-size: 0.8rem;
+    font-size: 1rem;
     font-weight: 600;
     color: var(--text-primary, #fff);
 }
@@ -7103,7 +7102,7 @@ label.spell-cb input {
 }
 
 .lu-asi-mod {
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     color: var(--success-color, #4caf50);
 }
 
@@ -7123,7 +7122,7 @@ label.spell-cb input {
     display: inline-block;
     padding: 0.3rem 0.6rem;
     border-radius: 4px;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     font-weight: 500;
 }
 
@@ -7154,7 +7153,7 @@ label.spell-cb input {
     color: #64b5f6;
     border: 1px solid #2196f3;
     border-radius: 4px;
-    font-size: 0.8rem;
+    font-size: 1rem;
     font-weight: 600;
 }
 
@@ -7184,7 +7183,7 @@ label.spell-cb input {
     border: 2px solid #81c784;
     color: #fff;
     margin-top: 0;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     font-weight: 700;
     padding: 0.4rem 0.8rem;
     border-radius: 6px;
@@ -7216,7 +7215,7 @@ label.spell-cb input {
 }
 
 .btn-level-up-sheet .btn-text {
-    font-size: 0.75rem;
+    font-size: 1.15rem;
 }
 
 /* Equipment button in sheet header */
@@ -7225,7 +7224,7 @@ label.spell-cb input {
     border: 2px solid #e6c455;
     color: #1a1a1a;
     margin-top: 0;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     font-weight: 700;
     padding: 0.4rem 0.8rem;
     border-radius: 6px;
@@ -7251,7 +7250,7 @@ label.spell-cb input {
 }
 
 .btn-equipment-sheet .btn-text {
-    font-size: 0.75rem;
+    font-size: 1.15rem;
 }
 
 /* ============================================================================
@@ -7265,7 +7264,7 @@ label.spell-cb input {
 
 .lu-spells-section h5 {
     margin: 0.5rem 0 0.25rem;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     color: var(--text-primary, #fff);
 }
 
@@ -7276,7 +7275,7 @@ label.spell-cb input {
 }
 
 .lu-spell-counter {
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     color: var(--text-secondary, #aaa);
     margin-bottom: 0.4rem;
     padding: 0.3rem 0.6rem;
@@ -7301,7 +7300,7 @@ label.spell-cb input {
 .lu-spell-level-block h5 .lu-spell-count {
     font-weight: 400;
     color: var(--text-muted, #888);
-    font-size: 0.8rem;
+    font-size: 1rem;
 }
 
 .lu-spell-tags {
@@ -7349,7 +7348,7 @@ label.spell-cb input {
     border: 1px solid var(--border-color, #444);
     border-radius: 4px;
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: var(--text-secondary, #aaa);
     background: rgba(255, 255, 255, 0.03);
     transition: all 0.15s;
@@ -7414,7 +7413,7 @@ label.spell-cb input {
     padding: 0.2rem 0.5rem;
     border: 1px solid var(--border-color, #444);
     border-radius: 4px;
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     cursor: pointer;
     transition: all 0.15s;
     color: var(--text-secondary, #aaa);
@@ -7616,7 +7615,7 @@ label.spell-cb input {
 
 .pg-qb-section-title {
     font-family: 'Cinzel', serif;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     color: var(--campagna-accent, #f0ad4e);
     margin-bottom: 0.5rem;
     padding-bottom: 0.25rem;
@@ -7629,7 +7628,7 @@ label.spell-cb input {
 
 .pg-qb-form-group label {
     display: block;
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     color: var(--campagna-text-muted, #888);
     margin-bottom: 0.25rem;
     text-transform: uppercase;
@@ -7644,7 +7643,7 @@ label.spell-cb input {
     border-radius: 4px;
     color: var(--campagna-text, #f0e6d2);
     font-family: 'Lora', serif;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
 }
 
 .pg-qb-form-group select:focus,
@@ -7658,7 +7657,7 @@ label.spell-cb input {
     padding: 0.6rem 1.2rem;
     border-radius: 6px;
     font-family: 'Cinzel', serif;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     cursor: pointer;
     transition: all 0.2s;
     border: none;
@@ -7726,7 +7725,7 @@ label.spell-cb input {
 }
 
 .pg-qb-preview-info {
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: var(--campagna-text-muted, #888);
     margin: 0.2rem 0;
 }
@@ -7748,7 +7747,7 @@ label.spell-cb input {
 }
 
 .pg-qb-stat-label {
-    font-size: 0.6rem;
+    font-size: 1rem;
     color: var(--campagna-text-muted, #888);
     text-transform: uppercase;
 }
@@ -7760,7 +7759,7 @@ label.spell-cb input {
 }
 
 .pg-qb-stat-mod {
-    font-size: 0.75rem;
+    font-size: 1.15rem;
     color: var(--campagna-text, #f0e6d2);
 }
 
@@ -7781,7 +7780,7 @@ label.spell-cb input {
 }
 
 .pg-qb-combat-stat label {
-    font-size: 0.6rem;
+    font-size: 1rem;
     color: var(--campagna-text-muted, #888);
     text-transform: uppercase;
     display: block;
@@ -7804,7 +7803,7 @@ label.spell-cb input {
 
 .pg-qb-section-box-title {
     font-family: 'Cinzel', serif;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     color: var(--campagna-accent, #f0ad4e);
     margin-bottom: 0.5rem;
     padding-bottom: 0.25rem;
@@ -7817,7 +7816,7 @@ label.spell-cb input {
     padding: 0.15rem 0.4rem;
     background: rgba(155, 89, 182, 0.2);
     border-radius: 3px;
-    font-size: 0.7rem;
+    font-size: 1.1rem;
     margin: 0.1rem;
     color: var(--campagna-text, #f0e6d2);
 }
@@ -7827,7 +7826,7 @@ label.spell-cb input {
     padding: 0.15rem 0.4rem;
     background: rgba(212, 175, 55, 0.15);
     border-radius: 3px;
-    font-size: 0.7rem;
+    font-size: 1.1rem;
     margin: 0.1rem;
     color: var(--campagna-text, #f0e6d2);
 }
@@ -7859,7 +7858,7 @@ label.spell-cb input {
 }
 
 .pg-sidebar-buttons .btn {
-    font-size: 0.8rem;
+    font-size: 1rem;
     padding: 0.4rem 0.5rem;
     white-space: nowrap;
     flex: 1;
@@ -7900,7 +7899,7 @@ label.spell-cb input {
     padding: 0.5rem 0.75rem;
     background: rgba(0, 0, 0, 0.2);
     border-radius: 6px;
-    font-size: 0.8rem;
+    font-size: 1rem;
 }
 
 .legend-item {
@@ -7955,7 +7954,7 @@ label.spell-cb input {
 }
 
 .sub-label {
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: #aaa;
     margin-bottom: 0.3rem;
     font-weight: 600;
@@ -7970,7 +7969,7 @@ label.spell-cb input {
 }
 
 .bg-label {
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: #64b5f6;
     font-weight: 600;
     margin-bottom: 0.25rem;
@@ -7991,7 +7990,7 @@ label.spell-cb input {
 .no-prof {
     color: #666;
     font-style: italic;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
 }
 
 .skills-grid.with-bonus {
@@ -8006,7 +8005,7 @@ label.spell-cb input {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     font-weight: 600;
     white-space: nowrap;
     transition: all 0.15s;
@@ -8023,6 +8022,6 @@ label.spell-cb input {
     border: 1px solid var(--border-color, #444);
     border-radius: 4px;
     color: #fff;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     min-width: 150px;
 }
