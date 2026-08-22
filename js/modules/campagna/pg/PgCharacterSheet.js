@@ -722,6 +722,31 @@ export function renderTraitsAndPrivileges(pgData, databases) {
                 </div>
             </div>
         `;
+        
+        // Privilegi della sottoclasse/archetipo (se selezionata)
+        if (pgData.subclass && selectedClass.sottoclassi) {
+            const subclassData = selectedClass.sottoclassi.find(s => 
+                s.index === pgData.subclass || s.nome === pgData.subclass
+            ) || selectedClass.sottoclassi.find(s => 
+                (s.index || '').toLowerCase() === (pgData.subclass || '').toLowerCase()
+            );
+            
+            if (subclassData) {
+                // Imposta temporaneamente la sottoclasse per getSubclassPrivileges
+                const classWithSubclass = { ...selectedClass, sottoclasse: subclassData };
+                const subclassPrivs = getSubclassPrivileges(classWithSubclass, level);
+                if (subclassPrivs.length > 0) {
+                    html += `
+                        <div class="tp-section">
+                            <h4>🏅 Privilegi ${subclassData.nome || 'Sottoclasse'} (Liv. ${level})</h4>
+                            <div class="tp-tags">
+                                ${subclassPrivs.map(p => renderTraitTag(p.nome, p.descrizione, 'subclass')).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+        }
     }
     
     html += '</div>';

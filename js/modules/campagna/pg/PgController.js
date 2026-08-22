@@ -1118,10 +1118,8 @@ export class PgController {
         if (this.currentStep === 3) {
             // Usa il nuovo parser per ottenere il numero corretto di scelte
             const classSkillsData = this.parseClassSkillsForController();
-            const bgSkills = this.wizardData._bgSkills || [];
-            // Solo le bg skills che sono ANCHE nella lista di classe danno scelta extra
-            const bgInClassList = bgSkills.filter(s => classSkillsData.availableSkills.includes(s));
-            this.wizardData._classNumSkillChoices = classSkillsData.numChoices + bgInClassList.length;
+            // numChoices stays at class's original number (NO increase from bg overlap)
+            this.wizardData._classNumSkillChoices = classSkillsData.numChoices;
         }
         if (this.currentStep === 4) {
             this.wizardData._maxCantrips = this.getMaxCantrips();
