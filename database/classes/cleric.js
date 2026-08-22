@@ -36,26 +36,342 @@ export const cleric = {
     "Uno scudo e un simbolo sacro"
   ],
   "tabella_progressione": [
-    { "livello": 1, "bonus_competenza": 2, "privilegi": ["Dominio Divino", "Incantesimi"], "trucchetti_conosciuti": 3, "slot_1": 2, "slot_2": 0, "slot_3": 0, "slot_4": 0, "slot_5": 0, "slot_6": 0, "slot_7": 0, "slot_8": 0, "slot_9": 0 },
-    { "livello": 2, "bonus_competenza": 2, "privilegi": ["Incanalare Divinità (1/riposo)", "privilegio di Dominio Divino"], "trucchetti_conosciuti": 3, "slot_1": 3, "slot_2": 0, "slot_3": 0, "slot_4": 0, "slot_5": 0, "slot_6": 0, "slot_7": 0, "slot_8": 0, "slot_9": 0 },
-    { "livello": 3, "bonus_competenza": 2, "privilegi": [], "trucchetti_conosciuti": 3, "slot_1": 4, "slot_2": 2, "slot_3": 0, "slot_4": 0, "slot_5": 0, "slot_6": 0, "slot_7": 0, "slot_8": 0, "slot_9": 0 },
-    { "livello": 4, "bonus_competenza": 2, "privilegi": ["Aumento dei Punteggi di Caratteristica"], "trucchetti_conosciuti": 4, "slot_1": 4, "slot_2": 3, "slot_3": 0, "slot_4": 0, "slot_5": 0, "slot_6": 0, "slot_7": 0, "slot_8": 0, "slot_9": 0 },
-    { "livello": 5, "bonus_competenza": 3, "privilegi": ["Distruggere Non Morti (GS 1/2)"], "trucchetti_conosciuti": 4, "slot_1": 4, "slot_2": 3, "slot_3": 2, "slot_4": 0, "slot_5": 0, "slot_6": 0, "slot_7": 0, "slot_8": 0, "slot_9": 0 },
-    { "livello": 6, "bonus_competenza": 3, "privilegi": ["Incanalare Divinità (2/riposo)", "privilegio di Dominio Divino"], "trucchetti_conosciuti": 4, "slot_1": 4, "slot_2": 3, "slot_3": 3, "slot_4": 0, "slot_5": 0, "slot_6": 0, "slot_7": 0, "slot_8": 0, "slot_9": 0 },
-    { "livello": 7, "bonus_competenza": 3, "privilegi": [], "trucchetti_conosciuti": 4, "slot_1": 4, "slot_2": 3, "slot_3": 3, "slot_4": 1, "slot_5": 0, "slot_6": 0, "slot_7": 0, "slot_8": 0, "slot_9": 0 },
-    { "livello": 8, "bonus_competenza": 3, "privilegi": ["Aumento dei Punteggi di Caratteristica", "Distruggere Non Morti (GS 1)", "privilegio di Dominio Divino"], "trucchetti_conosciuti": 4, "slot_1": 4, "slot_2": 3, "slot_3": 3, "slot_4": 2, "slot_5": 0, "slot_6": 0, "slot_7": 0, "slot_8": 0, "slot_9": 0 },
-    { "livello": 9, "bonus_competenza": 4, "privilegi": [], "trucchetti_conosciuti": 4, "slot_1": 4, "slot_2": 3, "slot_3": 3, "slot_4": 3, "slot_5": 1, "slot_6": 0, "slot_7": 0, "slot_8": 0, "slot_9": 0 },
-    { "livello": 10, "bonus_competenza": 4, "privilegi": ["Intervento Divino"], "trucchetti_conosciuti": 5, "slot_1": 4, "slot_2": 3, "slot_3": 3, "slot_4": 3, "slot_5": 2, "slot_6": 0, "slot_7": 0, "slot_8": 0, "slot_9": 0 },
-    { "livello": 11, "bonus_competenza": 4, "privilegi": ["Distruggere Non Morti (GS 2)"], "trucchetti_conosciuti": 5, "slot_1": 4, "slot_2": 3, "slot_3": 3, "slot_4": 3, "slot_5": 2, "slot_6": 1, "slot_7": 0, "slot_8": 0, "slot_9": 0 },
-    { "livello": 12, "bonus_competenza": 4, "privilegi": ["Aumento dei Punteggi di Caratteristica"], "trucchetti_conosciuti": 5, "slot_1": 4, "slot_2": 3, "slot_3": 3, "slot_4": 3, "slot_5": 2, "slot_6": 1, "slot_7": 0, "slot_8": 0, "slot_9": 0 },
-    { "livello": 13, "bonus_competenza": 5, "privilegi": [], "trucchetti_conosciuti": 5, "slot_1": 4, "slot_2": 3, "slot_3": 3, "slot_4": 3, "slot_5": 2, "slot_6": 1, "slot_7": 1, "slot_8": 0, "slot_9": 0 },
-    { "livello": 14, "bonus_competenza": 5, "privilegi": ["Distruggere Non Morti (GS 3)"], "trucchetti_conosciuti": 5, "slot_1": 4, "slot_2": 3, "slot_3": 3, "slot_4": 3, "slot_5": 2, "slot_6": 1, "slot_7": 1, "slot_8": 0, "slot_9": 0 },
-    { "livello": 15, "bonus_competenza": 5, "privilegi": [], "trucchetti_conosciuti": 5, "slot_1": 4, "slot_2": 3, "slot_3": 3, "slot_4": 3, "slot_5": 2, "slot_6": 1, "slot_7": 1, "slot_8": 1, "slot_9": 0 },
-    { "livello": 16, "bonus_competenza": 5, "privilegi": ["Aumento dei Punteggi di Caratteristica"], "trucchetti_conosciuti": 5, "slot_1": 4, "slot_2": 3, "slot_3": 3, "slot_4": 3, "slot_5": 2, "slot_6": 1, "slot_7": 1, "slot_8": 1, "slot_9": 0 },
-    { "livello": 17, "bonus_competenza": 6, "privilegi": ["Distruggere Non Morti (GS 4)", "privilegio di Dominio Divino"], "trucchetti_conosciuti": 5, "slot_1": 4, "slot_2": 3, "slot_3": 3, "slot_4": 3, "slot_5": 2, "slot_6": 1, "slot_7": 1, "slot_8": 1, "slot_9": 1 },
-    { "livello": 18, "bonus_competenza": 6, "privilegi": ["Incanalare Divinità (3/riposo)"], "trucchetti_conosciuti": 5, "slot_1": 4, "slot_2": 3, "slot_3": 3, "slot_4": 3, "slot_5": 3, "slot_6": 1, "slot_7": 1, "slot_8": 1, "slot_9": 1 },
-    { "livello": 19, "bonus_competenza": 6, "privilegi": ["Aumento dei Punteggi di Caratteristica"], "trucchetti_conosciuti": 5, "slot_1": 4, "slot_2": 3, "slot_3": 3, "slot_4": 3, "slot_5": 3, "slot_6": 2, "slot_7": 1, "slot_8": 1, "slot_9": 1 },
-    { "livello": 20, "bonus_competenza": 6, "privilegi": ["Intervento Divino Migliorato"], "trucchetti_conosciuti": 5, "slot_1": 4, "slot_2": 3, "slot_3": 3, "slot_4": 3, "slot_5": 3, "slot_6": 2, "slot_7": 2, "slot_8": 1, "slot_9": 1 }
+    {
+      "livello": 1,
+      "bonus_competenza": 2,
+      "privilegi": [
+        "Dominio Divino",
+        "Incantesimi"
+      ],
+      "trucchetti_conosciuti": 3,
+      "slot_1": 2,
+      "slot_2": 0,
+      "slot_3": 0,
+      "slot_4": 0,
+      "slot_5": 0,
+      "slot_6": 0,
+      "slot_7": 0,
+      "slot_8": 0,
+      "slot_9": 0
+    },
+    {
+      "livello": 2,
+      "bonus_competenza": 2,
+      "privilegi": [
+        "Incanalare Divinità (1/riposo)",
+        "privilegio di Dominio Divino"
+      ],
+      "trucchetti_conosciuti": 3,
+      "slot_1": 3,
+      "slot_2": 0,
+      "slot_3": 0,
+      "slot_4": 0,
+      "slot_5": 0,
+      "slot_6": 0,
+      "slot_7": 0,
+      "slot_8": 0,
+      "slot_9": 0
+    },
+    {
+      "livello": 3,
+      "bonus_competenza": 2,
+      "privilegi": [],
+      "trucchetti_conosciuti": 3,
+      "slot_1": 4,
+      "slot_2": 2,
+      "slot_3": 0,
+      "slot_4": 0,
+      "slot_5": 0,
+      "slot_6": 0,
+      "slot_7": 0,
+      "slot_8": 0,
+      "slot_9": 0
+    },
+    {
+      "livello": 4,
+      "bonus_competenza": 2,
+      "privilegi": [
+        "Aumento dei Punteggi di Caratteristica"
+      ],
+      "trucchetti_conosciuti": 4,
+      "slot_1": 4,
+      "slot_2": 3,
+      "slot_3": 0,
+      "slot_4": 0,
+      "slot_5": 0,
+      "slot_6": 0,
+      "slot_7": 0,
+      "slot_8": 0,
+      "slot_9": 0
+    },
+    {
+      "livello": 5,
+      "bonus_competenza": 3,
+      "privilegi": [
+        "Distruggere Non Morti (GS 1/2)"
+      ],
+      "trucchetti_conosciuti": 4,
+      "slot_1": 4,
+      "slot_2": 3,
+      "slot_3": 2,
+      "slot_4": 0,
+      "slot_5": 0,
+      "slot_6": 0,
+      "slot_7": 0,
+      "slot_8": 0,
+      "slot_9": 0
+    },
+    {
+      "livello": 6,
+      "bonus_competenza": 3,
+      "privilegi": [
+        "Incanalare Divinità (2/riposo)",
+        "privilegio di Dominio Divino"
+      ],
+      "trucchetti_conosciuti": 4,
+      "slot_1": 4,
+      "slot_2": 3,
+      "slot_3": 3,
+      "slot_4": 0,
+      "slot_5": 0,
+      "slot_6": 0,
+      "slot_7": 0,
+      "slot_8": 0,
+      "slot_9": 0
+    },
+    {
+      "livello": 7,
+      "bonus_competenza": 3,
+      "privilegi": [],
+      "trucchetti_conosciuti": 4,
+      "slot_1": 4,
+      "slot_2": 3,
+      "slot_3": 3,
+      "slot_4": 1,
+      "slot_5": 0,
+      "slot_6": 0,
+      "slot_7": 0,
+      "slot_8": 0,
+      "slot_9": 0
+    },
+    {
+      "livello": 8,
+      "bonus_competenza": 3,
+      "privilegi": [
+        "Aumento dei Punteggi di Caratteristica",
+        "Distruggere Non Morti (GS 1)",
+        "privilegio di Dominio Divino"
+      ],
+      "trucchetti_conosciuti": 4,
+      "slot_1": 4,
+      "slot_2": 3,
+      "slot_3": 3,
+      "slot_4": 2,
+      "slot_5": 0,
+      "slot_6": 0,
+      "slot_7": 0,
+      "slot_8": 0,
+      "slot_9": 0
+    },
+    {
+      "livello": 9,
+      "bonus_competenza": 4,
+      "privilegi": [],
+      "trucchetti_conosciuti": 4,
+      "slot_1": 4,
+      "slot_2": 3,
+      "slot_3": 3,
+      "slot_4": 3,
+      "slot_5": 1,
+      "slot_6": 0,
+      "slot_7": 0,
+      "slot_8": 0,
+      "slot_9": 0
+    },
+    {
+      "livello": 10,
+      "bonus_competenza": 4,
+      "privilegi": [
+        "Intervento Divino"
+      ],
+      "trucchetti_conosciuti": 5,
+      "slot_1": 4,
+      "slot_2": 3,
+      "slot_3": 3,
+      "slot_4": 3,
+      "slot_5": 2,
+      "slot_6": 0,
+      "slot_7": 0,
+      "slot_8": 0,
+      "slot_9": 0
+    },
+    {
+      "livello": 11,
+      "bonus_competenza": 4,
+      "privilegi": [
+        "Distruggere Non Morti (GS 2)"
+      ],
+      "trucchetti_conosciuti": 5,
+      "slot_1": 4,
+      "slot_2": 3,
+      "slot_3": 3,
+      "slot_4": 3,
+      "slot_5": 2,
+      "slot_6": 1,
+      "slot_7": 0,
+      "slot_8": 0,
+      "slot_9": 0
+    },
+    {
+      "livello": 12,
+      "bonus_competenza": 4,
+      "privilegi": [
+        "Aumento dei Punteggi di Caratteristica"
+      ],
+      "trucchetti_conosciuti": 5,
+      "slot_1": 4,
+      "slot_2": 3,
+      "slot_3": 3,
+      "slot_4": 3,
+      "slot_5": 2,
+      "slot_6": 1,
+      "slot_7": 0,
+      "slot_8": 0,
+      "slot_9": 0
+    },
+    {
+      "livello": 13,
+      "bonus_competenza": 5,
+      "privilegi": [],
+      "trucchetti_conosciuti": 5,
+      "slot_1": 4,
+      "slot_2": 3,
+      "slot_3": 3,
+      "slot_4": 3,
+      "slot_5": 2,
+      "slot_6": 1,
+      "slot_7": 1,
+      "slot_8": 0,
+      "slot_9": 0
+    },
+    {
+      "livello": 14,
+      "bonus_competenza": 5,
+      "privilegi": [
+        "Distruggere Non Morti (GS 3)"
+      ],
+      "trucchetti_conosciuti": 5,
+      "slot_1": 4,
+      "slot_2": 3,
+      "slot_3": 3,
+      "slot_4": 3,
+      "slot_5": 2,
+      "slot_6": 1,
+      "slot_7": 1,
+      "slot_8": 0,
+      "slot_9": 0
+    },
+    {
+      "livello": 15,
+      "bonus_competenza": 5,
+      "privilegi": [],
+      "trucchetti_conosciuti": 5,
+      "slot_1": 4,
+      "slot_2": 3,
+      "slot_3": 3,
+      "slot_4": 3,
+      "slot_5": 2,
+      "slot_6": 1,
+      "slot_7": 1,
+      "slot_8": 1,
+      "slot_9": 0
+    },
+    {
+      "livello": 16,
+      "bonus_competenza": 5,
+      "privilegi": [
+        "Aumento dei Punteggi di Caratteristica"
+      ],
+      "trucchetti_conosciuti": 5,
+      "slot_1": 4,
+      "slot_2": 3,
+      "slot_3": 3,
+      "slot_4": 3,
+      "slot_5": 2,
+      "slot_6": 1,
+      "slot_7": 1,
+      "slot_8": 1,
+      "slot_9": 0
+    },
+    {
+      "livello": 17,
+      "bonus_competenza": 6,
+      "privilegi": [
+        "Distruggere Non Morti (GS 4)",
+        "privilegio di Dominio Divino"
+      ],
+      "trucchetti_conosciuti": 5,
+      "slot_1": 4,
+      "slot_2": 3,
+      "slot_3": 3,
+      "slot_4": 3,
+      "slot_5": 2,
+      "slot_6": 1,
+      "slot_7": 1,
+      "slot_8": 1,
+      "slot_9": 1
+    },
+    {
+      "livello": 18,
+      "bonus_competenza": 6,
+      "privilegi": [
+        "Incanalare Divinità (3/riposo)"
+      ],
+      "trucchetti_conosciuti": 5,
+      "slot_1": 4,
+      "slot_2": 3,
+      "slot_3": 3,
+      "slot_4": 3,
+      "slot_5": 3,
+      "slot_6": 1,
+      "slot_7": 1,
+      "slot_8": 1,
+      "slot_9": 1
+    },
+    {
+      "livello": 19,
+      "bonus_competenza": 6,
+      "privilegi": [
+        "Aumento dei Punteggi di Caratteristica"
+      ],
+      "trucchetti_conosciuti": 5,
+      "slot_1": 4,
+      "slot_2": 3,
+      "slot_3": 3,
+      "slot_4": 3,
+      "slot_5": 3,
+      "slot_6": 2,
+      "slot_7": 1,
+      "slot_8": 1,
+      "slot_9": 1
+    },
+    {
+      "livello": 20,
+      "bonus_competenza": 6,
+      "privilegi": [
+        "Intervento Divino Migliorato"
+      ],
+      "trucchetti_conosciuti": 5,
+      "slot_1": 4,
+      "slot_2": 3,
+      "slot_3": 3,
+      "slot_4": 3,
+      "slot_5": 3,
+      "slot_6": 2,
+      "slot_7": 2,
+      "slot_8": 1,
+      "slot_9": 1
+    }
   ],
   "descrizione_privilegi": {
     "Dominio Divino": {
@@ -95,28 +411,30 @@ export const cleric = {
       "nome": "Dominio della Vita",
       "descrizione": "Si concentra sulla energia positiva che sostiene la vita, promuovendo salute e guarigione.",
       "privilegi": {
-        "Competenza Bonus": {
-          "livello": 1,
-          "descrizione": "Ottieni competenza con le armature pesanti."
-        },
-        "Discepolo della Vita": {
-          "livello": 1,
-          "descrizione": "I tuoi incantesimi di guarigione ripristinano punti ferita aggiuntivi (2 + livello incantesimo)."
-        },
-        "Incanalare Divinità: Preservare Vita": {
-          "livello": 2,
+        "1": [
+          {
+            "nome": "Competenza Bonus",
+            "descrizione": "Ottieni competenza con le armature pesanti."
+          },
+          {
+            "nome": "Discepolo della Vita",
+            "descrizione": "I tuoi incantesimi di guarigione ripristinano punti ferita aggiuntivi (2 + livello incantesimo)."
+          }
+        ],
+        "2": {
+          "nome": "Incanalare Divinità: Preservare Vita",
           "descrizione": "Come azione, puoi guarire creature entro 9 metri per 5 × livello chierico PF."
         },
-        "Guaritore Benedetto": {
-          "livello": 6,
+        "6": {
+          "nome": "Guaritore Benedetto",
           "descrizione": "Quando guarisci un'altra creatura, guarisci anche te stesso (2 + livello incantesimo PF)."
         },
-        "Colpo Divino": {
-          "livello": 8,
+        "8": {
+          "nome": "Colpo Divino",
           "descrizione": "Una volta per turno, i tuoi attacco con arma infliggono 1d8 danni radianti aggiuntivi (2d8 al 14° livello)."
         },
-        "Guarigione Suprema": {
-          "livello": 17,
+        "17": {
+          "nome": "Guarigione Suprema",
           "descrizione": "Quando lanci un incantesimo che ripristina PF, usi il massimo possibile per ogni dado."
         }
       },
