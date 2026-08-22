@@ -182,18 +182,29 @@ export function renderStep3Proficiencies(pgData, databases) {
     const numChoices = classSkillsData.numChoices;
     const availableSkills = classSkillsData.availableSkills;
     
-    // Skill selezionate dall'utente (solo quelle scelte, NON quelle del background)
+    // SRD 5e rules for skill proficiencies:
+    // 1. Background skills are applied FIRST (always proficient, shown blue)
+    // 2. Class skills: player chooses N from the class list
+    // 3. If a background skill is ALSO in the class list, it's shown PURPLE
+    //    and the player gets to choose an ADDITIONAL skill (replacement)
+    // 4. Background skills NOT in the class list are still proficient (blue)
+    //    but don't grant additional choices
+    
     const allSelectedSkills = pgData.skills || [];
     
-    // Le skill del background sono sempre competenti e non contano verso il limite
-    // Le skill scelte dall'utente sono quelle in pgData.skills che NON sono del background
-    const userSelectedSkills = allSelectedSkills.filter(s => !bgSkills.includes(s));
-    const userSelectedCount = userSelectedSkills.length;
+    // Background skills in class list (purple) - grant extra choice
+    const bgInClassList = bgSkills.filter(s => availableSkills.includes(s));
+    const numExtraChoices = bgInClassList.length;
+    const effectiveNumChoices = numChoices + numExtraChoices;
     
-    // Per SRD 5e: se un'abilità del background è anche nella lista di classe,
-    // il pg può scegliere un'abilità aggiuntiva dalla lista di classe
-    const bgOverlappingClass = bgSkills.filter(s => availableSkills.includes(s));
-    const effectiveNumChoices = numChoices + bgOverlappingClass.length;
+    // Background skills NOT in class list (blue only, no extra choice)
+    const bgNotInClassList = bgSkills.filter(s => !availableSkills.includes(s));
+    
+    // Skills chosen by the user (from class list, excluding background skills)
+    const userSelectedSkills = allSelectedSkills.filter(s => 
+        !bgSkills.includes(s) && availableSkills.includes(s)
+    );
+    const userSelectedCount = userSelectedSkills.length;
     
     // Calcola bonus competenza
     const profBonus = pgData.proficiencyBonus || 2;
@@ -273,7 +284,7 @@ export function renderStep3Proficiencies(pgData, databases) {
                         ` : ''}
                         
                         <div class="skill-counter-box ${userSelectedCount > effectiveNumChoices ? 'over-limit' : ''}">
-                            <div class="counter-label">Competenze da classe (scegli ${effectiveNumChoices}${bgOverlappingClass.length > 0 ? ` (${numChoices} + ${bgOverlappingClass.length} dal background)` : ''}):</div>
+                            <div class="counter-label">Competenze da classe (scegli ${effectiveNumChoices}${numExtraChoices > 0 ? ` (${numChoices} + ${numExtraChoices} sostituzione background)` : ''}):</div>
                             <div class="counter-value">
                                 <span class="selected-num">${userSelectedCount}</span>
                                 <span class="separator">/</span>
@@ -286,6 +297,7 @@ export function renderStep3Proficiencies(pgData, databases) {
                             ${availableSkills.map(skill => {
                                 const isSelectedByUser = userSelectedSkills.includes(skill);
                                 const isFromBackground = bgSkills.includes(skill);
+                                const isBgInClassList = isFromBackground && availableSkills.includes(skill);
                                 
                                 const ability = SKILL_ABILITY_MAP[skill];
                                 const abilityKey = PROPERTY_TO_ABILITY_KEY[ability];
@@ -298,12 +310,14 @@ export function renderStep3Proficiencies(pgData, databases) {
                                 const totalBonus = abilityMod + (isProficient ? profBonus : 0);
                                 
                                 let skillClass = '';
-                                if (isFromBackground) {
-                                    skillClass = 'from-background';
+                                if (isBgInClassList) {
+                                    skillClass = 'double-prof'; // viola: background + nella lista classe
+                                } else if (isFromBackground) {
+                                    skillClass = 'from-background'; // blu: solo background
                                 } else if (isSelectedByUser && userSelectedCount > effectiveNumChoices) {
-                                    skillClass = 'over-limit';
+                                    skillClass = 'over-limit'; // arancio
                                 } else if (isSelectedByUser) {
-                                    skillClass = 'selected';
+                                    skillClass = 'selected'; // verde
                                 }
                                 
                                 const abbr = ABILITY_NAMES[ability]?.substring(0, 3).toUpperCase() || '';
@@ -325,6 +339,7 @@ export function renderStep3Proficiencies(pgData, databases) {
                         <div class="skill-legend">
                             <span class="legend-item"><span class="dot green"></span> Da classe (scelta)</span>
                             <span class="legend-item"><span class="dot blue"></span> Dal background</span>
+                            <span class="legend-item"><span class="dot purple"></span> Background + classe (sostituzione)</span>
                             <span class="legend-item"><span class="dot orange"></span> Oltre limite</span>
                         </div>
                     </div>

@@ -1119,8 +1119,9 @@ export class PgController {
             // Usa il nuovo parser per ottenere il numero corretto di scelte
             const classSkillsData = this.parseClassSkillsForController();
             const bgSkills = this.wizardData._bgSkills || [];
-            const bgOverlappingClass = bgSkills.filter(s => classSkillsData.availableSkills.includes(s));
-            this.wizardData._classNumSkillChoices = classSkillsData.numChoices + bgOverlappingClass.length;
+            // Solo le bg skills che sono ANCHE nella lista di classe danno scelta extra
+            const bgInClassList = bgSkills.filter(s => classSkillsData.availableSkills.includes(s));
+            this.wizardData._classNumSkillChoices = classSkillsData.numChoices + bgInClassList.length;
         }
         if (this.currentStep === 4) {
             this.wizardData._maxCantrips = this.getMaxCantrips();
@@ -1467,7 +1468,7 @@ export class PgController {
             this.wizardData.skills = this.wizardData.skills.filter(s => s !== skillName);
         }
         
-        // Re-render completo per aggiornare evidenziazione abilità
+        // Re-render completo per aggiornare evidenziazione e contatore
         this.render();
     }
     
@@ -2246,16 +2247,30 @@ export class PgController {
             }
         });
         
-        // In D&D 5e, ogni PG inizia con una scarsella contenente 10 MO
-        // Aggiungi le 10 MO al contatore se non sono già state aggiunte
+        // In D&D 5e, l'oro iniziale deriva dal background (es. "Scarsella con 15 mo")
+        // Cerca "Scarsella con N mo" nell'equipaggiamento del background
         if (!this.wizardData._startingGoldAdded) {
-            if (!this.wizardData.treasure) this.wizardData.treasure = {};
-            this.wizardData.treasure.gp = (this.wizardData.treasure.gp || 0) + 10;
-            this.wizardData._startingGoldAdded = true;
+            const bgEquip = this.databases.selectedBackground?.equipaggiamento || [];
+            let goldAmount = 0;
+            if (Array.isArray(bgEquip)) {
+                bgEquip.forEach(item => {
+                    const name = item.nome || '';
+                    const match = name.match(/scarsella\s+con\s+(\d+)\s*mo/i);
+                    if (match) {
+                        goldAmount += parseInt(match[1], 10) * (item.quantita || 1);
+                    }
+                });
+            }
+            if (goldAmount > 0) {
+                if (!this.wizardData.treasure) this.wizardData.treasure = {};
+                this.wizardData.treasure.gp = (this.wizardData.treasure.gp || 0) + goldAmount;
+                this.wizardData._startingGoldAdded = true;
+            }
         }
         
         this.render();
-        showToast('Equipaggiamento aggiunto! (+10 MO scarsella)', 'success');
+        const goldMsg = this.wizardData._startingGoldAdded ? '' : '';
+        showToast('Equipaggiamento aggiunto!', 'success');
     }
     
     /**
