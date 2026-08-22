@@ -593,8 +593,7 @@ function renderCard2Back(pg, databases) {
                     <div class="traits-group">
                         <span class="traits-label">Classe:</span>
                         <div class="traits-tags">
-                            ${classPrivs.slice(0, MAX_VISIBLE_PRIVILEGES).map(p => renderTraitTag(p.nome, p.descrizione, 'class')).join('')}
-                            ${classPrivs.length > MAX_VISIBLE_PRIVILEGES ? `<span class="more-hint">+${classPrivs.length - MAX_VISIBLE_PRIVILEGES}</span>` : ''}
+                            ${classPrivs.map(p => renderTraitTag(p.nome, p.descrizione, 'class')).join('')}
                         </div>
                     </div>
                 ` : ''}

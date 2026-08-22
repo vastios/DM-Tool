@@ -2149,7 +2149,7 @@ textarea.form-control {
 .pg-sheet .trait-tag {
     background: rgba(139, 115, 85, 0.15);
     border-color: var(--parchment-border);
-    color: var(--parchment-text);
+    color: #2a1a0a !important;
     font-family: 'Cinzel', serif;
 }
 
@@ -4954,7 +4954,7 @@ label.spell-cb input {
     border: 1px solid var(--parchment-border);
     border-radius: 4px;
     font-size: 1rem;
-    color: var(--parchment-text);
+    color: #2a1a0a !important;
     position: relative;
 }
 
@@ -5711,7 +5711,7 @@ label.spell-cb input {
     border: 1px solid var(--parchment-border);
     border-radius: 4px;
     font-size: 1.15rem;
-    color: var(--parchment-text);
+    color: #2a1a0a !important;
     position: relative;
 }
 
