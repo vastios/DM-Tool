@@ -4591,6 +4591,21 @@ label.spell-cb input {
     box-sizing: border-box;
 }
 
+/* Font nero per trait-tag nella scheda PG (sfondo pergamena chiaro) */
+.pg-sheet-v2 .trait-tag {
+    color: #2a1a0a !important;
+}
+.pg-sheet-v2 .trait-tag.racial,
+.pg-sheet-v2 .trait-tag.class,
+.pg-sheet-v2 .trait-tag.subclass,
+.pg-sheet-v2 .trait-tag.background {
+    color: #2a1a0a !important;
+}
+.pg-sheet-v2 .traits-label,
+.pg-sheet-v2 .more-hint {
+    color: #3d2914 !important;
+}
+
 /* Container delle 2 card */
 .cards-container {
     display: grid;

@@ -262,10 +262,16 @@ export const rogue = {
       "nome": "Furfante",
       "descrizione": "Applichi le tue capacità all'arte del furto. Rapinatori, banditi, tagliaborse e altri criminali di solito seguono questo archetipo, ma lo fanno anche ladri che preferiscono considerarsi cercatori di tesori professionisti, esploratori, speleologi e investigatori.",
       "privilegi": {
-        "3": {
-          "nome": "Lavoro al Secondo Piano",
-          "descrizione": "Ottieni la capacità di arrampicarti più rapidamente del normale; arrampicarsi non ti costa movimento aggiuntivo. Inoltre, quando effettui un salto con rincorsa, la distanza che puoi coprire aumenta di 30 cm moltiplicati il tuo modificatore di Destrezza."
-        },
+        "3": [
+          {
+            "nome": "Mani Veloci",
+            "descrizione": "Puoi usare un'azione bonus per effettuare una prova di Destrezza (Rapidità di Mano), per utilizzare gli attrezzi da artigiano, o per estrarre qualcosa da una sacca o da un contenitore."
+          },
+          {
+            "nome": "Lavoro al Secondo Piano",
+            "descrizione": "Ottieni la capacità di arrampicarti più rapidamente del normale; arrampicarsi non ti costa movimento aggiuntivo. Inoltre, quando effetti un salto con rincorsa, la distanza che puoi coprire aumenta di 30 cm moltiplicati il tuo modificatore di Destrezza."
+          }
+        ],
         "9": {
           "nome": "Furtività Suprema",
           "descrizione": "Se in un turno non ti sei mosso di più di metà della tua velocità, hai vantaggio su di una prova di Destrezza (Furtività)."
