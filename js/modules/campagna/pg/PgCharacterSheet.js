@@ -566,7 +566,20 @@ function renderCard2Back(pg, databases) {
     // Tratti
     const racialTraits = getRacialTraits(pgRace);
     const classPrivs = pgClass ? getClassPrivileges(pgClass, pg.level || 1) : [];
-    const subclassPrivs = pgClass ? getSubclassPrivileges(pgClass, pg.level || 1) : [];
+    
+    // Per i privilegi sottoclasse, cerca la sottoclasse selezionata
+    let subclassPrivs = [];
+    if (pgClass && pg.subclass && pgClass.sottoclassi) {
+        const subclassData = pgClass.sottoclassi.find(s => 
+            s.nome === pg.subclass || s.index === pg.subclass ||
+            (s.nome || '').toLowerCase() === (pg.subclass || '').toLowerCase()
+        );
+        if (subclassData) {
+            const classWithSubclass = { ...pgClass, sottoclasse: subclassData };
+            subclassPrivs = getSubclassPrivileges(classWithSubclass, pg.level || 1);
+        }
+    }
+    
     const backgroundPrivs = getBackgroundPrivileges(pgBackground);
     
     // Inventario

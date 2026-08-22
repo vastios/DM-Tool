@@ -747,7 +747,10 @@ export class PgController {
         // Step 1
         if (target.id === 'pg-race') this.updateRace(target.value);
         if (target.id === 'pg-class') this.updateClass(target.value);
-        if (target.id === 'pg-subclass') this.wizardData.subclass = target.value;
+        if (target.id === 'pg-subclass') {
+            this.wizardData.subclass = target.value;
+            this.render();
+        }
         if (target.id === 'pg-alignment') this.wizardData.alignment = target.value;
         if (target.id === 'pg-background') this.updateBackground(target.value);
         if (target.id === 'pg-gender') this.wizardData.gender = target.value;
