@@ -1018,7 +1018,6 @@ export function renderTraitsAndPrivileges(pgData, databases) {
             `;
         }
     }  // fine if (pgData.scelte_permanenti)
-    }  // fine if (selectedClass)
     
     html += '</div>';
     return html;
