@@ -315,16 +315,16 @@ export const warlock = {
           "descrizione": "Ti fornisce una predisposizione per gli incantesimi."
         },
         "6": {
-          "nome": "Privilegio di Patrono Ultraterreno",
-          "descrizione": "Ottieni un nuovo privilegio legato al tuo patrono ultraterreno."
+          "nome": "Resistenza Magica",
+          "descrizione": "Il tuo patrono ti protegge dalla magia nociva. Hai vantaggio sui tiri salvezza contro incantesimi e altri effetti magici."
         },
         "10": {
-          "nome": "Privilegio di Patrono Ultraterreno",
-          "descrizione": "Ottieni un nuovo privilegio legato al tuo patrono ultraterreno."
+          "nome": "Mente Illuminata",
+          "descrizione": "Il tuo patrono ti dona una maggiore comprensione del sapere cosmico. Puoi comunicare telepaticamente con qualsiasi creatura entro 18 metri che tu possa vedere. Non è necessario che la creatura conosca una lingua per comunicare con te in questo modo."
         },
         "14": {
-          "nome": "Privilegio di Patrono Ultraterreno",
-          "descrizione": "Ottieni un nuovo privilegio legato al tuo patrono ultraterreno."
+          "nome": "Salto Dimensionale",
+          "descrizione": "Puoi usare la tua azione per teletrasportarti in uno spazio non occupato entro 36 metri che puoi vedere. In alternativa, puoi teletrasportare una creatura consenzibile che tocchi. Una volta usato questo privilegio, non puoi usarlo di nuovo finché non completi un riposo breve o lungo."
         }
       }
     },
