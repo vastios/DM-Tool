@@ -883,6 +883,16 @@ export class PgController {
             this.wizardData.pactBoon = target.value;
             this.render();
         }
+        // pg-level: also handle onchange (fallback for browsers where oninput
+        // doesn't fire on number spinner arrows)
+        if (target.id === 'pg-level') {
+            const newLevel = parseInt(target.value) || 1;
+            if (newLevel !== this.wizardData.level) {
+                this.wizardData.level = newLevel;
+                this.recalculateHp();
+                this.render();
+            }
+        }
         if (target.id === 'pg-alignment') this.wizardData.alignment = target.value;
         if (target.id === 'pg-background') this.updateBackground(target.value);
         if (target.id === 'pg-gender') this.wizardData.gender = target.value;
