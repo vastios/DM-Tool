@@ -877,7 +877,7 @@ export function renderTraitsAndPrivileges(pgData, databases) {
     }
 
     // Scelte permanenti per tutte le classi (NON Warlock — gestito sopra)
-    if (pgData.scelte_permanenti && selectedClass.index !== 'warlock') {
+    if (pgData.scelte_permanenti && selectedClass && selectedClass.index !== 'warlock') {
         const sp = pgData.scelte_permanenti;
 
         // Stile di Combattimento (Fighter/Paladin/Ranger)
