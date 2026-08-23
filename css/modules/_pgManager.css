@@ -7268,6 +7268,125 @@ label.spell-cb input {
     font-size: 1.15rem;
 }
 
+/* === Bottone Modifica Scelte (scheda PG) === */
+.btn-choices-sheet {
+    background: linear-gradient(135deg, #6c7a89 0%, #4a5568 100%);
+    border: 2px solid #95a5a6;
+    color: #fff;
+    margin-top: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: 'Cinzel', serif;
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 8px rgba(108, 122, 137, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-choices-sheet:hover {
+    background: linear-gradient(135deg, #7f8c8d 0%, #6c7a89 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(108, 122, 137, 0.4);
+}
+
+.btn-choices-sheet .btn-icon {
+    font-size: 1rem;
+}
+
+.btn-choices-sheet .btn-text {
+    font-size: 1.15rem;
+}
+
+/* === Choices Editor Modal === */
+.choices-editor-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(2px);
+}
+
+.choices-editor-modal {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.choices-editor-content {
+    background: var(--bg-color, #1a1a1a);
+    border: 2px solid #6c7a89;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 900px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+}
+
+.choices-editor-header {
+    background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    color: #fff;
+    padding: 14px 20px;
+    border-radius: 6px 6px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #6c7a89;
+}
+
+.choices-editor-header h3 {
+    margin: 0;
+    font-family: 'Cinzel', serif;
+    font-size: 1.2rem;
+    color: #fff;
+}
+
+.choices-editor-body {
+    padding: 20px;
+    overflow-y: auto;
+    flex: 1;
+    background: var(--bg-color, #1a1a1a);
+}
+
+.choices-editor-footer {
+    padding: 14px 20px;
+    border-top: 2px solid #6c7a89;
+    background: rgba(108, 122, 137, 0.1);
+    border-radius: 0 0 6px 6px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+body.light-theme .choices-editor-content {
+    background: #f5f5f5;
+}
+
+body.light-theme .choices-editor-body {
+    background: #f5f5f5;
+}
+
+body.light-theme .choices-editor-header {
+    background: linear-gradient(135deg, #7f8c8d 0%, #4a5568 100%);
+}
+
 /* ============================================================================
    LEVEL UP - SPELL SELECTION
    ============================================================================ */
@@ -8040,3 +8159,867 @@ label.spell-cb input {
     font-size: 1.05rem;
     min-width: 150px;
 }
+
+/* ========================================================================
+   WARLOCK STEP 4 — Sezioni specifiche (Patron spells, Invocations, Arcanum)
+   ======================================================================== */
+
+.warlock-step4-container {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 2px dashed rgba(155, 89, 182, 0.4);
+}
+
+.warlock-info-banner {
+    background: linear-gradient(135deg, rgba(155, 89, 182, 0.15) 0%, rgba(212, 175, 55, 0.08) 100%);
+    padding: 12px 16px;
+    border-radius: 6px;
+    border-left: 4px solid #9b59b6;
+    margin-bottom: 1.5rem;
+}
+
+.warlock-info-banner h3 {
+    color: #c084d8;
+    margin: 0 0 6px 0;
+    font-family: 'Cinzel', serif;
+}
+
+.warlock-info-banner p {
+    margin: 4px 0;
+    font-size: 0.9rem;
+    color: #ccc;
+}
+
+.warlock-info-banner .warn {
+    color: #f0ad4e;
+    font-style: italic;
+}
+
+.warlock-section {
+    background: rgba(40, 30, 50, 0.4);
+    border: 1px solid rgba(155, 89, 182, 0.3);
+    border-radius: 6px;
+    padding: 14px;
+    margin-bottom: 1.2rem;
+}
+
+.warlock-section > .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.warlock-section h4 {
+    color: #c084d8;
+    margin: 0;
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+}
+
+.warlock-section .section-hint {
+    color: #aaa;
+    font-size: 0.85rem;
+    margin: 4px 0 10px 0;
+    font-style: italic;
+}
+
+.warlock-section .locked-msg {
+    color: #888;
+    font-style: italic;
+    text-align: center;
+    padding: 16px;
+}
+
+.counter-badge {
+    background: rgba(155, 89, 182, 0.2);
+    border: 1px solid rgba(155, 89, 182, 0.5);
+    color: #c084d8;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+.counter-badge.at-limit {
+    background: rgba(92, 184, 92, 0.2);
+    border-color: rgba(92, 184, 92, 0.5);
+    color: #5cb85c;
+}
+
+.counter-badge.over-limit {
+    background: rgba(217, 83, 79, 0.25);
+    border-color: rgba(217, 83, 79, 0.6);
+    color: #d9534f;
+}
+
+/* Patron expanded spells (read-only) */
+.patron-expanded-spells .patron-spells-list {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.patron-spell-row {
+    display: flex;
+    gap: 8px;
+    padding: 4px 0;
+    font-size: 0.9rem;
+    border-bottom: 1px dotted rgba(255, 255, 255, 0.08);
+}
+
+.patron-spell-row:last-child { border-bottom: none; }
+
+.patron-spell-row .spell-level {
+    color: #d4af37;
+    font-weight: bold;
+    min-width: 35px;
+}
+
+.patron-spell-row .spell-list {
+    color: #ddd;
+}
+
+.locked-levels {
+    margin-top: 8px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.locked-lvl {
+    color: #777;
+    font-size: 0.8rem;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 2px 8px;
+    border-radius: 3px;
+}
+
+/* Eldritch Invocations grid */
+.invocations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 10px;
+}
+
+.invocation-cb {
+    display: flex;
+    gap: 8px;
+    padding: 10px;
+    background: rgba(50, 40, 60, 0.5);
+    border: 1px solid rgba(155, 89, 182, 0.2);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    align-items: flex-start;
+}
+
+.invocation-cb:hover {
+    background: rgba(60, 48, 72, 0.6);
+    border-color: rgba(155, 89, 182, 0.5);
+}
+
+.invocation-cb.selected {
+    background: rgba(155, 89, 182, 0.15);
+    border-color: #9b59b6;
+}
+
+.invocation-cb input[type="checkbox"] {
+    margin-top: 3px;
+    flex-shrink: 0;
+}
+
+.invocation-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.inv-name {
+    color: #f0ad4e;
+    display: block;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.inv-prereq {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 1px 6px;
+    border-radius: 8px;
+    margin: 2px 0;
+    font-style: italic;
+}
+
+.inv-prereq.ok {
+    background: rgba(92, 184, 92, 0.15);
+    color: #5cb85c;
+}
+
+.inv-prereq.locked {
+    background: rgba(217, 83, 79, 0.2);
+    color: #d9534f;
+}
+
+.inv-desc {
+    color: #bbb;
+    font-size: 0.78rem;
+    line-height: 1.4;
+    margin: 4px 0 0 0;
+}
+
+.locked-invocations {
+    margin-top: 12px;
+    border-top: 1px solid rgba(155, 89, 182, 0.2);
+    padding-top: 8px;
+}
+
+.locked-invocations summary {
+    cursor: pointer;
+    color: #888;
+    font-size: 0.85rem;
+    font-style: italic;
+    padding: 4px 0;
+}
+
+.locked-invocations summary:hover {
+    color: #aaa;
+}
+
+.locked-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.locked-invocation {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 6px 8px;
+    border-radius: 3px;
+    opacity: 0.6;
+}
+
+/* Mystic Arcanum */
+.arcanum-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.arcanum-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.arcanum-label {
+    color: #d4af37;
+    font-weight: bold;
+    font-size: 0.85rem;
+}
+
+.arcanum-select {
+    background: var(--input-bg, #252525);
+    border: 1px solid rgba(155, 89, 182, 0.3);
+    color: #fff;
+    padding: 6px 8px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.arcanum-select:focus {
+    border-color: #9b59b6;
+    outline: none;
+}
+
+/* Pact Tome cantrips */
+.tome-cantrips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 6px;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
+.tome-cantrips-grid .spell-cb {
+    padding: 6px 8px;
+    background: rgba(50, 40, 60, 0.4);
+    border: 1px solid rgba(155, 89, 182, 0.2);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.tome-cantrips-grid .spell-cb:hover {
+    background: rgba(60, 48, 72, 0.6);
+}
+
+.tome-cantrips-grid .spell-cb.selected {
+    background: rgba(155, 89, 182, 0.2);
+    border-color: #9b59b6;
+}
+
+.tome-cantrips-grid .spell-cb .sk-name {
+    font-size: 0.82rem;
+    color: #ddd;
+}
+
+/* Level warning */
+.level-warning {
+    background: rgba(217, 83, 79, 0.15);
+    color: #d9534f;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    margin: 6px 0;
+}
+
+/* Summary warlock section */
+.warlock-summary {
+    background: rgba(155, 89, 182, 0.08);
+    border-left: 3px solid #9b59b6;
+}
+
+.warlock-summary h4 {
+    color: #c084d8;
+}
+
+/* Character sheet extras */
+.warlock-extras-container {
+    margin-top: 1rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid rgba(155, 89, 182, 0.3);
+}
+
+.warlock-extra-section {
+    margin-bottom: 0.8rem;
+}
+
+.warlock-extra-section h4 {
+    color: #c084d8;
+    font-size: 0.85rem;
+    margin: 0 0 4px 0;
+    font-family: 'Cinzel', serif;
+}
+
+.spells-mini-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.spell-tag-mini.arcanum-tag {
+    background: rgba(212, 175, 55, 0.15);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    color: #d4af37;
+}
+
+.spell-tag-mini.invocation-tag {
+    background: rgba(155, 89, 182, 0.15);
+    border: 1px solid rgba(155, 89, 182, 0.4);
+    color: #c084d8;
+}
+
+/* Light theme overrides */
+body.light-theme .warlock-section {
+    background: rgba(155, 89, 182, 0.05);
+    border-color: rgba(155, 89, 182, 0.2);
+}
+
+body.light-theme .invocation-cb {
+    background: rgba(155, 89, 182, 0.05);
+}
+
+body.light-theme .invocation-cb:hover {
+    background: rgba(155, 89, 182, 0.1);
+}
+
+body.light-theme .invocation-cb.selected {
+    background: rgba(155, 89, 182, 0.15);
+}
+
+body.light-theme .warlock-info-banner {
+    background: linear-gradient(135deg, rgba(155, 89, 182, 0.08) 0%, rgba(212, 175, 55, 0.05) 100%);
+}
+
+body.light-theme .patron-expanded-spells .patron-spells-list,
+body.light-theme .tome-cantrips-grid {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+body.light-theme .warlock-summary {
+    background: rgba(155, 89, 182, 0.06);
+}
+
+/* ========================================================================
+   LEVEL-UP WIZARD — STEP 3 WARLOCK (suppliche occulte + arcanum mistico)
+   ======================================================================== */
+
+.lu-warlock-banner {
+    background: linear-gradient(135deg, rgba(155, 89, 182, 0.15) 0%, rgba(212, 175, 55, 0.08) 100%);
+    border-left: 4px solid #9b59b6;
+    padding: 12px 16px;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+.lu-warlock-banner h4 {
+    color: #c084d8;
+    margin: 0;
+    font-family: 'Cinzel', serif;
+}
+
+.lu-warlock-banner .lu-desc {
+    margin: 4px 0 0 0;
+    color: #ccc;
+    font-size: 0.9rem;
+}
+
+.lu-invocations-section {
+    border: 1px solid rgba(155, 89, 182, 0.3);
+    border-radius: 6px;
+    padding: 14px;
+    background: rgba(40, 30, 50, 0.3);
+}
+
+.lu-invocations-section h4 {
+    color: #c084d8;
+    margin-top: 0;
+}
+
+.lu-invocations-section .lu-desc {
+    color: #ddd;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+}
+
+.lu-invocations-section .lu-hint {
+    color: #aaa;
+    font-size: 0.82rem;
+    font-style: italic;
+    margin: 4px 0 10px 0;
+}
+
+.lu-spell-counter {
+    background: rgba(0, 0, 0, 0.25);
+    padding: 6px 10px;
+    border-radius: 4px;
+    margin: 6px 0 10px 0;
+    font-size: 0.9rem;
+    color: #ddd;
+}
+
+.lu-spell-counter .lu-ok {
+    color: #5cb85c;
+    margin-left: 8px;
+}
+
+.lu-spell-counter .lu-warn {
+    color: #d9534f;
+    margin-left: 8px;
+    font-weight: bold;
+}
+
+.lu-invocations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.lu-invocation-cb {
+    display: flex;
+    gap: 8px;
+    padding: 10px;
+    background: rgba(50, 40, 60, 0.5);
+    border: 1px solid rgba(155, 89, 182, 0.2);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    align-items: flex-start;
+}
+
+.lu-invocation-cb:hover {
+    background: rgba(60, 48, 72, 0.7);
+    border-color: rgba(155, 89, 182, 0.5);
+}
+
+.lu-invocation-cb.selected {
+    background: rgba(155, 89, 182, 0.18);
+    border-color: #9b59b6;
+}
+
+.lu-invocation-cb input[type="checkbox"] {
+    margin-top: 3px;
+    flex-shrink: 0;
+}
+
+.lu-invocation-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.lu-inv-name {
+    color: #f0ad4e;
+    display: block;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.lu-inv-prereq {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 1px 6px;
+    border-radius: 8px;
+    margin: 2px 0;
+    font-style: italic;
+}
+
+.lu-inv-prereq.ok {
+    background: rgba(92, 184, 92, 0.15);
+    color: #5cb85c;
+}
+
+.lu-inv-prereq.locked {
+    background: rgba(217, 83, 79, 0.2);
+    color: #d9534f;
+}
+
+.lu-inv-desc {
+    color: #bbb;
+    font-size: 0.78rem;
+    line-height: 1.4;
+    margin: 4px 0 0 0;
+}
+
+.lu-locked-invocations {
+    margin-top: 10px;
+    border-top: 1px solid rgba(155, 89, 182, 0.2);
+    padding-top: 8px;
+}
+
+.lu-locked-invocations summary {
+    cursor: pointer;
+    color: #888;
+    font-size: 0.85rem;
+    font-style: italic;
+    padding: 4px 0;
+}
+
+.lu-locked-invocations summary:hover {
+    color: #aaa;
+}
+
+.lu-locked-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.lu-locked-invocation {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 6px 8px;
+    border-radius: 3px;
+    opacity: 0.65;
+}
+
+.lu-locked-invocation strong {
+    color: #ccc;
+    font-size: 0.85rem;
+}
+
+/* Arcanum mistico section */
+.lu-arcanum-section {
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 6px;
+    padding: 14px;
+    background: rgba(50, 40, 30, 0.3);
+    margin-top: 1rem;
+}
+
+.lu-arcanum-section h4 {
+    color: #d4af37;
+    margin-top: 0;
+}
+
+.lu-arcanum-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.lu-arcanum-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.lu-arcanum-label {
+    color: #d4af37;
+    font-weight: bold;
+    font-size: 0.85rem;
+}
+
+.lu-arcanum-select {
+    background: var(--input-bg, #252525);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    color: #fff;
+    padding: 6px 8px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.lu-arcanum-select:focus {
+    border-color: #d4af37;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+}
+
+/* Light theme overrides for level-up step 3 */
+body.light-theme .lu-warlock-banner {
+    background: linear-gradient(135deg, rgba(155, 89, 182, 0.08) 0%, rgba(212, 175, 55, 0.05) 100%);
+}
+
+body.light-theme .lu-invocations-section,
+body.light-theme .lu-arcanum-section {
+    background: rgba(155, 89, 182, 0.04);
+}
+
+body.light-theme .lu-invocation-cb {
+    background: rgba(155, 89, 182, 0.05);
+}
+
+body.light-theme .lu-invocation-cb:hover {
+    background: rgba(155, 89, 182, 0.1);
+}
+
+body.light-theme .lu-invocation-cb.selected {
+    background: rgba(155, 89, 182, 0.15);
+}
+
+body.light-theme .lu-spell-counter {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+/* ========================================================================
+   SCELTE DI CLASSE — tutte le classi (eccetto Warlock)
+   Stili condivisi per PgStep4ClassChoices e PgStep7Summary
+   ======================================================================== */
+
+.class-choices-container {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 2px dashed rgba(240, 173, 78, 0.4);
+}
+
+.class-choice-section {
+    background: rgba(50, 40, 20, 0.3);
+    border: 1px solid rgba(240, 173, 78, 0.3);
+    border-radius: 6px;
+    padding: 14px;
+    margin-bottom: 1.2rem;
+}
+
+.class-choice-section > .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.class-choice-section h4 {
+    color: #f0ad4e;
+    margin: 0;
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+}
+
+.class-choice-section .section-hint {
+    color: #aaa;
+    font-size: 0.85rem;
+    margin: 4px 0 10px 0;
+    font-style: italic;
+}
+
+.class-choice-section .locked-msg {
+    color: #888;
+    font-style: italic;
+    text-align: center;
+    padding: 16px;
+}
+
+.choices-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.expertise-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+}
+
+.magical-secrets-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
+.choice-cb {
+    display: flex;
+    gap: 8px;
+    padding: 10px;
+    background: rgba(60, 50, 30, 0.4);
+    border: 1px solid rgba(240, 173, 78, 0.2);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    align-items: flex-start;
+}
+
+.choice-cb:hover {
+    background: rgba(70, 58, 35, 0.6);
+    border-color: rgba(240, 173, 78, 0.5);
+}
+
+.choice-cb.selected {
+    background: rgba(240, 173, 78, 0.18);
+    border-color: #f0ad4e;
+}
+
+.choice-cb input[type="checkbox"] {
+    margin-top: 3px;
+    flex-shrink: 0;
+}
+
+.choice-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.choice-name {
+    color: #f0ad4e;
+    display: block;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.choice-desc {
+    color: #bbb;
+    font-size: 0.78rem;
+    line-height: 1.4;
+    margin: 4px 0 0 0;
+}
+
+.choice-cb.compact {
+    padding: 6px 8px;
+    align-items: center;
+}
+
+.choice-cb.compact .choice-name {
+    font-size: 0.82rem;
+    color: #ddd;
+}
+
+.spell-lvl-mini {
+    background: rgba(212, 175, 55, 0.2);
+    color: #d4af37;
+    padding: 1px 6px;
+    border-radius: 8px;
+    font-size: 0.7rem;
+    margin-left: 4px;
+}
+
+/* Dragon ancestry select */
+.dragon-select {
+    background: var(--input-bg, #252525);
+    border: 1px solid rgba(240, 173, 78, 0.3);
+    color: #fff;
+    padding: 6px 8px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    width: 100%;
+}
+
+.dragon-select:focus {
+    border-color: #f0ad4e;
+    outline: none;
+}
+
+/* Hunter options rows */
+.hunter-option-row {
+    margin-bottom: 12px;
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
+.hunter-option-row.locked {
+    opacity: 0.6;
+}
+
+.hunter-select {
+    background: var(--input-bg, #252525);
+    border: 1px solid rgba(240, 173, 78, 0.3);
+    color: #fff;
+    padding: 6px 8px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    width: 100%;
+    margin-top: 4px;
+}
+
+.choice-hint {
+    color: #aaa;
+    font-size: 0.78rem;
+    margin: 4px 0 0 0;
+    font-style: italic;
+}
+
+/* Summary section */
+.class-choices-summary {
+    background: rgba(240, 173, 78, 0.06);
+    border-left: 3px solid #f0ad4e;
+}
+
+.class-choices-summary h4 {
+    color: #f0ad4e;
+}
+
+/* Light theme overrides */
+body.light-theme .class-choice-section {
+    background: rgba(240, 173, 78, 0.04);
+    border-color: rgba(240, 173, 78, 0.2);
+}
+
+body.light-theme .choice-cb {
+    background: rgba(240, 173, 78, 0.05);
+}
+
+body.light-theme .choice-cb:hover {
+    background: rgba(240, 173, 78, 0.1);
+}
+
+body.light-theme .choice-cb.selected {
+    background: rgba(240, 173, 78, 0.15);
+}
+
+body.light-theme .magical-secrets-grid {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+body.light-theme .class-choices-summary {
+    background: rgba(240, 173, 78, 0.08);
+}
+
+
+

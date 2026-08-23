@@ -365,11 +365,22 @@ export const sorcerer = {
     {
       "nome": "Lineaggio Drago",
       "descrizione": "Il tuo sangue porta il potere di un drago, conferendoti resistenze e abilità draconiche.",
+      "dragon_types": [
+        { "nome": "Nero",   "tipo_danno": "Acido",     "descrizione": "Draghi degli acidi che vivono in paludi e caverne umide." },
+        { "nome": "Blu",    "tipo_danno": "Fulmine",   "descrizione": "Draghi del deserto che sputano saette di fulmine." },
+        { "nome": "Rosso",  "tipo_danno": "Fuoco",     "descrizione": "Draghi tirannici che abitano regioni vulcaniche." },
+        { "nome": "Bianco", "tipo_danno": "Freddo",    "descrizione": "Draghi delle terre gelide e artiche." },
+        { "nome": "Oro",    "tipo_danno": "Fuoco",     "descrizione": "Draghi metallici nobili e benevoli." },
+        { "nome": "Argento","tipo_danno": "Freddo",    "descrizione": "Draghi metallici protettori degli innocenti." },
+        { "nome": "Ottone", "tipo_danno": "Fuoco",     "descrizione": "Draghi metallici socievoli che amano conversare." },
+        { "nome": "Bronzo", "tipo_danno": "Fulmine",   "descrizione": "Draghi metallici amanti del mare e della battaglia." },
+        { "nome": "Rame",   "tipo_danno": "Acido",     "descrizione": "Draghi metallici scherzosi che vivono sulle montagne." }
+      ],
       "privilegi": {
         "1": [
           {
             "nome": "Ascendenza Draconica",
-            "descrizione": "Scegli un tipo di drago come antenato: Nero (acido), Blu (fulmine), Blu (fulmine), Rosso (fuoco), Bianco (freddo), Oro (fuoco), Argento (freddo), Ottone (fuoco), Bronzo (fulmine), Rame (acido). Parli draconico e hai vantaggio sui tiri di Carisma quando interagisci con draghi."
+            "descrizione": "Scegli un tipo di drago come antenato (vedi dragon_types). Parli draconico e hai vantaggio sui tiri di Carisma quando interagisci con draghi."
           },
           {
             "nome": "Resistenza Draconica",

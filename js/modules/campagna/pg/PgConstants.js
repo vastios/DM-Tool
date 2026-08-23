@@ -196,6 +196,7 @@ export const EMPTY_PG = {
     className: '',
     subclass: '',
     subclassName: '',
+    pactBoon: '', // Dono del Patto (Warlock) — privilegio di classe scelto al liv. 3, distinto dal Patrono
     level: 1,
     background: '',
     backgroundName: '',
@@ -247,6 +248,36 @@ export const EMPTY_PG = {
     equippedSlots: {},  // Slot equipaggiati: { mainHand: item, body: item, ... }
     _acceptedSuggestions: [],
     _selectedChoices: {},
+    
+    // === Campi specifici Warlock ===
+    eldritchInvocations: [],   // Array di nomi di suppliche occulte selezionate
+    mysticArcanum: {},         // { 6: "spellname", 7: null, 8: null, 9: null }
+    pactTomeCantrips: [],      // 3 trucchetti da qualsiasi lista (solo Patto del Tomo)
+    
+    // === Scelte permanenti per tutte le classi ===
+    scelte_permanenti: {
+        // Stile di Combattimento (Fighter liv.1, Paladin liv.2, Ranger liv.2; +1 al liv.10 se Campione)
+        stili_combattimento: [],
+        // Metamagia (Stregone: 2 al liv.3, +1 al liv.10, +1 al liv.17)
+        metamagia: [],
+        // Tipo di drago (Stregone Lineaggio Drago liv.1)
+        ascendenza_draconica: '',
+        // Maestria (Bardo liv.3 +2, liv.10 +2; Ladro liv.1 +2, liv.6 +2)
+        maestria: [],
+        // Segreti Magici (Bardo: 2 al liv.6 se Sapienza, 2 al liv.10/14/18)
+        segreti_magici: [],
+        // Nemico Prescelto (Ranger: 1 al liv.1, +1 al liv.6, +1 al liv.14)
+        nemici_prescelti: [],
+        // Terreno Prescelto (Ranger: 1 al liv.1, +1 al liv.6, +1 al liv.10)
+        terreni_prescelti: [],
+        // Opzioni Cacciatore (Ranger sottoclasse Cacciatore: scelta singola a liv.3, 7, 15)
+        preda_cacciatore: '',    // Nome opzione scelta al liv.3
+        difesa_cacciatore: '',   // Nome opzione scelta al liv.7
+        cacciatore_supremo: '',  // Nome opzione scelta al liv.15
+        // Maestria degli Incantesimi (Mago liv.18: 1 incantesimo 1° + 1 di 2° livello a volontà)
+        maestria_incantesimi_1: '',
+        maestria_incantesimi_2: ''
+    },
     
     treasure: {
         cp: 0, sp: 0, ep: 0, gp: 0, pp: 0,

@@ -240,6 +240,39 @@ export const fighter = {
       }
     }
   ],
+  // === STILI DI COMBATTIMENTO (scelti al liv. 1, +1 al liv. 10 se Campione) ===
+  "stili_combattimento": [
+    {
+      "nome": "Archi Possenti",
+      "descrizione": "Quando usi un'arma da tiro per attaccare una creatura che è entro la gittata normale dell'arma o entro la gittata lunga, subisci svantaggio al tiro per colpire se la creatura è oltre la gittata normale, ma non hai svantaggio per la gittata lunga.",
+      "livello": 1
+    },
+    {
+      "nome": "Difesa",
+      "descrizione": "Mentre indossi un'armatura, ottieni un bonus +1 alla CA.",
+      "livello": 1
+    },
+    {
+      "nome": "Duellare",
+      "descrizione": "Quando impugni un'arma da mischia in una mano e nessun'altra arma, ottieni un bonus +2 al danno con quell'arma.",
+      "livello": 1
+    },
+    {
+      "nome": "Arma a Due Mani Possente",
+      "descrizione": "Quando effettui un tiro per colpire con un'arma che impugni a due mani, puoi riaggiungere 1 o 2 al tiro (non puoi riaggiungere dopo aver visto il risultato). L'arma deve avere la proprietà a due mani o versatile per beneficiarne.",
+      "livello": 1
+    },
+    {
+      "nome": "Protezione",
+      "descrizione": "Quando una creatura che puoi vedere attacca un bersaglio diverso da te entro 1,5 metri da te, puoi usare la tua reazione per imporre svantaggio al tiro per colpire. Devi impugnare uno scudo.",
+      "livello": 1
+    },
+    {
+      "nome": "Combattimento a Due Armi",
+      "descrizione": "Quando combatti con due armi, puoi aggiungere il tuo modificatore di caratteristica al danno del secondo attacco.",
+      "livello": 1
+    }
+  ],
   "index": "fighter",
   "name": "Guerriero",
   "hit_die": 10,

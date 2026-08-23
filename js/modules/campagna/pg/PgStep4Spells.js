@@ -24,6 +24,9 @@ import {
     isKnownCaster,
     isPreparedCaster
 } from '../../../../database/classSpells.js';
+import { renderWarlockStep4Sections } from './PgStep4Warlock.js';
+import { renderClassChoicesStep4Sections } from './PgStep4ClassChoices.js';
+
 
 // Mappatura indizi classi (inglese) -> nomi italiani
 const CLASS_NAME_IT = {
@@ -252,7 +255,7 @@ function renderPreparedCasterView(classNameIt, pgLevel, classSpellsByLevel, maxS
  * Renderizza lo Step 4 per KNOWN CASTERS e MAGO
  * Selezione attiva di trucchetti e incantesimi
  */
-function renderKnownCasterView(classNameIt, pgLevel, classSpellsByLevel, maxSpellLevel, knownSpells, maxKnown) {
+function renderKnownCasterView(classNameIt, pgLevel, classSpellsByLevel, maxSpellLevel, knownSpells, maxKnown, pgData = null, selectedClass = null) {
     const maxCantrips = getMaxCantripsKnown(classNameIt, pgLevel);
     
     // Conta selezionati
@@ -277,8 +280,12 @@ function renderKnownCasterView(classNameIt, pgLevel, classSpellsByLevel, maxSpel
     
     // Badge tipo
     const isWizard = classNameIt === 'Mago';
+    const isWarlock = classNameIt === 'Warlock';
     const badgeIcon = isWizard ? '📖' : '📚';
     const badgeText = isWizard ? 'Grimorio del Mago' : 'Incantesimi Conosciuti';
+    
+    // Per Warlock: maxSpellLevel è sempre 5 (pact magic). I livelli 6-9 sono gestiti tramite Arcanum Mistico.
+    const effectiveMaxSpellLevel = isWarlock ? Math.min(maxSpellLevel, 5) : maxSpellLevel;
     
     // Contatori
     let countersHtml = '<div class="spells-counters-container">';
@@ -302,7 +309,8 @@ function renderKnownCasterView(classNameIt, pgLevel, classSpellsByLevel, maxSpel
         <div class="spells-summary" id="spells-summary">
             <p>Selezionati: <strong class="total-count">${knownSpells.length}</strong> 
                (<span class="cantrips-total">${cantripsCount}</span> trucchetti + <span class="spells-total">${spellsCount}</span> incantesimi)</p>
-            <p class="hint">Livello PG: ${pgLevel} | Max: ${levelLabels[maxSpellLevel]}</p>
+            <p class="hint">Livello PG: ${pgLevel} | Max: ${levelLabels[effectiveMaxSpellLevel]}</p>
+            ${isWarlock ? `<p class="hint">⚠️ Warlock: gli incantesimi di 6°-9° livello sono gestiti tramite <em>Arcanum Mistico</em> (vedi sezione dedicata).</p>` : ''}
         </div>
     `;
     
@@ -335,8 +343,8 @@ function renderKnownCasterView(classNameIt, pgLevel, classSpellsByLevel, maxSpel
         `;
     }
     
-    // Incantesimi per livello
-    for (let level = 1; level <= maxSpellLevel; level++) {
+    // Incantesimi per livello (per warlock: solo 1-5)
+    for (let level = 1; level <= effectiveMaxSpellLevel; level++) {
         const spells = classSpellsByLevel[level] || [];
         if (spells.length === 0) continue;
         
@@ -364,21 +372,36 @@ function renderKnownCasterView(classNameIt, pgLevel, classSpellsByLevel, maxSpel
         `;
     }
     
-    // Livelli bloccati
+    // Livelli bloccati (per warlock: 6-9 → rimando ad Arcanum Mistico)
     let lockedHtml = '';
-    for (let level = maxSpellLevel + 1; level <= 9; level++) {
-        const spells = classSpellsByLevel[level] || [];
-        if (spells.length === 0) continue;
-        
-        lockedHtml += `
-            <div class="spells-level-section locked">
-                <div class="spells-level-header">
-                    <h4>🔒 ${levelLabels[level]}</h4>
-                    <span class="spells-locked-hint">Disponibile dal livello ${getLevelForSpellLevel(classNameIt, level)}</span>
+    if (isWarlock) {
+        // Per warlock: livelli 6-9 → gestiti da Arcanum Mistico (non mostrare come bloccati)
+        // Vengono mostrati nella sezione dedicata più sotto
+    } else {
+        for (let level = effectiveMaxSpellLevel + 1; level <= 9; level++) {
+            const spells = classSpellsByLevel[level] || [];
+            if (spells.length === 0) continue;
+            
+            lockedHtml += `
+                <div class="spells-level-section locked">
+                    <div class="spells-level-header">
+                        <h4>🔒 ${levelLabels[level]}</h4>
+                        <span class="spells-locked-hint">Disponibile dal livello ${getLevelForSpellLevel(classNameIt, level)}</span>
+                    </div>
                 </div>
-            </div>
-        `;
+            `;
+        }
     }
+    
+    // Per Warlock: aggiungi sezioni specifiche (patron spells, suppliche, arcanum, pact tome)
+    const warlockSections = isWarlock && pgData && selectedClass
+        ? renderWarlockStep4Sections(pgData, { selectedClass })
+        : '';
+
+    // Per altre classi: aggiungi sezioni specifiche (fighting style, metamagia, maestria, etc.)
+    const classChoicesSections = !isWarlock && pgData && selectedClass
+        ? renderClassChoicesStep4Sections(pgData, { selectedClass })
+        : '';
     
     return `
         <div class="wizard-form">
@@ -397,6 +420,9 @@ function renderKnownCasterView(classNameIt, pgLevel, classSpellsByLevel, maxSpel
                     ${sectionsHtml}
                     ${lockedHtml}
                 </div>
+                
+                ${warlockSections}
+                ${classChoicesSections}
             </div>
         </div>
     `;
@@ -423,12 +449,17 @@ export function renderStep4Spells(pgData, databases) {
     
     const classSpellsByLevel = spellLevelsByClass[classNameIt];
     
+    // Per classi NON incantatrici (Barbaro, Guerriero, Monaco, Ladro): mostra solo le scelte di classe
     if (!classSpellsByLevel || Object.keys(classSpellsByLevel).length === 0) {
+        const classChoicesHtml = renderClassChoicesStep4Sections(pgData, databases);
+        if (classChoicesHtml) {
+            return `<div class="wizard-form"><div class="form-section">${classChoicesHtml}</div></div>`;
+        }
         return `
             <div class="wizard-form">
-                <div class="warning-box">
-                    <h4>⚠️ Incantesimi non trovati</h4>
-                    <p>Non ci sono incantesimi definiti per ${classNameIt}.</p>
+                <div class="info-box">
+                    <h4>⚔️ Non Incantatore</h4>
+                    <p>La classe selezionata non è un'incantatrice. Procedi oltre.</p>
                 </div>
             </div>
         `;
@@ -449,11 +480,17 @@ export function renderStep4Spells(pgData, databases) {
     
     if (!selectSpells) {
         // Prepared casters: solo trucchetti selezionabili
-        return renderPreparedCasterView(classNameIt, pgLevel, classSpellsByLevel, maxSpellLevel, knownSpells);
+        const preparedHtml = renderPreparedCasterView(classNameIt, pgLevel, classSpellsByLevel, maxSpellLevel, knownSpells);
+        // Per clerici/paladins/etc: aggiungi sezioni scelte classe dopo la sezione incantesimi
+        const classChoicesHtml = renderClassChoicesStep4Sections(pgData, databases);
+        if (classChoicesHtml) {
+            return preparedHtml + `<div class="form-section" style="margin-top:1rem;">${classChoicesHtml}</div>`;
+        }
+        return preparedHtml;
     }
     
     // Known casters + Mago: selezione attiva
-    return renderKnownCasterView(classNameIt, pgLevel, classSpellsByLevel, maxSpellLevel, knownSpells, maxKnown);
+    return renderKnownCasterView(classNameIt, pgLevel, classSpellsByLevel, maxSpellLevel, knownSpells, maxKnown, pgData, selectedClass);
 }
 
 console.log('📋 [PgStep4Spells] Modulo caricato v2.3.0');

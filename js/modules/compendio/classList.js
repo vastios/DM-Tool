@@ -382,12 +382,61 @@ function formatSubclasses(subclasses) {
                 `;
             }).join('');
         }
+
+        // Renderizza la lista incantesimi ampliati del patrono (warlock)
+        let patronSpellsHtml = '';
+        if (sub.patron_spells && Object.keys(sub.patron_spells).length > 0) {
+            const rows = Object.entries(sub.patron_spells).map(([lvl, spells]) => `
+                <div class="domain-spells-row">
+                    <span class="spell-level">${lvl}° liv.:</span>
+                    <span class="spell-list">${Array.isArray(spells) ? spells.map(escapeHtml).join(', ') : escapeHtml(String(spells))}</span>
+                </div>
+            `).join('');
+            patronSpellsHtml = `
+                <div class="domain-spells patron-spells">
+                    <h4>Incantesimi Ampliati</h4>
+                    ${rows}
+                </div>
+            `;
+        }
         
         return `
             <div class="subclass-card featured">
                 <h4>${escapeHtml(String(sub.nome || ''))}</h4>
                 <p class="subclass-card-desc">${escapeHtml(String(sub.descrizione || ''))}</p>
+                ${patronSpellsHtml}
                 ${privilegiHtml ? `<div class="subclass-privilegi">${privilegiHtml}</div>` : ''}
+            </div>
+        `;
+    }).join('');
+}
+
+// === DONI DEL PATTO (warlock — privilegi di classe, NON sottoclassi) ===
+function formatDoniDelPatto(doni) {
+    if (!doni || !Array.isArray(doni) || doni.length === 0) return '';
+    
+    return doni.map(dono => {
+        const livello = dono.livello || 3;
+        return `
+            <div class="subclass-card pact-boon-card">
+                <h4>${escapeHtml(String(dono.nome || ''))} <span class="level-badge">Liv. ${livello}</span></h4>
+                <p class="subclass-card-desc">${escapeHtml(String(dono.descrizione || ''))}</p>
+            </div>
+        `;
+    }).join('');
+}
+
+// === SUPPLICHE OCCULTE (warlock — Eldritch Invocations) ===
+function formatSupplicheOcculte(suppliche) {
+    if (!suppliche || !Array.isArray(suppliche) || suppliche.length === 0) return '';
+    
+    return suppliche.map(s => {
+        const prereq = s.prerequisito ? `<span class="invocation-prereq">Req: ${escapeHtml(String(s.prerequisito))}</span>` : '';
+        return `
+            <div class="invocation-card">
+                <h5 class="invocation-name">${escapeHtml(String(s.nome || ''))}</h5>
+                ${prereq}
+                <p class="invocation-desc">${escapeHtml(String(s.descrizione || ''))}</p>
             </div>
         `;
     }).join('');
@@ -599,10 +648,10 @@ const ClassList = {
                         </div>
                     </div>
                     
-                    <!-- SOTTOCLASSI -->
+                    <!-- SOTTOCLASSI (PATRONI per Warlock) -->
                     ${cls.sottoclassi && cls.sottoclassi.length > 0 ? `
                         <div class="details-section subclass-section">
-                            <h3>🔮 Sottoclassi</h3>
+                            <h3>🔮 ${cls.index === 'warlock' ? 'Patroni Ultraterreni' : 'Sottoclassi'}</h3>
                             <div class="subclasses-container">
                                 ${formatSubclasses(cls.sottoclassi)}
                             </div>
@@ -622,6 +671,28 @@ const ClassList = {
                             <div class="subclass-privilegi">
                                 <h4>Privilegi della Sottoclasse</h4>
                                 ${formatSottoclassePrivilegi(cls.sottoclasse.privilegi)}
+                            </div>
+                        </div>
+                    ` : ''}
+                    
+                    <!-- DONI DEL PATTO (solo Warlock) -->
+                    ${cls.doni_del_patto && cls.doni_del_patto.length > 0 ? `
+                        <div class="details-section pact-boon-section">
+                            <h3>🗡️ Doni del Patto</h3>
+                            <p class="section-hint">Scelti al liv. 3 come privilegio di classe. Sono diversi dal Patrono (sottoclasse).</p>
+                            <div class="subclasses-container">
+                                ${formatDoniDelPatto(cls.doni_del_patto)}
+                            </div>
+                        </div>
+                    ` : ''}
+                    
+                    <!-- SUPPLICHE OCCULTE (solo Warlock — Eldritch Invocations) -->
+                    ${cls.suppliche_occulte && cls.suppliche_occulte.length > 0 ? `
+                        <div class="details-section invocations-section">
+                            <h3>📖 Suppliche Occulte</h3>
+                            <p class="section-hint">Si ottengono a partire dal liv. 2 (2 suppliche), poi aumentano come da tabella progressione. Alcune richiedono prerequisiti specifici.</p>
+                            <div class="invocations-grid">
+                                ${formatSupplicheOcculte(cls.suppliche_occulte)}
                             </div>
                         </div>
                     ` : ''}

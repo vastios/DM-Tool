@@ -518,3 +518,152 @@
     font-size: 0.8rem;
     white-space: nowrap;
 }
+
+/* === Sezioni specifiche Warlock: Doni del Patto + Suppliche Occulte === */
+.section-hint {
+    color: #888;
+    font-style: italic;
+    font-size: 0.85rem;
+    margin: 0 0 12px 0;
+    padding: 8px 12px;
+    background: rgba(240, 173, 78, 0.06);
+    border-left: 3px solid #d4af37;
+    border-radius: 3px;
+}
+
+.pact-boon-section,
+.invocations-section {
+    margin-top: 1.5rem;
+}
+
+.pact-boon-card {
+    background: linear-gradient(135deg, #2a2233 0%, #333 100%);
+    border-color: #7a4a8a;
+}
+
+.pact-boon-card:hover {
+    border-color: #b366cc;
+    background: linear-gradient(135deg, #322840 0%, #3d3d3d 100%);
+}
+
+.pact-boon-card h4 {
+    color: #c084d8;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.pact-boon-card .level-badge,
+.invocation-prereq .level-badge {
+    font-size: 0.75rem;
+    background: rgba(192, 132, 216, 0.2);
+    color: #c084d8;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-weight: normal;
+}
+
+/* Patron spells (incantesimi ampliati del patrono) */
+.patron-spells {
+    margin: 10px 0;
+    padding: 10px;
+    background: rgba(240, 173, 78, 0.05);
+    border-radius: 4px;
+    border: 1px dashed rgba(240, 173, 78, 0.3);
+}
+
+.patron-spells h4 {
+    color: #f0ad4e;
+    font-size: 0.9rem;
+    margin: 0 0 6px 0;
+}
+
+.patron-spells .domain-spells-row {
+    display: flex;
+    gap: 8px;
+    margin: 4px 0;
+    font-size: 0.85rem;
+}
+
+.patron-spells .spell-level {
+    color: #d4af37;
+    font-weight: bold;
+    min-width: 70px;
+}
+
+.patron-spells .spell-list {
+    color: #ccc;
+}
+
+/* Suppliche Occulte — griglia compatta */
+.invocations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.invocation-card {
+    background: #2a2a2a;
+    border: 1px solid #555;
+    border-radius: 6px;
+    padding: 10px 12px;
+    transition: all 0.2s ease;
+}
+
+.invocation-card:hover {
+    border-color: #d4af37;
+    background: #303030;
+    transform: translateY(-2px);
+}
+
+.invocation-name {
+    color: #f0ad4e;
+    font-family: 'Cinzel', serif;
+    font-size: 0.95rem;
+    margin: 0 0 4px 0;
+}
+
+.invocation-prereq {
+    display: inline-block;
+    font-size: 0.75rem;
+    color: #b366cc;
+    background: rgba(192, 132, 216, 0.12);
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-bottom: 6px;
+    font-style: italic;
+}
+
+.invocation-desc {
+    color: #bbb;
+    font-size: 0.82rem;
+    line-height: 1.45;
+    margin: 0;
+}
+
+/* Dark theme override per light mode */
+body.light-theme .pact-boon-card {
+    background: linear-gradient(135deg, #f5f0f8 0%, #ffffff 100%);
+    border-color: #b366cc;
+}
+
+body.light-theme .invocation-card {
+    background: #f9f9f9;
+    border-color: #ccc;
+}
+
+body.light-theme .invocation-card:hover {
+    background: #f0f0f0;
+}
+
+body.light-theme .patron-spells {
+    background: rgba(240, 173, 78, 0.08);
+}
+
+body.light-theme .section-hint {
+    background: rgba(240, 173, 78, 0.1);
+    color: #555;
+}

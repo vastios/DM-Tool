@@ -126,6 +126,32 @@ export const ranger = {
         {
             nome: "Cacciatore",
             descrizione: "Un ranger che si concentra sulla capacità di trovare e abbattere i nemici.",
+            opzioni_cacciatore: {
+                "3": {
+                    "nome": "Preda del Cacciatore",
+                    "opzioni": [
+                        { "nome": "Caccia al Colosso", "descrizione": "Una volta per turno, infliggi 1d8 danno aggiuntivo contro creature di taglia Grande o superiore." },
+                        { "nome": "Distruttore di Orde", "descrizione": "Quando riduci a 0 PF una creatura con un attacco, puoi effettuare un attacco aggiuntivo." },
+                        { "nome": "Presa del Cacciatore", "descrizione": "Hai vantaggio alle prove di Percezione passive." }
+                    ]
+                },
+                "7": {
+                    "nome": "Difesa del Cacciatore",
+                    "opzioni": [
+                        { "nome": "Evasione", "descrizione": "Hai vantaggio ai TS di Destrezza. Nessun danno se superi, dimezzo se fallisci." },
+                        { "nome": "Resistenza ai Veleni", "descrizione": "Hai vantaggio ai TS contro trappole e veleni." },
+                        { "nome": "Volontà di Ferro", "descrizione": "Hai vantaggio ai TS contro essere affascinato o spaventato." }
+                    ]
+                },
+                "15": {
+                    "nome": "Cacciatore Supremo",
+                    "opzioni": [
+                        { "nome": "Elusione", "descrizione": "Quando un attacco ti manca, puoi usare la reazione per muoverti di metà velocità senza provocare attacchi d'opportunità." },
+                        { "nome": "Opporsi alla Marea", "descrizione": "Quando una creatura ti manca con un attacco in mischia, puoi usare la reazione per attaccarla." },
+                        { "nome": "Schivata Prodigiosa", "descrizione": "Quando subisci danni, puoi usare la reazione per ridurli di 1d10 + modificatore Destrezza." }
+                    ]
+                }
+            },
             privilegi: {
                 "3": {
                     nome: "Preda del Cacciatore",
@@ -168,7 +194,58 @@ export const ranger = {
             }
         }
     ],
-    
+    // === STILI DI COMBATTIMENTO (scelti al liv. 2) ===
+    stili_combattimento: [
+        {
+            nome: "Tiro con Arco",
+            descrizione: "Hai un bonus +2 al tiro per colpire con armi da tiro ranged.",
+            livello: 2
+        },
+        {
+            nome: "Difesa",
+            descrizione: "Mentre indossi un'armatura, ottieni un bonus +1 alla CA.",
+            livello: 2
+        },
+        {
+            nome: "Duellare",
+            descrizione: "Quando impugni un'arma da mischia in una mano e nessun'altra arma, ottieni un bonus +2 al danno con quell'arma.",
+            livello: 2
+        },
+        {
+            nome: "Combattimento a Due Armi",
+            descrizione: "Quando combatti con due armi, puoi aggiungere il tuo modificatore di caratteristica al danno del secondo attacco.",
+            livello: 2
+        }
+    ],
+    // === TIPI DI NEMICO PRECELTO (ranger liv. 1, +1 al liv. 6 e 14) ===
+    tipi_nemico_prescelto: [
+        { nome: "Aberrazioni", descrizione: "Mostri dall'aspetto alieno provenienti dal Regno Lontano." },
+        { nome: "Bestie", descrizione: "Creature non umanoidi non senzienti." },
+        { nome: "Celestiali", descrizione: "Angeli e creature del piano superiore." },
+        { nome: "Costrutti", descrizione: "Creature artificiali animate da magia." },
+        { nome: "Draghi", descrizione: "Grandi rettili alati con poteri magici." },
+        { nome: "Elementali", descrizione: "Creature dei piani interni (fuoco, acqua, aria, terra)." },
+        { nome: "Fate", descrizione: "Creature del Feywild." },
+        { nome: "Immondi", descrizione: "Demoni e creature dei Nove Inferni." },
+        { nome: "Giganti", descrizione: "Umanoidi di taglia enorme." },
+        { nome: "Umanoidi (qualsiasi razza)", descrizione: "Scegli una razza umanoide specifica (es. Orchi, Goblin)." },
+        { nome: "Melme", descrizione: "Creature gelatinose amorfe." },
+        { nome: "Non Morti", descrizione: "Zombie, scheletri, vampiri, etc." },
+        { nome: "Piante", descrizione: "Vegetali animati." },
+        { nome: "Vermi", descrizione: "Insettoidi e creature simili a vermi." }
+    ],
+    // === TIPI DI TERRENO PRECELTO (ranger liv. 1, +1 al liv. 6 e 10) ===
+    tipi_terreno_prescelto: [
+        { nome: "Artico", descrizione: "Tundra, ghiacciai, regioni innevate." },
+        { nome: "Costa", descrizione: "Spiagge, scogliere marine, isole." },
+        { nome: "Deserto", descrizione: "Sabbia, dune, regioni aride." },
+        { nome: "Foresta", descrizione: "Boschi, giungle, foreste pluviali." },
+        { nome: "Palude", descrizione: "Zone umide, acquitrini, mangrovie." },
+        { nome: "Montagna", descrizione: "Catene montuose, cime, altopiani." },
+        { nome: "Pianura", descrizione: "Praterie, savane, steppe." },
+        { nome: "Sottosuolo", descrizione: "Caverne, dungeon, miniere." }
+    ],
+
     // Compatibilità
     name: "Ranger",
     hit_die: 10,

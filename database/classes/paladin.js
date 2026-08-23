@@ -128,6 +128,13 @@ export const paladin = {
     {
       "nome": "Giuramento di Devozione",
       "descrizione": "Il Giuramento di Devozione lega il paladino ai nobili ideali di giustizia, virtù e ordine. A volte detti anche cavalieri, cavalieri bianchi o guerrieri sacri, questi paladini si riconoscono nell'ideale del cavaliere dall'armatura splendente, che agisce con onore perseguendo la giustizia e un bene superiore.",
+      "incantesimi_di_giuramento": {
+        "3": ["Protezione dal bene e dal male", "Santuario"],
+        "5": ["Aiuto", "Colpo infuocato"],
+        "9": ["Dissolvi magie", "Guardiani spirituali"],
+        "13": ["Santificare", "Ristorare superiore"],
+        "17": ["Sbando", "Evoca celestiale"]
+      },
       "privilegi": {
         "3": {
           "nome": "Scacciare i Sacrileghi",
@@ -146,6 +153,29 @@ export const paladin = {
           "descrizione": "Con un'azione, puoi emanare un'aura di luce solare. Per 1 minuto, da te promana luce intensa in un raggio di 9 metri, e luce fioca per altri 9 metri oltre questi. Ogni qualvolta una creatura nemica inizi il suo turno all'interno della luce intensa, la creatura subisce 10 danni radianti. Inoltre, per la durata, hai vantaggio sui tiri salvezza contro incantesimi lanciati da immondi e non morti."
         }
       }
+    }
+  ],
+  // === STILI DI COMBATTIMENTO (scelti al liv. 2) ===
+  "stili_combattimento": [
+    {
+      "nome": "Difesa",
+      "descrizione": "Mentre indossi un'armatura, ottieni un bonus +1 alla CA.",
+      "livello": 2
+    },
+    {
+      "nome": "Duellare",
+      "descrizione": "Quando impugni un'arma da mischia in una mano e nessun'altra arma, ottieni un bonus +2 al danno con quell'arma.",
+      "livello": 2
+    },
+    {
+      "nome": "Protezione",
+      "descrizione": "Quando una creatura che puoi vedere attacca un bersaglio diverso da te entro 1,5 metri da te, puoi usare la tua reazione per imporre svantaggio al tiro per colpire. Devi impugnare uno scudo.",
+      "livello": 2
+    },
+    {
+      "nome": "Armi Possenti",
+      "descrizione": "Quando effettui un tiro per colpire con un'arma da mischia che impugni a due mani, puoi riaggiungere 1 o 2 al tiro (non puoi riaggiungere dopo aver visto il risultato). L'arma deve avere la proprietà a due mani o versatile.",
+      "livello": 2
     }
   ],
   "index": "paladin",

@@ -257,22 +257,33 @@ export class PgViewManager {
         const currentLevel = levelUpData.currentLevel;
         const newLevel = levelUpData.newLevel;
         const hasSpells = levelUpData.hasSpellStep;
-        const totalSteps = hasSpells ? 2 : 1;
+        const hasWarlock = levelUpData.hasWarlockStep;
+        const hasClassChoices = levelUpData.hasClassChoicesStep;
+        const totalSteps = 1 + (hasSpells ? 1 : 0) + ((hasWarlock || hasClassChoices) ? 1 : 0);
         const isLastStep = step >= totalSteps;
+
+        // Mappa numeri step → label dinamica (per saltare step inattivi)
+        const stepLabels = [];
+        stepLabels.push('HP &amp; Caratteristiche');
+        if (hasSpells) stepLabels.push('Incantesimi');
+        if (hasWarlock) stepLabels.push('Scelte Warlock');
+        else if (hasClassChoices) stepLabels.push('Scelte di Classe');
 
         return `
             <div class="pg-wizard level-up-wizard">
                 <div class="wizard-header">
                     <div class="wizard-steps">
-                        <div class="wizard-step active">
-                            <div class="step-circle">${step > 1 ? '✓' : '1'}</div>
-                            <span class="step-label">HP &amp; Caratteristiche</span>
-                        </div>
-                        ${hasSpells ? `
-                        <div class="wizard-step ${step >= 2 ? 'active' : ''}">
-                            <div class="step-circle">2</div>
-                            <span class="step-label">Incantesimi</span>
-                        </div>` : ''}
+                        ${stepLabels.map((label, i) => {
+                            const stepNum = i + 1;
+                            const isActive = step === stepNum;
+                            const isCompleted = step > stepNum;
+                            return `
+                                <div class="wizard-step ${isActive ? 'active' : ''} ${isCompleted ? 'completed' : ''}">
+                                    <div class="step-circle">${isCompleted ? '✓' : stepNum}</div>
+                                    <span class="step-label">${label}</span>
+                                </div>
+                            `;
+                        }).join('')}
                     </div>
                     <h2 class="wizard-title">
                         ⬆️ Level Up: ${escapeHtml(pg.name)} — ${escapeHtml(pg.className || pg.class)}

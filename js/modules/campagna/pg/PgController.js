@@ -14,6 +14,11 @@
 import { PgDataManager } from './PgDataManager.js';
 import { PgViewManager } from './PgViewManager.js';
 import { PgLevelUpManager } from './PgLevelUpManager.js';
+import {
+    renderChoicesEditorModal,
+    createChoicesDraft,
+    draftToUpdates
+} from './PgEditChoices.js';
 import { 
     EMPTY_PG, 
     calculateModifier, 
@@ -99,6 +104,12 @@ export class PgController {
          * @type {PgLevelUpManager|null}
          */
         this.levelUpManager = null;
+
+        /**
+         * Stato del modal di modifica scelte permanenti.
+         * Inizializzato on-demand da openChoicesEditor().
+         */
+        this.choicesEditorState = null;  // { pgId, pg, selectedClass, draft }
         
         console.log('🎮 [PgController] Inizializzato.');
     }
@@ -127,6 +138,23 @@ export class PgController {
             equippedSlots: {},
             _acceptedSuggestions: [],
             _selectedChoices: {},
+            eldritchInvocations: [],
+            mysticArcanum: {},
+            pactTomeCantrips: [],
+            scelte_permanenti: {
+                stili_combattimento: [],
+                metamagia: [],
+                ascendenza_draconica: '',
+                maestria: [],
+                segreti_magici: [],
+                nemici_prescelti: [],
+                terreni_prescelti: [],
+                preda_cacciatore: '',
+                difesa_cacciatore: '',
+                cacciatore_supremo: '',
+                maestria_incantesimi_1: '',
+                maestria_incantesimi_2: ''
+            },
             _racialBonuses: [],
             _asiBonuses: {
                 strength: 0, dexterity: 0, constitution: 0,
@@ -488,6 +516,91 @@ export class PgController {
                 this.levelUpManager._handleWizardSpellToggle(spellLabel);
                 return;
             }
+            // Invocation toggle (label con checkbox - step 3 warlock)
+            const invocationLabel = target.closest('[data-lu-invocation]');
+            if (invocationLabel) {
+                e.preventDefault();
+                this.levelUpManager._handleWizardInvocationToggle(invocationLabel);
+                return;
+            }
+            // === Scelte permanenti altre classi (step 3 non-warlock) ===
+            // Stile di Combattimento aggiuntivo
+            const fightingStyleLabel = target.closest('[data-lu-fighting-style]');
+            if (fightingStyleLabel) {
+                e.preventDefault();
+                this.levelUpManager._handleWizardFightingStyleToggle(fightingStyleLabel);
+                return;
+            }
+            // Metamagia aggiuntiva
+            const metamagicLabel = target.closest('[data-lu-metamagic]');
+            if (metamagicLabel) {
+                e.preventDefault();
+                this.levelUpManager._handleWizardMetamagicToggle(metamagicLabel);
+                return;
+            }
+            // Maestria aggiuntiva
+            const expertiseLabel = target.closest('[data-lu-expertise]');
+            if (expertiseLabel) {
+                e.preventDefault();
+                this.levelUpManager._handleWizardExpertiseToggle(expertiseLabel);
+                return;
+            }
+            // Segreti Magici aggiuntivi
+            const secretLabel = target.closest('[data-lu-magical-secret]');
+            if (secretLabel) {
+                e.preventDefault();
+                this.levelUpManager._handleWizardMagicalSecretToggle(secretLabel);
+                return;
+            }
+            // Nemico Prescelto aggiuntivo
+            const enemyLabel = target.closest('[data-lu-favored-enemy]');
+            if (enemyLabel) {
+                e.preventDefault();
+                this.levelUpManager._handleWizardFavoredEnemyToggle(enemyLabel);
+                return;
+            }
+            // Terreno Prescelto aggiuntivo
+            const terrainLabel = target.closest('[data-lu-favored-terrain]');
+            if (terrainLabel) {
+                e.preventDefault();
+                this.levelUpManager._handleWizardFavoredTerrainToggle(terrainLabel);
+                return;
+            }
+
+            // === CHOICES EDITOR MODAL: toggle checkbox ===
+            if (target.dataset.editInvocation !== undefined) {
+                this._handleChoicesEditorToggle(target, 'editInvocation', 'eldritchInvocations');
+                return;
+            }
+            if (target.dataset.editTomeCantrip !== undefined) {
+                this._handleChoicesEditorToggle(target, 'editTomeCantrip', 'pactTomeCantrips');
+                return;
+            }
+            if (target.dataset.editFightingStyle !== undefined) {
+                this._handleChoicesEditorToggle(target, 'editFightingStyle', 'scelte_permanenti.stili_combattimento');
+                return;
+            }
+            if (target.dataset.editMetamagic !== undefined) {
+                this._handleChoicesEditorToggle(target, 'editMetamagic', 'scelte_permanenti.metamagia');
+                return;
+            }
+            if (target.dataset.editExpertise !== undefined) {
+                this._handleChoicesEditorToggle(target, 'editExpertise', 'scelte_permanenti.maestria');
+                return;
+            }
+            if (target.dataset.editMagicalSecret !== undefined) {
+                this._handleChoicesEditorToggle(target, 'editMagicalSecret', 'scelte_permanenti.segreti_magici');
+                return;
+            }
+            if (target.dataset.editFavoredEnemy !== undefined) {
+                this._handleChoicesEditorToggle(target, 'editFavoredEnemy', 'scelte_permanenti.nemici_prescelti');
+                return;
+            }
+            if (target.dataset.editFavoredTerrain !== undefined) {
+                this._handleChoicesEditorToggle(target, 'editFavoredTerrain', 'scelte_permanenti.terreni_prescelti');
+                return;
+            }
+
             // Spell swap out (span)
             const swapOutItem = target.closest('[data-swap-out]');
             if (swapOutItem && !swapOutItem.classList.contains('already-known')) {
@@ -632,6 +745,20 @@ export class PgController {
             if (pgId) this.levelUpManager.startLevelUp(pgId);
             return;
         }
+        if (action === 'edit-choices') {
+            if (pgId) this.openChoicesEditor(pgId);
+            return;
+        }
+
+        // === CHOICES EDITOR MODAL: azioni footer ===
+        if (button.dataset.closeChoicesEditor !== undefined) {
+            this.closeChoicesEditor();
+            return;
+        }
+        if (button.dataset.saveChoicesEditor !== undefined) {
+            this.saveChoicesEditor();
+            return;
+        }
         
         // Aggiungi condizione
         if (button.id === 'btn-add-condition') {
@@ -751,6 +878,10 @@ export class PgController {
             this.wizardData.subclass = target.value;
             this.render();
         }
+        if (target.id === 'pg-pact-boon') {
+            this.wizardData.pactBoon = target.value;
+            this.render();
+        }
         if (target.id === 'pg-alignment') this.wizardData.alignment = target.value;
         if (target.id === 'pg-background') this.updateBackground(target.value);
         if (target.id === 'pg-gender') this.wizardData.gender = target.value;
@@ -771,6 +902,118 @@ export class PgController {
             this.toggleSpell(target.dataset.spell, target.checked);
         }
         
+        // Step 4 — Warlock: Suppliche Occulte
+        if (target.dataset.invocation) {
+            this.toggleInvocation(target.dataset.invocation, target.checked);
+        }
+        
+        // Step 4 — Warlock: Arcanum Mistico
+        if (target.dataset.arcanum) {
+            this.updateMysticArcanum(parseInt(target.dataset.arcanum), target.value);
+        }
+        
+        // Step 4 — Warlock: Trucchetti del Patto del Tomo
+        if (target.dataset.tomeCantrip) {
+            this.togglePactTomeCantrip(target.dataset.tomeCantrip, target.checked);
+        }
+        
+        // Step 4 — Altre classi: Stile di Combattimento (Fighter/Paladin/Ranger)
+        if (target.dataset.fightingStyle) {
+            this.toggleFightingStyle(target.dataset.fightingStyle, target.checked);
+        }
+        
+        // Step 4 — Stregone: Metamagia
+        if (target.dataset.metamagic) {
+            this.toggleMetamagic(target.dataset.metamagic, target.checked);
+        }
+        
+        // Step 4 — Bardo/Ladro: Maestria
+        if (target.dataset.expertise) {
+            this.toggleExpertise(target.dataset.expertise, target.checked);
+        }
+        
+        // Step 4 — Bardo: Segreti Magici
+        if (target.dataset.magicalSecret) {
+            this.toggleMagicalSecret(target.dataset.magicalSecret, target.checked);
+        }
+        
+        // Step 4 — Ranger: Nemico Prescelto
+        if (target.dataset.favoredEnemy) {
+            this.toggleFavoredEnemy(target.dataset.favoredEnemy, target.checked);
+        }
+        
+        // Step 4 — Ranger: Terreno Prescelto
+        if (target.dataset.favoredTerrain) {
+            this.toggleFavoredTerrain(target.dataset.favoredTerrain, target.checked);
+        }
+        
+        // Step 4 — Warlock: Arcanum Mistico (level-up wizard)
+        if (target.dataset.luArcanum) {
+            if (this.levelUpManager?.isActive) {
+                this.levelUpManager._handleWizardArcanumSelect(target);
+            }
+        }
+
+        // Step 3 level-up — Opzioni Cacciatore (Ranger)
+        if (target.dataset.luHunterOption) {
+            if (this.levelUpManager?.isActive) {
+                this.levelUpManager._handleWizardHunterOptionSelect(target);
+            }
+        }
+
+        // Step 3 level-up — Maestria Incantesimi (Mago)
+        if (target.dataset.luSpellMastery) {
+            if (this.levelUpManager?.isActive) {
+                this.levelUpManager._handleWizardSpellMasterySelect(target);
+            }
+        }
+
+        // === CHOICES EDITOR MODAL: select ===
+        if (target.dataset.editPactBoon !== undefined) {
+            this._handleChoicesEditorSelect(target, 'editPactBoon', (draft, value) => {
+                draft.pactBoon = value || '';
+            });
+        }
+        if (target.dataset.editArcanum !== undefined) {
+            this._handleChoicesEditorSelect(target, 'editArcanum', (draft, value, lvl) => {
+                const spellLvl = parseInt(lvl);
+                if (!draft.mysticArcanum) draft.mysticArcanum = {};
+                if (value) draft.mysticArcanum[spellLvl] = value;
+                else delete draft.mysticArcanum[spellLvl];
+            });
+        }
+        if (target.dataset.editDragonAncestry !== undefined) {
+            this._handleChoicesEditorSelect(target, 'editDragonAncestry', (draft, value) => {
+                draft.scelte_permanenti.ascendenza_draconica = value || '';
+            });
+        }
+        if (target.dataset.editHunterOption !== undefined) {
+            this._handleChoicesEditorSelect(target, 'editHunterOption', (draft, value, field) => {
+                draft.scelte_permanenti[field] = value || '';
+            });
+        }
+        if (target.dataset.editSpellMastery !== undefined) {
+            this._handleChoicesEditorSelect(target, 'editSpellMastery', (draft, value, level) => {
+                const key = level === '1' ? 'maestria_incantesimi_1' : 'maestria_incantesimi_2';
+                draft.scelte_permanenti[key] = value || '';
+            });
+        }
+        
+        // Step 4 — Stregone: Ascendenza Draconica
+        if (target.dataset.dragonAncestry !== undefined) {
+            this.updateDragonAncestry(target.value);
+        }
+        
+        // Step 4 — Ranger: Opzioni Cacciatore (preda/difesa/supremo)
+        if (target.dataset.hunterOption) {
+            this.updateHunterOption(target.dataset.hunterOption, target.value);
+        }
+        
+        // Step 4 — Mago: Maestria degli Incantesimi
+        if (target.dataset.spellMastery) {
+            this.updateSpellMastery(target.dataset.spellMastery, target.value);
+        }
+
         // Scheda - HP correnti
         if (target.id === 'hp-current') {
             this.updateCurrentHp(parseInt(target.value) || 0);
@@ -1640,6 +1883,302 @@ export class PgController {
         
         // Aggiorna contatori e labels
         this.updateSpellCounters();
+    }
+
+    // ========================================================================
+    // WARLOCK: SUPPLICHE OCCULTE, ARCANUM MISTICO, PATTO DEL TOMO
+    // ========================================================================
+
+    /**
+     * Toggle di una supplica occulta (Eldritch Invocation).
+     * @param {string} invocationName - Nome della supplica
+     * @param {boolean} isChecked - true se aggiunta, false se rimossa
+     */
+    toggleInvocation(invocationName, isChecked) {
+        if (!Array.isArray(this.wizardData.eldritchInvocations)) {
+            this.wizardData.eldritchInvocations = [];
+        }
+        if (isChecked) {
+            if (!this.wizardData.eldritchInvocations.includes(invocationName)) {
+                this.wizardData.eldritchInvocations.push(invocationName);
+            }
+        } else {
+            this.wizardData.eldritchInvocations = this.wizardData.eldritchInvocations.filter(n => n !== invocationName);
+        }
+        this.updateInvocationCounters();
+    }
+
+    /**
+     * Aggiorna l'incantesimo Arcanum Mistico per un dato livello.
+     * @param {number} spellLevel - 6, 7, 8 o 9
+     * @param {string} spellName - Nome dell'incantesimo (o '' per deselezionare)
+     */
+    updateMysticArcanum(spellLevel, spellName) {
+        if (!this.wizardData.mysticArcanum || typeof this.wizardData.mysticArcanum !== 'object') {
+            this.wizardData.mysticArcanum = {};
+        }
+        if (spellName) {
+            this.wizardData.mysticArcanum[spellLevel] = spellName;
+        } else {
+            delete this.wizardData.mysticArcanum[spellLevel];
+        }
+        // Aggiornamento leggero: non serve re-render completo per una select
+        // ma rendiamo il flag consistente
+    }
+
+    /**
+     * Toggle di un truccetto del Patto del Tomo.
+     * @param {string} cantripName
+     * @param {boolean} isChecked
+     */
+    togglePactTomeCantrip(cantripName, isChecked) {
+        if (!Array.isArray(this.wizardData.pactTomeCantrips)) {
+            this.wizardData.pactTomeCantrips = [];
+        }
+        if (isChecked) {
+            if (!this.wizardData.pactTomeCantrips.includes(cantripName)) {
+                this.wizardData.pactTomeCantrips.push(cantripName);
+            }
+        } else {
+            this.wizardData.pactTomeCantrips = this.wizardData.pactTomeCantrips.filter(n => n !== cantripName);
+        }
+        this.updateTomeCantripCounters();
+    }
+
+    /**
+     * Aggiorna i contatori delle suppliche occulte.
+     */
+    updateInvocationCounters() {
+        const selected = this.wizardData.eldritchInvocations || [];
+        // Aggiorna il counter-badge della sezione suppliche
+        const section = this.container.querySelector('.eldritch-invocations');
+        if (!section) return;
+        const badge = section.querySelector('.counter-badge');
+        if (badge) {
+            const max = parseInt(badge.querySelector('.counter-max')?.textContent) ||
+                        parseInt(badge.textContent.split('/')[1]) || 0;
+            const current = selected.length;
+            badge.innerHTML = `<strong>${current}</strong> / ${max}`;
+            badge.classList.remove('over-limit', 'at-limit');
+            if (current > max) badge.classList.add('over-limit');
+            else if (current === max) badge.classList.add('at-limit');
+        }
+        // Aggiorna classi selected sulle label
+        this.container.querySelectorAll('input[data-invocation]').forEach(cb => {
+            const label = cb.closest('.invocation-cb');
+            if (label) {
+                if (cb.checked) label.classList.add('selected');
+                else label.classList.remove('selected');
+            }
+        });
+    }
+
+    /**
+     * Aggiorna i contatori dei trucchetti del Patto del Tomo.
+     */
+    updateTomeCantripCounters() {
+        const selected = this.wizardData.pactTomeCantrips || [];
+        const section = this.container.querySelector('.pact-tome-cantrips');
+        if (!section) return;
+        const badge = section.querySelector('.counter-badge');
+        if (badge) {
+            const max = 3;
+            const current = selected.length;
+            badge.innerHTML = `<strong>${current}</strong> / ${max}`;
+            badge.classList.remove('over-limit', 'at-limit');
+            if (current > max) badge.classList.add('over-limit');
+            else if (current === max) badge.classList.add('at-limit');
+        }
+        this.container.querySelectorAll('input[data-tome-cantrip]').forEach(cb => {
+            const label = cb.closest('.spell-cb');
+            if (label) {
+                if (cb.checked) label.classList.add('selected');
+                else label.classList.remove('selected');
+            }
+        });
+    }
+
+    // ========================================================================
+    // SCELTE PERMANENTI TUTTE LE CLASSI (eccetto Warlock, già gestito sopra)
+    // ========================================================================
+
+    /**
+     * Helper: inizializza l'oggetto scelte_permanenti se mancante.
+     */
+    _ensureSceltePermanenti() {
+        if (!this.wizardData.scelte_permanenti) {
+            this.wizardData.scelte_permanenti = {
+                stili_combattimento: [],
+                metamagia: [],
+                ascendenza_draconica: '',
+                maestria: [],
+                segreti_magici: [],
+                nemici_prescelti: [],
+                terreni_prescelti: [],
+                preda_cacciatore: '',
+                difesa_cacciatore: '',
+                cacciatore_supremo: '',
+                maestria_incantesimi_1: '',
+                maestria_incantesimi_2: ''
+            };
+        }
+        return this.wizardData.scelte_permanenti;
+    }
+
+    /**
+     * Toggle Stile di Combattimento (Fighter/Paladin/Ranger).
+     * Limita al numero previsto in base alla classe e livello.
+     */
+    toggleFightingStyle(styleName, isChecked) {
+        const sp = this._ensureSceltePermanenti();
+        if (!Array.isArray(sp.stili_combattimento)) sp.stili_combattimento = [];
+        if (isChecked) {
+            if (!sp.stili_combattimento.includes(styleName)) {
+                sp.stili_combattimento.push(styleName);
+            }
+        } else {
+            sp.stili_combattimento = sp.stili_combattimento.filter(s => s !== styleName);
+        }
+        this._updateChoiceCounter('.class-choice-section', 'fighting-style', sp.stili_combattimento.length);
+    }
+
+    /**
+     * Toggle Metamagia (Stregone).
+     */
+    toggleMetamagic(metaName, isChecked) {
+        const sp = this._ensureSceltePermanenti();
+        if (!Array.isArray(sp.metamagia)) sp.metamagia = [];
+        if (isChecked) {
+            if (!sp.metamagia.includes(metaName)) {
+                sp.metamagia.push(metaName);
+            }
+        } else {
+            sp.metamagia = sp.metamagia.filter(s => s !== metaName);
+        }
+        this._updateChoiceCounter(null, 'metamagic', sp.metamagia.length);
+    }
+
+    /**
+     * Toggle Maestria (Bardo/Ladro).
+     */
+    toggleExpertise(skillName, isChecked) {
+        const sp = this._ensureSceltePermanenti();
+        if (!Array.isArray(sp.maestria)) sp.maestria = [];
+        if (isChecked) {
+            if (!sp.maestria.includes(skillName)) {
+                sp.maestria.push(skillName);
+            }
+        } else {
+            sp.maestria = sp.maestria.filter(s => s !== skillName);
+        }
+        this._updateChoiceCounter(null, 'expertise', sp.maestria.length);
+    }
+
+    /**
+     * Toggle Segreti Magici (Bardo).
+     */
+    toggleMagicalSecret(spellName, isChecked) {
+        const sp = this._ensureSceltePermanenti();
+        if (!Array.isArray(sp.segreti_magici)) sp.segreti_magici = [];
+        if (isChecked) {
+            if (!sp.segreti_magici.includes(spellName)) {
+                sp.segreti_magici.push(spellName);
+            }
+        } else {
+            sp.segreti_magici = sp.segreti_magici.filter(s => s !== spellName);
+        }
+        this._updateChoiceCounter(null, 'magical-secret', sp.segreti_magici.length);
+    }
+
+    /**
+     * Toggle Nemico Prescelto (Ranger).
+     */
+    toggleFavoredEnemy(enemyName, isChecked) {
+        const sp = this._ensureSceltePermanenti();
+        if (!Array.isArray(sp.nemici_prescelti)) sp.nemici_prescelti = [];
+        if (isChecked) {
+            if (!sp.nemici_prescelti.includes(enemyName)) {
+                sp.nemici_prescelti.push(enemyName);
+            }
+        } else {
+            sp.nemici_prescelti = sp.nemici_prescelti.filter(s => s !== enemyName);
+        }
+        this._updateChoiceCounter(null, 'favored-enemy', sp.nemici_prescelti.length);
+    }
+
+    /**
+     * Toggle Terreno Prescelto (Ranger).
+     */
+    toggleFavoredTerrain(terrainName, isChecked) {
+        const sp = this._ensureSceltePermanenti();
+        if (!Array.isArray(sp.terreni_prescelti)) sp.terreni_prescelti = [];
+        if (isChecked) {
+            if (!sp.terreni_prescelti.includes(terrainName)) {
+                sp.terreni_prescelti.push(terrainName);
+            }
+        } else {
+            sp.terreni_prescelti = sp.terreni_prescelti.filter(s => s !== terrainName);
+        }
+        this._updateChoiceCounter(null, 'favored-terrain', sp.terreni_prescelti.length);
+    }
+
+    /**
+     * Aggiorna Ascendenza Draconica (Stregone).
+     */
+    updateDragonAncestry(dragonName) {
+        const sp = this._ensureSceltePermanenti();
+        sp.ascendenza_draconica = dragonName || '';
+    }
+
+    /**
+     * Aggiorna opzione Cacciatore (Ranger).
+     * @param {string} field - 'preda_cacciatore' | 'difesa_cacciatore' | 'cacciatore_supremo'
+     * @param {string} value - Nome opzione scelta
+     */
+    updateHunterOption(field, value) {
+        const sp = this._ensureSceltePermanenti();
+        sp[field] = value || '';
+    }
+
+    /**
+     * Aggiorna Maestria Incantesimi (Mago liv.18).
+     * @param {string} level - '1' o '2'
+     * @param {string} spellName
+     */
+    updateSpellMastery(level, spellName) {
+        const sp = this._ensureSceltePermanenti();
+        const key = level === '1' ? 'maestria_incantesimi_1' : 'maestria_incantesimi_2';
+        sp[key] = spellName || '';
+    }
+
+    /**
+     * Helper: aggiorna il contatore di una sezione scelta.
+     * Cerca il counter-badge più vicino all'input con il data-attributo dato.
+     */
+    _updateChoiceCounter(_sectionSelector, dataAttr, currentCount) {
+        // Trova la sezione che contiene l'input con questo data-attributo
+        const input = this.container.querySelector(`input[data-${dataAttr}]:checked`);
+        if (!input) return;
+        const section = input.closest('.class-choice-section');
+        if (!section) return;
+        const badge = section.querySelector('.counter-badge');
+        if (!badge) return;
+        // Estrai il max dal testo del badge (formato "X / Y")
+        const text = badge.textContent || '';
+        const match = text.match(/\/\s*(\d+)/);
+        const max = match ? parseInt(match[1]) : 0;
+        badge.innerHTML = `<strong>${currentCount}</strong> / ${max}`;
+        badge.classList.remove('over-limit', 'at-limit');
+        if (currentCount > max) badge.classList.add('over-limit');
+        else if (currentCount === max && max > 0) badge.classList.add('at-limit');
+        // Aggiorna classi selected sulle label
+        this.container.querySelectorAll(`input[data-${dataAttr}]`).forEach(cb => {
+            const label = cb.closest('.choice-cb');
+            if (label) {
+                if (cb.checked) label.classList.add('selected');
+                else label.classList.remove('selected');
+            }
+        });
     }
     
     /**
@@ -3273,7 +3812,207 @@ export class PgController {
             showToast('Errore durante l\'apertura del popup equipaggiamento.', 'error');
         }
     }
-    
+
+    // ========================================================================
+    // MODAL MODIFICA SCELTE PERMANENTI
+    // ========================================================================
+
+    /**
+     * Apre il modal di modifica delle scelte permanenti di un PG.
+     * @param {string} pgId
+     */
+    openChoicesEditor(pgId) {
+        const pg = this.dataManager.getById(pgId);
+        if (!pg) {
+            showToast('PG non trovato.', 'error');
+            return;
+        }
+        if (!pg.class) {
+            showToast('PG senza classe. Impossibile modificare le scelte.', 'warning');
+            return;
+        }
+        const selectedClass = this.databases.classes?.find(c => c.index === pg.class);
+        if (!selectedClass) {
+            showToast('Classe non trovata nel database.', 'error');
+            return;
+        }
+
+        // Crea draft iniziale
+        const draft = createChoicesDraft(pg);
+        this.choicesEditorState = { pgId, pg, selectedClass, draft };
+
+        // Renderizza il modal (sovrapposto al pannello destro)
+        this._renderChoicesEditor();
+    }
+
+    /**
+     * Chiude il modal di modifica senza salvare.
+     */
+    closeChoicesEditor() {
+        this.choicesEditorState = null;
+        this.render();
+    }
+
+    /**
+     * Salva le modifiche dal draft al dataManager e chiude il modal.
+     */
+    saveChoicesEditor() {
+        if (!this.choicesEditorState) return;
+        const { pgId, draft, selectedClass } = this.choicesEditorState;
+
+        // === Validazione inline ===
+        const errors = this._validateChoicesDraft(draft, selectedClass, this.dataManager.getById(pgId));
+        if (errors.length > 0) {
+            showToast('Correggi gli errori prima di salvare:\n' + errors.join('\n'), 'warning');
+            return;
+        }
+
+        // === Salva ===
+        const updates = draftToUpdates(draft);
+        this.dataManager.update(pgId, updates);
+
+        showToast('Scelte permanenti aggiornate per ' + (this.dataManager.getById(pgId)?.name || 'PG'), 'success');
+        this.choicesEditorState = null;
+        this.render();
+    }
+
+    /**
+     * Valida il draft prima del salvataggio.
+     * @returns {Array<string>} Lista di errori (vuota se ok)
+     */
+    _validateChoicesDraft(draft, selectedClass, pg) {
+        const errors = [];
+        const lvl = pg.level || 1;
+        const cls = selectedClass.index;
+
+        // Warlock
+        if (cls === 'warlock') {
+            const maxInv = getMaxWarlockInvocationsForValidation(lvl);
+            if ((draft.eldritchInvocations || []).length > maxInv) {
+                errors.push(`Troppe suppliche occulte: massimo ${maxInv} per il liv. ${lvl}`);
+            }
+            if (draft.pactTomeCantrips && draft.pactTomeCantrips.length > 3) {
+                errors.push('Troppi trucchetti del Patto del Tomo: massimo 3');
+            }
+        }
+
+        // Stili di Combattimento
+        if (cls === 'fighter' || cls === 'paladin' || cls === 'ranger') {
+            const max = getMaxFightingStylesForValidation(cls, lvl, pg.subclass);
+            if ((draft.scelte_permanenti.stili_combattimento || []).length > max) {
+                errors.push(`Troppi stili di combattimento: massimo ${max}`);
+            }
+        }
+
+        // Metamagia
+        if (cls === 'sorcerer') {
+            const max = getMaxMetamagicsForValidation(lvl);
+            if ((draft.scelte_permanenti.metamagia || []).length > max) {
+                errors.push(`Troppe metamagie: massimo ${max}`);
+            }
+        }
+
+        // Maestria
+        if (cls === 'bard' || cls === 'rogue') {
+            const classNameIt = cls === 'bard' ? 'Bardo' : 'Ladro';
+            const max = getMaxExpertiseForValidation(classNameIt, lvl);
+            if ((draft.scelte_permanenti.maestria || []).length > max) {
+                errors.push(`Troppe maestrie: massimo ${max}`);
+            }
+        }
+
+        // Segreti Magici
+        if (cls === 'bard') {
+            const max = getMaxMagicalSecretsForValidation(lvl, pg.subclass);
+            if ((draft.scelte_permanenti.segreti_magici || []).length > max) {
+                errors.push(`Troppi segreti magici: massimo ${max}`);
+            }
+        }
+
+        // Nemico/Terreno Prescelto
+        if (cls === 'ranger') {
+            const maxE = getMaxFavoredEnemiesForValidation(lvl);
+            if ((draft.scelte_permanenti.nemici_prescelti || []).length > maxE) {
+                errors.push(`Troppi nemici prescelti: massimo ${maxE}`);
+            }
+            const maxT = getMaxFavoredTerrainsForValidation(lvl);
+            if ((draft.scelte_permanenti.terreni_prescelti || []).length > maxT) {
+                errors.push(`Troppi terreni prescelti: massimo ${maxT}`);
+            }
+        }
+
+        return errors;
+    }
+
+    /**
+     * Renderizza il modal di modifica scelte nel pannello.
+     */
+    _renderChoicesEditor() {
+        if (!this.choicesEditorState) return;
+        const { pg, selectedClass, draft } = this.choicesEditorState;
+        const modalHtml = renderChoicesEditorModal(pg, selectedClass, draft);
+
+        // Inietta il modal come overlay nel container principale
+        let modalContainer = this.container.querySelector('#choices-editor-overlay');
+        if (!modalContainer) {
+            modalContainer = document.createElement('div');
+            modalContainer.id = 'choices-editor-overlay';
+            modalContainer.className = 'choices-editor-overlay';
+            this.container.appendChild(modalContainer);
+        }
+        modalContainer.innerHTML = modalHtml;
+        modalContainer.style.display = 'flex';
+    }
+
+    /**
+     * Aggiorna solo il contenuto del modal (dopo modifica del draft).
+     */
+    _refreshChoicesEditor() {
+        if (!this.choicesEditorState) return;
+        this._renderChoicesEditor();
+    }
+
+    // === HANDLER EVENTI MODAL ===
+
+    /**
+     * Toggle generico per checkbox multi-select nel modal scelte.
+     */
+    _handleChoicesEditorToggle(target, dataAttr, statePath) {
+        if (!this.choicesEditorState) return;
+        const { draft } = this.choicesEditorState;
+        const value = target.dataset[dataAttr];
+        if (!value) return;
+
+        // Naviga il path (es. 'scelte_permanenti.stili_combattimento')
+        const parts = statePath.split('.');
+        let arr = draft;
+        for (let i = 0; i < parts.length - 1; i++) {
+            arr = arr[parts[i]] || (arr[parts[i]] = {});
+        }
+        const lastKey = parts[parts.length - 1];
+        if (!Array.isArray(arr[lastKey])) arr[lastKey] = [];
+
+        if (target.checked) {
+            if (!arr[lastKey].includes(value)) arr[lastKey].push(value);
+        } else {
+            arr[lastKey] = arr[lastKey].filter(v => v !== value);
+        }
+        this._refreshChoicesEditor();
+    }
+
+    /**
+     * Handler per select singole (doni patto, dragon ancestry, hunter option, spell mastery, arcanum).
+     */
+    _handleChoicesEditorSelect(target, dataAttr, applyFn) {
+        if (!this.choicesEditorState) return;
+        const { draft } = this.choicesEditorState;
+        applyFn(draft, target.value, target.dataset[dataAttr]);
+        // Per le select che cambiano il layout (es. pactBoon → mostra Patto del Tomo)
+        if (dataAttr === 'editPactBoon') {
+            this._refreshChoicesEditor();
+        }
+    }
+
     // NOTE: Il livello-up wizard è gestito da PgLevelUpManager (modules/campagna/pg/PgLevelUpManager.js)
     // I metodi sono: startLevelUp, levelUpNextStep, levelUpPrevStep, cancelLevelUp, confirmLevelUp,
     // _renderLevelUpStep, _calculateLevelUpChanges, _getMaxSpellLevelForClass,
@@ -4030,6 +4769,71 @@ export class PgController {
         this.wizardData = this.createEmptyPg();
         this.databases = null;
     }
+}
+
+// === HELPER FUNZIONI DI VALIDAZIONE (per il modal scelte permanenti) ===
+// Repliche identiche delle funzioni in PgEditChoices.js / PgDataManager.js
+// Mantenute qui per evitare dipendenze circolari.
+
+function getMaxWarlockInvocationsForValidation(pgLevel) {
+    const table = { 2: 2, 5: 3, 7: 4, 9: 5, 12: 6, 15: 7, 18: 8 };
+    const levels = Object.keys(table).map(Number).sort((a, b) => b - a);
+    for (const lvl of levels) {
+        if (pgLevel >= lvl) return table[lvl];
+    }
+    return 0;
+}
+
+function getMaxFightingStylesForValidation(classIndex, pgLevel, subclass) {
+    if (classIndex === 'fighter') {
+        if (pgLevel < 1) return 0;
+        return (subclass === 'Campione' && pgLevel >= 10) ? 2 : 1;
+    }
+    if (classIndex === 'paladin') return pgLevel >= 2 ? 1 : 0;
+    if (classIndex === 'ranger')  return pgLevel >= 2 ? 1 : 0;
+    return 0;
+}
+
+function getMaxMetamagicsForValidation(pgLevel) {
+    if (pgLevel >= 17) return 4;
+    if (pgLevel >= 10) return 3;
+    if (pgLevel >= 3) return 2;
+    return 0;
+}
+
+function getMaxExpertiseForValidation(classNameIt, pgLevel) {
+    if (classNameIt === 'Bardo') {
+        if (pgLevel < 3) return 0;
+        return pgLevel >= 10 ? 4 : 2;
+    }
+    if (classNameIt === 'Ladro') {
+        if (pgLevel < 1) return 0;
+        return pgLevel >= 6 ? 4 : 2;
+    }
+    return 0;
+}
+
+function getMaxMagicalSecretsForValidation(pgLevel, subclass) {
+    let total = 0;
+    if (pgLevel >= 10) total += 2;
+    if (pgLevel >= 14) total += 2;
+    if (pgLevel >= 18) total += 2;
+    if (subclass === 'Collegio della Sapienza' && pgLevel >= 6) total += 2;
+    return total;
+}
+
+function getMaxFavoredEnemiesForValidation(pgLevel) {
+    if (pgLevel >= 14) return 3;
+    if (pgLevel >= 6) return 2;
+    if (pgLevel >= 1) return 1;
+    return 0;
+}
+
+function getMaxFavoredTerrainsForValidation(pgLevel) {
+    if (pgLevel >= 10) return 3;
+    if (pgLevel >= 6) return 2;
+    if (pgLevel >= 1) return 1;
+    return 0;
 }
 
 console.log('🎮 [PgController] Modulo caricato.');

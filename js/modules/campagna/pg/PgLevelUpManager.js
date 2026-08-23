@@ -18,7 +18,8 @@ import {
     calculateSpellSlots, 
     calculateAvailableASI,
     ABILITY_KEY_TO_PROPERTY,
-    ALL_SPELLCASTERS
+    ALL_SPELLCASTERS,
+    escapeHtml
 } from './PgConstants.js';
 import { showToast } from '../../../../utils/toast.js';
 
@@ -89,6 +90,13 @@ export class PgLevelUpManager {
             (changes.newSpellLevelsAccessible && changes.newSpellLevelsAccessible.length > 0) ||
             changes.canSwapSpells);
 
+        // Determina se c'è uno step dedicato alle scelte Warlock (suppliche + arcanum)
+        const hasWarlockStep = !!(changes.isWarlock &&
+            (changes.newInvocations > 0 || changes.newArcanumLevels.length > 0));
+
+        // Determina se c'è uno step dedicato alle scelte permanenti delle altre classi
+        const hasClassChoicesStep = !!changes.hasClassChoicesStep;
+
         this.data = {
             pg,
             currentLevel,
@@ -96,6 +104,8 @@ export class PgLevelUpManager {
             classData,
             ...changes,
             hasSpellStep,
+            hasWarlockStep,
+            hasClassChoicesStep,
             renderStep: (step) => this._renderLevelUpStep(step)
         };
 
@@ -110,26 +120,47 @@ export class PgLevelUpManager {
 
     /**
      * Passa allo step successivo del level-up wizard.
+     * Step possibili:
+     *   1: HP, ASI, Features
+     *   2: Incantesimi (se hasSpellStep)
+     *   3: Scelte Warlock (se hasWarlockStep) OPPURE Scelte altra classe (se hasClassChoicesStep)
+     * Nota: al massimo uno tra hasWarlockStep e hasClassChoicesStep è attivo contemporaneamente
+     * (warlock non ha scelte_permanenti, altre classi non hanno suppliche/arcanum).
      */
     levelUpNextStep() {
         const data = this.data;
         if (!data) return;
 
-        // Se siamo allo step 1 e non c'è uno step spell, conferma direttamente
-        if (this.step === 1 && !data.hasSpellStep) {
-            this.confirmLevelUp();
-            return;
-        }
+        // Calcola il numero totale di step: 1 + (incantesimi?) + (warlock OR class choices?)
+        const hasChoiceStep = data.hasWarlockStep || data.hasClassChoicesStep;
+        const totalSteps = 1 + (data.hasSpellStep ? 1 : 0) + (hasChoiceStep ? 1 : 0);
 
-        // Se siamo allo step 1 con spell, passa allo step 2
+        // Step 1 → step 2 (spell) oppure step 3 (choices) oppure conferma
         if (this.step === 1) {
-            this.step = 2;
+            if (data.hasSpellStep) {
+                this.step = 2;
+            } else if (hasChoiceStep) {
+                this.step = 3;
+            } else {
+                this.confirmLevelUp();
+                return;
+            }
             this._render();
             return;
         }
 
-        // Se siamo all'ultimo step, conferma
-        const totalSteps = data.hasSpellStep ? 2 : 1;
+        // Step 2 (incantesimi) → step 3 (choices) oppure conferma
+        if (this.step === 2) {
+            if (hasChoiceStep) {
+                this.step = 3;
+                this._render();
+                return;
+            }
+            this.confirmLevelUp();
+            return;
+        }
+
+        // Step 3 (choices) → conferma
         if (this.step >= totalSteps) {
             this.confirmLevelUp();
         }
@@ -179,6 +210,71 @@ export class PgLevelUpManager {
         if (expectedNewSpells > 0 && data.selectedNewSpells.length !== expectedNewSpells) {
             showToast(`Devi selezionare esattamente ${expectedNewSpells} incantesim${expectedNewSpells > 1 ? 'i' : 'o'} nuov${expectedNewSpells > 1 ? 'i' : 'o'}.`, 'warning');
             return;
+        }
+
+        // === Validazione scelte Warlock ===
+        if (data.isWarlock && data.newInvocations > 0 &&
+            data.selectedNewInvocations.length !== data.newInvocations) {
+            showToast(`Devi selezionare esattamente ${data.newInvocations} supplica${data.newInvocations > 1 ? 'he' : 'a'} occult${data.newInvocations > 1 ? 'e' : 'a'} nuov${data.newInvocations > 1 ? 'e' : 'a'}.`, 'warning');
+            return;
+        }
+        if (data.isWarlock && data.newArcanumLevels.length > 0) {
+            const missingArcanum = data.newArcanumLevels.find(lvl => !data.selectedNewArcanum[lvl]);
+            if (missingArcanum) {
+                showToast(`Devi selezionare un incantesimo per l'Arcanum Mistico di ${missingArcanum}° livello.`, 'warning');
+                return;
+            }
+        }
+
+        // === Validazione scelte permanenti altre classi ===
+        if (!data.isWarlock && data.hasClassChoicesStep) {
+            if (data.newFightingStyles > 0 &&
+                data.selectedNewFightingStyles.length !== data.newFightingStyles) {
+                showToast(`Devi selezionare ${data.newFightingStyles} nuovo stile di combattimento.`, 'warning');
+                return;
+            }
+            if (data.newMetamagics > 0 &&
+                data.selectedNewMetamagics.length !== data.newMetamagics) {
+                showToast(`Devi selezionare ${data.newMetamagics} nuova/e opzione/i Metamagia.`, 'warning');
+                return;
+            }
+            if (data.newExpertise > 0 &&
+                data.selectedNewExpertise.length !== data.newExpertise) {
+                showToast(`Devi selezionare ${data.newExpertise} nuove abilità per Maestria.`, 'warning');
+                return;
+            }
+            if (data.newMagicalSecrets > 0 &&
+                data.selectedNewMagicalSecrets.length !== data.newMagicalSecrets) {
+                showToast(`Devi selezionare ${data.newMagicalSecrets} Segreti Magici.`, 'warning');
+                return;
+            }
+            if (data.newFavoredEnemies > 0 &&
+                data.selectedNewFavoredEnemies.length !== data.newFavoredEnemies) {
+                showToast(`Devi selezionare ${data.newFavoredEnemies} nuovo/i Nemico/i Prescelto/i.`, 'warning');
+                return;
+            }
+            if (data.newFavoredTerrains > 0 &&
+                data.selectedNewFavoredTerrains.length !== data.newFavoredTerrains) {
+                showToast(`Devi selezionare ${data.newFavoredTerrains} nuovo/i Terreno/i Prescelto/i.`, 'warning');
+                return;
+            }
+            if (data.newHunterOptions.length > 0) {
+                const missingHunter = data.newHunterOptions.find(f => !data.selectedHunterOptions[f]);
+                if (missingHunter) {
+                    showToast(`Devi selezionare un'opzione per ${missingHunter.replace(/_/g, ' ')}.`, 'warning');
+                    return;
+                }
+            }
+            if (data.newSpellMastery) {
+                if (!data.selectedSpellMastery1) {
+                    showToast('Devi selezionare un incantesimo di 1° livello per la Maestria degli Incantesimi.', 'warning');
+                    return;
+                }
+                if (!data.selectedSpellMastery2) {
+                    showToast('Devi selezionare un incantesimo di 2° livello per la Maestria degli Incantesimi.', 'warning');
+                    return;
+                }
+            }
         }
 
         // 1. Aggiorna livello
@@ -269,6 +365,98 @@ export class PgLevelUpManager {
         // 6. Ricalcola iniziativa
         updates.initiative = calculateModifier(newAbilities.dexterity);
 
+        // 7. Aggiorna scelte Warlock (suppliche occulte + arcanum mistico)
+        if (data.isWarlock) {
+            // Aggiungi nuove suppliche a quelle esistenti
+            if (data.selectedNewInvocations.length > 0) {
+                const existingInvocations = Array.isArray(pg.eldritchInvocations)
+                    ? pg.eldritchInvocations : [];
+                updates.eldritchInvocations = [
+                    ...existingInvocations,
+                    ...data.selectedNewInvocations
+                ];
+            }
+            // Aggiungi nuovi arcanum a quelli esistenti
+            if (data.newArcanumLevels.length > 0) {
+                const existingArcanum = (pg.mysticArcanum && typeof pg.mysticArcanum === 'object')
+                    ? { ...pg.mysticArcanum } : {};
+                for (const lvl of data.newArcanumLevels) {
+                    if (data.selectedNewArcanum[lvl]) {
+                        existingArcanum[lvl] = data.selectedNewArcanum[lvl];
+                    }
+                }
+                updates.mysticArcanum = existingArcanum;
+            }
+        }
+
+        // 8. Aggiorna scelte permanenti altre classi (NON warlock)
+        if (!data.isWarlock && data.hasClassChoicesStep) {
+            const existingSP = (pg.scelte_permanenti && typeof pg.scelte_permanenti === 'object')
+                ? { ...pg.scelte_permanenti }
+                : {
+                    stili_combattimento: [], metamagia: [], ascendenza_draconica: '',
+                    maestria: [], segreti_magici: [], nemici_prescelti: [], terreni_prescelti: [],
+                    preda_cacciatore: '', difesa_cacciatore: '', cacciatore_supremo: '',
+                    maestria_incantesimi_1: '', maestria_incantesimi_2: ''
+                };
+
+            // Stili di combattimento aggiuntivi
+            if (data.selectedNewFightingStyles.length > 0) {
+                existingSP.stili_combattimento = [
+                    ...(existingSP.stili_combattimento || []),
+                    ...data.selectedNewFightingStyles
+                ];
+            }
+            // Metamagia aggiuntiva
+            if (data.selectedNewMetamagics.length > 0) {
+                existingSP.metamagia = [
+                    ...(existingSP.metamagia || []),
+                    ...data.selectedNewMetamagics
+                ];
+            }
+            // Maestria aggiuntiva
+            if (data.selectedNewExpertise.length > 0) {
+                existingSP.maestria = [
+                    ...(existingSP.maestria || []),
+                    ...data.selectedNewExpertise
+                ];
+            }
+            // Segreti Magici aggiuntivi
+            if (data.selectedNewMagicalSecrets.length > 0) {
+                existingSP.segreti_magici = [
+                    ...(existingSP.segreti_magici || []),
+                    ...data.selectedNewMagicalSecrets
+                ];
+            }
+            // Nemici prescelti aggiuntivi
+            if (data.selectedNewFavoredEnemies.length > 0) {
+                existingSP.nemici_prescelti = [
+                    ...(existingSP.nemici_prescelti || []),
+                    ...data.selectedNewFavoredEnemies
+                ];
+            }
+            // Terreni prescelti aggiuntivi
+            if (data.selectedNewFavoredTerrains.length > 0) {
+                existingSP.terreni_prescelti = [
+                    ...(existingSP.terreni_prescelti || []),
+                    ...data.selectedNewFavoredTerrains
+                ];
+            }
+            // Opzioni Cacciatore
+            for (const field of data.newHunterOptions) {
+                if (data.selectedHunterOptions[field]) {
+                    existingSP[field] = data.selectedHunterOptions[field];
+                }
+            }
+            // Maestria degli Incantesimi (Mago liv.18)
+            if (data.newSpellMastery) {
+                existingSP.maestria_incantesimi_1 = data.selectedSpellMastery1;
+                existingSP.maestria_incantesimi_2 = data.selectedSpellMastery2;
+            }
+
+            updates.scelte_permanenti = existingSP;
+        }
+
         // Salva
         this.ctx.dataManager.update(pgId, updates);
         if (this.callbacks?.setSelectedPgId) {
@@ -295,6 +483,12 @@ export class PgLevelUpManager {
     _renderLevelUpStep(step) {
         if (step === 2) {
             return this._renderLevelUpStep2Spells();
+        }
+        if (step === 3) {
+            // Step 3: warlock → suppliche+arcanum; altre classi → scelte permanenti
+            return this.data.isWarlock
+                ? this._renderLevelUpStep3Warlock()
+                : this._renderLevelUpStep3ClassChoices();
         }
         return this._renderLevelUpStep1HP();
     }
@@ -608,7 +802,456 @@ export class PgLevelUpManager {
 
         return html;
     }
-    
+
+    /**
+     * Renderizza lo Step 3 del level-up wizard: scelte specifiche Warlock.
+     * Mostra: nuove suppliche occulte da selezionare + nuovi arcanum mistici.
+     * @returns {string} HTML
+     */
+    _renderLevelUpStep3Warlock() {
+        const data = this.data;
+        if (!data || !data.isWarlock) return '';
+
+        const { pg, newLevel, classData } = data;
+        const suppliche = classData.suppliche_occulte || [];
+        const patrono = pg.subclass;
+        const dono = pg.pactBoon;
+
+        // === 1. SUPPLICHE OCCULTE ===
+        let invocationsHtml = '';
+        if (data.newInvocations > 0) {
+            // Filtra suppliche disponibili (soddisfano prerequisiti AND non già possedute)
+            const available = suppliche.filter(s => {
+                if ((data.currentInvocations || []).includes(s.nome)) return false;
+                if (data.selectedNewInvocations.includes(s.nome)) return false;
+                const check = this._checkInvocationPrereq(s, pg, newLevel);
+                return check.ok;
+            });
+
+            // Filtra suppliche bloccate (per mostrarle in collasso)
+            const locked = suppliche.filter(s => {
+                if ((data.currentInvocations || []).includes(s.nome)) return false;
+                if (data.selectedNewInvocations.includes(s.nome)) return false;
+                const check = this._checkInvocationPrereq(s, pg, newLevel);
+                return !check.ok;
+            });
+
+            const selectedCount = data.selectedNewInvocations.length;
+            const isComplete = selectedCount === data.newInvocations;
+            const isOver = selectedCount > data.newInvocations;
+
+            invocationsHtml = `
+                <div class="lu-section lu-invocations-section">
+                    <h4>📖 Nuove Suppliche Occulte</h4>
+                    <p class="lu-desc">
+                        Hai guadagnato <strong>${data.newInvocations}</strong> nuova/e supplica/e occulta/e da selezionare.
+                        Totale attuale: ${data.maxInvocationsOld} → <strong>${data.maxInvocationsNew}</strong>.
+                    </p>
+                    <div class="lu-spell-counter">
+                        Selezionate: <strong class="lu-invocation-count">${selectedCount}</strong> / ${data.newInvocations}
+                        ${isComplete ? ' <span class="lu-ok">✓</span>' : ''}
+                        ${isOver ? ' <span class="lu-warn">⚠️ Superato</span>' : ''}
+                    </div>
+                    <p class="lu-hint">
+                        Patrono: <strong>${patrono || '— non scelto —'}</strong> ·
+                        Dono del Patto: <strong>${dono || '— non scelto —'}</strong>
+                    </p>
+
+                    <div class="lu-invocations-grid">
+                        ${available.map(s => `
+                            <label class="lu-invocation-cb ${data.selectedNewInvocations.includes(s.nome) ? 'selected' : ''}"
+                                   data-lu-invocation="${s.nome}">
+                                <input type="checkbox" data-lu-invocation-input="${s.nome}"
+                                       ${data.selectedNewInvocations.includes(s.nome) ? 'checked' : ''}>
+                                <div class="lu-invocation-body">
+                                    <strong class="lu-inv-name">${s.nome}</strong>
+                                    ${s.prerequisito ? `<span class="lu-inv-prereq ok">${s.prerequisito}</span>` : ''}
+                                    <p class="lu-inv-desc">${s.descrizione}</p>
+                                </div>
+                            </label>
+                        `).join('')}
+                    </div>
+
+                    ${locked.length > 0 ? `
+                        <details class="lu-locked-invocations">
+                            <summary>🔒 Suppliche bloccate (${locked.length})</summary>
+                            <div class="lu-locked-list">
+                                ${locked.map(s => {
+                                    const check = this._checkInvocationPrereq(s, pg, newLevel);
+                                    return `
+                                        <div class="lu-locked-invocation">
+                                            <strong>${s.nome}</strong>
+                                            <span class="lu-inv-prereq locked">${check.reason}</span>
+                                            <p class="lu-inv-desc">${s.descrizione}</p>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </details>
+                    ` : ''}
+                </div>
+            `;
+        } else {
+            invocationsHtml = `
+                <div class="lu-section">
+                    <h4>📖 Suppliche Occulte</h4>
+                    <p class="lu-hint">Nessuna nuova supplica da selezionare a questo livello.</p>
+                </div>
+            `;
+        }
+
+        // === 2. ARCANUM MISTICO ===
+        let arcanumHtml = '';
+        if (data.newArcanumLevels.length > 0) {
+            // Per ciascun livello di arcanum, mostra select con incantesimi warlock di quel livello
+            const warlockSpells = data.classSpellsByLevel || {};
+            const levelLabels = {
+                6: '6° Livello', 7: '7° Livello', 8: '8° Livello', 9: '9° Livello'
+            };
+
+            arcanumHtml = `
+                <div class="lu-section lu-arcanum-section">
+                    <h4>✨ Arcanum Mistico</h4>
+                    <p class="lu-desc">
+                        Il tuo patrono ti rivela ${data.newArcanumLevels.length} nuovo/i segreto/i magico/i.
+                        Ogni Arcanum può essere lanciato <strong>una volta</strong> senza spendere slot;
+                        si recupera con un riposo lungo.
+                    </p>
+                    <div class="lu-arcanum-grid">
+                        ${data.newArcanumLevels.map(lvl => {
+                            const spells = warlockSpells[lvl] || [];
+                            const current = data.selectedNewArcanum[lvl] || '';
+                            return `
+                                <div class="lu-arcanum-row">
+                                    <label class="lu-arcanum-label">Arcanum ${levelLabels[lvl]}</label>
+                                    <select class="form-control lu-arcanum-select" data-lu-arcanum="${lvl}">
+                                        <option value="">-- Scegli un incantesimo --</option>
+                                        ${spells.map(s => `
+                                            <option value="${s}" ${current === s ? 'selected' : ''}>${s}</option>
+                                        `).join('')}
+                                    </select>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        return `
+            <div class="level-up-body">
+                <div class="lu-section lu-warlock-banner">
+                    <h4>🔮 Scelte Warlock — Livello ${newLevel}</h4>
+                    <p class="lu-desc">Configura le nuove opzioni specifiche della tua classe.</p>
+                </div>
+                ${invocationsHtml}
+                ${arcanumHtml}
+            </div>
+        `;
+    }
+
+    /**
+     * Renderizza lo Step 3 del level-up wizard: scelte permanenti per classi NON-Warlock.
+     * Mostra: stili di combattimento aggiuntivi, metamagia, maestria, segreti magici,
+     * nemico/terreno prescelto, opzioni cacciatore, maestria incantesimi.
+     * @returns {string} HTML
+     */
+    _renderLevelUpStep3ClassChoices() {
+        const data = this.data;
+        if (!data || data.isWarlock) return '';
+
+        const { pg, newLevel, classData } = data;
+        const className = classData.classe || classData.name;
+
+        let html = `
+            <div class="level-up-body">
+                <div class="lu-section lu-warlock-banner">
+                    <h4>⚔️ Scelte di Classe — ${className}</h4>
+                    <p class="lu-desc">Configura le nuove opzioni specifiche della tua classe per il livello ${newLevel}.</p>
+                </div>
+        `;
+
+        // === STILI DI COMBATTIMENTO AGGIUNTIVI (Fighter Campione liv.10) ===
+        if (data.newFightingStyles > 0) {
+            const stili = classData.stili_combattimento || [];
+            const existing = (pg.scelte_permanenti?.stili_combattimento) || [];
+            // Escludi quelli già posseduti
+            const available = stili.filter(s => !existing.includes(s.nome));
+            const selected = data.selectedNewFightingStyles || [];
+            const isComplete = selected.length === data.newFightingStyles;
+
+            html += `
+                <div class="lu-section lu-invocations-section">
+                    <div class="section-header">
+                        <h4>⚔️ Nuovo Stile di Combattimento</h4>
+                        <span class="counter-badge ${selected.length > data.newFightingStyles ? 'over-limit' : isComplete ? 'at-limit' : ''}">
+                            <strong>${selected.length}</strong> / ${data.newFightingStyles}
+                        </span>
+                    </div>
+                    <p class="lu-desc">
+                        Hai guadagnato <strong>${data.newFightingStyles}</strong> nuovo/i stile/i di combattimento
+                        (privilegio Campione al liv.10).
+                    </p>
+                    <div class="lu-invocations-grid">
+                        ${available.map(s => `
+                            <label class="lu-invocation-cb ${selected.includes(s.nome) ? 'selected' : ''}"
+                                   data-lu-fighting-style="${s.nome}">
+                                <input type="checkbox" data-lu-fighting-style-input="${s.nome}"
+                                       ${selected.includes(s.nome) ? 'checked' : ''}>
+                                <div class="lu-invocation-body">
+                                    <strong class="lu-inv-name">${s.nome}</strong>
+                                    <p class="lu-inv-desc">${s.descrizione}</p>
+                                </div>
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // === METAMAGIA AGGIUNTIVA (Stregone) ===
+        if (data.newMetamagics > 0) {
+            const catalog = classData.metamagia || {};
+            const existing = (pg.scelte_permanenti?.metamagia) || [];
+            const available = Object.entries(catalog).filter(([nome]) => !existing.includes(nome));
+            const selected = data.selectedNewMetamagics || [];
+            const isComplete = selected.length === data.newMetamagics;
+
+            html += `
+                <div class="lu-section lu-invocations-section">
+                    <div class="section-header">
+                        <h4>✨ Nuova Metamagia</h4>
+                        <span class="counter-badge ${selected.length > data.newMetamagics ? 'over-limit' : isComplete ? 'at-limit' : ''}">
+                            <strong>${selected.length}</strong> / ${data.newMetamagics}
+                        </span>
+                    </div>
+                    <p class="lu-desc">Scegli <strong>${data.newMetamagics}</strong> nuova/e opzione/i Metamagia.</p>
+                    <div class="lu-invocations-grid">
+                        ${available.map(([nome, info]) => `
+                            <label class="lu-invocation-cb ${selected.includes(nome) ? 'selected' : ''}"
+                                   data-lu-metamagic="${nome}">
+                                <input type="checkbox" data-lu-metamagic-input="${nome}"
+                                       ${selected.includes(nome) ? 'checked' : ''}>
+                                <div class="lu-invocation-body">
+                                    <strong class="lu-inv-name">${nome}</strong>
+                                    <span class="lu-inv-prereq ok">Costo: ${info.costo}</span>
+                                    <p class="lu-inv-desc">${info.descrizione}</p>
+                                </div>
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // === MAESTRIA AGGIUNTIVA (Bardo liv.10, Ladro liv.6) ===
+        if (data.newExpertise > 0) {
+            const SKILLS = ['Acrobazia','Addestrare Animali','Arcano','Atletica','Furtività',
+                'Indagare','Inganno','Intimidire','Intuizione','Medicina','Natura',
+                'Percezione','Persuasione','Rappresentazione','Religione','Sopravvivenza'];
+            const existing = (pg.scelte_permanenti?.maestria) || [];
+            const available = SKILLS.filter(s => !existing.includes(s));
+            const selected = data.selectedNewExpertise || [];
+            const isComplete = selected.length === data.newExpertise;
+
+            html += `
+                <div class="lu-section lu-invocations-section">
+                    <div class="section-header">
+                        <h4>🎯 Nuova Maestria</h4>
+                        <span class="counter-badge ${selected.length > data.newExpertise ? 'over-limit' : isComplete ? 'at-limit' : ''}">
+                            <strong>${selected.length}</strong> / ${data.newExpertise}
+                        </span>
+                    </div>
+                    <p class="lu-desc">Scegli <strong>${data.newExpertise}</strong> abilità in cui hai competenza per raddoppiarne il bonus.</p>
+                    <div class="lu-invocations-grid">
+                        ${available.map(skill => `
+                            <label class="lu-invocation-cb compact ${selected.includes(skill) ? 'selected' : ''}"
+                                   data-lu-expertise="${skill}">
+                                <input type="checkbox" data-lu-expertise-input="${skill}"
+                                       ${selected.includes(skill) ? 'checked' : ''}>
+                                <span class="lu-inv-name">${skill}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // === SEGRETI MAGICI (Bardo) ===
+        if (data.newMagicalSecrets > 0) {
+            // Genera lista unica di tutti gli incantesimi di qualsiasi classe
+            const allSpells = new Set();
+            const classSpells = data.classSpellsByLevel || {};
+            // Aggiungi gli incantesimi del bardo (già in classSpellsByLevel)
+            for (let lvl = 1; lvl <= 9; lvl++) {
+                (classSpells[lvl] || []).forEach(s => allSpells.add(s));
+            }
+            const spellsArray = Array.from(allSpells).sort((a, b) => a.localeCompare(b, 'it'));
+            const existing = (pg.scelte_permanenti?.segreti_magici) || [];
+            const available = spellsArray.filter(s => !existing.includes(s));
+            const selected = data.selectedNewMagicalSecrets || [];
+            const isComplete = selected.length === data.newMagicalSecrets;
+
+            html += `
+                <div class="lu-section lu-invocations-section">
+                    <div class="section-header">
+                        <h4>🔮 Nuovi Segreti Magici</h4>
+                        <span class="counter-badge ${selected.length > data.newMagicalSecrets ? 'over-limit' : isComplete ? 'at-limit' : ''}">
+                            <strong>${selected.length}</strong> / ${data.newMagicalSecrets}
+                        </span>
+                    </div>
+                    <p class="lu-desc">Scegli <strong>${data.newMagicalSecrets}</strong> incantesimi da qualsiasi classe. Sono sempre considerati conosciuti.</p>
+                    <div class="lu-invocations-grid" style="max-height: 350px; overflow-y: auto;">
+                        ${available.map(spell => `
+                            <label class="lu-invocation-cb compact ${selected.includes(spell) ? 'selected' : ''}"
+                                   data-lu-magical-secret="${spell}">
+                                <input type="checkbox" data-lu-magical-secret-input="${spell}"
+                                       ${selected.includes(spell) ? 'checked' : ''}>
+                                <span class="lu-inv-name">${spell}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // === NEMICO PRECELTO (Ranger) ===
+        if (data.newFavoredEnemies > 0) {
+            const tipi = classData.tipi_nemico_prescelto || [];
+            const existing = (pg.scelte_permanenti?.nemici_prescelti) || [];
+            const available = tipi.filter(t => !existing.includes(t.nome));
+            const selected = data.selectedNewFavoredEnemies || [];
+            const isComplete = selected.length === data.newFavoredEnemies;
+
+            html += `
+                <div class="lu-section lu-invocations-section">
+                    <div class="section-header">
+                        <h4>🎯 Nuovo Nemico Prescelto</h4>
+                        <span class="counter-badge ${selected.length > data.newFavoredEnemies ? 'over-limit' : isComplete ? 'at-limit' : ''}">
+                            <strong>${selected.length}</strong> / ${data.newFavoredEnemies}
+                        </span>
+                    </div>
+                    <div class="lu-invocations-grid">
+                        ${available.map(t => `
+                            <label class="lu-invocation-cb ${selected.includes(t.nome) ? 'selected' : ''}"
+                                   data-lu-favored-enemy="${t.nome}">
+                                <input type="checkbox" data-lu-favored-enemy-input="${t.nome}"
+                                       ${selected.includes(t.nome) ? 'checked' : ''}>
+                                <div class="lu-invocation-body">
+                                    <strong class="lu-inv-name">${t.nome}</strong>
+                                    <p class="lu-inv-desc">${t.descrizione}</p>
+                                </div>
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // === TERRENO PRECELTO (Ranger) ===
+        if (data.newFavoredTerrains > 0) {
+            const tipi = classData.tipi_terreno_prescelto || [];
+            const existing = (pg.scelte_permanenti?.terreni_prescelti) || [];
+            const available = tipi.filter(t => !existing.includes(t.nome));
+            const selected = data.selectedNewFavoredTerrains || [];
+            const isComplete = selected.length === data.newFavoredTerrains;
+
+            html += `
+                <div class="lu-section lu-invocations-section">
+                    <div class="section-header">
+                        <h4>🌲 Nuovo Terreno Prescelto</h4>
+                        <span class="counter-badge ${selected.length > data.newFavoredTerrains ? 'over-limit' : isComplete ? 'at-limit' : ''}">
+                            <strong>${selected.length}</strong> / ${data.newFavoredTerrains}
+                        </span>
+                    </div>
+                    <div class="lu-invocations-grid">
+                        ${available.map(t => `
+                            <label class="lu-invocation-cb ${selected.includes(t.nome) ? 'selected' : ''}"
+                                   data-lu-favored-terrain="${t.nome}">
+                                <input type="checkbox" data-lu-favored-terrain-input="${t.nome}"
+                                       ${selected.includes(t.nome) ? 'checked' : ''}>
+                                <div class="lu-invocation-body">
+                                    <strong class="lu-inv-name">${t.nome}</strong>
+                                    <p class="lu-inv-desc">${t.descrizione}</p>
+                                </div>
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // === OPZIONI CACCIATORE (Ranger) ===
+        if (data.newHunterOptions.length > 0) {
+            const cacciatore = (classData.sottoclassi || []).find(s => s.nome === 'Cacciatore');
+            if (cacciatore?.opzioni_cacciatore) {
+                html += `
+                    <div class="lu-section lu-arcanum-section">
+                        <h4>🏹 Opzioni del Cacciatore</h4>
+                        <p class="lu-desc">Scegli un'opzione per ciascuna delle nuove feature del Cacciatore.</p>
+                        <div class="lu-arcanum-grid">
+                `;
+                for (const field of data.newHunterOptions) {
+                    // Mappa field → livello richiesto
+                    const lvlMap = { difesa_cacciatore: '7', cacciatore_supremo: '15' };
+                    const optData = cacciatore.opzioni_cacciatore[lvlMap[field]];
+                    if (!optData) continue;
+                    const current = data.selectedHunterOptions[field] || '';
+                    html += `
+                        <div class="lu-arcanum-row">
+                            <label class="lu-arcanum-label">${optData.nome}</label>
+                            <select class="form-control lu-arcanum-select" data-lu-hunter-option="${field}">
+                                <option value="">-- Scegli un'opzione --</option>
+                                ${optData.opzioni.map(o => `
+                                    <option value="${o.nome}" ${current === o.nome ? 'selected' : ''}>${o.nome}</option>
+                                `).join('')}
+                            </select>
+                            <p class="choice-hint">${escapeHtml(optData.opzioni.find(o => o.nome === current)?.descrizione || 'Seleziona per vedere la descrizione.')}</p>
+                        </div>
+                    `;
+                }
+                html += `</div></div>`;
+            }
+        }
+
+        // === MAESTRIA DEGLI INCANTESIMI (Mago liv.18) ===
+        if (data.newSpellMastery) {
+            const wizardSpells = data.classSpellsByLevel || {};
+            const spells1 = wizardSpells[1] || [];
+            const spells2 = wizardSpells[2] || [];
+
+            html += `
+                <div class="lu-section lu-arcanum-section">
+                    <h4>📘 Maestria degli Incantesimi</h4>
+                    <p class="lu-desc">Scegli un incantesimo di 1° e uno di 2° livello. Puoi lanciarli a volontà senza slot.</p>
+                    <div class="lu-arcanum-grid">
+                        <div class="lu-arcanum-row">
+                            <label class="lu-arcanum-label">Incantesimo 1° livello</label>
+                            <select class="form-control lu-arcanum-select" data-lu-spell-mastery="1">
+                                <option value="">-- Scegli --</option>
+                                ${spells1.map(s => `
+                                    <option value="${s}" ${data.selectedSpellMastery1 === s ? 'selected' : ''}>${s}</option>
+                                `).join('')}
+                            </select>
+                        </div>
+                        <div class="lu-arcanum-row">
+                            <label class="lu-arcanum-label">Incantesimo 2° livello</label>
+                            <select class="form-control lu-arcanum-select" data-lu-spell-mastery="2">
+                                <option value="">-- Scegli --</option>
+                                ${spells2.map(s => `
+                                    <option value="${s}" ${data.selectedSpellMastery2 === s ? 'selected' : ''}>${s}</option>
+                                `).join('')}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        html += `</div>`; // close level-up-body
+        return html;
+    }
+
     // ========================================================================
     // LEVEL-UP WIZARD: CALCOLO CAMBIAMENTI
     // ========================================================================
@@ -741,6 +1384,96 @@ export class PgLevelUpManager {
             }
         }
 
+        // === WARLOCK: nuove suppliche occulte ===
+        let newInvocations = 0;
+        let maxInvocationsOld = 0;
+        let maxInvocationsNew = 0;
+        if (classData.index === 'warlock') {
+            maxInvocationsOld = this._getMaxWarlockInvocations(currentLevel);
+            maxInvocationsNew = this._getMaxWarlockInvocations(newLevel);
+            newInvocations = maxInvocationsNew - maxInvocationsOld;
+        }
+
+        // === WARLOCK: nuovi arcanum mistici ===
+        let newArcanumLevels = [];
+        if (classData.index === 'warlock') {
+            const arcanumMap = { 11: 6, 13: 7, 15: 8, 17: 9 };
+            for (const [reqLvl, spellLvl] of Object.entries(arcanumMap)) {
+                if (currentLevel < parseInt(reqLvl) && newLevel >= parseInt(reqLvl)) {
+                    newArcanumLevels.push(spellLvl);
+                }
+            }
+        }
+
+        // === SCELTE PERMANENTI ALTRE CLASSI ===
+        // Stile di Combattimento aggiuntivo (Fighter Campione liv.10)
+        let newFightingStyles = 0;
+        if (classData.index === 'fighter' && pg.subclass === 'Campione' &&
+            currentLevel < 10 && newLevel >= 10) {
+            newFightingStyles = 1;
+        }
+
+        // Metamagia (Stregone: +1 al liv.10, +1 al liv.17)
+        let newMetamagics = 0;
+        if (classData.index === 'sorcerer') {
+            if (currentLevel < 10 && newLevel >= 10) newMetamagics++;
+            if (currentLevel < 17 && newLevel >= 17) newMetamagics++;
+        }
+
+        // Maestria (Bardo: +2 al liv.10; Ladro: +2 al liv.6)
+        let newExpertise = 0;
+        if (classData.index === 'bard' && currentLevel < 10 && newLevel >= 10) {
+            newExpertise = 2;
+        } else if (classData.index === 'rogue' && currentLevel < 6 && newLevel >= 6) {
+            newExpertise = 2;
+        }
+
+        // Segreti Magici (Bardo: +2 al liv.10, +2 al liv.14, +2 al liv.18; +2 al liv.6 se Sapienza)
+        let newMagicalSecrets = 0;
+        if (classData.index === 'bard') {
+            if (currentLevel < 10 && newLevel >= 10) newMagicalSecrets += 2;
+            if (currentLevel < 14 && newLevel >= 14) newMagicalSecrets += 2;
+            if (currentLevel < 18 && newLevel >= 18) newMagicalSecrets += 2;
+            if (pg.subclass === 'Collegio della Sapienza' &&
+                currentLevel < 6 && newLevel >= 6) newMagicalSecrets += 2;
+        }
+
+        // Nemico Prescelto (Ranger: +1 al liv.6, +1 al liv.14)
+        let newFavoredEnemies = 0;
+        if (classData.index === 'ranger') {
+            if (currentLevel < 6 && newLevel >= 6) newFavoredEnemies++;
+            if (currentLevel < 14 && newLevel >= 14) newFavoredEnemies++;
+        }
+
+        // Terreno Prescelto (Ranger: +1 al liv.6, +1 al liv.10)
+        let newFavoredTerrains = 0;
+        if (classData.index === 'ranger') {
+            if (currentLevel < 6 && newLevel >= 6) newFavoredTerrains++;
+            if (currentLevel < 10 && newLevel >= 10) newFavoredTerrains++;
+        }
+
+        // Opzioni Cacciatore (Ranger sottoclasse Cacciatore: 1 al liv.7, 1 al liv.15)
+        let newHunterOptions = [];
+        if (classData.index === 'ranger' && pg.subclass === 'Cacciatore') {
+            if (currentLevel < 7 && newLevel >= 7) newHunterOptions.push('difesa_cacciatore');
+            if (currentLevel < 15 && newLevel >= 15) newHunterOptions.push('cacciatore_supremo');
+        }
+
+        // Maestria degli Incantesimi (Mago liv.18)
+        let newSpellMastery = false;
+        if (classData.index === 'wizard' && currentLevel < 18 && newLevel >= 18) {
+            newSpellMastery = true;
+        }
+
+        // Verifica se c'è uno step dedicato alle scelte permanenti (warlock + altre classi)
+        const hasClassChoicesStep = classData.index === 'warlock' ? (
+            newInvocations > 0 || newArcanumLevels.length > 0
+        ) : (
+            newFightingStyles > 0 || newMetamagics > 0 || newExpertise > 0 ||
+            newMagicalSecrets > 0 || newFavoredEnemies > 0 || newFavoredTerrains > 0 ||
+            newHunterOptions.length > 0 || newSpellMastery
+        );
+
         return {
             profBonus: { old: oldProfBonus, new: newProfBonus, changed: oldProfBonus !== newProfBonus },
             newFeatures,
@@ -763,14 +1496,76 @@ export class PgLevelUpManager {
             maxCantripsNew,
             maxSpellsKnownOld,
             maxSpellsKnownNew,
+            // === Warlock: suppliche occulte ===
+            isWarlock: classData.index === 'warlock',
+            newInvocations,
+            maxInvocationsOld,
+            maxInvocationsNew,
+            currentInvocations: [...(pg.eldritchInvocations || [])],
+            selectedNewInvocations: [],
+            // === Warlock: arcanum mistico ===
+            newArcanumLevels,
+            currentArcanum: { ...(pg.mysticArcanum || {}) },
+            selectedNewArcanum: {},
+            // === Altre classi: scelte permanenti ===
+            hasClassChoicesStep,
+            newFightingStyles,
+            newMetamagics,
+            newExpertise,
+            newMagicalSecrets,
+            newFavoredEnemies,
+            newFavoredTerrains,
+            newHunterOptions,
+            newSpellMastery,
+            // Stato selezioni per scelte permanenti (riempito durante il wizard)
+            selectedNewFightingStyles: [],
+            selectedNewMetamagics: [],
+            selectedNewExpertise: [],
+            selectedNewMagicalSecrets: [],
+            selectedNewFavoredEnemies: [],
+            selectedNewFavoredTerrains: [],
+            selectedHunterOptions: {}, // { difesa_cacciatore: "nome_opzione", cacciatore_supremo: "nome_opzione" }
+            selectedSpellMastery1: '',
+            selectedSpellMastery2: '',
             // Stato selezioni nel modal
             selectedNewCantrips: [],
             selectedNewSpells: [],
-            swappedOut: null,   // Nome incantesimo rimosso
-            swappedIn: null,    // Nome incantesimo aggiunto
-            // Stato corrente ASI allocation nel modal (per i nuovi punti)
+            swappedOut: null,
+            swappedIn: null,
             modalASI: { strength: 0, dexterity: 0, constitution: 0, intelligence: 0, wisdom: 0, charisma: 0 }
         };
+    }
+
+    /**
+     * Helper: numero massimo di suppliche occulte per warlock al livello dato.
+     * Da tabella: 2/2/3/4/5/6/7/8 ai livelli 2/5/7/9/12/15/18.
+     */
+    _getMaxWarlockInvocations(pgLevel) {
+        const table = { 2: 2, 5: 3, 7: 4, 9: 5, 12: 6, 15: 7, 18: 8 };
+        const levels = Object.keys(table).map(Number).sort((a, b) => b - a);
+        for (const lvl of levels) {
+            if (pgLevel >= lvl) return table[lvl];
+        }
+        return 0;
+    }
+
+    /**
+     * Helper: verifica i prerequisiti di una supplica occulta.
+     * @returns {{ok: boolean, reason: string}}
+     */
+    _checkInvocationPrereq(supplica, pg, newLevel) {
+        const patrono = pg.subclass;
+        const dono = pg.pactBoon;
+        if (supplica.livello_minimo && newLevel < supplica.livello_minimo) {
+            return { ok: false, reason: `Richiede liv. ${supplica.livello_minimo}` };
+        }
+        if (supplica.richiede_dono && dono !== supplica.richiede_dono) {
+            return { ok: false, reason: `Richiede ${supplica.richiede_dono}` };
+        }
+        if (supplica.richiede_patrono && patrono !== supplica.richiede_patrono) {
+            return { ok: false, reason: `Richiede patrono ${supplica.richiede_patrono}` };
+        }
+        return { ok: true, reason: '' };
     }
     
     // ========================================================================
@@ -964,6 +1759,151 @@ export class PgLevelUpManager {
         }
 
         this._render();
+    }
+
+    // ========================================================================
+    // LEVEL-UP WIZARD: HANDLER WARLOCK (SUPPLICHE, ARCANUM)
+    // ========================================================================
+
+    /**
+     * Gestisce il toggle di una supplica occulta nello step 3 del level-up.
+     * Limita la selezione al numero di nuove suppliche previste.
+     */
+    _handleWizardInvocationToggle(invocationLabel) {
+        const data = this.data;
+        if (!data) return;
+
+        const invocationName = invocationLabel.dataset.luInvocation;
+        if (!invocationName) return;
+
+        const max = data.newInvocations || 0;
+        const idx = data.selectedNewInvocations.indexOf(invocationName);
+
+        if (idx >= 0) {
+            // Deseleziona
+            data.selectedNewInvocations.splice(idx, 1);
+        } else {
+            // Verifica limite
+            if (data.selectedNewInvocations.length >= max) {
+                showToast(`Puoi selezionare solo ${max} supplic${max > 1 ? 'he' : 'a'} nuov${max > 1 ? 'e' : 'a'}. Deseleziona prima.`, 'warning');
+                return;
+            }
+            // Verifica che non sia già posseduta
+            if ((data.currentInvocations || []).includes(invocationName)) {
+                showToast('Supplica già conosciuta.', 'warning');
+                return;
+            }
+            data.selectedNewInvocations.push(invocationName);
+        }
+
+        this._render();
+    }
+
+    /**
+     * Gestisce la selezione di un incantesimo Arcanum Mistico nello step 3.
+     * @param {HTMLSelectElement} selectElement - Elemento <select> con data-lu-arcanum
+     */
+    _handleWizardArcanumSelect(selectElement) {
+        const data = this.data;
+        if (!data) return;
+
+        const lvl = parseInt(selectElement.dataset.luArcanum);
+        if (!lvl) return;
+
+        const spellName = selectElement.value;
+        if (spellName) {
+            data.selectedNewArcanum[lvl] = spellName;
+        } else {
+            delete data.selectedNewArcanum[lvl];
+        }
+        // Non serve re-render per una select (il valore è già visibile nel controllo)
+    }
+
+    // ========================================================================
+    // LEVEL-UP WIZARD: HANDLER SCELTE PERMANENTI ALTRE CLASSI
+    // ========================================================================
+
+    /**
+     * Toggle generico per scelte permanenti multi-select nel level-up step 3.
+     * @param {HTMLElement} label - Label con data-lu-*
+     * @param {string} dataAttr - Nome attr senza prefisso 'lu-' (es. 'fighting-style', 'metamagic')
+     * @param {string} stateField - Campo in this.data (es. 'selectedNewFightingStyles')
+     * @param {number} max - Limite massimo (data.newFightingStyles, data.newMetamagics, etc.)
+     */
+    _handleWizardChoiceToggle(label, dataAttr, stateField, max) {
+        const data = this.data;
+        if (!data) return;
+
+        const value = label.dataset[`lu${dataAttr.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('')}`];
+        if (!value) return;
+
+        const arr = data[stateField] || [];
+        const idx = arr.indexOf(value);
+        if (idx >= 0) {
+            arr.splice(idx, 1);
+        } else {
+            if (arr.length >= max) {
+                showToast(`Puoi selezionare solo ${max} opzione/i. Deseleziona prima.`, 'warning');
+                return;
+            }
+            arr.push(value);
+        }
+        data[stateField] = arr;
+        this._render();
+    }
+
+    /**
+     * Handler specifici per ciascuna tipologia di scelta permanente.
+     */
+    _handleWizardFightingStyleToggle(label) {
+        this._handleWizardChoiceToggle(label, 'fighting-style', 'selectedNewFightingStyles', this.data.newFightingStyles);
+    }
+    _handleWizardMetamagicToggle(label) {
+        this._handleWizardChoiceToggle(label, 'metamagic', 'selectedNewMetamagics', this.data.newMetamagics);
+    }
+    _handleWizardExpertiseToggle(label) {
+        this._handleWizardChoiceToggle(label, 'expertise', 'selectedNewExpertise', this.data.newExpertise);
+    }
+    _handleWizardMagicalSecretToggle(label) {
+        this._handleWizardChoiceToggle(label, 'magical-secret', 'selectedNewMagicalSecrets', this.data.newMagicalSecrets);
+    }
+    _handleWizardFavoredEnemyToggle(label) {
+        this._handleWizardChoiceToggle(label, 'favored-enemy', 'selectedNewFavoredEnemies', this.data.newFavoredEnemies);
+    }
+    _handleWizardFavoredTerrainToggle(label) {
+        this._handleWizardChoiceToggle(label, 'favored-terrain', 'selectedNewFavoredTerrains', this.data.newFavoredTerrains);
+    }
+
+    /**
+     * Handler per select Opzioni Cacciatore (data-lu-hunter-option).
+     */
+    _handleWizardHunterOptionSelect(selectElement) {
+        const data = this.data;
+        if (!data) return;
+        const field = selectElement.dataset.luHunterOption;
+        if (!field) return;
+        const value = selectElement.value;
+        if (value) {
+            data.selectedHunterOptions[field] = value;
+        } else {
+            delete data.selectedHunterOptions[field];
+        }
+    }
+
+    /**
+     * Handler per select Maestria Incantesimi Mago (data-lu-spell-mastery).
+     */
+    _handleWizardSpellMasterySelect(selectElement) {
+        const data = this.data;
+        if (!data) return;
+        const level = selectElement.dataset.luSpellMastery;
+        if (!level) return;
+        const value = selectElement.value;
+        if (level === '1') {
+            data.selectedSpellMastery1 = value || '';
+        } else if (level === '2') {
+            data.selectedSpellMastery2 = value || '';
+        }
     }
 }
 

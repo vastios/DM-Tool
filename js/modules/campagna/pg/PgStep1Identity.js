@@ -68,6 +68,49 @@ function renderSubclassSelect(pgData, databases) {
 }
 
 /**
+ * Renderizza il selettore del Dono del Patto (solo Warlock liv. 3+)
+ * @param {Object} pgData - Dati del personaggio
+ * @param {Object} databases - Database con classe selezionata
+ * @returns {string} HTML del selettore o stringa vuota
+ */
+function renderPactBoonSelect(pgData, databases) {
+    const { selectedClass } = databases;
+    
+    // Solo per Warlock
+    if (!selectedClass || selectedClass.index !== 'warlock') {
+        return '';
+    }
+    
+    const doni = selectedClass.doni_del_patto;
+    if (!doni || doni.length === 0) {
+        return '';
+    }
+    
+    const currentLevel = pgData.level || 1;
+    
+    // Il dono del patto si sceglie al liv. 3
+    if (currentLevel < 3) {
+        return `
+            <div class="pact-boon-locked">
+                <select id="pg-pact-boon" class="form-control" disabled>
+                    <option value="">🔒 Disponibile dal Liv. 3</option>
+                </select>
+                <span class="subclass-hint">Attualmente al Liv. ${currentLevel}</span>
+            </div>
+        `;
+    }
+    
+    return `
+        <select id="pg-pact-boon" class="form-control">
+            <option value="">-- Scegli un dono --</option>
+            ${doni.map(d => `
+                <option value="${d.nome}" ${pgData.pactBoon === d.nome ? 'selected' : ''}>${d.nome}</option>
+            `).join('')}
+        </select>
+    `;
+}
+
+/**
  * Renderizza le informazioni su razza e classe
  * @param {Object} pgData - Dati del personaggio
  * @param {Object} databases - Database con razza e classe
@@ -167,7 +210,7 @@ export function renderStep1Identity(pgData, databases, traitsHtml = '') {
                     
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="pg-subclass">Sottoclasse</label>
+                            <label for="pg-subclass">Sottoclasse ${selectedClass && selectedClass.index === 'warlock' ? '(Patrono)' : ''}</label>
                             ${renderSubclassSelect(pgData, databases)}
                         </div>
                         <div class="form-group">
@@ -175,6 +218,16 @@ export function renderStep1Identity(pgData, databases, traitsHtml = '') {
                             <input type="number" id="pg-level" value="${pgData.level || 1}" min="1" max="20" class="form-control">
                         </div>
                     </div>
+                    
+                    ${selectedClass && selectedClass.index === 'warlock' ? `
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="pg-pact-boon">🗡️ Dono del Patto</label>
+                                ${renderPactBoonSelect(pgData, databases)}
+                            </div>
+                            <div class="form-group"></div>
+                        </div>
+                    ` : ''}
                     
                     <div class="form-row">
                         <div class="form-group">

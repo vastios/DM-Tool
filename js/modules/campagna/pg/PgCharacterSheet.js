@@ -162,6 +162,10 @@ function renderSheetHeader(pg) {
                         <span class="btn-icon">⬆️</span>
                         <span class="btn-text">Livello Su</span>
                     </button>
+                    <button class="btn btn-choices-sheet" data-action="edit-choices" data-pg-id="${pg.id}" title="Modifica scelte di classe (Stile, Metamagia, Maestria, ecc.)">
+                        <span class="btn-icon">⚙️</span>
+                        <span class="btn-text">Scelte</span>
+                    </button>
                     <button class="btn btn-equipment-sheet" data-action="open-equipment" data-pg-id="${pg.id}" title="Gestisci equipaggiamento">
                         <span class="btn-icon">⚔️</span>
                         <span class="btn-text">Equipaggiamento</span>
@@ -405,10 +409,53 @@ function renderCard1Back(pg, databases) {
                     <p class="empty-hint">Gli incantesimi possono essere aggiunti durante la creazione del personaggio o tramite il wizard di modifica.</p>
                 </div>
             `}
+
+            ${renderWarlockExtras(pg, databases)}
             
             <div class="flip-hint">↻ Click per girare</div>
         </div>
     `;
+}
+
+/**
+ * Renderizza i blocchi aggiuntivi specifici del Warlock (Arcanum + Suppliche).
+ * Mostrati solo se il PG ha questi dati.
+ */
+function renderWarlockExtras(pg, databases) {
+    const { selectedClass } = databases;
+    if (!selectedClass || selectedClass.index !== 'warlock') return '';
+
+    let html = '';
+
+    // Arcanum Mistico
+    if (pg.mysticArcanum && Object.keys(pg.mysticArcanum).length > 0) {
+        const entries = Object.entries(pg.mysticArcanum)
+            .filter(([lvl, name]) => name)
+            .map(([lvl, name]) => `<span class="spell-tag-mini arcanum-tag">✨ ${lvl}°: ${name}</span>`);
+        if (entries.length > 0) {
+            html += `
+                <div class="warlock-extra-section arcanum">
+                    <h4>✨ Arcanum Mistico</h4>
+                    <div class="spells-mini-list">${entries.join('')}</div>
+                </div>
+            `;
+        }
+    }
+
+    // Suppliche Occulte
+    if (Array.isArray(pg.eldritchInvocations) && pg.eldritchInvocations.length > 0) {
+        const tags = pg.eldritchInvocations.map(name =>
+            `<span class="spell-tag-mini invocation-tag" title="${escapeHtml(selectedClass.suppliche_occulte?.find(s => s.nome === name)?.descrizione || '')}">📖 ${escapeHtml(name)}</span>`
+        ).join('');
+        html += `
+            <div class="warlock-extra-section invocations">
+                <h4>📖 Suppliche Occulte (${pg.eldritchInvocations.length})</h4>
+                <div class="spells-mini-list">${tags}</div>
+            </div>
+        `;
+    }
+
+    return html ? `<div class="warlock-extras-container">${html}</div>` : '';
 }
 
 /**
@@ -759,7 +806,219 @@ export function renderTraitsAndPrivileges(pgData, databases) {
                 }
             }
         }
+        
+        // Dono del Patto (solo Warlock) — privilegio di classe separato dal Patrono
+        if (pgData.pactBoon && selectedClass.doni_del_patto) {
+            const donoData = selectedClass.doni_del_patto.find(d => d.nome === pgData.pactBoon);
+            if (donoData) {
+                html += `
+                    <div class="tp-section">
+                        <h4>🗡️ ${donoData.nome}</h4>
+                        <div class="tp-tags">
+                            ${renderTraitTag(donoData.nome, donoData.descrizione, 'class')}
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Suppliche Occulte (solo Warlock) — Eldritch Invocations
+        if (Array.isArray(pgData.eldritchInvocations) && pgData.eldritchInvocations.length > 0 &&
+            selectedClass.suppliche_occulte) {
+            html += `
+                <div class="tp-section">
+                    <h4>📖 Suppliche Occulte (${pgData.eldritchInvocations.length})</h4>
+                    <div class="tp-tags">
+                        ${pgData.eldritchInvocations.map(name => {
+                            const s = selectedClass.suppliche_occulte.find(x => x.nome === name);
+                            return renderTraitTag(
+                                name,
+                                s ? s.descrizione : 'Supplica occulta',
+                                'class'
+                            );
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Arcanum Mistico (solo Warlock) — incantesimi di 6°-9° livello
+        if (pgData.mysticArcanum && Object.keys(pgData.mysticArcanum).length > 0) {
+            const arcanumEntries = Object.entries(pgData.mysticArcanum)
+                .filter(([lvl, name]) => name)
+                .map(([lvl, name]) => `<strong>${lvl}°:</strong> ${name}`);
+            if (arcanumEntries.length > 0) {
+                html += `
+                    <div class="tp-section">
+                        <h4>✨ Arcanum Mistico</h4>
+                        <div class="tp-tags">
+                            ${arcanumEntries.map(e => `
+                                <span class="trait-tag class">${e}</span>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Trucchetti del Patto del Tomo (solo Warlock con Patto del Tomo)
+        if (Array.isArray(pgData.pactTomeCantrips) && pgData.pactTomeCantrips.length > 0) {
+            html += `
+                <div class="tp-section">
+                    <h4>📕 Trucchetti del Libro delle Ombre</h4>
+                    <div class="tp-tags">
+                        ${pgData.pactTomeCantrips.map(name => `
+                            <span class="trait-tag class">${name}</span>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
     }
+
+    // Scelte permanenti per tutte le classi (NON Warlock — gestito sopra)
+    if (pgData.scelte_permanenti && selectedClass.index !== 'warlock') {
+        const sp = pgData.scelte_permanenti;
+
+        // Stile di Combattimento (Fighter/Paladin/Ranger)
+        if (Array.isArray(sp.stili_combattimento) && sp.stili_combattimento.length > 0) {
+            html += `
+                <div class="tp-section">
+                    <h4>⚔️ Stile${sp.stili_combattimento.length > 1 ? 'i' : ''} di Combattimento</h4>
+                    <div class="tp-tags">
+                        ${sp.stili_combattimento.map(name => {
+                            const stile = selectedClass.stili_combattimento?.find(s => s.nome === name);
+                            return renderTraitTag(name, stile?.descrizione || '', 'class');
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Metamagia (Stregone)
+        if (Array.isArray(sp.metamagia) && sp.metamagia.length > 0) {
+            html += `
+                <div class="tp-section">
+                    <h4>✨ Metamagia (${sp.metamagia.length})</h4>
+                    <div class="tp-tags">
+                        ${sp.metamagia.map(name => {
+                            const meta = selectedClass.metamagia?.[name];
+                            const desc = meta ? `Costo: ${meta.costo}. ${meta.descrizione}` : '';
+                            return renderTraitTag(name, desc, 'class');
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Ascendenza Draconica (Stregone Lineaggio Drago)
+        if (sp.ascendenza_draconica) {
+            const patrono = (selectedClass.sottoclassi || []).find(s => s.nome === pgData.subclass);
+            const drag = patrono?.dragon_types?.find(d => d.nome === sp.ascendenza_draconica);
+            const desc = drag ? `Tipo di danno: ${drag.tipo_danno}. ${drag.descrizione}` : '';
+            html += `
+                <div class="tp-section">
+                    <h4>🐉 Ascendenza Draconica</h4>
+                    <div class="tp-tags">
+                        ${renderTraitTag(sp.ascendenza_draconica, desc, 'subclass')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Maestria (Bardo/Ladro)
+        if (Array.isArray(sp.maestria) && sp.maestria.length > 0) {
+            html += `
+                <div class="tp-section">
+                    <h4>🎯 Maestria (${sp.maestria.length})</h4>
+                    <div class="tp-tags">
+                        ${sp.maestria.map(name => `
+                            <span class="trait-tag class">${name} (competenza raddoppiata)</span>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Segreti Magici (Bardo)
+        if (Array.isArray(sp.segreti_magici) && sp.segreti_magici.length > 0) {
+            html += `
+                <div class="tp-section">
+                    <h4>🔮 Segreti Magici (${sp.segreti_magici.length})</h4>
+                    <div class="tp-tags">
+                        ${sp.segreti_magici.map(name => `
+                            <span class="trait-tag class">${name}</span>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Nemico Prescelto (Ranger)
+        if (Array.isArray(sp.nemici_prescelti) && sp.nemici_prescelti.length > 0) {
+            html += `
+                <div class="tp-section">
+                    <h4>🎯 Nemico Prescelto (${sp.nemici_prescelti.length})</h4>
+                    <div class="tp-tags">
+                        ${sp.nemici_prescelti.map(name => {
+                            const t = selectedClass.tipi_nemico_prescelto?.find(x => x.nome === name);
+                            return renderTraitTag(name, t?.descrizione || '', 'class');
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Terreno Prescelto (Ranger)
+        if (Array.isArray(sp.terreni_prescelti) && sp.terreni_prescelti.length > 0) {
+            html += `
+                <div class="tp-section">
+                    <h4>🌲 Terreno Prescelto (${sp.terreni_prescelti.length})</h4>
+                    <div class="tp-tags">
+                        ${sp.terreni_prescelti.map(name => {
+                            const t = selectedClass.tipi_terreno_prescelto?.find(x => x.nome === name);
+                            return renderTraitTag(name, t?.descrizione || '', 'class');
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Opzioni Cacciatore (Ranger Cacciatore)
+        const cacciatoreOpts = [
+            { field: 'preda_cacciatore',  label: 'Preda del Cacciatore' },
+            { field: 'difesa_cacciatore',  label: 'Difesa del Cacciatore' },
+            { field: 'cacciatore_supremo', label: 'Cacciatore Supremo' }
+        ].filter(o => sp[o.field]);
+        if (cacciatoreOpts.length > 0) {
+            html += `
+                <div class="tp-section">
+                    <h4>🏹 Opzioni del Cacciatore</h4>
+                    <div class="tp-tags">
+                        ${cacciatoreOpts.map(o => `
+                            <span class="trait-tag subclass"><strong>${o.label}:</strong> ${sp[o.field]}</span>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Maestria degli Incantesimi (Mago)
+        if (sp.maestria_incantesimi_1 || sp.maestria_incantesimi_2) {
+            const tags = [];
+            if (sp.maestria_incantesimi_1) tags.push(`1°: ${sp.maestria_incantesimi_1}`);
+            if (sp.maestria_incantesimi_2) tags.push(`2°: ${sp.maestria_incantesimi_2}`);
+            html += `
+                <div class="tp-section">
+                    <h4>📘 Maestria degli Incantesimi</h4>
+                    <div class="tp-tags">
+                        ${tags.map(t => `<span class="trait-tag class">${t} (a volontà)</span>`).join('')}
+                    </div>
+                </div>
+            `;
+        }
+    }  // fine if (pgData.scelte_permanenti)
+    }  // fine if (selectedClass)
     
     html += '</div>';
     return html;

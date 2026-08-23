@@ -199,6 +199,100 @@ export class PgDataManager {
                     errors.push(`Troppi trucchetti: ${cantrips.length} selezionati, massimo ${maxCantrips}.`);
                 }
             }
+
+            // === Validazione specifica Warlock ===
+            if (pgData.class === 'warlock') {
+                const lvl = pgData.level || 1;
+
+                // Patrono obbligatorio dal liv. 1
+                if (!pgData.subclass) {
+                    errors.push('Il Warlock deve scegliere un Patrono Ultraterreno (sottoclasse).');
+                }
+
+                // Dono del Patto obbligatorio dal liv. 3
+                if (lvl >= 3 && !pgData.pactBoon) {
+                    errors.push('Il Warlock dal liv. 3 deve scegliere un Dono del Patto (Catena, Lama o Tomo).');
+                }
+
+                // Suppliche occulte: numero atteso in base al livello
+                const expectedInvocations = _getExpectedWarlockInvocations(lvl);
+                const actualInvocations = (pgData.eldritchInvocations || []).length;
+                if (actualInvocations > expectedInvocations) {
+                    errors.push(`Troppe suppliche occulte: ${actualInvocations} selezionate, massimo ${expectedInvocations} per il liv. ${lvl}.`);
+                }
+                // Nota: non blocchiamo per "poche suppliche" perché l'utente potrebbe voler completare la scelta in un secondo momento
+                // (solo avviso, non errore bloccante)
+                if (expectedInvocations > 0 && actualInvocations < expectedInvocations && step === null) {
+                    console.warn(`⚠️ [Warlock] Suppliche incomplete: ${actualInvocations}/${expectedInvocations} al liv. ${lvl}`);
+                }
+
+                // Arcanum Mistico: deve essere popolato ai livelli appropriati (solo avviso in console, non bloccante)
+                const arcanum = pgData.mysticArcanum || {};
+                const expectedArcanumLevels = [11, 13, 15, 17].filter(reqLvl => lvl >= reqLvl);
+                const actualArcanumCount = expectedArcanumLevels.filter(reqLvl => arcanum[{11:6,13:7,15:8,17:9}[reqLvl]]).length;
+                if (expectedArcanumLevels.length > 0 && actualArcanumCount < expectedArcanumLevels.length && step === null) {
+                    console.warn(`⚠️ [Warlock] Arcanum Mistico incompleti: ${actualArcanumCount}/${expectedArcanumLevels.length} al liv. ${lvl}`);
+                }
+
+                // Patto del Tomo: 3 trucchetti bonus
+                if (pgData.pactBoon === 'Patto del Tomo') {
+                    const tomeCantrips = (pgData.pactTomeCantrips || []).length;
+                    if (tomeCantrips > 3) {
+                        errors.push(`Troppi trucchetti del Libro delle Ombre: ${tomeCantrips} selezionati, massimo 3.`);
+                    }
+                }
+            }
+
+            // === Validazione scelte_permanenti per altre classi ===
+            if (pgData.class !== 'warlock' && pgData.scelte_permanenti) {
+                const sp = pgData.scelte_permanenti;
+                const lvl = pgData.level || 1;
+                const cls = pgData.class;
+
+                // Stile di Combattimento (Fighter/Paladin/Ranger)
+                if (cls === 'fighter' || cls === 'paladin' || cls === 'ranger') {
+                    const expected = _getExpectedFightingStyles(cls, lvl, pgData.subclass);
+                    if (sp.stili_combattimento && sp.stili_combattimento.length > expected) {
+                        errors.push(`Troppi stili di combattimento: ${sp.stili_combattimento.length} selezionati, massimo ${expected}.`);
+                    }
+                }
+
+                // Metamagia (Stregone)
+                if (cls === 'sorcerer') {
+                    const expected = _getExpectedMetamagics(lvl);
+                    if (sp.metamagia && sp.metamagia.length > expected) {
+                        errors.push(`Troppe metamagie: ${sp.metamagia.length} selezionate, massimo ${expected}.`);
+                    }
+                }
+
+                // Maestria (Bardo/Ladro)
+                if (cls === 'bard' || cls === 'rogue') {
+                    const expected = _getExpectedExpertise(cls === 'bard' ? 'Bardo' : 'Ladro', lvl);
+                    if (sp.maestria && sp.maestria.length > expected) {
+                        errors.push(`Troppe maestrie: ${sp.maestria.length} selezionate, massimo ${expected}.`);
+                    }
+                }
+
+                // Segreti Magici (Bardo)
+                if (cls === 'bard') {
+                    const expected = _getExpectedMagicalSecrets(lvl, pgData.subclass);
+                    if (sp.segreti_magici && sp.segreti_magici.length > expected) {
+                        errors.push(`Troppi segreti magici: ${sp.segreti_magici.length} selezionati, massimo ${expected}.`);
+                    }
+                }
+
+                // Nemico Prescelto (Ranger)
+                if (cls === 'ranger') {
+                    const expectedE = _getExpectedFavoredEnemies(lvl);
+                    if (sp.nemici_prescelti && sp.nemici_prescelti.length > expectedE) {
+                        errors.push(`Troppi nemici prescelti: ${sp.nemici_prescelti.length} selezionati, massimo ${expectedE}.`);
+                    }
+                    const expectedT = _getExpectedFavoredTerrains(lvl);
+                    if (sp.terreni_prescelti && sp.terreni_prescelti.length > expectedT) {
+                        errors.push(`Troppi terreni prescelti: ${sp.terreni_prescelti.length} selezionati, massimo ${expectedT}.`);
+                    }
+                }
+            }
         }
         
         const result = {
@@ -435,6 +529,90 @@ export class PgDataManager {
         this.pcs = [];
         console.log('📊 [PgDataManager] Cache resettata.');
     }
+}
+
+/**
+ * Helper: numero atteso di suppliche occulte per warlock al livello dato.
+ * Da tabella warlock: liv.2=2, liv.5=3, liv.7=4, liv.9=5, liv.12=6, liv.15=7, liv.18=8.
+ * Sotto il liv. 2 → 0 suppliche.
+ */
+function _getExpectedWarlockInvocations(pgLevel) {
+    const table = { 2: 2, 5: 3, 7: 4, 9: 5, 12: 6, 15: 7, 18: 8 };
+    const levels = Object.keys(table).map(Number).sort((a, b) => b - a);
+    for (const lvl of levels) {
+        if (pgLevel >= lvl) return table[lvl];
+    }
+    return 0;
+}
+
+/**
+ * Helper: numero atteso di stili di combattimento.
+ */
+function _getExpectedFightingStyles(classIndex, pgLevel, subclass) {
+    if (classIndex === 'fighter') {
+        if (pgLevel < 1) return 0;
+        return (subclass === 'Campione' && pgLevel >= 10) ? 2 : 1;
+    }
+    if (classIndex === 'paladin') return pgLevel >= 2 ? 1 : 0;
+    if (classIndex === 'ranger')  return pgLevel >= 2 ? 1 : 0;
+    return 0;
+}
+
+/**
+ * Helper: numero atteso di metamagie per Stregone.
+ */
+function _getExpectedMetamagics(pgLevel) {
+    if (pgLevel >= 17) return 4;
+    if (pgLevel >= 10) return 3;
+    if (pgLevel >= 3) return 2;
+    return 0;
+}
+
+/**
+ * Helper: numero atteso di Maestrie per Bardo/Ladro.
+ */
+function _getExpectedExpertise(classNameIt, pgLevel) {
+    if (classNameIt === 'Bardo') {
+        if (pgLevel < 3) return 0;
+        return pgLevel >= 10 ? 4 : 2;
+    }
+    if (classNameIt === 'Ladro') {
+        if (pgLevel < 1) return 0;
+        return pgLevel >= 6 ? 4 : 2;
+    }
+    return 0;
+}
+
+/**
+ * Helper: numero atteso di Segreti Magici per Bardo.
+ */
+function _getExpectedMagicalSecrets(pgLevel, subclass) {
+    let total = 0;
+    if (pgLevel >= 10) total += 2;
+    if (pgLevel >= 14) total += 2;
+    if (pgLevel >= 18) total += 2;
+    if (subclass === 'Collegio della Sapienza' && pgLevel >= 6) total += 2;
+    return total;
+}
+
+/**
+ * Helper: numero atteso di nemici prescelti per Ranger.
+ */
+function _getExpectedFavoredEnemies(pgLevel) {
+    if (pgLevel >= 14) return 3;
+    if (pgLevel >= 6) return 2;
+    if (pgLevel >= 1) return 1;
+    return 0;
+}
+
+/**
+ * Helper: numero atteso di terreni prescelti per Ranger.
+ */
+function _getExpectedFavoredTerrains(pgLevel) {
+    if (pgLevel >= 10) return 3;
+    if (pgLevel >= 6) return 2;
+    if (pgLevel >= 1) return 1;
+    return 0;
 }
 
 console.log('📊 [PgDataManager] Modulo caricato.');
