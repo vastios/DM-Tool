@@ -165,7 +165,7 @@ function renderRaceClassInfo(pgData, databases, traitsHtml = '') {
  * @returns {string} HTML dello step
  */
 export function renderStep1Identity(pgData, databases, traitsHtml = '') {
-    const { races, classes, alignments, backgrounds } = databases;
+    const { races, classes, alignments, backgrounds, selectedClass } = databases;
     
     return `
         <div class="wizard-form">
