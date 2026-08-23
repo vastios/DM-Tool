@@ -233,11 +233,11 @@ const maxSpellLevelHalfCaster = {
 const spellsKnownByLevel = {
     "Bardo": { 1: 4, 2: 5, 3: 6, 4: 7, 5: 8, 6: 9, 7: 10, 8: 11, 9: 12, 10: 14, 11: 15, 12: 16, 13: 17, 14: 18, 15: 19, 16: 20, 17: 22, 18: 23, 19: 24, 20: 25 },
     "Stregone": { 1: 2, 2: 3, 3: 4, 4: 5, 5: 6, 6: 7, 7: 8, 8: 9, 9: 10, 10: 11, 11: 12, 12: 12, 13: 13, 14: 13, 15: 14, 16: 14, 17: 15, 18: 15, 19: 16, 20: 16 },
+    "Warlock": { 1: 2, 2: 3, 3: 4, 4: 5, 5: 6, 6: 7, 7: 8, 8: 9, 9: 10, 10: 11, 11: 12, 12: 12, 13: 13, 14: 13, 15: 14, 16: 14, 17: 15, 18: 15, 19: 15, 20: 15 },
     // Per Mago, Chierico, Druido non c'è limite (preparano incantesimi)
     "Mago": null,
     "Chierico": null,
     "Druido": null,
-    "Warlock": null, // Warlock ha regole speciali
     "Paladino": null, // Prepara come Chierico
     "Ranger": null // Prepara come Druido
 };
@@ -329,10 +329,12 @@ export function getCasterType(className) {
 }
 
 /**
- * Verifica se una classe è un incantatore "known" (Bardo, Stregone)
+ * Verifica se una classe è un incantatore "known" (Bardo, Stregone, Warlock).
+ * Warlock è trattato come known caster perché seleziona un numero limitato di
+ * incantesimi conosciuti dalla propria lista (non preparati come Chierico/Druido).
  */
 export function isKnownCaster(className) {
-    return ['Bardo', 'Stregone'].includes(className);
+    return ['Bardo', 'Stregone', 'Warlock'].includes(className);
 }
 
 /**
