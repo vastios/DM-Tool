@@ -141,6 +141,7 @@ export class PgController {
             eldritchInvocations: [],
             mysticArcanum: {},
             pactTomeCantrips: [],
+            pactBoon: '',  // Dono del Patto (Warlock) — scelto al liv. 3
             scelte_permanenti: {
                 stili_combattimento: [],
                 metamagia: [],
@@ -1271,6 +1272,13 @@ export class PgController {
         
         // Deep clone del PG per evitare di modificare l'originale
         this.wizardData = this.clonePg(pg);
+        // Ensure campi warlock inizializzati (retrocompatibilità con PG creati prima della fix)
+        if (this.wizardData.class === 'warlock') {
+            if (!this.wizardData.pactBoon) this.wizardData.pactBoon = '';
+            if (!Array.isArray(this.wizardData.eldritchInvocations)) this.wizardData.eldritchInvocations = [];
+            if (!this.wizardData.mysticArcanum) this.wizardData.mysticArcanum = {};
+            if (!Array.isArray(this.wizardData.pactTomeCantrips)) this.wizardData.pactTomeCantrips = [];
+        }
         this.isEditMode = true;
         this.selectedPgId = pgId; // Mantieni selezionato
         this.mode = 'wizard';
