@@ -1385,7 +1385,8 @@ export class PgController {
             // numChoices stays at class's original number (NO increase from bg overlap)
             this.wizardData._classNumSkillChoices = classSkillsData.numChoices;
         }
-        if (this.currentStep === 4) {
+        if (this.currentStep === 5) {
+            // Step 5 è ora "Incantesimi" (prima era step 4)
             this.wizardData._maxCantrips = this.getMaxCantrips();
         }
         
@@ -1397,14 +1398,14 @@ export class PgController {
             return;
         }
         
-        if (this.currentStep === 7) {
+        if (this.currentStep === 8) {
             this.savePg();
             return;
         }
         
         this.currentStep++;
         
-        if (this.currentStep === 7) {
+        if (this.currentStep === 8) {
             // Strip eventuali bonus residui (navigazione avanti-indietro) prima di ricalcolare
             this._stripBonusesFromAbilities();
             this.calculateFinalStats();

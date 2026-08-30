@@ -186,7 +186,26 @@ export class PgDataManager {
             }
         }
         
+        // === Validazione scelte permanenti (sottoclasse, dono patto, stili, etc.) ===
+        // Prima era in step 4 (incantesimi), ora è step 4 (privilegi di classe).
         if (step === 4 || step === null) {
+            // Validazione Warlock: patrono obbligatorio, dono patto al liv.3+
+            if (pgData.class === 'warlock') {
+                const lvl = pgData.level || 1;
+                if (!pgData.subclass) {
+                    errors.push('Il Warlock deve scegliere un Patrono Ultraterreno (sottoclasse).');
+                }
+                if (lvl >= 3 && !pgData.pactBoon) {
+                    errors.push('Il Warlock dal liv. 3 deve scegliere un Dono del Patto (Catena, Lama o Tomo).');
+                }
+            }
+            // Per altre classi: sottoclasse obbligatoria al livello appropriato
+            // (il livello minimo dipende dalla classe — cleric/sorcerer/warlock liv.1, wizard liv.2, altri liv.3)
+            // Ma non blocchiamo se l'utente non ha ancora scelto — solo avviso in console
+        }
+
+        // === Validazione incantesimi (ora step 5) ===
+        if (step === 5 || step === null) {
             // Valida che i trucchetti siano entro il limite
             if (pgData.spellcasting && pgData.spellcasting.spellsKnown) {
                 const cantrips = pgData.spellcasting.spellsKnown.filter(s => {
@@ -200,19 +219,9 @@ export class PgDataManager {
                 }
             }
 
-            // === Validazione specifica Warlock ===
+            // === Validazione specifica Warlock (incantesimi e risorse) ===
             if (pgData.class === 'warlock') {
                 const lvl = pgData.level || 1;
-
-                // Patrono obbligatorio dal liv. 1
-                if (!pgData.subclass) {
-                    errors.push('Il Warlock deve scegliere un Patrono Ultraterreno (sottoclasse).');
-                }
-
-                // Dono del Patto obbligatorio dal liv. 3
-                if (lvl >= 3 && !pgData.pactBoon) {
-                    errors.push('Il Warlock dal liv. 3 deve scegliere un Dono del Patto (Catena, Lama o Tomo).');
-                }
 
                 // Suppliche occulte: numero atteso in base al livello
                 const expectedInvocations = _getExpectedWarlockInvocations(lvl);

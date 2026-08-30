@@ -27,6 +27,7 @@ import { renderStep7Summary } from './PgStep7Summary.js';
 import { renderStep2Abilities } from './PgStep2Abilities.js';
 import { renderStep1Identity } from './PgStep1Identity.js';
 import { renderStep3Proficiencies } from './PgStep3Proficiencies.js';
+import { renderStep4ClassPrivileges } from './PgStep4ClassPrivileges.js';
 import { renderStep4Spells } from './PgStep4Spells.js';
 import { 
     renderCharacterSheet, 
@@ -168,7 +169,7 @@ export class PgViewManager {
                         Annulla
                     </button>
                     <button class="btn btn-primary" id="btn-next">
-                        ${step === 7 ? '💾 Salva' : 'Avanti →'}
+                        ${step === 8 ? '💾 Salva' : 'Avanti →'}
                     </button>
                 </div>
             </div>
@@ -180,10 +181,11 @@ export class PgViewManager {
             { num: 1, label: 'Identità' },
             { num: 2, label: 'Statistiche' },
             { num: 3, label: 'Competenze' },
-            { num: 4, label: 'Incantesimi' },
-            { num: 5, label: 'Inventario' },
-            { num: 6, label: 'Note' },
-            { num: 7, label: 'Riepilogo' }
+            { num: 4, label: 'Privilegi' },
+            { num: 5, label: 'Incantesimi' },
+            { num: 6, label: 'Inventario' },
+            { num: 7, label: 'Note' },
+            { num: 8, label: 'Riepilogo' }
         ];
         
         return `
@@ -203,10 +205,11 @@ export class PgViewManager {
             1: 'Step 1: Identità del Personaggio',
             2: 'Step 2: Punteggi Caratteristica',
             3: 'Step 3: Competenze e Abilità',
-            4: 'Step 4: Incantesimi',
-            5: 'Step 5: Inventario ed Equipaggiamento',
-            6: 'Step 6: Note e Background',
-            7: 'Riepilogo del Personaggio'
+            4: 'Step 4: Privilegi di Classe',
+            5: 'Step 5: Incantesimi',
+            6: 'Step 6: Inventario ed Equipaggiamento',
+            7: 'Step 7: Note e Background',
+            8: 'Riepilogo del Personaggio'
         };
         return titles[step] || 'Step sconosciuto';
     }
@@ -225,10 +228,11 @@ export class PgViewManager {
             case 1: return renderStep1Identity(pgData, databases, renderTraitsAndPrivileges(pgData, databases));
             case 2: return renderStep2Abilities(pgData, databases);
             case 3: return renderStep3Proficiencies(pgData, databases);
-            case 4: return renderStep4Spells(pgData, databases);
-            case 5: return renderStep5Inventory(pgData, databases);
-            case 6: return renderStep6Notes(pgData);
-            case 7: return renderStep7Summary(pgData, databases, renderTraitsAndPrivileges(pgData, databases));
+            case 4: return renderStep4ClassPrivileges(pgData, databases);
+            case 5: return renderStep4Spells(pgData, databases);
+            case 6: return renderStep5Inventory(pgData, databases);
+            case 7: return renderStep6Notes(pgData);
+            case 8: return renderStep7Summary(pgData, databases, renderTraitsAndPrivileges(pgData, databases));
             default: return '<p>Step non valido</p>';
         }
     }

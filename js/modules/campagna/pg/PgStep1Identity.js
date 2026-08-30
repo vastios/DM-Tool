@@ -3,112 +3,15 @@
  * ─────────────────────────────────────────────────────────────
  * Renderizza lo Step 1 del wizard: Identità del personaggio.
  * Include generazione casuale di aspetto fisico e personalità.
- * 
+ *
+ * NOTA: Sottoclasse e Dono del Patto sono stati spostati allo Step 4
+ * (Privilegi di Classe) perché dipendono da classe e livello.
+ *
  * @author DM Tool
- * @version 1.2.0 - Generazione casuale aspetto e personalità
+ * @version 1.3.0 - Sottoclasse e Dono del Patto spostati allo Step 4
  */
 
-import { escapeHtml, getSubclassMinLevel } from './PgConstants.js';
-
-/**
- * Renderizza il selettore della sottoclasse con controllo livello
- * @param {Object} pgData - Dati del personaggio
- * @param {Object} databases - Database con classe selezionata
- * @returns {string} HTML del selettore
- */
-function renderSubclassSelect(pgData, databases) {
-    const { selectedClass } = databases;
-    
-    // Se non c'è una classe selezionata
-    if (!selectedClass) {
-        return `
-            <select id="pg-subclass" class="form-control" disabled>
-                <option value="">-- Seleziona prima una classe --</option>
-            </select>
-        `;
-    }
-    
-    // Ottieni le sottoclassi dalla classe (sia chiave italiana che inglese)
-    const subclassOptions = selectedClass.sottoclassi || selectedClass.subclasses || [];
-    
-    // Se non ci sono sottoclassi disponibili
-    if (subclassOptions.length === 0) {
-        return `
-            <select id="pg-subclass" class="form-control" disabled>
-                <option value="">-- Nessuna sottoclasse disponibile --</option>
-            </select>
-        `;
-    }
-    
-    // Determina il livello minimo per la sottoclasse
-    const currentLevel = pgData.level || 1;
-    const minLevel = getSubclassMinLevel(selectedClass);
-    
-    // Se il livello è insufficiente
-    if (currentLevel < minLevel) {
-        return `
-            <div class="subclass-locked">
-                <select id="pg-subclass" class="form-control" disabled>
-                    <option value="">🔒 Disponibile dal Liv. ${minLevel}</option>
-                </select>
-                <span class="subclass-hint">Attualmente al Liv. ${currentLevel}</span>
-            </div>
-        `;
-    }
-    
-    // Mostra le opzioni della sottoclasse
-    return `
-        <select id="pg-subclass" class="form-control">
-            <option value="">-- Opzionale --</option>
-            ${subclassOptions.map(s => `
-                <option value="${s.nome}" ${pgData.subclass === s.nome ? 'selected' : ''}>${s.nome}</option>
-            `).join('')}
-        </select>
-    `;
-}
-
-/**
- * Renderizza il selettore del Dono del Patto (solo Warlock liv. 3+)
- * @param {Object} pgData - Dati del personaggio
- * @param {Object} databases - Database con classe selezionata
- * @returns {string} HTML del selettore o stringa vuota
- */
-function renderPactBoonSelect(pgData, databases) {
-    const { selectedClass } = databases;
-    
-    // Solo per Warlock
-    if (!selectedClass || selectedClass.index !== 'warlock') {
-        return '';
-    }
-    
-    const doni = selectedClass.doni_del_patto;
-    if (!doni || doni.length === 0) {
-        return '';
-    }
-    
-    const currentLevel = pgData.level || 1;
-    
-    // Il dono del patto si sceglie al liv. 3
-    if (currentLevel < 3) {
-        return `
-            <div class="pact-boon-locked">
-                <select id="pg-pact-boon" class="form-control" disabled>
-                    <option value="">🔒 Disponibile dal Liv. 3</option>
-                </select>
-                <span class="subclass-hint">Attualmente al Liv. ${currentLevel}</span>
-            </div>
-        `;
-    }
-    
-    return `
-        <select id="pg-pact-boon" class="form-control">
-            <option value="">-- Scegli un dono --</option>
-            ${doni.map(d => `
-                <option value="${d.nome}" ${pgData.pactBoon === d.nome ? 'selected' : ''}>${d.nome}</option>
-            `).join('')}
-        </select>
-    `;
-}
+import { escapeHtml } from './PgConstants.js';
 
 /**
  * Renderizza le informazioni su razza e classe
@@ -210,26 +113,9 @@ export function renderStep1Identity(pgData, databases, traitsHtml = '') {
                     
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="pg-subclass">Sottoclasse ${selectedClass && selectedClass.index === 'warlock' ? '(Patrono)' : ''}</label>
-                            ${renderSubclassSelect(pgData, databases)}
-                        </div>
-                        <div class="form-group">
                             <label for="pg-level">Livello *</label>
                             <input type="number" id="pg-level" value="${pgData.level || 1}" min="1" max="20" class="form-control">
                         </div>
-                    </div>
-                    
-                    ${selectedClass && selectedClass.index === 'warlock' ? `
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="pg-pact-boon">🗡️ Dono del Patto</label>
-                                ${renderPactBoonSelect(pgData, databases)}
-                            </div>
-                            <div class="form-group"></div>
-                        </div>
-                    ` : ''}
-                    
-                    <div class="form-row">
                         <div class="form-group">
                             <label for="pg-background">Background</label>
                             <select id="pg-background" class="form-control">
@@ -239,6 +125,9 @@ export function renderStep1Identity(pgData, databases, traitsHtml = '') {
                                 `).join('')}
                             </select>
                         </div>
+                    </div>
+                    
+                    <div class="form-row">
                         <div class="form-group">
                             <label for="pg-alignment">Allineamento</label>
                             <select id="pg-alignment" class="form-control">
@@ -248,9 +137,6 @@ export function renderStep1Identity(pgData, databases, traitsHtml = '') {
                                 `).join('')}
                             </select>
                         </div>
-                    </div>
-                    
-                    <div class="form-row">
                         <div class="form-group">
                             <label for="pg-gender">Sesso</label>
                             <select id="pg-gender" class="form-control">
@@ -259,12 +145,22 @@ export function renderStep1Identity(pgData, databases, traitsHtml = '') {
                                 <option value="female" ${pgData.gender === 'female' ? 'selected' : ''}>Femmina</option>
                             </select>
                         </div>
+                    </div>
+                    
+                    <div class="form-row">
                         <div class="form-group" style="display: flex; align-items: flex-end;">
                             <button type="button" id="btn-generate-descriptions" class="btn btn-secondary" style="width: 100%; background: linear-gradient(135deg, #9b59b6 0%, #6c3483 100%); color: #fff; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">
                                 🎲 Genera Aspetto & Personalità
                             </button>
                         </div>
+                        <div class="form-group"></div>
                     </div>
+                    
+                    ${selectedClass ? `
+                        <div class="info-box step1-class-hint">
+                            <p>ℹ️ Sottoclasse, Dono del Patto (Warlock) e altre scelte specifiche della classe verranno selezionate nello <strong>Step 4 — Privilegi di Classe</strong>.</p>
+                        </div>
+                    ` : ''}
                     
                     <!-- Aspetto Fisico -->
                     <div class="form-section" style="margin-top: 1rem;">
@@ -302,4 +198,4 @@ export function renderStep1Identity(pgData, databases, traitsHtml = '') {
     `;
 }
 
-console.log('📋 [PgStep1Identity] Modulo caricato.');
+console.log('📋 [PgStep1Identity] Modulo caricato v1.3.0');
