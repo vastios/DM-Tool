@@ -22,6 +22,10 @@ import {
     escapeHtml
 } from './PgConstants.js';
 import { showToast } from '../../../../utils/toast.js';
+import {
+    checkInvocationPrereq,
+    getMaxWarlockInvocations
+} from './WarlockInvocations.js';
 
 export class PgLevelUpManager {
     
@@ -1538,34 +1542,20 @@ export class PgLevelUpManager {
 
     /**
      * Helper: numero massimo di suppliche occulte per warlock al livello dato.
-     * Da tabella: 2/2/3/4/5/6/7/8 ai livelli 2/5/7/9/12/15/18.
+     * @deprecated Usare getMaxWarlockInvocations da WarlockInvocations.js
      */
     _getMaxWarlockInvocations(pgLevel) {
-        const table = { 2: 2, 5: 3, 7: 4, 9: 5, 12: 6, 15: 7, 18: 8 };
-        const levels = Object.keys(table).map(Number).sort((a, b) => b - a);
-        for (const lvl of levels) {
-            if (pgLevel >= lvl) return table[lvl];
-        }
-        return 0;
+        return getMaxWarlockInvocations(pgLevel);
     }
 
     /**
      * Helper: verifica i prerequisiti di una supplica occulta.
+     * Usa il livello newLevel (post level-up) per il check.
+     * @deprecated Usare checkInvocationPrereq da WarlockInvocations.js
      * @returns {{ok: boolean, reason: string}}
      */
     _checkInvocationPrereq(supplica, pg, newLevel) {
-        const patrono = pg.subclass;
-        const dono = pg.pactBoon;
-        if (supplica.livello_minimo && newLevel < supplica.livello_minimo) {
-            return { ok: false, reason: `Richiede liv. ${supplica.livello_minimo}` };
-        }
-        if (supplica.richiede_dono && dono !== supplica.richiede_dono) {
-            return { ok: false, reason: `Richiede ${supplica.richiede_dono}` };
-        }
-        if (supplica.richiede_patrono && patrono !== supplica.richiede_patrono) {
-            return { ok: false, reason: `Richiede patrono ${supplica.richiede_patrono}` };
-        }
-        return { ok: true, reason: '' };
+        return checkInvocationPrereq(supplica, pg, newLevel);
     }
     
     // ========================================================================

@@ -21,6 +21,7 @@ import {
     ALL_SPELLCASTERS,
     SPELL_SLOTS_BY_LEVEL
 } from './PgConstants.js';
+import { getMaxWarlockInvocations as getMaxWarlockInvocationsShared } from './WarlockInvocations.js';
 
 export class PgDataManager {
     
@@ -542,16 +543,10 @@ export class PgDataManager {
 
 /**
  * Helper: numero atteso di suppliche occulte per warlock al livello dato.
- * Da tabella warlock: liv.2=2, liv.5=3, liv.7=4, liv.9=5, liv.12=6, liv.15=7, liv.18=8.
- * Sotto il liv. 2 → 0 suppliche.
+ * @deprecated Usare getMaxWarlockInvocations da WarlockInvocations.js
  */
 function _getExpectedWarlockInvocations(pgLevel) {
-    const table = { 2: 2, 5: 3, 7: 4, 9: 5, 12: 6, 15: 7, 18: 8 };
-    const levels = Object.keys(table).map(Number).sort((a, b) => b - a);
-    for (const lvl of levels) {
-        if (pgLevel >= lvl) return table[lvl];
-    }
-    return 0;
+    return getMaxWarlockInvocationsShared(pgLevel);
 }
 
 /**

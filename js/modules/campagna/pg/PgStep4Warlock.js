@@ -15,47 +15,26 @@
 
 import { escapeHtml } from './PgConstants.js';
 import { spellLevelsByClass } from '../../../../database/classSpells.js';
+import {
+    checkInvocationPrereq,
+    getMaxWarlockInvocations
+} from './WarlockInvocations.js';
 
 /**
- * Verifica se una supplica è scelta valida in base ai prerequisiti.
- * @param {Object} supplica - Oggetto supplica da warlock.js
- * @param {Object} pgData - Dati PG (per livello, patrono, dono)
- * @returns {Object} { ok: boolean, reason: string }
+ * @deprecated Usare checkInvocationPrereq da WarlockInvocations.js
+ * Wrapper per retrocompatibilità con il codice esistente in questo file.
  */
-function checkInvocationPrereq(supplica, pgData) {
-    const lvl = pgData.level || 1;
-    const patrono = pgData.subclass; // Patrono = sottoclasse per warlock
-    const dono = pgData.pactBoon;
-
-    // Livello minimo
-    if (supplica.livello_minimo && lvl < supplica.livello_minimo) {
-        return { ok: false, reason: `Richiede liv. ${supplica.livello_minimo}` };
-    }
-    // Richiede dono specifico
-    if (supplica.richiede_dono && dono !== supplica.richiede_dono) {
-        return { ok: false, reason: `Richiede ${supplica.richiede_dono}` };
-    }
-    // Richiede patrono specifico
-    if (supplica.richiede_patrono && patrono !== supplica.richiede_patrono) {
-        return { ok: false, reason: `Richiede patrono ${supplica.richiede_patrono}` };
-    }
-    return { ok: true, reason: '' };
+function checkInvocationPrereqLocal(supplica, pgData) {
+    return checkInvocationPrereq(supplica, pgData);
 }
 
 /**
- * Calcola quante suppliche occulte il warlock dovrebbe avere in base al livello.
- * @param {number} pgLevel
- * @returns {number}
+ * @deprecated Usare getMaxWarlockInvocations da WarlockInvocations.js
  */
 function getMaxInvocations(pgLevel) {
-    // Da tabella warlock: liv.2=2, liv.5=3, liv.7=4, liv.9=5, liv.12=6, liv.15=7, liv.18=8
-    const table = { 2: 2, 5: 3, 7: 4, 9: 5, 12: 6, 15: 7, 18: 8 };
-    const levels = Object.keys(table).map(Number).sort((a, b) => b - a);
-    for (const lvl of levels) {
-        if (pgLevel >= lvl) return table[lvl];
-    }
-    return 0; // liv. 1 → 0 suppliche
+    return getMaxWarlockInvocations(pgLevel);
 }
+
 
 /**
  * Ottiene la lista di tutti i trucchetti di qualsiasi classe (per Patto del Tomo).

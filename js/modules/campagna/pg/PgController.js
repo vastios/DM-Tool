@@ -19,6 +19,7 @@ import {
     createChoicesDraft,
     draftToUpdates
 } from './PgEditChoices.js';
+import { getMaxWarlockInvocations as getMaxWarlockInvocationsShared } from './WarlockInvocations.js';
 import { 
     EMPTY_PG, 
     calculateModifier, 
@@ -4795,12 +4796,7 @@ export class PgController {
 // Mantenute qui per evitare dipendenze circolari.
 
 function getMaxWarlockInvocationsForValidation(pgLevel) {
-    const table = { 2: 2, 5: 3, 7: 4, 9: 5, 12: 6, 15: 7, 18: 8 };
-    const levels = Object.keys(table).map(Number).sort((a, b) => b - a);
-    for (const lvl of levels) {
-        if (pgLevel >= lvl) return table[lvl];
-    }
-    return 0;
+    return getMaxWarlockInvocationsShared(pgLevel);
 }
 
 function getMaxFightingStylesForValidation(classIndex, pgLevel, subclass) {

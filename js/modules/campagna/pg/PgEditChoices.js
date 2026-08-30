@@ -25,6 +25,10 @@
 import { escapeHtml } from './PgConstants.js';
 import { spellLevelsByClass } from '../../../../database/classSpells.js';
 import { showToast } from '../../../../utils/toast.js';
+import {
+    checkInvocationPrereq,
+    getMaxWarlockInvocations as getMaxWarlockInvocationsShared
+} from './WarlockInvocations.js';
 
 // Abilità per Maestria
 const EXPERTISE_SKILLS = [
@@ -36,12 +40,7 @@ const EXPERTISE_SKILLS = [
 // === HELPER: limiti per livello/classe ===
 
 function getMaxWarlockInvocations(pgLevel) {
-    const table = { 2: 2, 5: 3, 7: 4, 9: 5, 12: 6, 15: 7, 18: 8 };
-    const levels = Object.keys(table).map(Number).sort((a, b) => b - a);
-    for (const lvl of levels) {
-        if (pgLevel >= lvl) return table[lvl];
-    }
-    return 0;
+    return getMaxWarlockInvocationsShared(pgLevel);
 }
 
 function getMaxFightingStyles(classIndex, pgLevel, subclass) {
@@ -97,22 +96,7 @@ function getMaxFavoredTerrains(pgLevel) {
 }
 
 // === VERIFICA PREREQUISITI WARLOCK INVOCATIONS ===
-
-function checkInvocationPrereq(supplica, pg) {
-    const lvl = pg.level || 1;
-    const patrono = pg.subclass;
-    const dono = pg.pactBoon;
-    if (supplica.livello_minimo && lvl < supplica.livello_minimo) {
-        return { ok: false, reason: `Richiede liv. ${supplica.livello_minimo}` };
-    }
-    if (supplica.richiede_dono && dono !== supplica.richiede_dono) {
-        return { ok: false, reason: `Richiede ${supplica.richiede_dono}` };
-    }
-    if (supplica.richiede_patrono && patrono !== supplica.richiede_patrono) {
-        return { ok: false, reason: `Richiede patrono ${supplica.richiede_patrono}` };
-    }
-    return { ok: true, reason: '' };
-}
+// La funzione checkInvocationPrereq è importata da WarlockInvocations.js
 
 // === RENDERING: SEZIONI ===
 
