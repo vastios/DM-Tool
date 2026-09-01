@@ -50,10 +50,30 @@ let currentModelId = null;
 
 /**
  * Verifica se il browser supporta WebGPU (necessario per WebLLM).
- * @returns {boolean} true se WebGPU è disponibile
+ * Nota: questo check è superficiale — navigator.gpu esiste ma requestAdapter()
+ * potrebbe comunque ritornare null se la GPU fisica non è disponibile.
+ * @returns {boolean} true se WebGPU è esposto dal browser
  */
 export function isWebGPUAvailable() {
     return typeof navigator !== 'undefined' && !!navigator.gpu;
+}
+
+/**
+ * Verifica se WebGPU è effettivamente utilizzabile (non solo esposto).
+ * Chiama navigator.gpu.requestAdapter() per verificare che ci sia una GPU compatibile.
+ * @returns {Promise<boolean>} true se WebGPU è effettivamente disponibile
+ */
+export async function isWebGPUUsable() {
+    if (!isWebGPUAvailable()) return false;
+    try {
+        const adapter = await navigator.gpu.requestAdapter({
+            powerPreference: 'high-performance'
+        });
+        return adapter !== null;
+    } catch (e) {
+        console.warn('⚠️ [WebLLM] requestAdapter() fallito:', e.message);
+        return false;
+    }
 }
 
 /**
@@ -113,26 +133,48 @@ async function loadWebLLMLibrary() {
  * @returns {Promise<Object>} L'engine WebLLM
  */
 export async function initWebLLM(modelId = null, progressCallback = null) {
-    // Verifica WebGPU
+    // Verifica WebGPU esposto dal browser
     if (!isWebGPUAvailable()) {
-        throw new Error('WebGPU non disponibile in questo browser. Usa Chrome 113+ o Edge 113+.');
+        throw new Error(
+            'WebGPU non disponibile in questo browser. WebLLM richiede Chrome 113+, Edge 113+ o un browser compatibile con WebGPU abilitato.'
+        );
     }
-    
+
+    // Verifica WebGPU effettivamente utilizzabile (GPU fisica accessibile)
+    if (progressCallback) {
+        progressCallback({ stage: 'checking_gpu', progress: 0, message: 'Verifica GPU in corso...' });
+    }
+    const gpuUsable = await isWebGPUUsable();
+    if (!gpuUsable) {
+        throw new Error(
+            'GPU non disponibile per WebGPU. Possibili cause:\n' +
+            '• Il computer non ha una GPU compatibile\n' +
+            '• I driver della GPU non sono aggiornati\n' +
+            '• L\'accelerazione hardware è disabilitata nelle impostazioni del browser\n' +
+            '• Stai usando un ambiente virtuale/remote desktop senza GPU passthrough\n\n' +
+            'Soluzioni:\n' +
+            '• Aggiorna i driver video (NVIDIA/AMD/Intel)\n' +
+            '• Verifica che l\'accelerazione hardware sia attiva (chrome://gpu)\n' +
+            '• Disabilita eventuali estensioni che bloccano WebGPU\n\n' +
+            'Puoi comunque usare il parser basato su regole (offline, no AI).'
+        );
+    }
+
     // Se già caricato con lo stesso modello, ritorna
     const targetModelId = modelId || getRecommendedModel().id;
     if (webllmEngine && currentModelId === targetModelId) {
         return webllmEngine;
     }
-    
+
     if (isLoadingModel) {
         throw new Error('Caricamento modello già in corso. Attendi...');
     }
-    
+
     isLoadingModel = true;
-    
+
     try {
         const lib = await loadWebLLMLibrary();
-        
+
         console.log(`🤖 [WebLLM] Caricamento modello: ${targetModelId}`);
         if (progressCallback) {
             progressCallback({ stage: 'loading', progress: 0, message: 'Inizializzazione...' });

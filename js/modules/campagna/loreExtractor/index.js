@@ -552,7 +552,14 @@ const LoreExtractor = {
             this.updateAIStatus('Errore');
             this.updateAIToggleButton(false);
             this.showAIProgress(false);
-            showToast(`❌ Errore: ${e.message}`, 'error', 5000);
+            // Per errori lunghi (es. GPU non disponibile), mostra toast più a lungo
+            const isLongError = e.message && e.message.length > 100;
+            const duration = isLongError ? 15000 : 5000;
+            const prefix = isLongError ? '❌ Impossibile attivare AI.' : '❌ Errore:';
+            const msg = isLongError
+                ? `${prefix}\n\n${e.message}\n\nℹ️ Puoi usare comunque il parser regole (offline).`
+                : `${prefix} ${e.message}`;
+            showToast(msg, 'error', duration);
         }
     },
     
