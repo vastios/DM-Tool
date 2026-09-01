@@ -9,30 +9,33 @@ import { parseLore } from './parser.js';
 const WEBLLM_CDN_URL = 'https://esm.run/@mlc-ai/web-llm@0.2.78';
 
 // Modelli disponibili (dal più leggero al più potente)
+// NOTA: nelle versioni recenti di @mlc-ai/web-llm (>= 0.2.78), i model ID
+// richiedono il suffisso "-MLC" per i modelli sulla piattaforma MLC.
+// Vedi: https://github.com/mlc-ai/web-llm/blob/main/src/config.ts
 const AVAILABLE_MODELS = [
     {
-        id: 'Llama-3.2-3B-Instruct-q4f16_1',
+        id: 'Llama-3.2-3B-Instruct-q4f16_1-MLC',
         name: 'Llama 3.2 3B',
         size: '~2.0 GB',
         description: 'Meta Llama 3.2 - Buon equilibrio qualità/dimensione',
         recommended: true,
     },
     {
-        id: 'Llama-3.2-1B-Instruct-q4f16_1',
+        id: 'Llama-3.2-1B-Instruct-q4f16_1-MLC',
         name: 'Llama 3.2 1B',
         size: '~0.9 GB',
         description: 'Più leggero, più veloce ma meno accurato',
         recommended: false,
     },
     {
-        id: 'Phi-3.5-mini-instruct-q4f16_1',
+        id: 'Phi-3.5-mini-instruct-q4f16_1-MLC',
         name: 'Phi 3.5 Mini',
         size: '~2.2 GB',
         description: 'Microsoft Phi 3.5 - Ottimo per compiti strutturati',
         recommended: false,
     },
     {
-        id: 'Qwen2.5-1.5B-Instruct-q4f16_1',
+        id: 'Qwen2.5-1.5B-Instruct-q4f16_1-MLC',
         name: 'Qwen 2.5 1.5B',
         size: '~1.0 GB',
         description: 'Alibaba Qwen - Leggero e veloce',
