@@ -1,0 +1,86 @@
+{
+  "id": "alce_gigante",
+  "nome": "Alce gigante",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 414
+  },
+  "tipo": "bestia",
+  "taglia": "Enorme",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 19,
+    "des": 16,
+    "cos": 14,
+    "int": 7,
+    "sag": 14,
+    "car": 10
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 3,
+    "cos": 2,
+    "int": -2,
+    "sag": 2,
+    "car": 0
+  },
+  "ca": 14,
+  "ca_tipo": "armatura naturale",
+  "pf": 42,
+  "pf_dadi": "5d12 + 10",
+  "velocita": {
+    "camminare": "18 m"
+  },
+  "sensi": "Percezione passiva 14",
+  "percezione_passiva": 14,
+  "linguaggi": "Alce Gigante, capisce il Comune, l'Elfico e il Silvano ma non li parla",
+  "cr": "2",
+  "pe": 450,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Carica",
+      "testo": "Se l'alce si muove di almeno 6 metri in linea retta verso un bersaglio e poi lo colpisce con un attacco da sfondamento nello stesso turno, il bersaglio subisce 7 (2d6) danni extra. Se il bersaglio è una creatura, deve superare un tiro salvezza su Forza con CD 14, altrimenti cade a terra prono.",
+      "salvataggio": {
+        "caratteristica": "for",
+        "cd": 14
+      }
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Sfondamento",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 11 (2d6 + 4) danni contundenti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 11,
+            "dadi": "2d6 + 4",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Zoccoli",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 1,5 m, una creatura prona. Colpito: 22 (4d8 + 4) danni contundenti.\nalce gigante Il maestoso è talmente raro che la sua comparsa è spesso interpretata come il presagio di un evento importante, come la nascita di un re. Secondo alcune leggende, gli dèi assumerebbero la forma di un alce gigante quando fanno visita al Piano Materiale. Molte culture credono quindi che cacciare queste creature significhi attirare su di sé la collera divina.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura prona",
+        "danni": [
+          {
+            "media": 22,
+            "dadi": "4d8 + 4",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    }
+  ]
+}

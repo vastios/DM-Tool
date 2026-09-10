@@ -1,0 +1,95 @@
+{
+  "id": "pseudodrago",
+  "nome": "Pseudodrago",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 388
+  },
+  "tipo": "drago",
+  "taglia": "Minuscola",
+  "allineamento": "neutrale buono",
+  "caratteristiche": {
+    "for": 6,
+    "des": 15,
+    "cos": 13,
+    "int": 10,
+    "sag": 12,
+    "car": 10
+  },
+  "modificatori": {
+    "for": -2,
+    "des": 2,
+    "cos": 1,
+    "int": 0,
+    "sag": 1,
+    "car": 0
+  },
+  "ca": 13,
+  "ca_tipo": "armatura naturale",
+  "pf": 7,
+  "pf_dadi": "2d4 + 2",
+  "velocita": {
+    "camminare": "5 m",
+    "volare": "18 m"
+  },
+  "sensi": "Percezione passiva 13, scurovisione 18 m, vista cieca 3 m",
+  "percezione_passiva": 13,
+  "linguaggi": "capisce Comune e Draconico, ma non è in grado di parlarli",
+  "cr": "1/4",
+  "pe": 50,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Resistenza alla magia",
+      "testo": "Lo pseudodrago dispone di vantaggio ai tiri salvezza contro incantesimi e altri effetti magici."
+    },
+    {
+      "nome": "Sensi acuti",
+      "testo": "Lo pseudodrago dispone di vantaggio alle prove di Saggezza (Percezione) basate sulla vista, sull'udito o sull'olfatto."
+    },
+    {
+      "nome": "Telepatia limitata",
+      "testo": "Lo pseudodrago può trasmettere magicamente idee, emozioni e immagini semplici a qualsiasi creatura situata entro 30 metri da lui e che sia in grado di comprendere un linguaggio."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 4 (1d4 + 2) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 4,
+            "dadi": "1d4 + 2",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Pungiglione",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, una creatura. Colpito: 4 (1d4 + 2) danni perforanti e il bersaglio deve superare un tiro salvezza su Costituzione con CD 11, altrimenti è avvelenato per 1 ora. Se fallisce il tiro salvezza di 5 o più, il bersaglio perde conoscenza per la stessa durata, o finché non subisce danni o un'altra creatura non usa un'azione per risvegliarlo scuotendolo.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura",
+        "danni": [
+          {
+            "media": 4,
+            "dadi": "1d4 + 2",
+            "tipo": "perforanti e"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 11
+      }
+    }
+  ]
+}

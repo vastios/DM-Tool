@@ -1,0 +1,212 @@
+{
+  "id": "androsfinge",
+  "nome": "Androsfinge",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 393
+  },
+  "tipo": "mostruosità",
+  "taglia": "Grande",
+  "allineamento": "legale neutrale",
+  "caratteristiche": {
+    "for": 22,
+    "des": 10,
+    "cos": 20,
+    "int": 16,
+    "sag": 18,
+    "car": 23
+  },
+  "modificatori": {
+    "for": 6,
+    "des": 0,
+    "cos": 5,
+    "int": 3,
+    "sag": 4,
+    "car": 6
+  },
+  "ca": 17,
+  "ca_tipo": "armatura naturale",
+  "pf": 199,
+  "pf_dadi": "19d10 + 95",
+  "velocita": {
+    "camminare": "12 m",
+    "volare": "18 m"
+  },
+  "competenze": {
+    "arcano": 9,
+    "percezione": 10,
+    "religione": 15
+  },
+  "immunita_danni": "psichici; contundenti, perforanti e taglienti da attacchi non magici",
+  "immunita_condizioni": "affascinato, spaventato",
+  "sensi": "Percezione passiva 20, vista pura 36 m",
+  "percezione_passiva": 20,
+  "linguaggi": "Comune, Sfinge",
+  "cr": "17",
+  "pe": 18000,
+  "bonus_competenza": 6,
+  "tratti": [
+    {
+      "nome": "Armi magiche",
+      "testo": "Gli attacchi con arma della sfinge sono magici."
+    },
+    {
+      "nome": "Imperscrutabile",
+      "testo": "La sfinge è immune a qualsiasi effetto che tenti di percepire le emozioni o leggere nel pensiero, nonché a qualsiasi incantesimo di divinazione a cui rifiuti di sottoporsi. Le prove di Saggezza (Intuizione) effettuate per discernere le intenzioni o la sincerità della sfinge subiscono svantaggio."
+    },
+    {
+      "nome": "Incantesimi",
+      "testo": "La sfinge è un'incantatrice di 12° livello: la sua caratteristica da incantatore è Saggezza (CD del tiro salvezza sull'incantesimo 18, +10 al tiro per colpire con attacco con incantesimo). Non ha bisogno di componenti materiali per lanciare i suoi incantesimi. La sfinge ha a disposizione i seguenti incantesimi da chierico: Trucchetti (a volontà): fiamma sacra, salvare i morenti, taumaturgia 1° livello (4 slot): comando, individuazione del bene e del male, individuazione del magico 2° livello (3 slot): ristorare inferiore, zona di verità 3° livello (3 slot): dissolvi magie, linguaggi 4° livello (3 slot): esilio, libertà di movimento 5° livello (2 slot): colpo infuocato, ristorare superiore 6° livello (1 slot): banchetto degli eroi",
+      "incantesimi": {
+        "testo": "La sfinge è un'incantatrice di 12° livello: la sua caratteristica da incantatore è Saggezza (CD del tiro salvezza sull'incantesimo 18, +10 al tiro per colpire con attacco con incantesimo). Non ha bisogno di componenti materiali per lanciare i suoi incantesimi. La sfinge ha a disposizione i seguenti incantesimi da chierico: Trucchetti (a volontà): fiamma sacra, salvare i morenti, taumaturgia 1° livello (4 slot): comando, individuazione del bene e del male, individuazione del magico 2° livello (3 slot): ristorare inferiore, zona di verità 3° livello (3 slot): dissolvi magie, linguaggi 4° livello (3 slot): esilio, libertà di movimento 5° livello (2 slot): colpo infuocato, ristorare superiore 6° livello (1 slot): banchetto degli eroi",
+        "gruppi": [
+          {
+            "tipo": "livello",
+            "livello": 12,
+            "incantesimi": [
+              "la sua caratteristica da incantatore è Saggezza (CD del tiro salvezza sull'incantesimo 18",
+              "+10 al tiro per colpire con attacco con incantesimo). Non ha bisogno di componenti materiali per lanciare i suoi incantesimi. La sfinge ha a disposizione i seguenti incantesimi da chierico:"
+            ]
+          },
+          {
+            "frequenza": "a volontà",
+            "tipo": "trucchetti",
+            "incantesimi": [
+              "fiamma sacra",
+              "salvare i morenti",
+              "taumaturgia"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 1,
+            "slot": 4,
+            "incantesimi": [
+              "comando",
+              "individuazione del bene",
+              "del male",
+              "individuazione del magico"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 2,
+            "slot": 3,
+            "incantesimi": [
+              "ristorare inferiore",
+              "zona di verità"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 3,
+            "slot": 3,
+            "incantesimi": [
+              "dissolvi magie",
+              "linguaggi"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 4,
+            "slot": 3,
+            "incantesimi": [
+              "esilio",
+              "libertà di movimento"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 5,
+            "slot": 2,
+            "incantesimi": [
+              "colpo infuocato",
+              "ristorare superiore"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 6,
+            "slot": 1,
+            "incantesimi": [
+              "banchetto degli eroi"
+            ]
+          }
+        ],
+        "caratteristica": "sag",
+        "cd": 18
+      }
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "La sfinge effettua due attacchi con gli artigli."
+    },
+    {
+      "nome": "Artiglio",
+      "testo": "Attacco con arma da mischia: +12 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 17 (2d10 + 6) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 12,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 17,
+            "dadi": "2d10 + 6",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Ruggito",
+      "testo": "La sfinge emette un ruggito magico. Ogni volta che ruggisce prima di completare un riposo lungo, il verso è più forte e l'effetto è diverso, come descritto di seguito. Ogni creatura entro 150 metri dalla sfinge e in grado di udire il ruggito deve effettuare un tiro salvezza.",
+      "uso": "3/giorno"
+    },
+    {
+      "nome": "Primo ruggito",
+      "testo": "Ogni creatura che fallisce un tiro salvezza su Saggezza con CD 18 è spaventata per 1 minuto. La creatura spaventata può ripetere il tiro salvezza alla fine di ogni suo turno e, se lo supera, l'effetto svanisce.",
+      "salvataggio": {
+        "caratteristica": "sag",
+        "cd": 18
+      }
+    },
+    {
+      "nome": "Secondo ruggito",
+      "testo": "Ogni creatura che fallisce un tiro salvezza su Saggezza con CD 18 è assordata e spaventata per 1 minuto. La creatura spaventata è paralizzata e può ripetere il tiro salvezza alla fine di ogni suo turno: se lo supera, l'effetto svanisce.",
+      "salvataggio": {
+        "caratteristica": "sag",
+        "cd": 18
+      }
+    },
+    {
+      "nome": "Terzo ruggito",
+      "testo": "Ogni creatura effettua un tiro salvezza su Costituzione con CD 18: chi lo fallisce subisce 44 (8d10) danni da tuono e cade a terra prona; chi lo supera, invece, subisce soltanto la metà di quei danni e non viene buttata a terra prona.",
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 18
+      }
+    }
+  ],
+  "azioni_leggendarie": {
+    "intro": "La sfinge può eseguire 3 azioni leggendarie a scelta tra le opzioni seguenti. È possibile utilizzare solo un'opzione di azione leggendaria alla volta e soltanto alla fine del turno di un'altra creatura. La sfinge recupera le azioni leggendarie effettuate.",
+    "opzioni": [
+      {
+        "nome": "Attacco con artiglio",
+        "testo": "La sfinge effettua un attacco con artiglio."
+      },
+      {
+        "nome": "Teletrasporto",
+        "testo": "La sfinge si teletrasporta magicamente, insieme a ogni oggetto che indossa o trasporta, fino a uno spazio libero visibile entro 36 metri.",
+        "uso": "costa 2 azioni"
+      },
+      {
+        "nome": "Lanciare un incantesimo",
+        "testo": "La sfinge lancia un incantesimo dalla sua lista degli incantesimi preparati, usando uno slot incantesimo come di consueto.",
+        "uso": "costa 3 azioni"
+      }
+    ]
+  }
+}

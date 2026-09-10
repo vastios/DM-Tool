@@ -1,0 +1,107 @@
+{
+  "id": "diavolo_uncinato",
+  "nome": "Diavolo uncinato",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 318
+  },
+  "tipo": "immondo",
+  "descrittore": "diavolo",
+  "taglia": "Media",
+  "allineamento": "legale malvagio",
+  "caratteristiche": {
+    "for": 16,
+    "des": 17,
+    "cos": 18,
+    "int": 12,
+    "sag": 14,
+    "car": 14
+  },
+  "modificatori": {
+    "for": 3,
+    "des": 3,
+    "cos": 4,
+    "int": 1,
+    "sag": 2,
+    "car": 2
+  },
+  "ca": 15,
+  "ca_tipo": "armatura naturale",
+  "pf": 110,
+  "pf_dadi": "13d8 + 52",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "competenze": {
+    "inganno": 5,
+    "intuizione": 5,
+    "percezione": 8
+  },
+  "resistenze_danni": "freddo; contundenti, perforanti e taglienti da attacchi non magici non argentati",
+  "immunita_danni": "fuoco, veleno",
+  "immunita_condizioni": "avvelenato",
+  "sensi": "Percezione passiva 18, scurovisione 36 m",
+  "percezione_passiva": 18,
+  "linguaggi": "Infernale, telepatia 36 m",
+  "cr": "5",
+  "pe": 1800,
+  "bonus_competenza": 3,
+  "tratti": [
+    {
+      "nome": "Pelle uncinata",
+      "testo": "All'inizio di ogni suo turno, il diavolo uncinato infligge 5 (1d10) danni perforanti a ogni creatura con cui lotta."
+    },
+    {
+      "nome": "Resistenza alla magia",
+      "testo": "Il diavolo dispone di vantaggio ai tiri salvezza contro incantesimi e altri effetti magici."
+    },
+    {
+      "nome": "Vista del diavolo",
+      "testo": "L'oscurità magica non ostacola la scurovisione del diavolo."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il diavolo effettua tre attacchi in mischia: uno con la coda e due con gli artigli. In alternativa, può usare Scagliare fiamma due volte."
+    },
+    {
+      "nome": "Artiglio",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 6 (1d6 + 3) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 6,
+            "dadi": "1d6 + 3",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Coda",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 10 (2d6 + 3) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 10,
+            "dadi": "2d6 + 3",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Scagliare fiamma",
+      "testo": "Attacco a distanza con incantesimo: +5 al tiro per colpire, gittata 45 m, un bersaglio. Colpito: 10 (3d6) danni da fuoco. Se il bersaglio è un oggetto infiammabile che non è indossato o trasportato, prende anche fuoco."
+    }
+  ]
+}

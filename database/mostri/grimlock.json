@@ -1,0 +1,79 @@
+{
+  "id": "grimlock",
+  "nome": "Grimlock",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 363
+  },
+  "tipo": "umanoide",
+  "descrittore": "grimlock",
+  "taglia": "Media",
+  "allineamento": "neutrale malvagio",
+  "caratteristiche": {
+    "for": 16,
+    "des": 12,
+    "cos": 12,
+    "int": 9,
+    "sag": 8,
+    "car": 6
+  },
+  "modificatori": {
+    "for": 3,
+    "des": 1,
+    "cos": 1,
+    "int": -1,
+    "sag": -1,
+    "car": -2
+  },
+  "ca": 11,
+  "pf": 11,
+  "pf_dadi": "2d8 + 2",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "immunita_condizioni": "accecato",
+  "sensi": "Percezione passiva 13, vista cieca 9 m o 3 m finché assordato (cieco oltre questo raggio)",
+  "percezione_passiva": 13,
+  "linguaggi": "Sottocomune",
+  "cr": "1/4",
+  "pe": 50,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Mimetizzazione rocciosa",
+      "testo": "Il grimlock dispone di vantaggio alle prove di Destrezza (Furtività) effettuate per nascondersi nei terreni rocciosi."
+    },
+    {
+      "nome": "Percezione cieca",
+      "testo": "Il grimlock non può usare la sua vista cieca finché è assordato e non ha olfatto."
+    },
+    {
+      "nome": "Udito e olfatto acuti",
+      "testo": "Il grimlock dispone di vantaggio alle prove di Saggezza (Percezione) basate sull'olfatto o sull'udito."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Clava di osso chiodata",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 5 (1d4 + 3) danni contundenti più 2 (1d4) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d4 + 3",
+            "tipo": "contundenti"
+          },
+          {
+            "media": 2,
+            "dadi": "1d4",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

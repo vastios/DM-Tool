@@ -1,0 +1,86 @@
+{
+  "id": "grifone",
+  "nome": "Grifone",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 363
+  },
+  "tipo": "mostruosità",
+  "taglia": "Grande",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 18,
+    "des": 15,
+    "cos": 16,
+    "int": 2,
+    "sag": 13,
+    "car": 8
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 2,
+    "cos": 3,
+    "int": -4,
+    "sag": 1,
+    "car": -1
+  },
+  "ca": 12,
+  "pf": 59,
+  "pf_dadi": "7d10 + 21",
+  "velocita": {
+    "camminare": "9 m",
+    "volare": "24 m"
+  },
+  "sensi": "Percezione passiva 15, scurovisione 18 m",
+  "percezione_passiva": 15,
+  "linguaggi": "—",
+  "cr": "2",
+  "pe": 450,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Vista acuta",
+      "testo": "Il grifone dispone di vantaggio alle prove di Saggezza (Percezione) basate sulla vista."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il grifone effettua due attacchi: uno con il becco e uno con gli artigli."
+    },
+    {
+      "nome": "Artigli",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 11 (2d6 + 4) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 11,
+            "dadi": "2d6 + 4",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Becco",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 8 (1d8 + 4) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 8,
+            "dadi": "1d8 + 4",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

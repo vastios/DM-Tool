@@ -1,0 +1,81 @@
+{
+  "id": "gorilla_gigante",
+  "nome": "Gorilla gigante",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 423
+  },
+  "tipo": "bestia",
+  "taglia": "Enorme",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 23,
+    "des": 14,
+    "cos": 18,
+    "int": 7,
+    "sag": 12,
+    "car": 7
+  },
+  "modificatori": {
+    "for": 6,
+    "des": 2,
+    "cos": 4,
+    "int": -2,
+    "sag": 1,
+    "car": -2
+  },
+  "ca": 12,
+  "pf": 157,
+  "pf_dadi": "15d12 + 60",
+  "velocita": {
+    "camminare": "12 m",
+    "scalare": "12 m"
+  },
+  "sensi": "Percezione passiva 14",
+  "percezione_passiva": 14,
+  "linguaggi": "—",
+  "cr": "7",
+  "pe": 2900,
+  "bonus_competenza": 3,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il gorilla effettua due attacchi con i pugni."
+    },
+    {
+      "nome": "Pugno",
+      "testo": "Attacco con arma da mischia: +9 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 22 (3d10 + 6) danni contundenti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 9,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 22,
+            "dadi": "3d10 + 6",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Roccia",
+      "testo": "Attacco con arma a distanza: +9 al tiro per colpire, gittata 15/30 m, un bersaglio. Colpito: 30 (7d6 + 6) danni contundenti.",
+      "attacco": {
+        "tipo": "distanza",
+        "tiro": 9,
+        "portata": "15/30 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 30,
+            "dadi": "7d6 + 6",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "id": "ragno_gigante",
+  "nome": "Ragno gigante",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 432
+  },
+  "tipo": "bestia",
+  "taglia": "Grande",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 14,
+    "des": 16,
+    "cos": 12,
+    "int": 2,
+    "sag": 11,
+    "car": 4
+  },
+  "modificatori": {
+    "for": 2,
+    "des": 3,
+    "cos": 1,
+    "int": -4,
+    "sag": 0,
+    "car": -3
+  },
+  "ca": 14,
+  "ca_tipo": "armatura naturale",
+  "pf": 26,
+  "pf_dadi": "4d10 + 4",
+  "velocita": {
+    "camminare": "9 m",
+    "scalare": "9 m"
+  },
+  "sensi": "Percezione passiva 10, scurovisione 18 m, vista cieca 3 m",
+  "percezione_passiva": 10,
+  "linguaggi": "—",
+  "cr": "1",
+  "pe": 200,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Arrampicatele",
+      "testo": "Il ragno ignora le restrizioni di movimento causate dalle ragnatele."
+    },
+    {
+      "nome": "Movimenti del ragno",
+      "testo": "Il ragno può scalare le superfici difficili, compresi i soffitti (lungo i quali si muove a testa in giù), senza effettuare una prova di caratteristica."
+    },
+    {
+      "nome": "Percezione della Ragnatela",
+      "testo": "Finché è in contatto con una ragnatela, il ragno conosce l'ubicazione esatta di ogni altra creatura a contatto con la stessa ragnatela."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, una creatura. Colpito: 7 (1d8 + 3) danni perforanti e il bersaglio deve effettuare un tiro salvezza su Costituzione con CD 11, subendo 9 (2d8) danni da veleno in caso di fallimento, o la metà in caso di successo. Se i danni da veleno riducono i punti ferita del bersaglio a 0, esso è stabile ma avvelenato per 1 ora anche dopo aver recuperato punti ferita e, mentre è avvelenato in questo modo, è paralizzato.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura",
+        "danni": [
+          {
+            "media": 7,
+            "dadi": "1d8 + 3",
+            "tipo": "perforanti e"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 11,
+        "danno_fallimento": {
+          "media": 9,
+          "dadi": "2d8",
+          "tipo": "veleno"
+        }
+      }
+    },
+    {
+      "nome": "Ragnatela",
+      "testo": "Attacco con arma a distanza: +5 al tiro per colpire, gittata 9/18 m, una creatura. Colpito: il bersaglio è trattenuto dalle ragnatele. Con un'azione, il bersaglio trattenuto può effettuare una prova di Forza con CD 12. Se la supera, strappa le ragnatele. La ragnatela può anche essere attaccata e distrutta (CA 10; 5 punti ferita; vulnerabilità ai danni da fuoco; immunità ai danni contundenti, da veleno e psichici).\nragno gigante Per catturare la sua preda, un tesse elaborate ragnatele o lancia filamenti viscosi di ragnatela dall'addome. I ragni giganti si annidano generalmente sottoterra, dove fanno la tana sui soffitti o all'interno di crepe immerse nel buio e ricoperte di ragnatele. Spesso queste tane sono piene di bozzoli in cui sono intrappolate le loro vittime.",
+      "uso": "ricarica 5–6",
+      "attacco": {
+        "tipo": "distanza",
+        "tiro": 5,
+        "portata": "9/18 m",
+        "bersaglio": "una creatura",
+        "danni": []
+      }
+    }
+  ]
+}

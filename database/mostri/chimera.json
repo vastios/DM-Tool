@@ -1,0 +1,114 @@
+{
+  "id": "chimera",
+  "nome": "Chimera",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 308
+  },
+  "tipo": "mostruosità",
+  "taglia": "Grande",
+  "allineamento": "caotica malvagia",
+  "caratteristiche": {
+    "for": 19,
+    "des": 11,
+    "cos": 19,
+    "int": 3,
+    "sag": 14,
+    "car": 10
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 0,
+    "cos": 4,
+    "int": -4,
+    "sag": 2,
+    "car": 0
+  },
+  "ca": 14,
+  "ca_tipo": "armatura naturale",
+  "pf": 114,
+  "pf_dadi": "12d10 + 48",
+  "velocita": {
+    "camminare": "9 m",
+    "volare": "18 m"
+  },
+  "sensi": "Percezione passiva 18, scurovisione 18 m",
+  "percezione_passiva": 18,
+  "linguaggi": "capisce il Draconico ma non lo parla",
+  "cr": "6",
+  "pe": 2300,
+  "bonus_competenza": 3,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "La chimera effettua tre attacchi: uno con il morso, uno con le corna e uno con gli artigli. Quando il soffio di fuoco è disponibile, può usarlo al posto del morso o delle corna."
+    },
+    {
+      "nome": "Artigli",
+      "testo": "Attacco con arma da mischia: +7 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 11 (2d6 + 4) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 11,
+            "dadi": "2d6 + 4",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Corna",
+      "testo": "Attacco con arma da mischia: +7 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 10 (1d12 + 4) danni contundenti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 10,
+            "dadi": "1d12 + 4",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +7 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 11 (2d6 + 4) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 11,
+            "dadi": "2d6 + 4",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Soffio di fuoco",
+      "testo": "La testa di drago esala un cono di fuoco di 4,5 metri. Ogni creatura in quell'area deve effettuare un tiro salvezza su Destrezza con CD 15, subendo 31 (7d8) danni da fuoco in caso di fallimento, o la metà dei danni in caso di successo.",
+      "uso": "ricarica 5–6",
+      "salvataggio": {
+        "caratteristica": "des",
+        "cd": 15,
+        "danno_fallimento": {
+          "media": 31,
+          "dadi": "7d8",
+          "tipo": "fuoco"
+        },
+        "successo": "metà danni"
+      }
+    }
+  ]
+}

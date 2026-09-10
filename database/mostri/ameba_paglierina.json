@@ -1,0 +1,82 @@
+{
+  "id": "ameba_paglierina",
+  "nome": "Ameba paglierina",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 376
+  },
+  "tipo": "melma",
+  "taglia": "Grande",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 15,
+    "des": 6,
+    "cos": 14,
+    "int": 2,
+    "sag": 6,
+    "car": 1
+  },
+  "modificatori": {
+    "for": 2,
+    "des": -2,
+    "cos": 2,
+    "int": -4,
+    "sag": -2,
+    "car": -5
+  },
+  "ca": 8,
+  "pf": 45,
+  "pf_dadi": "6d10 + 12",
+  "velocita": {
+    "camminare": "3 m",
+    "scalare": "3 m"
+  },
+  "immunita_danni": "fulmine, tagliente",
+  "immunita_condizioni": "accecato, affascinato, assordato, indebolimento, prono, spaventato",
+  "sensi": "Percezione passiva 8, vista cieca 18 m (cecità oltre questo raggio)",
+  "percezione_passiva": 8,
+  "linguaggi": "—",
+  "cr": "2",
+  "pe": 450,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Amorfo",
+      "testo": "L'ameba può muoversi attraverso uno spazio stretto fino a 2,5 centimetri senza doversi stringere."
+    },
+    {
+      "nome": "Movimenti del ragno",
+      "testo": "L'ameba può scalare le superfici difficili, inclusi i soffitti (lungo i quali si muove a testa in giù), senza effettuare una prova di caratteristica."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Pseudopode",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 9 (2d6 + 2) danni contundenti più 3 (1d6) danni da acido.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 9,
+            "dadi": "2d6 + 2",
+            "tipo": "contundenti"
+          },
+          {
+            "media": 3,
+            "dadi": "1d6",
+            "tipo": "acido"
+          }
+        ]
+      }
+    }
+  ],
+  "reazioni": [
+    {
+      "nome": "Scindersi",
+      "testo": "Quando un'ameba di taglia Media o superiore è soggetta a danni da fulmine o a danni taglienti, si scinde in due nuove amebe se possiede almeno 10 punti ferita. Ogni nuova ameba ha un numero di punti ferita pari alla metà dell'ameba originale, arrotondando per difetto. Le nuove amebe sono inferiori di una taglia rispetto a quella originale."
+    }
+  ]
+}

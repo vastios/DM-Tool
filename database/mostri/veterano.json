@@ -1,0 +1,99 @@
+{
+  "id": "veterano",
+  "nome": "Veterano",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 453
+  },
+  "tipo": "umanoide",
+  "descrittore": "qualsiasi razza",
+  "taglia": "Media",
+  "allineamento": "qualsiasi allineamento",
+  "caratteristiche": {
+    "for": 16,
+    "des": 13,
+    "cos": 14,
+    "int": 10,
+    "sag": 11,
+    "car": 10
+  },
+  "modificatori": {
+    "for": 3,
+    "des": 1,
+    "cos": 2,
+    "int": 0,
+    "sag": 0,
+    "car": 0
+  },
+  "ca": 17,
+  "ca_tipo": "corazza a strisce",
+  "pf": 58,
+  "pf_dadi": "9d8 + 18",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "sensi": "Percezione passiva 12",
+  "percezione_passiva": 12,
+  "linguaggi": "uno qualsiasi (di solito Comune)",
+  "cr": "3",
+  "pe": 700,
+  "bonus_competenza": 2,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il veterano sferra due attacchi con la spada lunga. Se ha sfoderato una spada corta, può effettuare anche un attacco con la spada corta."
+    },
+    {
+      "nome": "Spada corta",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 6 (1d6 + 3) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 6,
+            "dadi": "1d6 + 3",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Spada lunga",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 7 (1d8 + 3) danni taglienti o 8 (1d10 + 3) danni taglienti se usata a due mani.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 7,
+            "dadi": "1d8 + 3",
+            "tipo": "taglienti o"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Balestra pesante",
+      "testo": "Attacco con arma a distanza : +3 al tiro per colpire, gittata 30/120 m, un bersaglio. Colpito: 6 (1d10 + 1) danni perforanti.\nveterani I sono combattenti professionisti che operano a pagamento o per proteggere qualcosa in cui credono o che per loro ha valore. Questa categoria comprende soldati che un tempo hanno prestato servizio nell'esercito e guerrieri che non hanno mai servito alcuna causa se non la propria.",
+      "attacco": {
+        "tipo": "distanza",
+        "tiro": 3,
+        "portata": "30/120 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 6,
+            "dadi": "1d10 + 1",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

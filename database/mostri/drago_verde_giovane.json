@@ -1,0 +1,115 @@
+{
+  "id": "drago_verde_giovane",
+  "nome": "Drago verde giovane",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 345
+  },
+  "tipo": "drago",
+  "taglia": "Grande",
+  "allineamento": "legale malvagio",
+  "caratteristiche": {
+    "for": 19,
+    "des": 12,
+    "cos": 17,
+    "int": 16,
+    "sag": 13,
+    "car": 15
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 1,
+    "cos": 3,
+    "int": 3,
+    "sag": 1,
+    "car": 2
+  },
+  "ca": 18,
+  "ca_tipo": "armatura naturale",
+  "pf": 136,
+  "pf_dadi": "16d10 + 48",
+  "velocita": {
+    "camminare": "12 m",
+    "nuotare": "12 m",
+    "volare": "24 m"
+  },
+  "competenze": {
+    "furtività": 4,
+    "inganno": 5,
+    "percezione": 7
+  },
+  "immunita_danni": "veleno",
+  "immunita_condizioni": "avvelenato",
+  "sensi": "Percezione passiva 17, scurovisione 36 m, vista cieca 9 m",
+  "percezione_passiva": 17,
+  "linguaggi": "Comune, Draconico",
+  "cr": "8",
+  "pe": 3900,
+  "bonus_competenza": 3,
+  "tratti": [
+    {
+      "nome": "Anfibio",
+      "testo": "Il drago può respirare in aria e in acqua."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il drago effettua tre attacchi: uno con il morso e due con gli artigli."
+    },
+    {
+      "nome": "Artiglio",
+      "testo": "Attacco con arma da mischia: +7 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 11 (2d6 + 4) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 11,
+            "dadi": "2d6 + 4",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +7 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 15 (2d10 + 4) danni perforanti più 7 (2d6) danni da veleno.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 15,
+            "dadi": "2d10 + 4",
+            "tipo": "perforanti"
+          },
+          {
+            "media": 7,
+            "dadi": "2d6",
+            "tipo": "veleno"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Soffio di veleno",
+      "testo": "Il drago esala gas velenoso in un cono di 9 metri. Ogni creatura in quell'area deve effettuare un tiro salvezza su Costituzione con CD 14, subendo 42 (12d6) danni da veleno in caso di fallimento, o la metà dei danni in caso di successo.",
+      "uso": "ricarica 5–6",
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 14,
+        "danno_fallimento": {
+          "media": 42,
+          "dadi": "12d6",
+          "tipo": "veleno"
+        },
+        "successo": "metà danni"
+      }
+    }
+  ]
+}

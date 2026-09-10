@@ -1,0 +1,90 @@
+{
+  "id": "roc",
+  "nome": "Roc",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 390
+  },
+  "tipo": "mostruosità",
+  "taglia": "Mastodontica",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 28,
+    "des": 10,
+    "cos": 20,
+    "int": 3,
+    "sag": 10,
+    "car": 9
+  },
+  "modificatori": {
+    "for": 9,
+    "des": 0,
+    "cos": 5,
+    "int": -4,
+    "sag": 0,
+    "car": -1
+  },
+  "ca": 15,
+  "ca_tipo": "armatura naturale",
+  "pf": 248,
+  "pf_dadi": "16d20 + 80",
+  "velocita": {
+    "camminare": "6 m",
+    "volare": "36 m"
+  },
+  "competenze": {
+    "percezione": 4
+  },
+  "sensi": "Percezione passiva 14",
+  "percezione_passiva": 14,
+  "linguaggi": "—",
+  "cr": "11",
+  "pe": 7200,
+  "bonus_competenza": 4,
+  "tratti": [
+    {
+      "nome": "Vista acuta",
+      "testo": "Il roc dispone di vantaggio alle prove di Saggezza (Percezione) basate sulla vista."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il roc effettua due attacchi: uno con il becco e uno con gli artigli."
+    },
+    {
+      "nome": "Artigli",
+      "testo": "Attacco con arma da mischia: +13 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 23 (4d6 + 9) danni taglienti e il bersaglio è afferrato (CD 19 per sfuggire). Finché la presa perdura, il bersaglio è trattenuto e il roc non può usare i suoi artigli su altri.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 13,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 23,
+            "dadi": "4d6 + 9",
+            "tipo": "taglienti e"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Becco",
+      "testo": "Attacco con arma da mischia: +13 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 27 (4d8 + 9) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 13,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 27,
+            "dadi": "4d8 + 9",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

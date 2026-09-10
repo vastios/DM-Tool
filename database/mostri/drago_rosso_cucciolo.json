@@ -1,0 +1,87 @@
+{
+  "id": "drago_rosso_cucciolo",
+  "nome": "Drago rosso cucciolo",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 343
+  },
+  "tipo": "drago",
+  "taglia": "Media",
+  "allineamento": "caotico malvagio",
+  "caratteristiche": {
+    "for": 19,
+    "des": 10,
+    "cos": 17,
+    "int": 12,
+    "sag": 11,
+    "car": 15
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 0,
+    "cos": 3,
+    "int": 1,
+    "sag": 0,
+    "car": 2
+  },
+  "ca": 17,
+  "ca_tipo": "armatura naturale",
+  "pf": 75,
+  "pf_dadi": "10d8 + 30",
+  "velocita": {
+    "camminare": "9 m",
+    "scalare": "9 m",
+    "volare": "18 m"
+  },
+  "competenze": {
+    "furtività": 2,
+    "percezione": 4
+  },
+  "immunita_danni": "fuoco",
+  "sensi": "Percezione passiva 14, scurovisione 18 m, vista cieca 3 m",
+  "percezione_passiva": 14,
+  "linguaggi": "Draconico",
+  "cr": "4",
+  "pe": 1100,
+  "bonus_competenza": 2,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 9 (1d10 + 4) danni perforanti più 3 (1d6) danni da fuoco.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 9,
+            "dadi": "1d10 + 4",
+            "tipo": "perforanti"
+          },
+          {
+            "media": 3,
+            "dadi": "1d6",
+            "tipo": "fuoco"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Soffio di fuoco",
+      "testo": "Il drago esala fuoco in un cono di 4,5 metri. Ogni creatura in quell'area deve effettuare un tiro salvezza su Destrezza con CD 13, subendo 24 (7d6) danni da fuoco in caso di fallimento, o la metà dei danni in caso di successo. Drago verde",
+      "uso": "ricarica 5–6",
+      "salvataggio": {
+        "caratteristica": "des",
+        "cd": 13,
+        "danno_fallimento": {
+          "media": 24,
+          "dadi": "7d6",
+          "tipo": "fuoco"
+        },
+        "successo": "metà danni"
+      }
+    }
+  ]
+}

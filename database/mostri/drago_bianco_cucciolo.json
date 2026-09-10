@@ -1,0 +1,88 @@
+{
+  "id": "drago_bianco_cucciolo",
+  "nome": "Drago bianco cucciolo",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 337
+  },
+  "tipo": "drago",
+  "taglia": "Media",
+  "allineamento": "caotico malvagio",
+  "caratteristiche": {
+    "for": 14,
+    "des": 10,
+    "cos": 14,
+    "int": 5,
+    "sag": 10,
+    "car": 11
+  },
+  "modificatori": {
+    "for": 2,
+    "des": 0,
+    "cos": 2,
+    "int": -3,
+    "sag": 0,
+    "car": 0
+  },
+  "ca": 16,
+  "ca_tipo": "armatura naturale",
+  "pf": 32,
+  "pf_dadi": "5d8 + 10",
+  "velocita": {
+    "camminare": "5 m",
+    "nuotare": "9 m",
+    "scavare": "4",
+    "volare": "18 m"
+  },
+  "competenze": {
+    "furtività": 2,
+    "percezione": 4
+  },
+  "immunita_danni": "freddo",
+  "sensi": "Percezione passiva 14, scurovisione 18 m, vista cieca 3 m",
+  "percezione_passiva": 14,
+  "linguaggi": "Draconico",
+  "cr": "2",
+  "pe": 450,
+  "bonus_competenza": 2,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 7 (1d10 + 2) danni perforanti più 2 (1d4) danni da freddo.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 7,
+            "dadi": "1d10 + 2",
+            "tipo": "perforanti"
+          },
+          {
+            "media": 2,
+            "dadi": "1d4",
+            "tipo": "freddo"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Soffio di freddo",
+      "testo": "Il drago esala una folata gelida in un cono di 4,5 metri. Ogni creatura in quell'area deve effettuare un tiro salvezza su Costituzione con CD 12, subendo 22 (5d8) danni da freddo in caso di fallimento, o la metà dei danni in caso di successo. Drago blu",
+      "uso": "ricarica 5–6",
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 12,
+        "danno_fallimento": {
+          "media": 22,
+          "dadi": "5d8",
+          "tipo": "freddo"
+        },
+        "successo": "metà danni"
+      }
+    }
+  ]
+}

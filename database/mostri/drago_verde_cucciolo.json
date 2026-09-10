@@ -1,0 +1,93 @@
+{
+  "id": "drago_verde_cucciolo",
+  "nome": "Drago verde cucciolo",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 346
+  },
+  "tipo": "drago",
+  "taglia": "Media",
+  "allineamento": "legale malvagio",
+  "caratteristiche": {
+    "for": 15,
+    "des": 12,
+    "cos": 13,
+    "int": 14,
+    "sag": 11,
+    "car": 13
+  },
+  "modificatori": {
+    "for": 2,
+    "des": 1,
+    "cos": 1,
+    "int": 2,
+    "sag": 0,
+    "car": 1
+  },
+  "ca": 17,
+  "ca_tipo": "armatura naturale",
+  "pf": 38,
+  "pf_dadi": "7d8 + 7",
+  "velocita": {
+    "camminare": "9 m",
+    "nuotare": "9 m",
+    "volare": "18 m"
+  },
+  "competenze": {
+    "furtività": 3,
+    "percezione": 4
+  },
+  "immunita_danni": "veleno",
+  "immunita_condizioni": "avvelenato",
+  "sensi": "Percezione passiva 14, scurovisione 18 m, vista cieca 3 m",
+  "percezione_passiva": 14,
+  "linguaggi": "Draconico",
+  "cr": "2",
+  "pe": 450,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Anfibio",
+      "testo": "Il drago può respirare in aria e in acqua."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 7 (1d10 + 2) danni perforanti più 3 (1d6) danni da veleno.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 7,
+            "dadi": "1d10 + 2",
+            "tipo": "perforanti"
+          },
+          {
+            "media": 3,
+            "dadi": "1d6",
+            "tipo": "veleno"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Soffio di veleno",
+      "testo": "Il drago esala gas velenoso in un cono di 4,5 metri. Ogni creatura in quell'area deve effettuare un tiro salvezza su Costituzione con CD 11, subendo 21 (6d6) danni da veleno in caso di fallimento, o la metà dei danni in caso di successo.",
+      "uso": "ricarica 5–6",
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 11,
+        "danno_fallimento": {
+          "media": 21,
+          "dadi": "6d6",
+          "tipo": "veleno"
+        },
+        "successo": "metà danni"
+      }
+    }
+  ]
+}

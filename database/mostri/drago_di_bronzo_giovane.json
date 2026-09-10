@@ -1,0 +1,121 @@
+{
+  "id": "drago_di_bronzo_giovane",
+  "nome": "Drago di bronzo giovane",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 326
+  },
+  "tipo": "drago",
+  "taglia": "Grande",
+  "allineamento": "legale buono",
+  "caratteristiche": {
+    "for": 21,
+    "des": 10,
+    "cos": 19,
+    "int": 14,
+    "sag": 13,
+    "car": 17
+  },
+  "modificatori": {
+    "for": 5,
+    "des": 0,
+    "cos": 4,
+    "int": 2,
+    "sag": 1,
+    "car": 3
+  },
+  "ca": 18,
+  "ca_tipo": "armatura naturale",
+  "pf": 142,
+  "pf_dadi": "15d10 + 60",
+  "velocita": {
+    "camminare": "12 m",
+    "nuotare": "12 m",
+    "volare": "24 m"
+  },
+  "competenze": {
+    "furtività": 3,
+    "intuizione": 4,
+    "percezione": 7
+  },
+  "immunita_danni": "fulmine",
+  "sensi": "Percezione passiva 17, scurovisione 36 m, vista cieca 9 m",
+  "percezione_passiva": 17,
+  "linguaggi": "Comune, Draconico",
+  "cr": "8",
+  "pe": 3900,
+  "bonus_competenza": 3,
+  "tratti": [
+    {
+      "nome": "Anfibio",
+      "testo": "Il drago può respirare in aria e in acqua."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il drago effettua tre attacchi: uno con il morso e due con gli artigli."
+    },
+    {
+      "nome": "Artiglio",
+      "testo": "Attacco con arma da mischia: +8 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 12 (2d6 + 5) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 8,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 12,
+            "dadi": "2d6 + 5",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +8 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 16 (2d10 + 5) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 8,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 16,
+            "dadi": "2d10 + 5",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Soffi",
+      "testo": "Il drago usa uno dei seguenti soffi.",
+      "uso": "ricarica 5–6"
+    },
+    {
+      "nome": "Soffio di fulmini",
+      "testo": "Il drago esala una scarica di fulmini lunga 18 metri e larga 1,5 metri. Ogni creatura su quella linea deve effettuare un tiro salvezza su Destrezza con CD 15, subendo 55 (10d10) danni da fulmine in caso di fallimento, o la metà dei danni in caso di successo.",
+      "salvataggio": {
+        "caratteristica": "des",
+        "cd": 15,
+        "danno_fallimento": {
+          "media": 55,
+          "dadi": "10d10",
+          "tipo": "fulmine"
+        },
+        "successo": "metà danni"
+      }
+    },
+    {
+      "nome": "Soffio repulsivo",
+      "testo": "Il drago esala energia repulsiva in un cono di 9 metri. Ogni creatura in quell'area deve superare un tiro salvezza su Forza con CD 15. Se lo fallisce, viene scagliata a 12 metri dal drago.",
+      "salvataggio": {
+        "caratteristica": "for",
+        "cd": 15
+      }
+    }
+  ]
+}

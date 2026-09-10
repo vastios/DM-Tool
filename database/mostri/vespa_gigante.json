@@ -1,0 +1,67 @@
+{
+  "id": "vespa_gigante",
+  "nome": "Vespa gigante",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 443
+  },
+  "tipo": "bestia",
+  "taglia": "Media",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 10,
+    "des": 14,
+    "cos": 10,
+    "int": 1,
+    "sag": 10,
+    "car": 3
+  },
+  "modificatori": {
+    "for": 0,
+    "des": 2,
+    "cos": 0,
+    "int": -5,
+    "sag": 0,
+    "car": -4
+  },
+  "ca": 12,
+  "pf": 13,
+  "pf_dadi": "3d8",
+  "velocita": {
+    "camminare": "3 m",
+    "volare": "15 m"
+  },
+  "linguaggi": "—",
+  "cr": "1/2",
+  "pe": 100,
+  "bonus_competenza": 2,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Pungiglione",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, una creatura. Colpito: 5 (1d6 + 2) danni perforanti e il bersaglio deve effettuare un tiro salvezza su Costituzione con CD 11 subendo 10 (3d6) danni da veleno, in caso di fallimento, o la metà in caso di successo. Se i danni da veleno riducono i punti ferita del bersaglio a 0, esso è stabile ma avvelenato per 1 ora anche dopo aver recuperato punti ferita e, mentre è avvelenato in questo modo, è paralizzato.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d6 + 2",
+            "tipo": "perforanti e"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 11,
+        "danno_fallimento": {
+          "media": 10,
+          "dadi": "3d6",
+          "tipo": "veleno"
+        }
+      }
+    }
+  ]
+}

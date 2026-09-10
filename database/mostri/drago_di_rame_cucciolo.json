@@ -1,0 +1,94 @@
+{
+  "id": "drago_di_rame_cucciolo",
+  "nome": "Drago di rame cucciolo",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 329
+  },
+  "tipo": "drago",
+  "taglia": "Media",
+  "allineamento": "caotico buono",
+  "caratteristiche": {
+    "for": 15,
+    "des": 12,
+    "cos": 13,
+    "int": 14,
+    "sag": 11,
+    "car": 13
+  },
+  "modificatori": {
+    "for": 2,
+    "des": 1,
+    "cos": 1,
+    "int": 2,
+    "sag": 0,
+    "car": 1
+  },
+  "ca": 16,
+  "ca_tipo": "armatura naturale",
+  "pf": 22,
+  "pf_dadi": "4d8 + 4",
+  "velocita": {
+    "camminare": "9 m",
+    "scalare": "9 m",
+    "volare": "18 m"
+  },
+  "competenze": {
+    "furtività": 3,
+    "percezione": 4
+  },
+  "immunita_danni": "acido",
+  "sensi": "Percezione passiva 14, scurovisione 18 m, vista cieca 3 m",
+  "percezione_passiva": 14,
+  "linguaggi": "Draconico",
+  "cr": "1",
+  "pe": 200,
+  "bonus_competenza": 2,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 7 (1d10 + 2) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 7,
+            "dadi": "1d10 + 2",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Soffi",
+      "testo": "Il drago usa uno dei seguenti soffi.",
+      "uso": "ricarica 5–6"
+    },
+    {
+      "nome": "Soffio di acido",
+      "testo": "Il drago esala una scia di fuoco lunga 6 metri e larga 1,5 metri. Ogni creatura su quella linea deve effettuare un tiro salvezza su Destrezza con CD 11, subendo 18 (4d8) danni da acido in caso di fallimento, o la metà dei danni in caso di successo.",
+      "salvataggio": {
+        "caratteristica": "des",
+        "cd": 11,
+        "danno_fallimento": {
+          "media": 18,
+          "dadi": "4d8",
+          "tipo": "acido"
+        },
+        "successo": "metà danni"
+      }
+    },
+    {
+      "nome": "Soffio rallentante",
+      "testo": "Il drago esala gas in un cono di 4,5 metri. Ogni creatura in quell'area deve superare un tiro salvezza su Costituzione con CD 11; se lo fallisce, non può usare reazioni, la sua velocità è dimezzata e non può effettuare più di un attacco nel suo turno. Inoltre, nel suo turno la creatura può usare un'azione o un'azione bonus, ma non entrambe. Questi effetti durano 1 minuto. La creatura può ripetere il tiro salvezza alla fine di ogni suo turno e, se lo supera, l'effetto per lei termina. Drago d'oro",
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 11
+      }
+    }
+  ]
+}

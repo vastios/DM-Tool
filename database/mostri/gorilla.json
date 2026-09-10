@@ -1,0 +1,81 @@
+{
+  "id": "gorilla",
+  "nome": "Gorilla",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 423
+  },
+  "tipo": "bestia",
+  "taglia": "Media",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 16,
+    "des": 14,
+    "cos": 14,
+    "int": 6,
+    "sag": 12,
+    "car": 7
+  },
+  "modificatori": {
+    "for": 3,
+    "des": 2,
+    "cos": 2,
+    "int": -2,
+    "sag": 1,
+    "car": -2
+  },
+  "ca": 12,
+  "pf": 19,
+  "pf_dadi": "3d8 + 6",
+  "velocita": {
+    "camminare": "9 m",
+    "scalare": "9 m"
+  },
+  "sensi": "Percezione passiva 13",
+  "percezione_passiva": 13,
+  "linguaggi": "—",
+  "cr": "1/2",
+  "pe": 100,
+  "bonus_competenza": 2,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il gorilla effettua due attacchi con i pugni."
+    },
+    {
+      "nome": "Pugno",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 6 (1d6 + 3) danni contundenti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 6,
+            "dadi": "1d6 + 3",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Roccia",
+      "testo": "Attacco con arma a distanza: +5 al tiro per colpire, gittata 7,5/15 m, un bersaglio. Colpito: 6 (1d6 + 3) danni contundenti.",
+      "attacco": {
+        "tipo": "distanza",
+        "tiro": 5,
+        "portata": "7",
+        "bersaglio": "5/15 m, un bersaglio",
+        "danni": [
+          {
+            "media": 6,
+            "dadi": "1d6 + 3",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    }
+  ]
+}

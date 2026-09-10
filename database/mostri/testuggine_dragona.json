@@ -1,0 +1,124 @@
+{
+  "id": "testuggine_dragona",
+  "nome": "Testuggine dragona",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 397
+  },
+  "tipo": "drago",
+  "taglia": "Mastodontica",
+  "allineamento": "neutrale",
+  "caratteristiche": {
+    "for": 25,
+    "des": 10,
+    "cos": 20,
+    "int": 10,
+    "sag": 12,
+    "car": 12
+  },
+  "modificatori": {
+    "for": 7,
+    "des": 0,
+    "cos": 5,
+    "int": 0,
+    "sag": 1,
+    "car": 1
+  },
+  "ca": 20,
+  "ca_tipo": "armatura naturale",
+  "pf": 341,
+  "pf_dadi": "22d20 + 110",
+  "velocita": {
+    "camminare": "6 m",
+    "nuotare": "12 m"
+  },
+  "resistenze_danni": "fuoco",
+  "sensi": "Percezione passiva 11, scurovisione 36 m",
+  "percezione_passiva": 11,
+  "linguaggi": "Aquan, Draconico",
+  "cr": "17",
+  "pe": 18000,
+  "bonus_competenza": 6,
+  "tratti": [
+    {
+      "nome": "Anfibio",
+      "testo": "La testuggine dragona può respirare in aria e in acqua."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "La testuggine dragona effettua tre attacchi: uno con il morso e due con gli artigli. Può effettuare un attacco con la coda al posto dei due attacchi con gli artigli."
+    },
+    {
+      "nome": "Artiglio",
+      "testo": "Attacco con arma da mischia: +13 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 16 (2d8 + 7) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 13,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 16,
+            "dadi": "2d8 + 7",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Coda",
+      "testo": "Attacco con arma da mischia: +13 al tiro per colpire, portata 4,5 m, un bersaglio. Colpito: 26 (3d12 + 7) danni contundenti. Se il bersaglio è una creatura, deve superare un tiro salvezza su Forza con CD 20, altrimenti è scagliato a 3 metri dalla testuggine dragona e buttato a terra prono.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 13,
+        "portata": "4",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 26,
+            "dadi": "3d12 + 7",
+            "tipo": "contundenti"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "for",
+        "cd": 20
+      }
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +13 al tiro per colpire, portata 4,5 m, un bersaglio. Colpito: 26 (3d12 + 7) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 13,
+        "portata": "4",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 26,
+            "dadi": "3d12 + 7",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Soffio di vapore",
+      "testo": "La testuggine dragona esala vapore ustionante in un cono di 18 metri. Ogni creatura in quell'area deve effettuare un tiro salvezza su Costituzione con CD 18, subendo 52 (15d6) danni da fuoco in caso di fallimento, o la metà dei danni in caso di successo. Trovarsi sott'acqua non conferisce resistenza a tali danni.",
+      "uso": "ricarica 5–6",
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 18,
+        "danno_fallimento": {
+          "media": 52,
+          "dadi": "15d6",
+          "tipo": "fuoco"
+        },
+        "successo": "metà danni"
+      }
+    }
+  ]
+}

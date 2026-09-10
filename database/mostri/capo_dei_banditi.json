@@ -1,0 +1,92 @@
+{
+  "id": "capo_dei_banditi",
+  "nome": "Capo dei banditi",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 446
+  },
+  "tipo": "umanoide",
+  "descrittore": "qualsiasi razza",
+  "taglia": "Media",
+  "allineamento": "qualsiasi allineamento non legale",
+  "caratteristiche": {
+    "for": 15,
+    "des": 16,
+    "cos": 14,
+    "int": 14,
+    "sag": 11,
+    "car": 14
+  },
+  "modificatori": {
+    "for": 2,
+    "des": 3,
+    "cos": 2,
+    "int": 2,
+    "sag": 0,
+    "car": 2
+  },
+  "ca": 15,
+  "ca_tipo": "cuoio borchiato",
+  "pf": 65,
+  "pf_dadi": "10d8 + 20",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "competenze": {
+    "atletica": 4,
+    "inganno": 4
+  },
+  "sensi": "Percezione passiva 10",
+  "percezione_passiva": 10,
+  "linguaggi": "due qualsiasi",
+  "cr": "2",
+  "pe": 450,
+  "bonus_competenza": 2,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il capo dei banditi effettua tre attacchi in mischia: due con la scimitarra e uno con il pugnale. In alternativa, effettua due attacchi a distanza con i suoi pugnali."
+    },
+    {
+      "nome": "Scimitarra",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 6 (1d6 + 3) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 6,
+            "dadi": "1d6 + 3",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Pugnale",
+      "testo": "Attacco con arma da mischia o con arma a distanza: +5 al tiro per colpire, portata 1,5 m o gittata 6/18 m, un bersaglio. Colpito: 5 (1d4 + 3) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia o distanza",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m o gittata 6/18 m, un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d4 + 3",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ],
+  "reazioni": [
+    {
+      "nome": "Parata",
+      "testo": "Il capo aggiunge 2 alla sua CA contro un attacco in mischia che lo colpirebbe. Per farlo, deve vedere l'attaccante e deve impugnare un'arma da mischia. Ci vogliono personalità, astuzia e uno spiccato talento per l'arte oratoria per tenere in riga un\ncapo dei banditi gruppo di banditi. Un eccelle in questo senso. Il capitano dei pirati è una variante del capo dei banditi che, oltre a gestire una ciurma di delinquenti egoisti, ha una nave da proteggere e comandare. Per mantenere l'equipaggio in riga, il capitano deve elargire regolarmente ricompense e infliggere punizioni. Più che un tesoro, un capo dei banditi o un capitano dei pirati brama la fama di malevolo. Un prigioniero che si appella alla vanità o all'ego del capitano ha maggiori probabilità di essere trattato bene rispetto a un prigioniero che non conosce o afferma di non conoscere la reputazione iconica del capitano."
+    }
+  ]
+}

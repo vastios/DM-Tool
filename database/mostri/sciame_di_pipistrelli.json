@@ -1,0 +1,74 @@
+{
+  "id": "sciame_di_pipistrelli",
+  "nome": "Sciame di pipistrelli",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 436
+  },
+  "tipo": "sciame di bestie minuscole",
+  "taglia": "Media",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 5,
+    "des": 15,
+    "cos": 10,
+    "int": 2,
+    "sag": 12,
+    "car": 4
+  },
+  "modificatori": {
+    "for": -3,
+    "des": 2,
+    "cos": 0,
+    "int": -4,
+    "sag": 1,
+    "car": -3
+  },
+  "ca": 12,
+  "pf": 22,
+  "pf_dadi": "5d8",
+  "velocita": {
+    "camminare": "0 m",
+    "volare": "9 m"
+  },
+  "immunita_condizioni": "affascinato, afferrato, paralizzato, pietrificato, prono, spaventato, stordito, trattenuto",
+  "sensi": "Percezione passiva 11, vista cieca 18 m",
+  "percezione_passiva": 11,
+  "linguaggi": "—",
+  "cr": "1/4",
+  "pe": 50,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Sciame",
+      "testo": "Lo sciame può occupare lo spazio di un'altra creatura e viceversa, e può muoversi attraverso qualsiasi apertura sufficientemente larga da far passare un pipistrello Minuscolo. Lo sciame non può recuperare punti ferita, né ottenere punti ferita temporanei."
+    },
+    {
+      "nome": "Senso radar",
+      "testo": "Lo sciame non può usare vista cieca se è assordato."
+    },
+    {
+      "nome": "Udito acuto",
+      "testo": "Lo sciame dispone di vantaggio alle prove di Saggezza (Percezione) basate sull'udito."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Morsi",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 0 m, una creatura nello spazio dello sciame. Colpito: 5 (2d4) danni perforanti o 2 (1d4) danni perforanti se lo sciame possiede la metà dei suoi punti ferita o meno.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "0 m",
+        "bersaglio": "una creatura nello spazio dello sciame",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "2d4",
+            "tipo": "perforanti o"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "id": "mimic",
+  "nome": "Mimic",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 380
+  },
+  "tipo": "mostruosità",
+  "descrittore": "mutaforma",
+  "taglia": "Media",
+  "allineamento": "neutrale",
+  "caratteristiche": {
+    "for": 17,
+    "des": 12,
+    "cos": 15,
+    "int": 5,
+    "sag": 13,
+    "car": 8
+  },
+  "modificatori": {
+    "for": 3,
+    "des": 1,
+    "cos": 2,
+    "int": -3,
+    "sag": 1,
+    "car": -1
+  },
+  "ca": 12,
+  "ca_tipo": "armatura naturale",
+  "pf": 58,
+  "pf_dadi": "9d8 + 18",
+  "velocita": {
+    "camminare": "5 m"
+  },
+  "immunita_danni": "acido",
+  "immunita_condizioni": "prono",
+  "sensi": "Percezione passiva 11, scurovisione 18 m",
+  "percezione_passiva": 11,
+  "linguaggi": "—",
+  "cr": "2",
+  "pe": 450,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Mutaforma",
+      "testo": "Il mimic può usare la sua azione per trasformarsi in un oggetto o per tornare alla sua forma naturale, che è amorfa. Le sue statistiche restano le stesse in ogni forma. Ogni oggetto che indossa o trasporta non viene trasformato. Se muore, torna alla sua forma naturale."
+    },
+    {
+      "nome": "Adesivo",
+      "testo": "Il mimic aderisce a qualsiasi cosa lo tocchi. Una creatura di taglia Enorme o inferiore a cui il mimic si sia attaccato è anche afferrata da esso (CD 13 per sfuggire). Le prove di caratteristica effettuate per sfuggire a questa presa subiscono svantaggio.",
+      "uso": "solo forma di oggetto"
+    },
+    {
+      "nome": "Falso aspetto",
+      "testo": "Finché il mimic rimane immobile, non è possibile distinguerlo da un oggetto comune.",
+      "uso": "solo forma di oggetto"
+    },
+    {
+      "nome": "Lottatore",
+      "testo": "Il mimic dispone di vantaggio ai tiri per colpire contro qualsiasi creatura afferrata."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 7 (1d8 + 3) danni perforanti più 4 (1d8) danni da acido.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 7,
+            "dadi": "1d8 + 3",
+            "tipo": "perforanti"
+          },
+          {
+            "media": 4,
+            "dadi": "1d8",
+            "tipo": "acido"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Pseudopode",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 7 (1d8 + 3) danni contundenti. Se il mimic è in forma di oggetto, il bersaglio è soggetto al suo tratto Adesivo.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 7,
+            "dadi": "1d8 + 3",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    }
+  ]
+}

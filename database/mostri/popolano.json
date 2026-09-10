@@ -1,0 +1,58 @@
+{
+  "id": "popolano",
+  "nome": "Popolano",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 451
+  },
+  "tipo": "umanoide",
+  "descrittore": "qualsiasi razza",
+  "taglia": "Media",
+  "allineamento": "qualsiasi allineamento",
+  "caratteristiche": {
+    "for": 10,
+    "des": 10,
+    "cos": 10,
+    "int": 10,
+    "sag": 10,
+    "car": 10
+  },
+  "modificatori": {
+    "for": 0,
+    "des": 0,
+    "cos": 0,
+    "int": 0,
+    "sag": 0,
+    "car": 0
+  },
+  "ca": 10,
+  "pf": 4,
+  "pf_dadi": "1d8",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "linguaggi": "uno qualsiasi (di solito Comune)",
+  "cr": "0",
+  "pe": 10,
+  "bonus_competenza": 2,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Randello",
+      "testo": "Attacco con arma da mischia: +2 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 2 (1d4) danni contundenti.\npopolani I includono figure come contadini, schiavi, servitori, pellegrini, mercanti, artigiani ed eremiti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 2,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 2,
+            "dadi": "1d4",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    }
+  ]
+}

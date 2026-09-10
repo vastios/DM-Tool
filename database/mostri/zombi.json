@@ -1,0 +1,66 @@
+{
+  "id": "zombi",
+  "nome": "Zombi",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 404
+  },
+  "tipo": "non morto",
+  "taglia": "Media",
+  "allineamento": "neutrale malvagio",
+  "caratteristiche": {
+    "for": 13,
+    "des": 6,
+    "cos": 16,
+    "int": 3,
+    "sag": 6,
+    "car": 5
+  },
+  "modificatori": {
+    "for": 1,
+    "des": -2,
+    "cos": 3,
+    "int": -4,
+    "sag": -2,
+    "car": -3
+  },
+  "ca": 8,
+  "pf": 22,
+  "pf_dadi": "3d8 + 9",
+  "velocita": {
+    "camminare": "6 m"
+  },
+  "immunita_danni": "veleno",
+  "immunita_condizioni": "avvelenato",
+  "sensi": "Percezione passiva 8, scurovisione 18 m",
+  "percezione_passiva": 8,
+  "linguaggi": "capisce quelli che conosceva in vita, ma non è in grado di parlarli",
+  "cr": "1/4",
+  "pe": 50,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Tempra dei non morti",
+      "testo": "Se i danni riducono lo zombi a 0 punti ferita, esso deve effettuare un tiro salvezza su Costituzione con una CD pari a 5 + i danni subiti, a meno che non si tratti di danni radiosi o di un colpo critico. In caso di successo, lo zombi scende invece a 1 punto ferita."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Schianto",
+      "testo": "Attacco con arma da mischia: +3 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 4 (1d6 + 1) danni contundenti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 3,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 4,
+            "dadi": "1d6 + 1",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    }
+  ]
+}

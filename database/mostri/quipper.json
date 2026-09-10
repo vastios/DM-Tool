@@ -1,0 +1,67 @@
+{
+  "id": "quipper",
+  "nome": "Quipper",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 431
+  },
+  "tipo": "bestia",
+  "taglia": "Minuscola",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 2,
+    "des": 16,
+    "cos": 9,
+    "int": 1,
+    "sag": 7,
+    "car": 2
+  },
+  "modificatori": {
+    "for": -4,
+    "des": 3,
+    "cos": -1,
+    "int": -5,
+    "sag": -2,
+    "car": -4
+  },
+  "ca": 13,
+  "pf": 1,
+  "pf_dadi": "1d4 - 1",
+  "velocita": {
+    "camminare": "0 m",
+    "nuotare": "12 m"
+  },
+  "linguaggi": "—",
+  "cr": "0",
+  "pe": 10,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Frenesia di sangue",
+      "testo": "Il quipper dispone di vantaggio ai tiri per colpire in mischia contro ogni creatura che non possieda tutti i propri punti ferita."
+    },
+    {
+      "nome": "Respirare sott'acqua",
+      "testo": "Il quipper può respirare soltanto sott'acqua."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 1 danno perforante.\nquipper Un è un pesce carnivoro dai denti aguzzi. Queste bestie possono adattarsi a qualsiasi ambiente acquatico, inclusi i gelidi laghi sotterranei. Spesso si riuniscono in sciami, le cui statistiche sono specificate di seguito in quest'appendice.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 1,
+            "dadi": "1",
+            "tipo": "perforante"
+          }
+        ]
+      }
+    }
+  ]
+}

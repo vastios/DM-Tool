@@ -1,0 +1,76 @@
+{
+  "id": "rospo_gigante",
+  "nome": "Rospo gigante",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 435
+  },
+  "tipo": "bestia",
+  "taglia": "Grande",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 15,
+    "des": 13,
+    "cos": 13,
+    "int": 2,
+    "sag": 10,
+    "car": 3
+  },
+  "modificatori": {
+    "for": 2,
+    "des": 1,
+    "cos": 1,
+    "int": -4,
+    "sag": 0,
+    "car": -4
+  },
+  "ca": 11,
+  "pf": 39,
+  "pf_dadi": "6d10 + 6",
+  "velocita": {
+    "camminare": "6 m",
+    "nuotare": "12 m"
+  },
+  "linguaggi": "—",
+  "cr": "1",
+  "pe": 200,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Anfibio",
+      "testo": "Il rospo può respirare in aria e in acqua."
+    },
+    {
+      "nome": "Balzo da fermo",
+      "testo": "Il rospo può compiere un salto in lungo di massimo 6 metri e uno in alto di massimo 3 metri, con o senza rincorsa."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 7 (1d10 + 2) danni perforanti più 5 (1d10) danni da veleno e il bersaglio è afferrato (CD 13 per sfuggire). Finché la presa perdura, il bersaglio viene trattenuto e il rospo non può morderne un altro.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 7,
+            "dadi": "1d10 + 2",
+            "tipo": "perforanti"
+          },
+          {
+            "media": 5,
+            "dadi": "1d10",
+            "tipo": "veleno e"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Inghiottire",
+      "testo": "Il rospo effettua un attacco con il morso contro un bersaglio di taglia Media o inferiore con cui stia lottando. Se l'attacco va a segno, il bersaglio viene inghiottito e la lotta termina. Mentre è inghiottito, il bersaglio è accecato e trattenuto, beneficia di copertura totale contro gli attacchi e altri effetti al di fuori del rospo e subisce 10 (3d6) danni da acido all'inizio di ogni turno dell'animale, che può inghiottire soltanto un bersaglio alla volta. Se il rospo muore, la creatura inghiottita non è più trattenuta dalla bestia e può sfuggire usando 1,5 metri di movimento, uscendo prona dal cadavere."
+    }
+  ]
+}

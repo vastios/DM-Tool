@@ -1,0 +1,116 @@
+{
+  "id": "ettercap",
+  "nome": "Ettercap",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 350
+  },
+  "tipo": "mostruosità",
+  "taglia": "Media",
+  "allineamento": "neutrale malvagio",
+  "caratteristiche": {
+    "for": 14,
+    "des": 15,
+    "cos": 13,
+    "int": 7,
+    "sag": 12,
+    "car": 8
+  },
+  "modificatori": {
+    "for": 2,
+    "des": 2,
+    "cos": 1,
+    "int": -2,
+    "sag": 1,
+    "car": -1
+  },
+  "ca": 13,
+  "ca_tipo": "armatura naturale",
+  "pf": 44,
+  "pf_dadi": "8d8 + 8",
+  "velocita": {
+    "camminare": "9 m",
+    "scalare": "9 m"
+  },
+  "sensi": "Percezione passiva 13, scurovisione 18 m",
+  "percezione_passiva": 13,
+  "linguaggi": "—",
+  "cr": "2",
+  "pe": 450,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Arrampicatele",
+      "testo": "L'ettecap ignora le restrizioni di movimento causate dalle ragnatele."
+    },
+    {
+      "nome": "Movimenti del ragno",
+      "testo": "L'ettercap può scalare le superfici difficili, inclusi i soffitti, lungo i quali si muove a testa in giù, senza effettuare una prova di caratteristica."
+    },
+    {
+      "nome": "Percezione della Ragnatela",
+      "testo": "Finché è in contatto con una ragnatela, l'ettercap conosce l'ubicazione esatta di ogni altra creatura a contatto con la stessa ragnatela."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "L'ettercap effettua due attacchi: uno con il morso e uno con gli artigli."
+    },
+    {
+      "nome": "Artigli",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 7 (2d4 + 2) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 7,
+            "dadi": "2d4 + 2",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, una creatura. Colpito: 6 (1d8 + 2) danni perforanti più 4 (1d8) danni da veleno. Il bersaglio deve superare un tiro salvezza su Costituzione con CD 11, altrimenti viene avvelenato per 1 minuto. La creatura può ripetere il tiro salvezza alla fine di ogni suo turno e, se lo supera, l'effetto svanisce.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura",
+        "danni": [
+          {
+            "media": 6,
+            "dadi": "1d8 + 2",
+            "tipo": "perforanti"
+          },
+          {
+            "media": 4,
+            "dadi": "1d8",
+            "tipo": "veleno"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 11
+      }
+    },
+    {
+      "nome": "Ragnatela",
+      "testo": "Attacco con arma a distanza: +4 al tiro per colpire, gittata 9/18 m, una creatura Grande o di taglia inferiore. Colpito: La creatura è trattenuta dalle ragnatele. Con un'azione, la creatura trattenuta può effettuare una prova di Forza con CD 11, sfuggendo alla ragnatela in caso di successo. L'effetto termina anche se la ragnatela viene distrutta. La ragnatela ha CA 10, 5 punti ferita, vulnerabilità ai danni da fuoco e immunità ai danni contundenti, psichici e da veleno.",
+      "uso": "ricarica 5–6",
+      "attacco": {
+        "tipo": "distanza",
+        "tiro": 4,
+        "portata": "9/18 m",
+        "bersaglio": "una creatura Grande o di taglia inferiore",
+        "danni": []
+      }
+    }
+  ]
+}

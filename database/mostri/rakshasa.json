@@ -1,0 +1,109 @@
+{
+  "id": "rakshasa",
+  "nome": "Rakshasa",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 388
+  },
+  "tipo": "immondo",
+  "taglia": "Media",
+  "allineamento": "legale malvagio",
+  "caratteristiche": {
+    "for": 14,
+    "des": 17,
+    "cos": 18,
+    "int": 13,
+    "sag": 16,
+    "car": 20
+  },
+  "modificatori": {
+    "for": 2,
+    "des": 3,
+    "cos": 4,
+    "int": 1,
+    "sag": 3,
+    "car": 5
+  },
+  "ca": 16,
+  "ca_tipo": "armatura naturale",
+  "pf": 110,
+  "pf_dadi": "13d8 + 52",
+  "velocita": {
+    "camminare": "12 m"
+  },
+  "immunita_danni": "contundenti, perforanti e taglienti da attacchi non magici",
+  "vulnerabilita_danni": "perforanti da armi magiche impugnate da creature buone",
+  "sensi": "Percezione passiva 13, scurovisione 18 m",
+  "percezione_passiva": 13,
+  "linguaggi": "Comune, Infernale",
+  "cr": "13",
+  "pe": 10000,
+  "bonus_competenza": 5,
+  "tratti": [
+    {
+      "nome": "Immunità alla magia limitata",
+      "testo": "Il rakshasa non può essere influenzato o individuato dagli incantesimi di 6° livello o inferiori se non lo desidera. Dispone di vantaggio ai tiri salvezza contro tutti gli altri incantesimi ed effetti magici."
+    },
+    {
+      "nome": "Incantesimi innati",
+      "testo": "La caratteristica innata da incantatore del rakshasa è Carisma (CD del tiro salvezza sull'incantesimo 18, +10 al tiro per colpire con attacco con incantesimo). Per sua natura, il rakshasa è in grado di lanciare gli incantesimi indicati di seguito senza aver bisogno di componenti materiali: A volontà: camuffare se stesso, illusione minore, individuazione dei pensieri, mano magica 3/giorno ciascuno: charme su persone, immagine maggiore, individuazione del magico, invisibilità, suggestione 1/giorno ciascuno: dominare persone, spostamento planare, visione del vero, volare",
+      "incantesimi": {
+        "testo": "La caratteristica innata da incantatore del rakshasa è Carisma (CD del tiro salvezza sull'incantesimo 18, +10 al tiro per colpire con attacco con incantesimo). Per sua natura, il rakshasa è in grado di lanciare gli incantesimi indicati di seguito senza aver bisogno di componenti materiali: A volontà: camuffare se stesso, illusione minore, individuazione dei pensieri, mano magica 3/giorno ciascuno: charme su persone, immagine maggiore, individuazione del magico, invisibilità, suggestione 1/giorno ciascuno: dominare persone, spostamento planare, visione del vero, volare",
+        "gruppi": [
+          {
+            "frequenza": "a volontà",
+            "incantesimi": [
+              "camuffare se stesso",
+              "illusione minore",
+              "individuazione dei pensieri",
+              "mano magica"
+            ]
+          },
+          {
+            "frequenza": "3/giorno ciascuno",
+            "incantesimi": [
+              "charme su persone",
+              "immagine maggiore",
+              "individuazione del magico",
+              "invisibilità",
+              "suggestione"
+            ]
+          },
+          {
+            "frequenza": "1/giorno ciascuno",
+            "incantesimi": [
+              "dominare persone",
+              "spostamento planare",
+              "visione del vero",
+              "volare"
+            ]
+          }
+        ],
+        "cd": 18
+      }
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il rakshasa effettua due attacchi con gli artigli."
+    },
+    {
+      "nome": "Artiglio",
+      "testo": "Attacco con arma da mischia : +7 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 9 (2d6 + 2) danni taglienti e il bersaglio è maledetto se è una creatura. La maledizione magica ha effetto ogni volta che il bersaglio inizia un riposo breve o lungo, e provoca immagini e incubi orribili nella mente della vittima. Il bersaglio maledetto non ottiene alcun beneficio quando completa un riposo breve o lungo. La maledizione permane finché non viene rimossa da un incantesimo rimuovi maledizione o da una magia analoga.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 9,
+            "dadi": "2d6 + 2",
+            "tipo": "taglienti e"
+          }
+        ]
+      }
+    }
+  ]
+}

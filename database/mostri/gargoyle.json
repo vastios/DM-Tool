@@ -1,0 +1,89 @@
+{
+  "id": "gargoyle",
+  "nome": "Gargoyle",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 354
+  },
+  "tipo": "elementale",
+  "taglia": "Media",
+  "allineamento": "caotico malvagio",
+  "caratteristiche": {
+    "for": 15,
+    "des": 11,
+    "cos": 16,
+    "int": 6,
+    "sag": 11,
+    "car": 7
+  },
+  "modificatori": {
+    "for": 2,
+    "des": 0,
+    "cos": 3,
+    "int": -2,
+    "sag": 0,
+    "car": -2
+  },
+  "ca": 15,
+  "ca_tipo": "armatura naturale",
+  "pf": 52,
+  "pf_dadi": "7d8 + 21",
+  "velocita": {
+    "camminare": "9 m",
+    "volare": "18 m"
+  },
+  "immunita_danni": "veleno",
+  "immunita_condizioni": "avvelenato, indebolimento, pietrificato",
+  "sensi": "Percezione passiva 10, scurovisione 18 m",
+  "percezione_passiva": 10,
+  "linguaggi": "Terran",
+  "cr": "2",
+  "pe": 450,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Falso aspetto",
+      "testo": "Finché il gargoyle rimane immobile, non è possibile distinguerlo da una statua inanimata."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il gargoyle effettua due attacchi: uno con il morso e uno con gli artigli."
+    },
+    {
+      "nome": "Artigli",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 5 (1d6 + 2) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d6 + 2",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 5 (1d6 + 2) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d6 + 2",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,103 @@
+{
+  "id": "diavolo_cornuto",
+  "nome": "Diavolo cornuto",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 315
+  },
+  "tipo": "immondo",
+  "descrittore": "diavolo",
+  "taglia": "Grande",
+  "allineamento": "legale malvagio",
+  "caratteristiche": {
+    "for": 22,
+    "des": 17,
+    "cos": 21,
+    "int": 12,
+    "sag": 16,
+    "car": 17
+  },
+  "modificatori": {
+    "for": 6,
+    "des": 3,
+    "cos": 5,
+    "int": 1,
+    "sag": 3,
+    "car": 3
+  },
+  "ca": 18,
+  "ca_tipo": "armatura naturale",
+  "pf": 178,
+  "pf_dadi": "17d10 + 85",
+  "velocita": {
+    "camminare": "6 m",
+    "volare": "18 m"
+  },
+  "resistenze_danni": "freddo; contundenti, perforanti e taglienti da attacchi non magici con armi non argentate",
+  "immunita_danni": "fuoco, veleno",
+  "immunita_condizioni": "avvelenato",
+  "sensi": "Percezione passiva 13, scurovisione 36 m",
+  "percezione_passiva": 13,
+  "linguaggi": "Infernale, telepatia 36 m",
+  "cr": "11",
+  "pe": 7200,
+  "bonus_competenza": 4,
+  "tratti": [
+    {
+      "nome": "Resistenza alla magia",
+      "testo": "Il diavolo dispone di vantaggio ai tiri salvezza contro incantesimi e altri effetti magici."
+    },
+    {
+      "nome": "Vista del diavolo",
+      "testo": "L'oscurità magica non ostacola la scurovisione del diavolo."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il diavolo effettua tre attacchi in mischia: due con il forcone e uno con la coda. Può usare Scagliare fiamma al posto di qualsiasi attacco in mischia."
+    },
+    {
+      "nome": "Forcone",
+      "testo": "Attacco con arma da mischia: +10 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 15 (2d8 + 6) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 10,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 15,
+            "dadi": "2d8 + 6",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Coda",
+      "testo": "Attacco con arma da mischia: +10 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 10 (1d8 + 6) danni perforanti. Se il bersaglio è una creatura diversa da un non morto o da un costrutto, deve superare un tiro salvezza su Costituzione con CD 17, altrimenti perde 10 (3d6) punti ferita all'inizio di ogni suo turno a causa di una ferita infernale. Ogni volta che il diavolo colpisce il bersaglio ferito con questo attacco, i danni inflitti dalla ferita aumentano di 10 (3d6). Una creatura qualsiasi può effettuare un'azione per tamponare la ferita superando una prova di Saggezza (Medicina) con CD 12. La ferita si richiude anche se il bersaglio riceve una qualsiasi forma di guarigione magica.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 10,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 10,
+            "dadi": "1d8 + 6",
+            "tipo": "perforanti"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 17
+      }
+    },
+    {
+      "nome": "Scagliare fiamma",
+      "testo": "Attacco a distanza con incantesimo: +7 al tiro per colpire, gittata 45 m, un bersaglio. Colpito: 14 (4d6) danni da fuoco. Se il bersaglio è un oggetto infiammabile che non è indossato o trasportato, prende anche fuoco."
+    }
+  ]
+}

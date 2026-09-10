@@ -1,0 +1,215 @@
+{
+  "id": "signore_delle_mummie",
+  "nome": "Signore delle mummie",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 381
+  },
+  "tipo": "non morto",
+  "taglia": "Media",
+  "allineamento": "legale malvagio",
+  "caratteristiche": {
+    "for": 18,
+    "des": 10,
+    "cos": 17,
+    "int": 11,
+    "sag": 18,
+    "car": 16
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 0,
+    "cos": 3,
+    "int": 0,
+    "sag": 4,
+    "car": 3
+  },
+  "ca": 17,
+  "ca_tipo": "armatura naturale",
+  "pf": 97,
+  "pf_dadi": "13d8 + 39",
+  "velocita": {
+    "camminare": "6 m"
+  },
+  "competenze": {
+    "religione": 5,
+    "storia": 5
+  },
+  "immunita_danni": "necrotici, veleno; contundenti, perforanti e taglienti da attacchi non magici",
+  "vulnerabilita_danni": "fuoco",
+  "immunita_condizioni": "affascinato, avvelenato, indebolimento, paralizzato, spaventato",
+  "sensi": "Percezione passiva 14, scurovisione 18 m",
+  "percezione_passiva": 14,
+  "linguaggi": "quelli conosciuti in vita",
+  "cr": "15",
+  "pe": 13000,
+  "bonus_competenza": 5,
+  "tratti": [
+    {
+      "nome": "Incantesimi",
+      "testo": "Il signore delle mummie è un incantatore di 10° livello: la sua caratteristica da incantatore è Saggezza (CD del tiro salvezza sull'incantesimo 17, +9 al tiro per colpire con attacco con incantesimo). Ha a disposizione i seguenti incantesimi da chierico: Trucchetti (a volontà): fiamma sacra, taumaturgia 1° livello (4 slot): comando, dardo tracciante, scudo della fede 2° livello (3 slot): arma spirituale, blocca persone, silenzio 3° livello (3 slot): animare morti, dissolvi magie 4° livello (3 slot): divinazione, guardiano della fede 5° livello (2 slot): contagio, piaga degli insetti 6° livello (1 slot): ferire",
+      "incantesimi": {
+        "testo": "Il signore delle mummie è un incantatore di 10° livello: la sua caratteristica da incantatore è Saggezza (CD del tiro salvezza sull'incantesimo 17, +9 al tiro per colpire con attacco con incantesimo). Ha a disposizione i seguenti incantesimi da chierico: Trucchetti (a volontà): fiamma sacra, taumaturgia 1° livello (4 slot): comando, dardo tracciante, scudo della fede 2° livello (3 slot): arma spirituale, blocca persone, silenzio 3° livello (3 slot): animare morti, dissolvi magie 4° livello (3 slot): divinazione, guardiano della fede 5° livello (2 slot): contagio, piaga degli insetti 6° livello (1 slot): ferire",
+        "gruppi": [
+          {
+            "tipo": "livello",
+            "livello": 10,
+            "incantesimi": [
+              "la sua caratteristica da incantatore è Saggezza (CD del tiro salvezza sull'incantesimo 17",
+              "+9 al tiro per colpire con attacco con incantesimo). Ha a disposizione i seguenti incantesimi da chierico:"
+            ]
+          },
+          {
+            "frequenza": "a volontà",
+            "tipo": "trucchetti",
+            "incantesimi": [
+              "fiamma sacra",
+              "taumaturgia"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 1,
+            "slot": 4,
+            "incantesimi": [
+              "comando",
+              "dardo tracciante",
+              "scudo della fede"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 2,
+            "slot": 3,
+            "incantesimi": [
+              "arma spirituale",
+              "blocca persone",
+              "silenzio"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 3,
+            "slot": 3,
+            "incantesimi": [
+              "animare morti",
+              "dissolvi magie"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 4,
+            "slot": 3,
+            "incantesimi": [
+              "divinazione",
+              "guardiano della fede"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 5,
+            "slot": 2,
+            "incantesimi": [
+              "contagio",
+              "piaga degli insetti"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 6,
+            "slot": 1,
+            "incantesimi": [
+              "ferire"
+            ]
+          }
+        ],
+        "caratteristica": "sag",
+        "cd": 17
+      }
+    },
+    {
+      "nome": "Resistenza alla magia",
+      "testo": "Il signore delle mummie dispone di vantaggio ai tiri salvezza contro incantesimi e altri effetti magici."
+    },
+    {
+      "nome": "Rigenerazione",
+      "testo": "Un signore delle mummie distrutto ottiene un nuovo corpo nel giro di 24 ore se il suo cuore è intatto, recuperando tutti i suoi punti ferita e tornando a essere attivo. Il nuovo corpo compare entro 1,5 metri dal cuore del signore delle mummie."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "La mummia può usare lo sguardo funesto ed effettuare un attacco con il pugno di putrefazione."
+    },
+    {
+      "nome": "Pugno di putrefazione",
+      "testo": "Attacco con arma da mischia: +9 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 14 (3d6 + 4) danni contundenti più 21 (6d6) danni necrotici. Se il bersaglio è una creatura, deve superare un tiro salvezza su Costituzione con CD 16, altrimenti è maledetto dalla putrefazione della mummia. In tal caso, non può riguadagnare punti ferita e i suoi punti ferita massimi diminuiscono di 10 (3d6) ogni 24 ore trascorse. Se la maledizione riduce i punti ferita massimi del bersaglio a 0, quest'ultimo muore e il suo corpo si trasforma in polvere. La maledizione permane finché non viene rimossa da un incantesimo rimuovi maledizione o da una magia analoga.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 9,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 14,
+            "dadi": "3d6 + 4",
+            "tipo": "contundenti"
+          },
+          {
+            "media": 21,
+            "dadi": "6d6",
+            "tipo": "necrotici"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 16
+      }
+    },
+    {
+      "nome": "Sguardo funesto",
+      "testo": "Il signore delle mummie prende di mira una creatura nel suo campo visivo in un raggio di 18 metri. Se il bersaglio può vedere il signore delle mummie, deve superare un tiro salvezza su Saggezza con CD 16 contro questa magia, altrimenti è spaventato fino alla fine del turno successivo del mostro. Se il bersaglio fallisce il tiro salvezza di 5 o più, è anche paralizzato per la stessa durata. Un bersaglio che supera il tiro salvezza è immune allo sguardo funesto di tutte le mummie e di tutti i signori delle mummie per le 24 ore successive.",
+      "salvataggio": {
+        "caratteristica": "sag",
+        "cd": 16
+      }
+    }
+  ],
+  "azioni_leggendarie": {
+    "intro": "Il signore delle mummie può eseguire 3 azioni leggendarie a scelta tra le opzioni seguenti. È possibile utilizzare solo un'opzione di azione leggendaria alla volta e soltanto alla fine del turno di un'altra creatura. All'inizio del proprio turno, il signore delle mummie recupera le azioni leggendarie effettuate.",
+    "opzioni": [
+      {
+        "nome": "Attacco",
+        "testo": "Il signore delle mummie effettua un attacco con il pugno di putrefazione o usa lo sguardo funesto."
+      },
+      {
+        "nome": "Polvere accecante",
+        "testo": "Una nube di polvere e sabbia accecante si solleva magicamente attorno al signore delle mummie. Ogni creatura entro 1,5 metri da lui deve superare un tiro salvezza su Costituzione con CD 16, altrimenti è accecata fino alla fine del proprio turno successivo.",
+        "salvataggio": {
+          "caratteristica": "cos",
+          "cd": 16
+        }
+      },
+      {
+        "nome": "Incanalare energia negativa",
+        "testo": "Il signore delle mummie scatena magicamente un'ondata di energia negativa. Le creature entro 18 metri dal signore delle mummie, incluse quelle dietro una barriera o oltre un angolo, non possono recuperare punti ferita fino alla fine del turno successivo del signore delle mummie.",
+        "uso": "costa 2 azioni"
+      },
+      {
+        "nome": "Parola blasfema",
+        "testo": "Il signore delle mummie pronuncia una parola blasfema. Ogni creatura che non sia un non morto, situata entro 3 metri dal signore delle mummie e che possa sentire l'enunciazione magica, deve superare un tiro salvezza su Costituzione con CD 16, altrimenti è stordita fino alla fine del turno successivo del mostro.",
+        "uso": "costa 2 azioni",
+        "salvataggio": {
+          "caratteristica": "cos",
+          "cd": 16
+        }
+      },
+      {
+        "nome": "Turbine di sabbia",
+        "testo": "Il signore delle mummie si trasforma magicamente in un turbine di sabbia, si sposta al massimo di 18 metri e torna alla sua forma normale. Finché è in forma di turbine, è immune a tutti i danni e non può essere afferrato, pietrificato, buttato a terra prono, trattenuto o stordito. Ogni oggetto indossato o trasportato dal signore delle mummie resta in suo possesso.",
+        "uso": "costa 2 azioni"
+      }
+    ]
+  }
+}

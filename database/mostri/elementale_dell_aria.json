@@ -1,0 +1,80 @@
+{
+  "id": "elementale_dell_aria",
+  "nome": "Elementale dell'aria",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 349
+  },
+  "tipo": "elementale",
+  "taglia": "Grande",
+  "allineamento": "neutrale",
+  "caratteristiche": {
+    "for": 14,
+    "des": 20,
+    "cos": 14,
+    "int": 6,
+    "sag": 10,
+    "car": 6
+  },
+  "modificatori": {
+    "for": 2,
+    "des": 5,
+    "cos": 2,
+    "int": -2,
+    "sag": 0,
+    "car": -2
+  },
+  "ca": 15,
+  "pf": 90,
+  "pf_dadi": "12d10 + 24",
+  "velocita": {
+    "camminare": "0 m",
+    "volare": "27 m (fluttuare)"
+  },
+  "immunita_danni": "veleno",
+  "immunita_condizioni": "afferrato, avvelenato, indebolimento, paralizzato, pietrificato, privo di sensi, prono, trattenuto",
+  "sensi": "Percezione passiva 10, scurovisione 18 m",
+  "percezione_passiva": 10,
+  "linguaggi": "Auran",
+  "cr": "5",
+  "pe": 1800,
+  "bonus_competenza": 3,
+  "tratti": [
+    {
+      "nome": "Forma d'aria",
+      "testo": "L'elementale può entrare nello spazio di una creatura ostile e soffermarvisi. Può muoversi attraverso uno spazio stretto fino a 2,5 centimetri senza doversi stringere."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "L'elementale effettua due attacchi con schianto."
+    },
+    {
+      "nome": "Schianto",
+      "testo": "Attacco con arma da mischia: +8 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 14 (2d8 + 5) danni contundenti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 8,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 14,
+            "dadi": "2d8 + 5",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Vortice",
+      "testo": "Ogni creatura nello spazio dell'elementale deve effettuare un tiro salvezza su Forza con CD 13; se lo fallisce, subisce 15 (3d8 + 2) danni contundenti, viene scagliata a 6 metri di distanza dall'elementale in una direzione casuale e cade a terra prona. Se un bersaglio scagliato colpisce un oggetto, come per esempio un muro o una porta, quel bersaglio subisce 3 (1d6) danni contundenti per ogni 3 metri di cui è stato scagliato. Se il bersaglio viene lanciato contro un'altra creatura, quest'ultima deve superare un tiro salvezza su Destrezza con CD 13, altrimenti subirà gli stessi danni e cadrà a terra prona. Se supera il tiro salvezza, il bersaglio subisce la metà dei danni contundenti, non viene scagliato via e non cade a terra prono.",
+      "uso": "ricarica 4–6",
+      "salvataggio": {
+        "caratteristica": "for",
+        "cd": 13
+      }
+    }
+  ]
+}

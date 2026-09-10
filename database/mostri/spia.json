@@ -1,0 +1,91 @@
+{
+  "id": "spia",
+  "nome": "Spia",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 452
+  },
+  "tipo": "umanoide",
+  "descrittore": "qualsiasi razza",
+  "taglia": "Media",
+  "allineamento": "qualsiasi allineamento",
+  "caratteristiche": {
+    "for": 10,
+    "des": 15,
+    "cos": 10,
+    "int": 12,
+    "sag": 14,
+    "car": 16
+  },
+  "modificatori": {
+    "for": 0,
+    "des": 2,
+    "cos": 0,
+    "int": 1,
+    "sag": 2,
+    "car": 3
+  },
+  "ca": 12,
+  "pf": 27,
+  "pf_dadi": "6d8",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "sensi": "Percezione passiva 16",
+  "percezione_passiva": 16,
+  "linguaggi": "due qualsiasi",
+  "cr": "1",
+  "pe": 200,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Attacco furtivo",
+      "testo": "La spia infligge 7 (2d6) danni extra quando colpisce un bersaglio con un attacco con un'arma e dispone di vantaggio al tiro per colpire, oppure quando il bersaglio si trova entro 1,5 metri da un alleato della spia (purché quest'ultimo non sia incapacitato e la spia non subisca svantaggio al tiro per colpire).",
+      "uso": "1/turno"
+    },
+    {
+      "nome": "Azione scaltra",
+      "testo": "A ogni suo turno, la spia può usare un'azione bonus per effettuare l'azione Scatto, Disimpegno o Nascondersi."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "La spia effettua due attacchi in mischia."
+    },
+    {
+      "nome": "Spada corta",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 5 (1d6 + 2) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d6 + 2",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Balestra a mano",
+      "testo": "Attacco con arma a distanza: +4 al tiro per colpire, gittata 9/36 m, un bersaglio. Colpito: 5 (1d6 + 2) danni perforanti. Sovrani, nobili, mercanti, maestri di gilda e altri\nspie individui facoltosi si servono spesso di per tentare di avere la meglio in un mondo dominato da una politica spietata. Le spie sono addestrate per recuperare informazioni in segreto. Quelle più fedeli preferiscono morire pur di non rivelare informazioni che potrebbero compromettere loro stesse o il loro datore di lavoro.",
+      "attacco": {
+        "tipo": "distanza",
+        "tiro": 4,
+        "portata": "9/36 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d6 + 2",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

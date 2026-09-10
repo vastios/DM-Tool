@@ -1,0 +1,87 @@
+{
+  "id": "grick",
+  "nome": "Grick",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 363
+  },
+  "tipo": "mostruosità",
+  "taglia": "Media",
+  "allineamento": "neutrale",
+  "caratteristiche": {
+    "for": 14,
+    "des": 14,
+    "cos": 11,
+    "int": 3,
+    "sag": 14,
+    "car": 5
+  },
+  "modificatori": {
+    "for": 2,
+    "des": 2,
+    "cos": 0,
+    "int": -4,
+    "sag": 2,
+    "car": -3
+  },
+  "ca": 14,
+  "ca_tipo": "armatura naturale",
+  "pf": 27,
+  "pf_dadi": "6d8",
+  "velocita": {
+    "camminare": "9 m",
+    "scalare": "9 m"
+  },
+  "sensi": "Percezione passiva 12, scurovisione 18 m",
+  "percezione_passiva": 12,
+  "linguaggi": "—",
+  "cr": "2",
+  "pe": 450,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Mimetizzazione rocciosa",
+      "testo": "Il grick dispone di vantaggio alle prove di Destrezza (Furtività) effettuate per nascondersi nei terreni rocciosi."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il grick effettua un attacco con i tentacoli. Se va a segno, può effettuarne uno con il becco contro lo stesso bersaglio."
+    },
+    {
+      "nome": "Becco",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 5 (1d6 + 2) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d6 + 2",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Tentacoli",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 9 (2d6 + 2) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 9,
+            "dadi": "2d6 + 2",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    }
+  ]
+}

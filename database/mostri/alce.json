@@ -1,0 +1,83 @@
+{
+  "id": "alce",
+  "nome": "Alce",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 414
+  },
+  "tipo": "bestia",
+  "taglia": "Grande",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 16,
+    "des": 10,
+    "cos": 12,
+    "int": 2,
+    "sag": 10,
+    "car": 6
+  },
+  "modificatori": {
+    "for": 3,
+    "des": 0,
+    "cos": 1,
+    "int": -4,
+    "sag": 0,
+    "car": -2
+  },
+  "ca": 10,
+  "pf": 13,
+  "pf_dadi": "2d10 + 2",
+  "velocita": {
+    "camminare": "15 m"
+  },
+  "linguaggi": "—",
+  "cr": "1/4",
+  "pe": 50,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Carica",
+      "testo": "Se l'alce si muove di almeno 6 metri in linea retta verso un bersaglio e poi lo colpisce con un attacco da sfondamento nello stesso turno, il bersaglio subisce 7 (2d6) danni extra. Se il bersaglio è una creatura, deve superare un tiro salvezza su Forza con CD 13, altrimenti cade a terra prono.",
+      "salvataggio": {
+        "caratteristica": "for",
+        "cd": 13
+      }
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Sfondamento",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 6 (1d6 + 3) danni contundenti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 6,
+            "dadi": "1d6 + 3",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Zoccoli",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, una creatura prona. Colpito: 8 (2d4 + 3) danni contundenti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura prona",
+        "danni": [
+          {
+            "media": 8,
+            "dadi": "2d4 + 3",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    }
+  ]
+}

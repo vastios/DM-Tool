@@ -1,0 +1,67 @@
+{
+  "id": "scorpione",
+  "nome": "Scorpione",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 438
+  },
+  "tipo": "bestia",
+  "taglia": "Minuscola",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 2,
+    "des": 11,
+    "cos": 8,
+    "int": 1,
+    "sag": 8,
+    "car": 2
+  },
+  "modificatori": {
+    "for": -4,
+    "des": 0,
+    "cos": -1,
+    "int": -5,
+    "sag": -1,
+    "car": -4
+  },
+  "ca": 11,
+  "ca_tipo": "armatura naturale",
+  "pf": 1,
+  "pf_dadi": "1d4 - 1",
+  "velocita": {
+    "camminare": "3 m"
+  },
+  "linguaggi": "—",
+  "cr": "0",
+  "pe": 10,
+  "bonus_competenza": 2,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Pungiglione",
+      "testo": "Attacco con arma da mischia: +2 al tiro per colpire, portata 1,5 m, una creatura. Colpito: 1 danno perforante e il bersaglio deve effettuare un tiro salvezza su Costituzione con CD 9, subendo 4 (1d8) danni da veleno in caso di fallimento, o la metà in caso di successo.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 2,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura",
+        "danni": [
+          {
+            "media": 4,
+            "dadi": "1d8",
+            "tipo": "veleno in"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 9,
+        "danno_fallimento": {
+          "media": 4,
+          "dadi": "1d8",
+          "tipo": "veleno"
+        }
+      }
+    }
+  ]
+}

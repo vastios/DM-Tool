@@ -1,0 +1,64 @@
+{
+  "id": "faina_gigante",
+  "nome": "Faina gigante",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 422
+  },
+  "tipo": "bestia",
+  "taglia": "Media",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 11,
+    "des": 16,
+    "cos": 10,
+    "int": 4,
+    "sag": 12,
+    "car": 5
+  },
+  "modificatori": {
+    "for": 0,
+    "des": 3,
+    "cos": 0,
+    "int": -3,
+    "sag": 1,
+    "car": -3
+  },
+  "ca": 13,
+  "pf": 9,
+  "pf_dadi": "2d8",
+  "velocita": {
+    "camminare": "12 m"
+  },
+  "sensi": "Percezione passiva 13, scurovisione 18 m",
+  "percezione_passiva": 13,
+  "linguaggi": "—",
+  "cr": "1/8",
+  "pe": 25,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Udito e olfatto acuti",
+      "testo": "La faina dispone di vantaggio alle prove di Saggezza (Percezione) basate sull'olfatto o sull'udito."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 5 (1d4 + 3) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d4 + 3",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

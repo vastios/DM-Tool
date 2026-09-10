@@ -1,0 +1,67 @@
+{
+  "id": "pipistrello",
+  "nome": "Pipistrello",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 431
+  },
+  "tipo": "bestia",
+  "taglia": "Minuscola",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 2,
+    "des": 15,
+    "cos": 8,
+    "int": 2,
+    "sag": 12,
+    "car": 4
+  },
+  "modificatori": {
+    "for": -4,
+    "des": 2,
+    "cos": -1,
+    "int": -4,
+    "sag": 1,
+    "car": -3
+  },
+  "ca": 12,
+  "pf": 1,
+  "pf_dadi": "1d4 - 1",
+  "velocita": {
+    "camminare": "5 m",
+    "volare": "9 m"
+  },
+  "linguaggi": "—",
+  "cr": "0",
+  "pe": 10,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Senso radar",
+      "testo": "Il pipistrello non può usare vista cieca se è assordato."
+    },
+    {
+      "nome": "Udito acuto",
+      "testo": "Il pipistrello dispone di vantaggio alle prove di Saggezza (Percezione) basate sull'udito."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +0 al tiro per colpire, portata 1,5 m, una creatura. Colpito: 1 danno perforante.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 0,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura",
+        "danni": [
+          {
+            "media": 1,
+            "dadi": "1",
+            "tipo": "perforante"
+          }
+        ]
+      }
+    }
+  ]
+}

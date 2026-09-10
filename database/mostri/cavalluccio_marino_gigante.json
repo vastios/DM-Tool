@@ -1,0 +1,72 @@
+{
+  "id": "cavalluccio_marino_gigante",
+  "nome": "Cavalluccio marino gigante",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 419
+  },
+  "tipo": "bestia",
+  "taglia": "Grande",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 12,
+    "des": 15,
+    "cos": 11,
+    "int": 2,
+    "sag": 12,
+    "car": 5
+  },
+  "modificatori": {
+    "for": 1,
+    "des": 2,
+    "cos": 0,
+    "int": -4,
+    "sag": 1,
+    "car": -3
+  },
+  "ca": 13,
+  "ca_tipo": "armatura naturale",
+  "pf": 16,
+  "pf_dadi": "3d10",
+  "velocita": {
+    "camminare": "0 m",
+    "nuotare": "12 m"
+  },
+  "linguaggi": "—",
+  "cr": "1/2",
+  "pe": 100,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Carica",
+      "testo": "Se il cavalluccio marino si muove di almeno 6 metri in linea retta verso un bersaglio e poi lo colpisce con un attacco da sfondamento nello stesso turno, il bersaglio subisce 7 (2d6) danni contundenti extra. Se il bersaglio è una creatura, deve superare un tiro salvezza su Forza con CD 11, altrimenti cade a terra prono.",
+      "salvataggio": {
+        "caratteristica": "for",
+        "cd": 11
+      }
+    },
+    {
+      "nome": "Respirare sott'acqua",
+      "testo": "Il cavalluccio marino può respirare soltanto sott'acqua."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Sfondamento",
+      "testo": "Attacco con arma da mischia: +3 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 4 (1d6 + 1) danni contundenti.\ncavallucci marini Come i loro cugini più piccoli, i\ngiganti sono pesci timorosi, dai colori sgargianti, con il corpo oblungo e la coda arricciata. Gli elfi acquatici li addestrano per usarli come cavalcature.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 3,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 4,
+            "dadi": "1d6 + 1",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    }
+  ]
+}

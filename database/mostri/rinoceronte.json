@@ -1,0 +1,67 @@
+{
+  "id": "rinoceronte",
+  "nome": "Rinoceronte",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 434
+  },
+  "tipo": "bestia",
+  "taglia": "Grande",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 21,
+    "des": 8,
+    "cos": 15,
+    "int": 2,
+    "sag": 12,
+    "car": 6
+  },
+  "modificatori": {
+    "for": 5,
+    "des": -1,
+    "cos": 2,
+    "int": -4,
+    "sag": 1,
+    "car": -2
+  },
+  "ca": 11,
+  "ca_tipo": "armatura naturale",
+  "pf": 45,
+  "pf_dadi": "6d10 + 12",
+  "velocita": {
+    "camminare": "12 m"
+  },
+  "linguaggi": "—",
+  "cr": "2",
+  "pe": 450,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Carica",
+      "testo": "Se il rinoceronte si muove di almeno 6 metri in linea retta verso un bersaglio e poi lo colpisce con un'incornata nello stesso turno, la vittima subisce 9 (2d8) danni contundenti extra. Se il bersaglio è una creatura, deve superare un tiro salvezza su Forza con CD 15, altrimenti cade a terra prono.",
+      "salvataggio": {
+        "caratteristica": "for",
+        "cd": 15
+      }
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Incornata",
+      "testo": "Attacco con arma da mischia : +7 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 14 (2d8 + 5) danni contundenti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 14,
+            "dadi": "2d8 + 5",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    }
+  ]
+}

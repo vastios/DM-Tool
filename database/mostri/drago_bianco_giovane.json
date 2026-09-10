@@ -1,0 +1,114 @@
+{
+  "id": "drago_bianco_giovane",
+  "nome": "Drago bianco giovane",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 336
+  },
+  "tipo": "drago",
+  "taglia": "Grande",
+  "allineamento": "caotico malvagio",
+  "caratteristiche": {
+    "for": 18,
+    "des": 10,
+    "cos": 18,
+    "int": 6,
+    "sag": 11,
+    "car": 12
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 0,
+    "cos": 4,
+    "int": -2,
+    "sag": 0,
+    "car": 1
+  },
+  "ca": 17,
+  "ca_tipo": "armatura naturale",
+  "pf": 133,
+  "pf_dadi": "14d10 + 56",
+  "velocita": {
+    "camminare": "12 m",
+    "nuotare": "12 m",
+    "scavare": "6 m",
+    "volare": "24 m"
+  },
+  "competenze": {
+    "furtività": 3,
+    "percezione": 6
+  },
+  "immunita_danni": "freddo",
+  "sensi": "Percezione passiva 16, scurovisione 36 m, vista cieca 9 m",
+  "percezione_passiva": 16,
+  "linguaggi": "Comune, Draconico",
+  "cr": "6",
+  "pe": 2300,
+  "bonus_competenza": 3,
+  "tratti": [
+    {
+      "nome": "Camminare sul ghiaccio",
+      "testo": "Il drago può muoversi sulle superfici di ghiaccio e scalarle senza bisogno di effettuare una prova di caratteristica. Inoltre, un terreno difficile costituito da ghiaccio o neve non gli costa alcun movimento aggiuntivo."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il drago effettua tre attacchi: uno con il morso e due con gli artigli."
+    },
+    {
+      "nome": "Artiglio",
+      "testo": "Attacco con arma da mischia: +7 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 11 (2d6 + 4) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 11,
+            "dadi": "2d6 + 4",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +7 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 15 (2d10 + 4) danni perforanti più 4 (1d8) danni da freddo.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 15,
+            "dadi": "2d10 + 4",
+            "tipo": "perforanti"
+          },
+          {
+            "media": 4,
+            "dadi": "1d8",
+            "tipo": "freddo"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Soffio di freddo",
+      "testo": "Il drago esala una folata gelida in un cono di 9 metri. Ogni creatura in quell'area deve effettuare un tiro salvezza su Costituzione con CD 15, subendo 45 (10d8) danni da freddo in caso di fallimento, o la metà dei danni in caso di successo.",
+      "uso": "ricarica 5–6",
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 15,
+        "danno_fallimento": {
+          "media": 45,
+          "dadi": "10d8",
+          "tipo": "freddo"
+        },
+        "successo": "metà danni"
+      }
+    }
+  ]
+}

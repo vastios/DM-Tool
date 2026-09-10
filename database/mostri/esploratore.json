@@ -1,0 +1,87 @@
+{
+  "id": "esploratore",
+  "nome": "Esploratore",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 449
+  },
+  "tipo": "umanoide",
+  "descrittore": "qualsiasi razza",
+  "taglia": "Media",
+  "allineamento": "qualsiasi allineamento",
+  "caratteristiche": {
+    "for": 11,
+    "des": 14,
+    "cos": 12,
+    "int": 11,
+    "sag": 13,
+    "car": 11
+  },
+  "modificatori": {
+    "for": 0,
+    "des": 2,
+    "cos": 1,
+    "int": 0,
+    "sag": 1,
+    "car": 0
+  },
+  "ca": 13,
+  "ca_tipo": "armatura di cuoio",
+  "pf": 16,
+  "pf_dadi": "3d8 + 3",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "sensi": "Percezione passiva 15",
+  "percezione_passiva": 15,
+  "linguaggi": "uno qualsiasi (di solito Comune)",
+  "cr": "1/2",
+  "pe": 100,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Udito e vista acuti",
+      "testo": "L'esploratore dispone di vantaggio alle prove di Saggezza (Percezione) basate sulla vista o sull'udito."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "L'esploratore effettua due attacchi in mischia o due attacchi a distanza."
+    },
+    {
+      "nome": "Spada corta",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 5 (1d6 + 2) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d6 + 2",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Arco lungo",
+      "testo": "Attacco con arma a distanza: +4 al tiro per colpire, gittata 45/180 m, un bersaglio. Colpito: 6 (1d8 + 2) danni perforanti.\nesploratori Gli sono abili cacciatori e inseguitori che offrono i loro servizi a pagamento. Molti danno la caccia agli animali selvatici, ma alcuni lavorano anche come cacciatori di taglie, guide o eseguono ricognizioni nell'ambito di operazioni militari.",
+      "attacco": {
+        "tipo": "distanza",
+        "tiro": 4,
+        "portata": "45/180 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 6,
+            "dadi": "1d8 + 2",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

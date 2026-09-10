@@ -1,0 +1,108 @@
+{
+  "id": "drago_blu_giovane",
+  "nome": "Drago blu giovane",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 339
+  },
+  "tipo": "drago",
+  "taglia": "Grande",
+  "allineamento": "legale malvagio",
+  "caratteristiche": {
+    "for": 21,
+    "des": 10,
+    "cos": 19,
+    "int": 14,
+    "sag": 13,
+    "car": 17
+  },
+  "modificatori": {
+    "for": 5,
+    "des": 0,
+    "cos": 4,
+    "int": 2,
+    "sag": 1,
+    "car": 3
+  },
+  "ca": 18,
+  "ca_tipo": "armatura naturale",
+  "pf": 152,
+  "pf_dadi": "16d10 + 64",
+  "velocita": {
+    "camminare": "12 m",
+    "scavare": "6 m",
+    "volare": "24 m"
+  },
+  "competenze": {
+    "furtività": 4,
+    "percezione": 9
+  },
+  "immunita_danni": "fulmine",
+  "sensi": "Percezione passiva 19, scurovisione 36 m, vista cieca 9 m",
+  "percezione_passiva": 19,
+  "linguaggi": "Comune, Draconico",
+  "cr": "9",
+  "pe": 5000,
+  "bonus_competenza": 4,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il drago effettua tre attacchi: uno con il morso e due con gli artigli."
+    },
+    {
+      "nome": "Artiglio",
+      "testo": "Attacco con arma da mischia: +9 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 12 (2d6 + 5) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 9,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 12,
+            "dadi": "2d6 + 5",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +9 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 16 (2d10 + 5) danni perforanti più 5 (1d10) danni da fulmine.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 9,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 16,
+            "dadi": "2d10 + 5",
+            "tipo": "perforanti"
+          },
+          {
+            "media": 5,
+            "dadi": "1d10",
+            "tipo": "fulmine"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Soffio di fulmini",
+      "testo": "Il drago esala una scarica di fulmini lunga 18 metri e larga 1,5 metri. Ogni creatura su quella linea deve effettuare un tiro salvezza su Destrezza con CD 16, subendo 55 (10d10) danni da fulmine in caso di fallimento, o la metà dei danni in caso di successo.",
+      "uso": "ricarica 5–6",
+      "salvataggio": {
+        "caratteristica": "des",
+        "cd": 16,
+        "danno_fallimento": {
+          "media": 55,
+          "dadi": "10d10",
+          "tipo": "fulmine"
+        },
+        "successo": "metà danni"
+      }
+    }
+  ]
+}

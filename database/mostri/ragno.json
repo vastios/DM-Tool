@@ -1,0 +1,77 @@
+{
+  "id": "ragno",
+  "nome": "Ragno",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 432
+  },
+  "tipo": "bestia",
+  "taglia": "Minuscola",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 2,
+    "des": 14,
+    "cos": 8,
+    "int": 1,
+    "sag": 10,
+    "car": 2
+  },
+  "modificatori": {
+    "for": -4,
+    "des": 2,
+    "cos": -1,
+    "int": -5,
+    "sag": 0,
+    "car": -4
+  },
+  "ca": 12,
+  "pf": 1,
+  "pf_dadi": "1d4 - 1",
+  "velocita": {
+    "camminare": "6 m",
+    "scalare": "6 m"
+  },
+  "sensi": "Percezione passiva 10, scurovisione 9 m",
+  "percezione_passiva": 10,
+  "linguaggi": "—",
+  "cr": "0",
+  "pe": 10,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Arrampicatele",
+      "testo": "Il ragno ignora le restrizioni di movimento causate dalle ragnatele."
+    },
+    {
+      "nome": "Movimenti del ragno",
+      "testo": "Il ragno può scalare le superfici difficili, compresi i soffitti (lungo i quali si muove a testa in giù), senza effettuare una prova di caratteristica."
+    },
+    {
+      "nome": "Percezione della Ragnatela",
+      "testo": "Finché è in contatto con una ragnatela, il ragno conosce l'ubicazione esatta di ogni altra creatura a contatto con la stessa ragnatela."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, una creatura. Colpito: 1 danno perforante e il bersaglio deve superare un tiro salvezza su Costituzione con CD 9, altrimenti subisce 2 (1d4) danni da veleno.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura",
+        "danni": [
+          {
+            "media": 2,
+            "dadi": "1d4",
+            "tipo": "veleno"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 9
+      }
+    }
+  ]
+}

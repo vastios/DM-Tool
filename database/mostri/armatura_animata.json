@@ -1,0 +1,74 @@
+{
+  "id": "armatura_animata",
+  "nome": "Armatura animata",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 384
+  },
+  "tipo": "costrutto",
+  "taglia": "Media",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 14,
+    "des": 11,
+    "cos": 13,
+    "int": 1,
+    "sag": 3,
+    "car": 1
+  },
+  "modificatori": {
+    "for": 2,
+    "des": 0,
+    "cos": 1,
+    "int": -5,
+    "sag": -4,
+    "car": -5
+  },
+  "ca": 18,
+  "ca_tipo": "armatura naturale",
+  "pf": 33,
+  "pf_dadi": "6d8 + 6",
+  "velocita": {
+    "camminare": "5 m"
+  },
+  "immunita_condizioni": "accecato, affascinato, assordato, avvelenato, indebolimento, paralizzato, pietrificato, spaventato",
+  "sensi": "Percezione passiva 6, vista cieca 18 m (cecità oltre questo raggio)",
+  "percezione_passiva": 6,
+  "linguaggi": "—",
+  "cr": "1",
+  "pe": 200,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Falso aspetto",
+      "testo": "Finché l'armatura rimane immobile, non è distinguibile da un'armatura normale."
+    },
+    {
+      "nome": "Suscettibilità all'anti-magia",
+      "testo": "L'armatura è incapacitata finché si trova nell'area di un campo anti-magia . Se bersagliata da un incantesimo dissolvi magie , l'armatura deve superare un tiro salvezza su Costituzione contro la CD del tiro salvezza sull'incantesimo di chi lo lancia, altrimenti è priva di sensi per 1 minuto."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "L'armatura effettua due attacchi in mischia."
+    },
+    {
+      "nome": "Schianto",
+      "testo": "Attacco con arma da mischia : +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 5 (1d6 + 2) danni contundenti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d6 + 2",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "id": "drago_d_ottone_cucciolo",
+  "nome": "Drago d'ottone cucciolo",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 334
+  },
+  "tipo": "drago",
+  "taglia": "Media",
+  "allineamento": "caotico buono",
+  "caratteristiche": {
+    "for": 15,
+    "des": 10,
+    "cos": 13,
+    "int": 10,
+    "sag": 11,
+    "car": 13
+  },
+  "modificatori": {
+    "for": 2,
+    "des": 0,
+    "cos": 1,
+    "int": 0,
+    "sag": 0,
+    "car": 1
+  },
+  "ca": 16,
+  "ca_tipo": "armatura naturale",
+  "pf": 16,
+  "pf_dadi": "3d8 + 3",
+  "velocita": {
+    "camminare": "5 m",
+    "scavare": "4",
+    "volare": "18 m"
+  },
+  "competenze": {
+    "furtività": 2,
+    "percezione": 4
+  },
+  "immunita_danni": "fuoco",
+  "sensi": "Percezione passiva 14, scurovisione 18 m, vista cieca 3 m",
+  "percezione_passiva": 14,
+  "linguaggi": "Draconico",
+  "cr": "1",
+  "pe": 200,
+  "bonus_competenza": 2,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 7 (1d10 + 2) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 7,
+            "dadi": "1d10 + 2",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Soffi",
+      "testo": "Il drago usa uno dei seguenti soffi.",
+      "uso": "ricarica 5–6"
+    },
+    {
+      "nome": "Soffio di fuoco",
+      "testo": "Il drago esala una scia di fuoco lunga 6 metri e larga 1,5 metri. Ogni creatura su quella scia deve effettuare un tiro salvezza su Destrezza con CD 11, subendo 14 (4d6) danni da fuoco in caso di fallimento, o la metà dei danni in caso di successo.",
+      "salvataggio": {
+        "caratteristica": "des",
+        "cd": 11,
+        "danno_fallimento": {
+          "media": 14,
+          "dadi": "4d6",
+          "tipo": "fuoco"
+        },
+        "successo": "metà danni"
+      }
+    },
+    {
+      "nome": "Soffio di sonno",
+      "testo": "Il drago esala gas soporifero in un cono di 4,5 metri. Ogni creatura in quell'area deve superare un tiro salvezza su Costituzione con CD 11, altrimenti è priva di sensi per 1 minuto. Questo effetto termina se la creatura subisce danni o se qualcuno usa un'azione per svegliarla.",
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 11
+      }
+    }
+  ]
+}

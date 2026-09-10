@@ -1,0 +1,81 @@
+{
+  "id": "ghoul",
+  "nome": "Ghoul",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 356
+  },
+  "tipo": "non morto",
+  "taglia": "Media",
+  "allineamento": "caotico malvagio",
+  "caratteristiche": {
+    "for": 13,
+    "des": 15,
+    "cos": 10,
+    "int": 7,
+    "sag": 10,
+    "car": 6
+  },
+  "modificatori": {
+    "for": 1,
+    "des": 2,
+    "cos": 0,
+    "int": -2,
+    "sag": 0,
+    "car": -2
+  },
+  "ca": 12,
+  "pf": 22,
+  "pf_dadi": "5d8",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "immunita_condizioni": "affascinato, avvelenato, indebolimento",
+  "sensi": "Percezione passiva 10, scurovisione 18 m",
+  "percezione_passiva": 10,
+  "linguaggi": "Comune",
+  "cr": "1",
+  "pe": 200,
+  "bonus_competenza": 2,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Artigli",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 7 (2d4 + 2) danni taglienti. Se il bersaglio è una creatura diversa da un elfo o un non morto, deve superare un tiro salvezza su Costituzione con CD 10, altrimenti viene paralizzato per 1 minuto. Il bersaglio può ripetere il tiro salvezza alla fine di ogni suo turno e, se lo supera, l'effetto svanisce.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 7,
+            "dadi": "2d4 + 2",
+            "tipo": "taglienti"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 10
+      }
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +2 al tiro per colpire, portata 1,5 m, una creatura. Colpito: 9 (2d6 + 2) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 2,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura",
+        "danni": [
+          {
+            "media": 9,
+            "dadi": "2d6 + 2",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

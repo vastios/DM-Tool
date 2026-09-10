@@ -1,0 +1,142 @@
+{
+  "id": "mago",
+  "nome": "Mago",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 450
+  },
+  "tipo": "umanoide",
+  "descrittore": "qualsiasi razza",
+  "taglia": "Media",
+  "allineamento": "qualsiasi allineamento",
+  "caratteristiche": {
+    "for": 9,
+    "des": 14,
+    "cos": 11,
+    "int": 17,
+    "sag": 12,
+    "car": 11
+  },
+  "modificatori": {
+    "for": -1,
+    "des": 2,
+    "cos": 0,
+    "int": 3,
+    "sag": 1,
+    "car": 0
+  },
+  "ca": 12,
+  "ca_tipo": "15 con armatura magica",
+  "pf": 40,
+  "pf_dadi": "9d8",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "competenze": {
+    "arcano": 6,
+    "storia": 6
+  },
+  "sensi": "Percezione passiva 11",
+  "percezione_passiva": 11,
+  "linguaggi": "quattro qualsiasi",
+  "cr": "6",
+  "pe": 2300,
+  "bonus_competenza": 3,
+  "tratti": [
+    {
+      "nome": "Incantesimi",
+      "testo": "Il mago è un incantatore di 9° livello: la sua caratteristica da incantatore è Intelligenza (CD del tiro salvezza sull'incantesimo 14, +6 al tiro per colpire con attacco con incantesimo). Ha a disposizione i seguenti incantesimi da mago: Trucchetti (a volontà): dardo di fuoco, luce, mano magica, prestidigitazione 1° livello (4 slot): dardo di fuoco, luce, mano magica, prestidigitazione 2° livello (3 slot): passo velato, suggestione 3° livello (3 slot): controincantesimo, palla di fuoco, volare 4° livello (3 slot): invisibilità superiore, tempesta di ghiaccio 5° livello (1 slot): cono di freddo",
+      "incantesimi": {
+        "testo": "Il mago è un incantatore di 9° livello: la sua caratteristica da incantatore è Intelligenza (CD del tiro salvezza sull'incantesimo 14, +6 al tiro per colpire con attacco con incantesimo). Ha a disposizione i seguenti incantesimi da mago: Trucchetti (a volontà): dardo di fuoco, luce, mano magica, prestidigitazione 1° livello (4 slot): dardo di fuoco, luce, mano magica, prestidigitazione 2° livello (3 slot): passo velato, suggestione 3° livello (3 slot): controincantesimo, palla di fuoco, volare 4° livello (3 slot): invisibilità superiore, tempesta di ghiaccio 5° livello (1 slot): cono di freddo",
+        "gruppi": [
+          {
+            "tipo": "livello",
+            "livello": 9,
+            "incantesimi": [
+              "la sua caratteristica da incantatore è Intelligenza (CD del tiro salvezza sull'incantesimo 14",
+              "+6 al tiro per colpire con attacco con incantesimo). Ha a disposizione i seguenti incantesimi da mago:"
+            ]
+          },
+          {
+            "frequenza": "a volontà",
+            "tipo": "trucchetti",
+            "incantesimi": [
+              "dardo di fuoco",
+              "luce",
+              "mano magica",
+              "prestidigitazione"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 1,
+            "slot": 4,
+            "incantesimi": [
+              "dardo di fuoco",
+              "luce",
+              "mano magica",
+              "prestidigitazione"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 2,
+            "slot": 3,
+            "incantesimi": [
+              "passo velato",
+              "suggestione"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 3,
+            "slot": 3,
+            "incantesimi": [
+              "controincantesimo",
+              "palla di fuoco",
+              "volare"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 4,
+            "slot": 3,
+            "incantesimi": [
+              "invisibilità superiore",
+              "tempesta di ghiaccio"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 5,
+            "slot": 1,
+            "incantesimi": [
+              "cono di freddo"
+            ]
+          }
+        ],
+        "caratteristica": "int",
+        "cd": 14
+      }
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Pugnale",
+      "testo": "Attacco con arma da mischia o con arma a distanza: +5 al tiro per colpire, portata 1,5 m o gittata 6/18 m, un bersaglio. Colpito: 4 (1d4 + 2) danni perforanti.\nmaghi I trascorrono la vita a studiare e praticare la magia. I maghi di allineamento buono offrono consigli ai nobili o ad altre figure potenti, mentre quelli malvagi si nascondono in luoghi isolati per condurre esperimenti atroci senza che nessuno possa interferire.",
+      "attacco": {
+        "tipo": "mischia o distanza",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m o gittata 6/18 m, un bersaglio",
+        "danni": [
+          {
+            "media": 4,
+            "dadi": "1d4 + 2",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

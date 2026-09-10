@@ -1,0 +1,88 @@
+{
+  "id": "scheletro_di_minotauro",
+  "nome": "Scheletro di minotauro",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 392
+  },
+  "tipo": "non morto",
+  "taglia": "Grande",
+  "allineamento": "legale malvagio",
+  "caratteristiche": {
+    "for": 18,
+    "des": 11,
+    "cos": 15,
+    "int": 6,
+    "sag": 8,
+    "car": 5
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 0,
+    "cos": 2,
+    "int": -2,
+    "sag": -1,
+    "car": -3
+  },
+  "ca": 12,
+  "ca_tipo": "armatura naturale",
+  "pf": 67,
+  "pf_dadi": "9d10 + 18",
+  "velocita": {
+    "camminare": "12 m"
+  },
+  "immunita_danni": "veleno",
+  "immunita_condizioni": "avvelenato, indebolimento",
+  "sensi": "Percezione passiva 9, scurovisione 18 m",
+  "percezione_passiva": 9,
+  "linguaggi": "capisce l'Abissale ma non lo parla",
+  "cr": "2",
+  "pe": 450,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Carica",
+      "testo": "Se lo scheletro si muove di almeno 3 metri in linea retta verso un bersaglio e poi lo colpisce con un'incornata nello stesso turno, la vittima subisce 9 (2d8) danni perforanti extra. Se il bersaglio è una creatura, deve superare un tiro salvezza su Forza con CD 14, altrimenti viene scagliato a 3 metri di distanza e buttato a terra prono.",
+      "salvataggio": {
+        "caratteristica": "for",
+        "cd": 14
+      }
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Ascia bipenne",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 17 (2d12 + 4) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 17,
+            "dadi": "2d12 + 4",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Incornata",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 13 (2d8 + 4) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 13,
+            "dadi": "2d8 + 4",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

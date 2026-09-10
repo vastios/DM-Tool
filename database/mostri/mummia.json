@@ -1,0 +1,85 @@
+{
+  "id": "mummia",
+  "nome": "Mummia",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 381
+  },
+  "tipo": "non morto",
+  "taglia": "Media",
+  "allineamento": "legale malvagia",
+  "caratteristiche": {
+    "for": 16,
+    "des": 8,
+    "cos": 15,
+    "int": 6,
+    "sag": 10,
+    "car": 12
+  },
+  "modificatori": {
+    "for": 3,
+    "des": -1,
+    "cos": 2,
+    "int": -2,
+    "sag": 0,
+    "car": 1
+  },
+  "ca": 11,
+  "ca_tipo": "armatura naturale",
+  "pf": 58,
+  "pf_dadi": "9d8 + 18",
+  "velocita": {
+    "camminare": "6 m"
+  },
+  "resistenze_danni": "contundenti, perforanti e taglienti da attacchi non magici",
+  "immunita_danni": "necrotici, veleno",
+  "vulnerabilita_danni": "fuoco",
+  "immunita_condizioni": "affascinato, avvelenato, indebolimento, paralizzato, spaventato",
+  "sensi": "Percezione passiva 10, scurovisione 18 m",
+  "percezione_passiva": 10,
+  "linguaggi": "quelli conosciuti in vita",
+  "cr": "3",
+  "pe": 700,
+  "bonus_competenza": 2,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "La mummia può usare lo sguardo funesto ed effettuare un attacco con il pugno di putrefazione."
+    },
+    {
+      "nome": "Pugno di putrefazione",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 10 (2d6 + 3) danni contundenti più 10 (3d6) danni necrotici. Se il bersaglio è una creatura, deve superare un tiro salvezza su Costituzione con CD 12, altrimenti è maledetto dalla putrefazione della mummia. In tal caso, non può riguadagnare punti ferita e i suoi punti ferita massimi diminuiscono di 10 (3d6) ogni 24 ore trascorse. Se la maledizione riduce i punti ferita massimi del bersaglio a 0, quest'ultimo muore e il suo corpo si trasforma in polvere. La maledizione permane finché non viene rimossa da un incantesimo rimuovi maledizione o da una magia analoga.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 10,
+            "dadi": "2d6 + 3",
+            "tipo": "contundenti"
+          },
+          {
+            "media": 10,
+            "dadi": "3d6",
+            "tipo": "necrotici"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 12
+      }
+    },
+    {
+      "nome": "Sguardo funesto",
+      "testo": "La mummia prende di mira una creatura nel suo campo visivo in un raggio di 18 metri. Se il bersaglio può vedere la mummia, deve superare un tiro salvezza su Saggezza con CD 11 contro questa magia, altrimenti è spaventato fino alla fine del turno successivo della mummia. Se il bersaglio fallisce il tiro salvezza di 5 o più, è anche paralizzato per la stessa durata. Un bersaglio che supera il tiro salvezza è immune allo sguardo funesto di tutte le mummie (ma non a quello dei signori delle mummie) per le 24 ore successive.",
+      "salvataggio": {
+        "caratteristica": "sag",
+        "cd": 11
+      }
+    }
+  ]
+}

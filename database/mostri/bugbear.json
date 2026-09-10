@@ -1,0 +1,87 @@
+{
+  "id": "bugbear",
+  "nome": "Bugbear",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 306
+  },
+  "tipo": "umanoide",
+  "descrittore": "goblinoide",
+  "taglia": "Media",
+  "allineamento": "caotico malvagio",
+  "caratteristiche": {
+    "for": 15,
+    "des": 14,
+    "cos": 13,
+    "int": 8,
+    "sag": 11,
+    "car": 9
+  },
+  "modificatori": {
+    "for": 2,
+    "des": 2,
+    "cos": 1,
+    "int": -1,
+    "sag": 0,
+    "car": -1
+  },
+  "ca": 16,
+  "ca_tipo": "armatura di pelle, scudo",
+  "pf": 27,
+  "pf_dadi": "5d8 + 5",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "sensi": "Percezione passiva 10, scurovisione 18 m",
+  "percezione_passiva": 10,
+  "linguaggi": "Comune, Goblin",
+  "cr": "1",
+  "pe": 200,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Attacco a sorpresa",
+      "testo": "Se il bugbear sorprende una creatura e la colpisce con un attacco durante il primo round di combattimento, il bersaglio subisce 7 (2d6) danni extra dall'attacco."
+    },
+    {
+      "nome": "Bruto",
+      "testo": "Quando il bugbear colpisce con un'arma da mischia, l'attacco infligge un dado extra del tipo di danno dell'arma (già incluso nell'attacco)."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Mazza chiodata",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 11 (2d8 + 2) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 11,
+            "dadi": "2d8 + 2",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Giavellotto",
+      "testo": "Attacco con arma da mischia o a distanza: +4 al tiro per colpire, portata 1,5 m o gittata 9/36 m, un bersaglio. Colpito: 10 (2d6 + 2) danni perforanti in mischia o 5 (1d6 + 2) danni perforanti a distanza.",
+      "attacco": {
+        "tipo": "mischia o distanza",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m o gittata 9/36 m, un bersaglio",
+        "danni": [
+          {
+            "media": 10,
+            "dadi": "2d6 + 2",
+            "tipo": "perforanti in"
+          }
+        ]
+      }
+    }
+  ]
+}

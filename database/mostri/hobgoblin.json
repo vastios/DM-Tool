@@ -1,0 +1,81 @@
+{
+  "id": "hobgoblin",
+  "nome": "Hobgoblin",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 364
+  },
+  "tipo": "umanoide",
+  "descrittore": "goblinoide",
+  "taglia": "Media",
+  "allineamento": "legale malvagio",
+  "caratteristiche": {
+    "for": 13,
+    "des": 12,
+    "cos": 12,
+    "int": 10,
+    "sag": 10,
+    "car": 9
+  },
+  "modificatori": {
+    "for": 1,
+    "des": 1,
+    "cos": 1,
+    "int": 0,
+    "sag": 0,
+    "car": -1
+  },
+  "ca": 18,
+  "ca_tipo": "cotta di maglia, scudo",
+  "pf": 11,
+  "pf_dadi": "2d8 + 2",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "linguaggi": "Comune, Goblin",
+  "cr": "1/2",
+  "pe": 100,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Vantaggio marziale",
+      "testo": "Una volta per turno, l'hobgoblin può infliggere 7 (2d6) danni extra a una creatura che colpisce con un attacco con arma, se quella creatura si trova entro 1,5 metri da un alleato dell'hobgoblin che non sia incapacitato."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Spada lunga",
+      "testo": "Attacco con arma da mischia: +3 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 5 (1d8 + 1) danni taglienti o 6 (1d10 + 1) danni taglienti se impugnata con due mani.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 3,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d8 + 1",
+            "tipo": "taglienti o"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Arco lungo",
+      "testo": "Attacco con arma a distanza: +3 al tiro per colpire, gittata 45/180 m, un bersaglio. Colpito: 5 (1d8 + 1) danni perforanti.",
+      "attacco": {
+        "tipo": "distanza",
+        "tiro": 3,
+        "portata": "45/180 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d8 + 1",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

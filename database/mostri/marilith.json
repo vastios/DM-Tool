@@ -1,0 +1,108 @@
+{
+  "id": "marilith",
+  "nome": "Marilith",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 312
+  },
+  "tipo": "immondo",
+  "descrittore": "demone",
+  "taglia": "Grande",
+  "allineamento": "caotica malvagia",
+  "caratteristiche": {
+    "for": 18,
+    "des": 20,
+    "cos": 20,
+    "int": 18,
+    "sag": 16,
+    "car": 20
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 5,
+    "cos": 5,
+    "int": 4,
+    "sag": 3,
+    "car": 5
+  },
+  "ca": 18,
+  "ca_tipo": "armatura naturale",
+  "pf": 189,
+  "pf_dadi": "18d10 + 90",
+  "velocita": {
+    "camminare": "12 m"
+  },
+  "resistenze_danni": "freddo, fulmine, fuoco; contundenti, perforanti e taglienti da attacchi non magici",
+  "immunita_danni": "veleno",
+  "immunita_condizioni": "avvelenato",
+  "sensi": "Percezione passiva 13, vista pura 36 m",
+  "percezione_passiva": 13,
+  "linguaggi": "Abissale, telepatia 36 m",
+  "cr": "16",
+  "pe": 15000,
+  "bonus_competenza": 5,
+  "tratti": [
+    {
+      "nome": "Armi magiche",
+      "testo": "Gli attacchi con arma della marilith sono magici."
+    },
+    {
+      "nome": "Reattiva",
+      "testo": "La marilith può eseguire una reazione a ogni turno in combattimento."
+    },
+    {
+      "nome": "Resistenza alla magia",
+      "testo": "La marilith dispone di vantaggio ai tiri salvezza contro incantesimi e altri effetti magici."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "La marilith effettua sette attacchi: sei con le spade lunghe e uno con la coda."
+    },
+    {
+      "nome": "Coda",
+      "testo": "Attacco con arma da mischia: +9 al tiro per colpire, portata 3 m, una creatura. Colpito: 15 (2d10 + 4) danni contundenti. Se il bersaglio è di taglia Media o inferiore, viene afferrato (CD 19 per sfuggire). Finché la presa perdura, il bersaglio è trattenuto e la marilith può colpirlo automaticamente con la coda ma non può effettuare attacchi di questo tipo contro altri.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 9,
+        "portata": "3 m",
+        "bersaglio": "una creatura",
+        "danni": [
+          {
+            "media": 15,
+            "dadi": "2d10 + 4",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Spada lunga",
+      "testo": "Attacco con arma da mischia: +9 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 13 (2d8 + 4) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 9,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 13,
+            "dadi": "2d8 + 4",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Teletrasporto",
+      "testo": "La marilith si teletrasporta magicamente, insieme a ogni oggetto che indossa o trasporta, fino a uno spazio libero visibile entro 36 metri."
+    }
+  ],
+  "reazioni": [
+    {
+      "nome": "Parata",
+      "testo": "La marilith aggiunge 5 alla sua CA contro un attacco in mischia che la colpirebbe. Per farlo, deve vedere l'attaccante e deve impugnare un'arma da mischia."
+    }
+  ]
+}

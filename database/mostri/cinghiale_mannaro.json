@@ -1,0 +1,109 @@
+{
+  "id": "cinghiale_mannaro",
+  "nome": "Cinghiale mannaro",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 367
+  },
+  "tipo": "umanoide",
+  "descrittore": "umano, mutaforma",
+  "taglia": "Media",
+  "allineamento": "neutrale malvagio",
+  "caratteristiche": {
+    "for": 17,
+    "des": 10,
+    "cos": 15,
+    "int": 10,
+    "sag": 11,
+    "car": 8
+  },
+  "modificatori": {
+    "for": 3,
+    "des": 0,
+    "cos": 2,
+    "int": 0,
+    "sag": 0,
+    "car": -1
+  },
+  "ca": 10,
+  "ca_nota": "in forma umanoide, 11 (armatura naturale) in forma di cinghiale o ibrida",
+  "pf": 78,
+  "pf_dadi": "12d8 + 24",
+  "velocita": {
+    "camminare": "9 m (12 m in forma di cinghiale)"
+  },
+  "immunita_danni": "contundenti, perforanti e taglienti da attacchi non magici con armi non argentate",
+  "sensi": "Percezione passiva 12",
+  "percezione_passiva": 12,
+  "linguaggi": "Comune (non può parlare in forma di cinghiale)",
+  "cr": "4",
+  "pe": 1100,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Mutaforma",
+      "testo": "Il cinghiale mannaro può usare la sua azione per trasformarsi in un ibrido umanoide-cinghiale o in un cinghiale, o per tornare alla sua forma naturale, che è umanoide. Le sue statistiche, a eccezione della CA, restano le stesse in ogni forma. Ogni oggetto che indossa o trasporta non viene trasformato. Se muore, torna alla sua forma naturale."
+    },
+    {
+      "nome": "Carica",
+      "testo": "Se il cinghiale mannaro si muove di almeno 4,5 metri in linea retta verso un bersaglio e poi lo colpisce con le zanne nello stesso turno, il bersaglio subisce 7 (2d6) danni taglienti extra. Se il bersaglio è una creatura, deve superare un tiro salvezza su Forza con CD 13, altrimenti cade a terra prono.",
+      "uso": "solo in forma di cinghiale o ibrida",
+      "salvataggio": {
+        "caratteristica": "for",
+        "cd": 13
+      }
+    },
+    {
+      "nome": "Implacabile",
+      "testo": "Se il cinghiale mannaro subisce 14 o meno danni che lo porterebbero a 0 punti ferita, è ridotto invece a 1 punto ferita.",
+      "uso": "ricarica dopo un riposo breve o lungo"
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il cinghiale mannaro effettua due attacchi, di cui solo uno può essere con le zanne.",
+      "uso": "solo in forma umanoide o ibrida"
+    },
+    {
+      "nome": "Dilaniare",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 10 (2d6 + 3) danni contundenti.",
+      "uso": "solo in forma umanoide o ibrida",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 10,
+            "dadi": "2d6 + 3",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Zanne",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 10 (2d6 + 3) danni taglienti. Se il bersaglio è un umanoide, deve superare un tiro salvezza su Costituzione con CD 12, altrimenti è costretto a trasformarsi in un cinghiale mannaro.",
+      "uso": "solo in forma di cinghiale o ibrida",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 10,
+            "dadi": "2d6 + 3",
+            "tipo": "taglienti"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 12
+      }
+    }
+  ]
+}

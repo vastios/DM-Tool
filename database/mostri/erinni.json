@@ -1,0 +1,115 @@
+{
+  "id": "erinni",
+  "nome": "Erinni",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 318
+  },
+  "tipo": "immondo",
+  "descrittore": "diavolo",
+  "taglia": "Media",
+  "allineamento": "legale malvagia",
+  "caratteristiche": {
+    "for": 18,
+    "des": 16,
+    "cos": 18,
+    "int": 14,
+    "sag": 14,
+    "car": 18
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 3,
+    "cos": 4,
+    "int": 2,
+    "sag": 2,
+    "car": 4
+  },
+  "ca": 18,
+  "ca_tipo": "piastre",
+  "pf": 153,
+  "pf_dadi": "18d8 + 72",
+  "velocita": {
+    "camminare": "9 m",
+    "volare": "18 m"
+  },
+  "resistenze_danni": "freddo; contundenti, perforanti e taglienti da attacchi non magici non argentati",
+  "immunita_danni": "fuoco, veleno",
+  "immunita_condizioni": "avvelenato",
+  "sensi": "Percezione passiva 12, vista pura 36 m",
+  "percezione_passiva": 12,
+  "linguaggi": "Infernale, telepatia 36 m",
+  "cr": "12",
+  "pe": 8400,
+  "bonus_competenza": 4,
+  "tratti": [
+    {
+      "nome": "Armi infernali",
+      "testo": "Gli attacchi con arma dell'erinni sono magici e infliggono 13 (3d8) danni da veleno extra se vanno a segno (già inclusi negli attacchi)."
+    },
+    {
+      "nome": "Resistenza alla magia",
+      "testo": "L'erinni dispone di vantaggio ai tiri salvezza contro incantesimi e altri effetti magici."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "L'erinni effettua tre attacchi."
+    },
+    {
+      "nome": "Spada lunga",
+      "testo": "Attacco con arma da mischia: +8 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 8 (1d8 + 4) danni taglienti, o 9 (1d10 + 4) danni taglienti se usata a due mani, più 13 (3d8) danni da veleno.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 8,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 8,
+            "dadi": "1d8 + 4",
+            "tipo": "taglienti"
+          },
+          {
+            "media": 13,
+            "dadi": "3d8",
+            "tipo": "veleno"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Arco lungo",
+      "testo": "Attacco con arma a distanza: +7 al tiro per colpire, gittata 45/180 m, un bersaglio. Colpito: 7 (1d8 + 3) danni perforanti più 13 (3d8) danni da veleno e il bersaglio deve superare un tiro salvezza su Costituzione con CD 14, altrimenti è avvelenato. Il veleno permane finché non viene rimosso dall'incantesimo ristorare inferiore o da una magia analoga.",
+      "attacco": {
+        "tipo": "distanza",
+        "tiro": 7,
+        "portata": "45/180 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 7,
+            "dadi": "1d8 + 3",
+            "tipo": "perforanti"
+          },
+          {
+            "media": 13,
+            "dadi": "3d8",
+            "tipo": "veleno e"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 14
+      }
+    }
+  ],
+  "reazioni": [
+    {
+      "nome": "Parata",
+      "testo": "L'erinni aggiunge 4 alla sua CA contro un attacco in mischia che la colpirebbe. Per farlo, l'erinni deve vedere l'attaccante e deve impugnare un'arma da mischia."
+    }
+  ]
+}

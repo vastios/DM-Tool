@@ -1,0 +1,66 @@
+{
+  "id": "marinide",
+  "nome": "Marinide",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 373
+  },
+  "tipo": "umanoide",
+  "descrittore": "marinide",
+  "taglia": "Media",
+  "allineamento": "neutrale",
+  "caratteristiche": {
+    "for": 10,
+    "des": 13,
+    "cos": 12,
+    "int": 11,
+    "sag": 11,
+    "car": 12
+  },
+  "modificatori": {
+    "for": 0,
+    "des": 1,
+    "cos": 1,
+    "int": 0,
+    "sag": 0,
+    "car": 1
+  },
+  "ca": 11,
+  "pf": 11,
+  "pf_dadi": "2d8 + 2",
+  "velocita": {
+    "camminare": "3 m",
+    "nuotare": "12 m"
+  },
+  "sensi": "Percezione passiva 12",
+  "percezione_passiva": 12,
+  "linguaggi": "Aquan, Comune",
+  "cr": "1/8",
+  "pe": 25,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Anfibio",
+      "testo": "Il marinide può respirare in aria e in acqua."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Lancia",
+      "testo": "Attacco con arma da mischia o a distanza: +2 al tiro per colpire, portata 1,5 m o gittata 6/18 m, un bersaglio. Colpito: 3 (1d6) danni perforanti o 4 (1d8) danni perforanti se usata a due mani per effettuare un attacco in mischia.",
+      "attacco": {
+        "tipo": "mischia o distanza",
+        "tiro": 2,
+        "portata": "1",
+        "bersaglio": "5 m o gittata 6/18 m, un bersaglio",
+        "danni": [
+          {
+            "media": 3,
+            "dadi": "1d6",
+            "tipo": "perforanti o"
+          }
+        ]
+      }
+    }
+  ]
+}

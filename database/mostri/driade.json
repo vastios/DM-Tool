@@ -1,0 +1,113 @@
+{
+  "id": "driade",
+  "nome": "Driade",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 346
+  },
+  "tipo": "folletto",
+  "taglia": "Media",
+  "allineamento": "neutrale",
+  "caratteristiche": {
+    "for": 10,
+    "des": 12,
+    "cos": 11,
+    "int": 14,
+    "sag": 15,
+    "car": 18
+  },
+  "modificatori": {
+    "for": 0,
+    "des": 1,
+    "cos": 0,
+    "int": 2,
+    "sag": 2,
+    "car": 4
+  },
+  "ca": 11,
+  "ca_tipo": "16 con pelle coriacea",
+  "pf": 22,
+  "pf_dadi": "5d8",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "sensi": "Percezione passiva 14, scurovisione 18 m",
+  "percezione_passiva": 14,
+  "linguaggi": "Elfico, Silvano",
+  "cr": "1",
+  "pe": 200,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Incantesimi innati",
+      "testo": "La caratteristica innata da incantatore della driade è Carisma (CD del tiro salvezza sull'incantesimo 14). Per sua natura, la driade è in grado di lanciare gli incantesimi indicati di seguito senza aver bisogno di componenti materiali: A volontà: artificio druidico 3/giorno ciascuno: bacche benefiche, intralciare 1/giorno ciascuno: passare senza tracce, pelle coriacea, randello incantato",
+      "incantesimi": {
+        "testo": "La caratteristica innata da incantatore della driade è Carisma (CD del tiro salvezza sull'incantesimo 14). Per sua natura, la driade è in grado di lanciare gli incantesimi indicati di seguito senza aver bisogno di componenti materiali: A volontà: artificio druidico 3/giorno ciascuno: bacche benefiche, intralciare 1/giorno ciascuno: passare senza tracce, pelle coriacea, randello incantato",
+        "gruppi": [
+          {
+            "frequenza": "a volontà",
+            "incantesimi": [
+              "artificio druidico"
+            ]
+          },
+          {
+            "frequenza": "3/giorno ciascuno",
+            "incantesimi": [
+              "bacche benefiche",
+              "intralciare"
+            ]
+          },
+          {
+            "frequenza": "1/giorno ciascuno",
+            "incantesimi": [
+              "passare senza tracce",
+              "pelle coriacea",
+              "randello incantato"
+            ]
+          }
+        ],
+        "cd": 14
+      }
+    },
+    {
+      "nome": "Parlare con bestie e vegetali",
+      "testo": "La driade può comunicare con le bestie e i vegetali come se condividesse con loro un linguaggio."
+    },
+    {
+      "nome": "Passo arboreo",
+      "testo": "Per una volta nel suo turno, la driade può usare 3 metri del suo movimento per entrare magicamente in un albero vivente entro la sua portata e uscire da un secondo albero vivente situato entro 18 metri dal primo, comparendo in uno spazio libero entro 1,5 metri dal secondo. Entrambi gli alberi devono essere di taglia Grande o superiore."
+    },
+    {
+      "nome": "Resistenza alla magia",
+      "testo": "La driade dispone di vantaggio ai tiri salvezza contro incantesimi e altri effetti magici."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Randello",
+      "testo": "Attacco con arma da mischia: +2 al tiro per colpire (+6 con randello incantato ), portata 1,5 m, un bersaglio. Colpito: 2 (1d4) danni contundenti o 8 (1d8 + 4) danni contundenti con randello incantato .",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 2,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 2,
+            "dadi": "1d4",
+            "tipo": "contundenti o"
+          }
+        ],
+        "tiro_nota": "+6 con randello incantato"
+      }
+    },
+    {
+      "nome": "Fascino fatato",
+      "testo": "La driade prende di mira un umanoide o una bestia nel suo campo visivo in un raggio di 9 metri. Se il bersaglio può vedere la driade, deve superare un tiro salvezza su Saggezza con CD 14, altrimenti è affascinato magicamente. La creatura affascinata considera la driade un'alleata fidata da ascoltare e da proteggere. Anche se il bersaglio non è sotto il controllo della driade, interpreta le sue richieste o le sue azioni nel modo più favorevole possibile. Ogni volta che la driade o i suoi alleati fanno qualcosa di dannoso al bersaglio, quest'ultimo può ripetere il tiro salvezza e, se lo supera, l'effetto svanisce. Altrimenti, l'effetto dura 24 ore o finché la driade non muore, non si trova su un piano di esistenza diverso da quello del bersaglio o non termina l'effetto con un'azione bonus. Se il bersaglio supera il tiro salvezza, è immune al Fascino fatato della driade per le 24 ore successive. La driade può affascinare al massimo un umanoide e tre bestie contemporaneamente.",
+      "salvataggio": {
+        "caratteristica": "sag",
+        "cd": 14
+      }
+    }
+  ]
+}

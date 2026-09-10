@@ -1,0 +1,84 @@
+{
+  "id": "triceratopo",
+  "nome": "Triceratopo",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 320
+  },
+  "tipo": "bestia",
+  "taglia": "Enorme",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 22,
+    "des": 9,
+    "cos": 17,
+    "int": 2,
+    "sag": 11,
+    "car": 5
+  },
+  "modificatori": {
+    "for": 6,
+    "des": -1,
+    "cos": 3,
+    "int": -4,
+    "sag": 0,
+    "car": -3
+  },
+  "ca": 13,
+  "ca_tipo": "armatura naturale",
+  "pf": 95,
+  "pf_dadi": "10d12 + 30",
+  "velocita": {
+    "camminare": "15 m"
+  },
+  "linguaggi": "—",
+  "cr": "5",
+  "pe": 1800,
+  "bonus_competenza": 3,
+  "tratti": [
+    {
+      "nome": "Carica travolgente",
+      "testo": "Se il triceratopo si muove di almeno 6 metri in linea retta verso una creatura e poi la colpisce con un'incornata nello stesso turno, quel bersaglio deve superare un tiro salvezza su Forza con CD 13, altrimenti cade a terra prono. Se il bersaglio è prono, il triceratopo può effettuare un pestone contro di esso come azione bonus.",
+      "salvataggio": {
+        "caratteristica": "for",
+        "cd": 13
+      }
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Incornata",
+      "testo": "Attacco con arma da mischia: +9 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 24 (4d8 + 6) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 9,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 24,
+            "dadi": "4d8 + 6",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Pestone",
+      "testo": "Attacco con arma da mischia: +9 al tiro per colpire, portata 1,5 m, una creatura prona. Colpito: 22 (3d10 + 6) danni contundenti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 9,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura prona",
+        "danni": [
+          {
+            "media": 22,
+            "dadi": "3d10 + 6",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    }
+  ]
+}

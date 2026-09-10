@@ -1,0 +1,2861 @@
+{
+  "versione": "1.0",
+  "fonte": "SRD 5.1 IT (Wizards of the Coast, licenza CC BY 4.0)",
+  "nota": "Un file JSON per mostro nella cartella database/mostri/. Questo indice contiene i metadati per filtri e ricerche senza caricare i file singoli.",
+  "totale": 317,
+  "mostri": {
+    "aboleth": {
+      "nome": "Aboleth",
+      "tipo": "aberrazione",
+      "taglia": "Grande",
+      "cr": "10",
+      "pe": 5900,
+      "pagina": 300,
+      "file": "mostri/aboleth.json"
+    },
+    "deva": {
+      "nome": "Deva",
+      "tipo": "celestiale",
+      "taglia": "Media",
+      "cr": "10",
+      "pe": 5900,
+      "pagina": 300,
+      "file": "mostri/deva.json"
+    },
+    "planetar": {
+      "nome": "Planetar",
+      "tipo": "celestiale",
+      "taglia": "Grande",
+      "cr": "16",
+      "pe": 15000,
+      "pagina": 301,
+      "file": "mostri/planetar.json"
+    },
+    "solar": {
+      "nome": "Solar",
+      "tipo": "celestiale",
+      "taglia": "Grande",
+      "cr": "21",
+      "pe": 33000,
+      "pagina": 302,
+      "file": "mostri/solar.json"
+    },
+    "ankheg": {
+      "nome": "Ankheg",
+      "tipo": "mostruosità",
+      "taglia": "Grande",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 303,
+      "file": "mostri/ankheg.json"
+    },
+    "mezzodrago_rosso_veterano": {
+      "nome": "Mezzodrago rosso veterano",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "5",
+      "pe": 1800,
+      "pagina": 303,
+      "file": "mostri/mezzodrago_rosso_veterano.json"
+    },
+    "arpia": {
+      "nome": "Arpia",
+      "tipo": "mostruosità",
+      "taglia": "Media",
+      "cr": "1",
+      "pe": 200,
+      "pagina": 304,
+      "file": "mostri/arpia.json"
+    },
+    "azer": {
+      "nome": "Azer",
+      "tipo": "elementale",
+      "taglia": "Media",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 304,
+      "file": "mostri/azer.json"
+    },
+    "basilisco": {
+      "nome": "Basilisco",
+      "tipo": "mostruosità",
+      "taglia": "Media",
+      "cr": "3",
+      "pe": 700,
+      "pagina": 305,
+      "file": "mostri/basilisco.json"
+    },
+    "behir": {
+      "nome": "Behir",
+      "tipo": "mostruosità",
+      "taglia": "Enorme",
+      "cr": "11",
+      "pe": 7200,
+      "pagina": 305,
+      "file": "mostri/behir.json"
+    },
+    "bugbear": {
+      "nome": "Bugbear",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "1",
+      "pe": 200,
+      "pagina": 306,
+      "file": "mostri/bugbear.json"
+    },
+    "bulette": {
+      "nome": "Bulette",
+      "tipo": "mostruosità",
+      "taglia": "Grande",
+      "cr": "5",
+      "pe": 1800,
+      "pagina": 306,
+      "file": "mostri/bulette.json"
+    },
+    "cacciatore_invisibile": {
+      "nome": "Cacciatore invisibile",
+      "tipo": "elementale",
+      "taglia": "Media",
+      "cr": "6",
+      "pe": 2300,
+      "pagina": 307,
+      "file": "mostri/cacciatore_invisibile.json"
+    },
+    "cavallo_degli_incubi": {
+      "nome": "Cavallo degli incubi",
+      "tipo": "immondo",
+      "taglia": "Grande",
+      "cr": "3",
+      "pe": 700,
+      "pagina": 307,
+      "file": "mostri/cavallo_degli_incubi.json"
+    },
+    "centauro": {
+      "nome": "Centauro",
+      "tipo": "mostruosità",
+      "taglia": "Grande",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 307,
+      "file": "mostri/centauro.json"
+    },
+    "chimera": {
+      "nome": "Chimera",
+      "tipo": "mostruosità",
+      "taglia": "Grande",
+      "cr": "6",
+      "pe": 2300,
+      "pagina": 308,
+      "file": "mostri/chimera.json"
+    },
+    "chuul": {
+      "nome": "Chuul",
+      "tipo": "aberrazione",
+      "taglia": "Grande",
+      "cr": "4",
+      "pe": 1100,
+      "pagina": 308,
+      "file": "mostri/chuul.json"
+    },
+    "coboldo": {
+      "nome": "Coboldo",
+      "tipo": "umanoide",
+      "taglia": "Piccola",
+      "cr": "1/8",
+      "pe": 25,
+      "pagina": 308,
+      "file": "mostri/coboldo.json"
+    },
+    "cockatrice": {
+      "nome": "Cockatrice",
+      "tipo": "mostruosità",
+      "taglia": "Piccola",
+      "cr": "1/2",
+      "pe": 100,
+      "pagina": 309,
+      "file": "mostri/cockatrice.json"
+    },
+    "couatl": {
+      "nome": "Couatl",
+      "tipo": "celestiale",
+      "taglia": "Media",
+      "cr": "4",
+      "pe": 1100,
+      "pagina": 309,
+      "file": "mostri/couatl.json"
+    },
+    "cumulo_strisciante": {
+      "nome": "Cumulo strisciante",
+      "tipo": "vegetale",
+      "taglia": "Grande",
+      "cr": "5",
+      "pe": 1800,
+      "pagina": 310,
+      "file": "mostri/cumulo_strisciante.json"
+    },
+    "balor": {
+      "nome": "Balor",
+      "tipo": "immondo",
+      "taglia": "Enorme",
+      "cr": "19",
+      "pe": 22000,
+      "pagina": 310,
+      "file": "mostri/balor.json"
+    },
+    "dretch": {
+      "nome": "Dretch",
+      "tipo": "immondo",
+      "taglia": "Piccola",
+      "cr": "1/4",
+      "pe": 50,
+      "pagina": 311,
+      "file": "mostri/dretch.json"
+    },
+    "glabrezu": {
+      "nome": "Glabrezu",
+      "tipo": "immondo",
+      "taglia": "Grande",
+      "cr": "9",
+      "pe": 5000,
+      "pagina": 311,
+      "file": "mostri/glabrezu.json"
+    },
+    "hezrou": {
+      "nome": "Hezrou",
+      "tipo": "immondo",
+      "taglia": "Grande",
+      "cr": "8",
+      "pe": 3900,
+      "pagina": 312,
+      "file": "mostri/hezrou.json"
+    },
+    "marilith": {
+      "nome": "Marilith",
+      "tipo": "immondo",
+      "taglia": "Grande",
+      "cr": "16",
+      "pe": 15000,
+      "pagina": 312,
+      "file": "mostri/marilith.json"
+    },
+    "nalfeshnee": {
+      "nome": "Nalfeshnee",
+      "tipo": "immondo",
+      "taglia": "Grande",
+      "cr": "13",
+      "pe": 10000,
+      "pagina": 313,
+      "file": "mostri/nalfeshnee.json"
+    },
+    "quasit": {
+      "nome": "Quasit",
+      "tipo": "immondo",
+      "taglia": "Minuscola",
+      "cr": "1",
+      "pe": 200,
+      "pagina": 313,
+      "file": "mostri/quasit.json"
+    },
+    "vrock": {
+      "nome": "Vrock",
+      "tipo": "immondo",
+      "taglia": "Grande",
+      "cr": "6",
+      "pe": 2300,
+      "pagina": 314,
+      "file": "mostri/vrock.json"
+    },
+    "diavolo_barbuto": {
+      "nome": "Diavolo barbuto",
+      "tipo": "immondo",
+      "taglia": "Media",
+      "cr": "3",
+      "pe": 700,
+      "pagina": 314,
+      "file": "mostri/diavolo_barbuto.json"
+    },
+    "diavolo_cornuto": {
+      "nome": "Diavolo cornuto",
+      "tipo": "immondo",
+      "taglia": "Grande",
+      "cr": "11",
+      "pe": 7200,
+      "pagina": 315,
+      "file": "mostri/diavolo_cornuto.json"
+    },
+    "diavolo_del_ghiaccio": {
+      "nome": "Diavolo del ghiaccio",
+      "tipo": "immondo",
+      "taglia": "Grande",
+      "cr": "14",
+      "pe": 11500,
+      "pagina": 315,
+      "file": "mostri/diavolo_del_ghiaccio.json"
+    },
+    "diavolo_della_fossa": {
+      "nome": "Diavolo della fossa",
+      "tipo": "immondo",
+      "taglia": "Grande",
+      "cr": "20",
+      "pe": 25000,
+      "pagina": 316,
+      "file": "mostri/diavolo_della_fossa.json"
+    },
+    "diavolo_delle_catene": {
+      "nome": "Diavolo delle catene",
+      "tipo": "immondo",
+      "taglia": "Media",
+      "cr": "8",
+      "pe": 3900,
+      "pagina": 317,
+      "file": "mostri/diavolo_delle_catene.json"
+    },
+    "diavolo_d_ossa": {
+      "nome": "Diavolo d'ossa",
+      "tipo": "immondo",
+      "taglia": "Grande",
+      "cr": "9",
+      "pe": 5000,
+      "pagina": 317,
+      "file": "mostri/diavolo_d_ossa.json"
+    },
+    "diavolo_uncinato": {
+      "nome": "Diavolo uncinato",
+      "tipo": "immondo",
+      "taglia": "Media",
+      "cr": "5",
+      "pe": 1800,
+      "pagina": 318,
+      "file": "mostri/diavolo_uncinato.json"
+    },
+    "erinni": {
+      "nome": "Erinni",
+      "tipo": "immondo",
+      "taglia": "Media",
+      "cr": "12",
+      "pe": 8400,
+      "pagina": 318,
+      "file": "mostri/erinni.json"
+    },
+    "imp": {
+      "nome": "Imp",
+      "tipo": "immondo",
+      "taglia": "Minuscola",
+      "cr": "1",
+      "pe": 200,
+      "pagina": 319,
+      "file": "mostri/imp.json"
+    },
+    "lemure": {
+      "nome": "Lemure",
+      "tipo": "immondo",
+      "taglia": "Media",
+      "cr": "0",
+      "pe": 10,
+      "pagina": 319,
+      "file": "mostri/lemure.json"
+    },
+    "plesiosauro": {
+      "nome": "Plesiosauro",
+      "tipo": "bestia",
+      "taglia": "Grande",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 320,
+      "file": "mostri/plesiosauro.json"
+    },
+    "tirannosauro": {
+      "nome": "Tirannosauro",
+      "tipo": "bestia",
+      "taglia": "Enorme",
+      "cr": "8",
+      "pe": 3900,
+      "pagina": 320,
+      "file": "mostri/tirannosauro.json"
+    },
+    "triceratopo": {
+      "nome": "Triceratopo",
+      "tipo": "bestia",
+      "taglia": "Enorme",
+      "cr": "5",
+      "pe": 1800,
+      "pagina": 320,
+      "file": "mostri/triceratopo.json"
+    },
+    "doppelganger": {
+      "nome": "Doppelganger",
+      "tipo": "mostruosità",
+      "taglia": "Media",
+      "cr": "3",
+      "pe": 700,
+      "pagina": 321,
+      "file": "mostri/doppelganger.json"
+    },
+    "drago_d_argento_antico": {
+      "nome": "Drago d'argento antico",
+      "tipo": "drago",
+      "taglia": "Mastodontica",
+      "cr": "23",
+      "pe": 50000,
+      "pagina": 321,
+      "file": "mostri/drago_d_argento_antico.json"
+    },
+    "drago_d_argento_adulto": {
+      "nome": "Drago d'argento adulto",
+      "tipo": "drago",
+      "taglia": "Enorme",
+      "cr": "16",
+      "pe": 15000,
+      "pagina": 322,
+      "file": "mostri/drago_d_argento_adulto.json"
+    },
+    "drago_d_argento_giovane": {
+      "nome": "Drago d'argento giovane",
+      "tipo": "drago",
+      "taglia": "Grande",
+      "cr": "9",
+      "pe": 5000,
+      "pagina": 323,
+      "file": "mostri/drago_d_argento_giovane.json"
+    },
+    "drago_d_argento_cucciolo": {
+      "nome": "Drago d'argento cucciolo",
+      "tipo": "drago",
+      "taglia": "Media",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 323,
+      "file": "mostri/drago_d_argento_cucciolo.json"
+    },
+    "drago_di_bronzo_antico": {
+      "nome": "Drago di bronzo antico",
+      "tipo": "drago",
+      "taglia": "Mastodontica",
+      "cr": "22",
+      "pe": 41000,
+      "pagina": 324,
+      "file": "mostri/drago_di_bronzo_antico.json"
+    },
+    "drago_di_bronzo_adulto": {
+      "nome": "Drago di bronzo adulto",
+      "tipo": "drago",
+      "taglia": "Enorme",
+      "cr": "15",
+      "pe": 13000,
+      "pagina": 325,
+      "file": "mostri/drago_di_bronzo_adulto.json"
+    },
+    "drago_di_bronzo_giovane": {
+      "nome": "Drago di bronzo giovane",
+      "tipo": "drago",
+      "taglia": "Grande",
+      "cr": "8",
+      "pe": 3900,
+      "pagina": 326,
+      "file": "mostri/drago_di_bronzo_giovane.json"
+    },
+    "drago_di_bronzo_cucciolo": {
+      "nome": "Drago di bronzo cucciolo",
+      "tipo": "drago",
+      "taglia": "Media",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 326,
+      "file": "mostri/drago_di_bronzo_cucciolo.json"
+    },
+    "drago_di_rame_antico": {
+      "nome": "Drago di rame antico",
+      "tipo": "drago",
+      "taglia": "Mastodontica",
+      "cr": "21",
+      "pe": 33000,
+      "pagina": 327,
+      "file": "mostri/drago_di_rame_antico.json"
+    },
+    "drago_di_rame_adulto": {
+      "nome": "Drago di rame adulto",
+      "tipo": "drago",
+      "taglia": "Enorme",
+      "cr": "14",
+      "pe": 11500,
+      "pagina": 328,
+      "file": "mostri/drago_di_rame_adulto.json"
+    },
+    "drago_di_rame_giovane": {
+      "nome": "Drago di rame giovane",
+      "tipo": "drago",
+      "taglia": "Grande",
+      "cr": "7",
+      "pe": 2900,
+      "pagina": 328,
+      "file": "mostri/drago_di_rame_giovane.json"
+    },
+    "drago_di_rame_cucciolo": {
+      "nome": "Drago di rame cucciolo",
+      "tipo": "drago",
+      "taglia": "Media",
+      "cr": "1",
+      "pe": 200,
+      "pagina": 329,
+      "file": "mostri/drago_di_rame_cucciolo.json"
+    },
+    "drago_d_oro_antico": {
+      "nome": "Drago d'oro antico",
+      "tipo": "drago",
+      "taglia": "Mastodontica",
+      "cr": "24",
+      "pe": 62000,
+      "pagina": 329,
+      "file": "mostri/drago_d_oro_antico.json"
+    },
+    "drago_d_oro_adulto": {
+      "nome": "Drago d'oro adulto",
+      "tipo": "drago",
+      "taglia": "Enorme",
+      "cr": "17",
+      "pe": 18000,
+      "pagina": 330,
+      "file": "mostri/drago_d_oro_adulto.json"
+    },
+    "drago_d_oro_giovane": {
+      "nome": "Drago d'oro giovane",
+      "tipo": "drago",
+      "taglia": "Grande",
+      "cr": "10",
+      "pe": 5900,
+      "pagina": 331,
+      "file": "mostri/drago_d_oro_giovane.json"
+    },
+    "drago_d_oro_cucciolo": {
+      "nome": "Drago d'oro cucciolo",
+      "tipo": "drago",
+      "taglia": "Media",
+      "cr": "3",
+      "pe": 700,
+      "pagina": 332,
+      "file": "mostri/drago_d_oro_cucciolo.json"
+    },
+    "drago_d_ottone_antico": {
+      "nome": "Drago d'ottone antico",
+      "tipo": "drago",
+      "taglia": "Mastodontica",
+      "cr": "20",
+      "pe": 25000,
+      "pagina": 332,
+      "file": "mostri/drago_d_ottone_antico.json"
+    },
+    "drago_d_ottone_adulto": {
+      "nome": "Drago d'ottone adulto",
+      "tipo": "drago",
+      "taglia": "Enorme",
+      "cr": "13",
+      "pe": 10000,
+      "pagina": 333,
+      "file": "mostri/drago_d_ottone_adulto.json"
+    },
+    "drago_d_ottone_giovane": {
+      "nome": "Drago d'ottone giovane",
+      "tipo": "drago",
+      "taglia": "Grande",
+      "cr": "6",
+      "pe": 2300,
+      "pagina": 334,
+      "file": "mostri/drago_d_ottone_giovane.json"
+    },
+    "drago_d_ottone_cucciolo": {
+      "nome": "Drago d'ottone cucciolo",
+      "tipo": "drago",
+      "taglia": "Media",
+      "cr": "1",
+      "pe": 200,
+      "pagina": 334,
+      "file": "mostri/drago_d_ottone_cucciolo.json"
+    },
+    "drago_bianco_antico": {
+      "nome": "Drago bianco antico",
+      "tipo": "drago",
+      "taglia": "Mastodontica",
+      "cr": "20",
+      "pe": 25000,
+      "pagina": 335,
+      "file": "mostri/drago_bianco_antico.json"
+    },
+    "drago_bianco_adulto": {
+      "nome": "Drago bianco adulto",
+      "tipo": "drago",
+      "taglia": "Enorme",
+      "cr": "13",
+      "pe": 10000,
+      "pagina": 336,
+      "file": "mostri/drago_bianco_adulto.json"
+    },
+    "drago_bianco_giovane": {
+      "nome": "Drago bianco giovane",
+      "tipo": "drago",
+      "taglia": "Grande",
+      "cr": "6",
+      "pe": 2300,
+      "pagina": 336,
+      "file": "mostri/drago_bianco_giovane.json"
+    },
+    "drago_bianco_cucciolo": {
+      "nome": "Drago bianco cucciolo",
+      "tipo": "drago",
+      "taglia": "Media",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 337,
+      "file": "mostri/drago_bianco_cucciolo.json"
+    },
+    "drago_blu_antico": {
+      "nome": "Drago blu antico",
+      "tipo": "drago",
+      "taglia": "Mastodontica",
+      "cr": "23",
+      "pe": 50000,
+      "pagina": 337,
+      "file": "mostri/drago_blu_antico.json"
+    },
+    "drago_blu_adulto": {
+      "nome": "Drago blu adulto",
+      "tipo": "drago",
+      "taglia": "Enorme",
+      "cr": "16",
+      "pe": 15000,
+      "pagina": 338,
+      "file": "mostri/drago_blu_adulto.json"
+    },
+    "drago_blu_giovane": {
+      "nome": "Drago blu giovane",
+      "tipo": "drago",
+      "taglia": "Grande",
+      "cr": "9",
+      "pe": 5000,
+      "pagina": 339,
+      "file": "mostri/drago_blu_giovane.json"
+    },
+    "drago_blu_cucciolo": {
+      "nome": "Drago blu cucciolo",
+      "tipo": "drago",
+      "taglia": "Media",
+      "cr": "3",
+      "pe": 700,
+      "pagina": 339,
+      "file": "mostri/drago_blu_cucciolo.json"
+    },
+    "drago_nero_antico": {
+      "nome": "Drago nero antico",
+      "tipo": "drago",
+      "taglia": "Mastodontica",
+      "cr": "21",
+      "pe": 33000,
+      "pagina": 339,
+      "file": "mostri/drago_nero_antico.json"
+    },
+    "drago_nero_adulto": {
+      "nome": "Drago nero adulto",
+      "tipo": "drago",
+      "taglia": "Enorme",
+      "cr": "14",
+      "pe": 11500,
+      "pagina": 340,
+      "file": "mostri/drago_nero_adulto.json"
+    },
+    "drago_nero_giovane": {
+      "nome": "Drago nero giovane",
+      "tipo": "drago",
+      "taglia": "Grande",
+      "cr": "7",
+      "pe": 2900,
+      "pagina": 341,
+      "file": "mostri/drago_nero_giovane.json"
+    },
+    "drago_nero_cucciolo": {
+      "nome": "Drago nero cucciolo",
+      "tipo": "drago",
+      "taglia": "Media",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 341,
+      "file": "mostri/drago_nero_cucciolo.json"
+    },
+    "drago_rosso_antico": {
+      "nome": "Drago rosso antico",
+      "tipo": "drago",
+      "taglia": "Mastodontica",
+      "cr": "24",
+      "pe": 62000,
+      "pagina": 341,
+      "file": "mostri/drago_rosso_antico.json"
+    },
+    "drago_rosso_adulto": {
+      "nome": "Drago rosso adulto",
+      "tipo": "drago",
+      "taglia": "Enorme",
+      "cr": "17",
+      "pe": 18000,
+      "pagina": 342,
+      "file": "mostri/drago_rosso_adulto.json"
+    },
+    "drago_rosso_giovane": {
+      "nome": "Drago rosso giovane",
+      "tipo": "drago",
+      "taglia": "Grande",
+      "cr": "10",
+      "pe": 5900,
+      "pagina": 343,
+      "file": "mostri/drago_rosso_giovane.json"
+    },
+    "drago_rosso_cucciolo": {
+      "nome": "Drago rosso cucciolo",
+      "tipo": "drago",
+      "taglia": "Media",
+      "cr": "4",
+      "pe": 1100,
+      "pagina": 343,
+      "file": "mostri/drago_rosso_cucciolo.json"
+    },
+    "drago_verde_antico": {
+      "nome": "Drago verde antico",
+      "tipo": "drago",
+      "taglia": "Mastodontica",
+      "cr": "22",
+      "pe": 41000,
+      "pagina": 344,
+      "file": "mostri/drago_verde_antico.json"
+    },
+    "drago_verde_adulto": {
+      "nome": "Drago verde adulto",
+      "tipo": "drago",
+      "taglia": "Enorme",
+      "cr": "15",
+      "pe": 13000,
+      "pagina": 344,
+      "file": "mostri/drago_verde_adulto.json"
+    },
+    "drago_verde_giovane": {
+      "nome": "Drago verde giovane",
+      "tipo": "drago",
+      "taglia": "Grande",
+      "cr": "8",
+      "pe": 3900,
+      "pagina": 345,
+      "file": "mostri/drago_verde_giovane.json"
+    },
+    "drago_verde_cucciolo": {
+      "nome": "Drago verde cucciolo",
+      "tipo": "drago",
+      "taglia": "Media",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 346,
+      "file": "mostri/drago_verde_cucciolo.json"
+    },
+    "driade": {
+      "nome": "Driade",
+      "tipo": "folletto",
+      "taglia": "Media",
+      "cr": "1",
+      "pe": 200,
+      "pagina": 346,
+      "file": "mostri/driade.json"
+    },
+    "drider": {
+      "nome": "Drider",
+      "tipo": "mostruosità",
+      "taglia": "Grande",
+      "cr": "6",
+      "pe": 2300,
+      "pagina": 347,
+      "file": "mostri/drider.json"
+    },
+    "duergar": {
+      "nome": "Duergar",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "1",
+      "pe": 200,
+      "pagina": 347,
+      "file": "mostri/duergar.json"
+    },
+    "elementale_del_fuoco": {
+      "nome": "Elementale del fuoco",
+      "tipo": "elementale",
+      "taglia": "Grande",
+      "cr": "5",
+      "pe": 1800,
+      "pagina": 348,
+      "file": "mostri/elementale_del_fuoco.json"
+    },
+    "elementale_della_terra": {
+      "nome": "Elementale della terra",
+      "tipo": "elementale",
+      "taglia": "Grande",
+      "cr": "5",
+      "pe": 1800,
+      "pagina": 348,
+      "file": "mostri/elementale_della_terra.json"
+    },
+    "elementale_dell_acqua": {
+      "nome": "Elementale dell'acqua",
+      "tipo": "elementale",
+      "taglia": "Grande",
+      "cr": "5",
+      "pe": 1800,
+      "pagina": 349,
+      "file": "mostri/elementale_dell_acqua.json"
+    },
+    "elementale_dell_aria": {
+      "nome": "Elementale dell'aria",
+      "tipo": "elementale",
+      "taglia": "Grande",
+      "cr": "5",
+      "pe": 1800,
+      "pagina": 349,
+      "file": "mostri/elementale_dell_aria.json"
+    },
+    "elfo_drow": {
+      "nome": "Elfo drow",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "1/4",
+      "pe": 50,
+      "pagina": 350,
+      "file": "mostri/elfo_drow.json"
+    },
+    "ettercap": {
+      "nome": "Ettercap",
+      "tipo": "mostruosità",
+      "taglia": "Media",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 350,
+      "file": "mostri/ettercap.json"
+    },
+    "ettin": {
+      "nome": "Ettin",
+      "tipo": "gigante",
+      "taglia": "Grande",
+      "cr": "4",
+      "pe": 1100,
+      "pagina": 351,
+      "file": "mostri/ettin.json"
+    },
+    "fantasma": {
+      "nome": "Fantasma",
+      "tipo": "non morto",
+      "taglia": "Media",
+      "cr": "4",
+      "pe": 1100,
+      "pagina": 351,
+      "file": "mostri/fantasma.json"
+    },
+    "fauce_gorgogliante": {
+      "nome": "Fauce gorgogliante",
+      "tipo": "aberrazione",
+      "taglia": "Media",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 352,
+      "file": "mostri/fauce_gorgogliante.json"
+    },
+    "boleto_stridente": {
+      "nome": "Boleto stridente",
+      "tipo": "vegetale",
+      "taglia": "Media",
+      "cr": "0",
+      "pe": 10,
+      "pagina": 353,
+      "file": "mostri/boleto_stridente.json"
+    },
+    "fungo_viola": {
+      "nome": "Fungo viola",
+      "tipo": "vegetale",
+      "taglia": "Media",
+      "cr": "1/4",
+      "pe": 50,
+      "pagina": 353,
+      "file": "mostri/fungo_viola.json"
+    },
+    "fuoco_fatuo": {
+      "nome": "Fuoco fatuo",
+      "tipo": "non morto",
+      "taglia": "Minuscola",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 353,
+      "file": "mostri/fuoco_fatuo.json"
+    },
+    "fustigatore": {
+      "nome": "Fustigatore",
+      "tipo": "mostruosità",
+      "taglia": "Grande",
+      "cr": "5",
+      "pe": 1800,
+      "pagina": 354,
+      "file": "mostri/fustigatore.json"
+    },
+    "gargoyle": {
+      "nome": "Gargoyle",
+      "tipo": "elementale",
+      "taglia": "Media",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 354,
+      "file": "mostri/gargoyle.json"
+    },
+    "djinni": {
+      "nome": "Djinni",
+      "tipo": "elementale",
+      "taglia": "Grande",
+      "cr": "11",
+      "pe": 7200,
+      "pagina": 355,
+      "file": "mostri/djinni.json"
+    },
+    "efreeti": {
+      "nome": "Efreeti",
+      "tipo": "elementale",
+      "taglia": "Grande",
+      "cr": "11",
+      "pe": 7200,
+      "pagina": 355,
+      "file": "mostri/efreeti.json"
+    },
+    "ghast": {
+      "nome": "Ghast",
+      "tipo": "non morto",
+      "taglia": "Media",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 356,
+      "file": "mostri/ghast.json"
+    },
+    "ghoul": {
+      "nome": "Ghoul",
+      "tipo": "non morto",
+      "taglia": "Media",
+      "cr": "1",
+      "pe": 200,
+      "pagina": 356,
+      "file": "mostri/ghoul.json"
+    },
+    "gigante_del_fuoco": {
+      "nome": "Gigante del fuoco",
+      "tipo": "gigante",
+      "taglia": "Enorme",
+      "cr": "9",
+      "pe": 5000,
+      "pagina": 357,
+      "file": "mostri/gigante_del_fuoco.json"
+    },
+    "gigante_del_gelo": {
+      "nome": "Gigante del gelo",
+      "tipo": "gigante",
+      "taglia": "Enorme",
+      "cr": "8",
+      "pe": 3900,
+      "pagina": 357,
+      "file": "mostri/gigante_del_gelo.json"
+    },
+    "gigante_delle_colline": {
+      "nome": "Gigante delle colline",
+      "tipo": "gigante",
+      "taglia": "Enorme",
+      "cr": "5",
+      "pe": 1800,
+      "pagina": 357,
+      "file": "mostri/gigante_delle_colline.json"
+    },
+    "gigante_delle_nuvole": {
+      "nome": "Gigante delle nuvole",
+      "tipo": "gigante",
+      "taglia": "Enorme",
+      "cr": "9",
+      "pe": 5000,
+      "pagina": 357,
+      "file": "mostri/gigante_delle_nuvole.json"
+    },
+    "gigante_delle_pietre": {
+      "nome": "Gigante delle pietre",
+      "tipo": "gigante",
+      "taglia": "Enorme",
+      "cr": "7",
+      "pe": 2900,
+      "pagina": 358,
+      "file": "mostri/gigante_delle_pietre.json"
+    },
+    "gigante_delle_tempeste": {
+      "nome": "Gigante delle tempeste",
+      "tipo": "gigante",
+      "taglia": "Enorme",
+      "cr": "13",
+      "pe": 10000,
+      "pagina": 358,
+      "file": "mostri/gigante_delle_tempeste.json"
+    },
+    "gnoll": {
+      "nome": "Gnoll",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "1/2",
+      "pe": 100,
+      "pagina": 359,
+      "file": "mostri/gnoll.json"
+    },
+    "gnomo_delle_profondit_svirfneblin": {
+      "nome": "Gnomo delle profondità (svirfneblin)",
+      "tipo": "umanoide",
+      "taglia": "Piccola",
+      "cr": "1/2",
+      "pe": 100,
+      "pagina": 359,
+      "file": "mostri/gnomo_delle_profondit_svirfneblin.json"
+    },
+    "goblin": {
+      "nome": "Goblin",
+      "tipo": "umanoide",
+      "taglia": "Piccola",
+      "cr": "1/4",
+      "pe": 50,
+      "pagina": 360,
+      "file": "mostri/goblin.json"
+    },
+    "golem_di_argilla": {
+      "nome": "Golem di argilla",
+      "tipo": "costrutto",
+      "taglia": "Grande",
+      "cr": "9",
+      "pe": 5000,
+      "pagina": 360,
+      "file": "mostri/golem_di_argilla.json"
+    },
+    "golem_di_carne": {
+      "nome": "Golem di carne",
+      "tipo": "costrutto",
+      "taglia": "Media",
+      "cr": "5",
+      "pe": 1800,
+      "pagina": 360,
+      "file": "mostri/golem_di_carne.json"
+    },
+    "golem_di_ferro": {
+      "nome": "Golem di ferro",
+      "tipo": "costrutto",
+      "taglia": "Grande",
+      "cr": "16",
+      "pe": 15000,
+      "pagina": 361,
+      "file": "mostri/golem_di_ferro.json"
+    },
+    "golem_di_pietra": {
+      "nome": "Golem di pietra",
+      "tipo": "costrutto",
+      "taglia": "Grande",
+      "cr": "10",
+      "pe": 5900,
+      "pagina": 362,
+      "file": "mostri/golem_di_pietra.json"
+    },
+    "gorgone": {
+      "nome": "Gorgone",
+      "tipo": "mostruosità",
+      "taglia": "Grande",
+      "cr": "5",
+      "pe": 1800,
+      "pagina": 362,
+      "file": "mostri/gorgone.json"
+    },
+    "grick": {
+      "nome": "Grick",
+      "tipo": "mostruosità",
+      "taglia": "Media",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 363,
+      "file": "mostri/grick.json"
+    },
+    "grifone": {
+      "nome": "Grifone",
+      "tipo": "mostruosità",
+      "taglia": "Grande",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 363,
+      "file": "mostri/grifone.json"
+    },
+    "grimlock": {
+      "nome": "Grimlock",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "1/4",
+      "pe": 50,
+      "pagina": 363,
+      "file": "mostri/grimlock.json"
+    },
+    "guardiano_protettore": {
+      "nome": "Guardiano protettore",
+      "tipo": "costrutto",
+      "taglia": "Grande",
+      "cr": "7",
+      "pe": 2900,
+      "pagina": 364,
+      "file": "mostri/guardiano_protettore.json"
+    },
+    "hobgoblin": {
+      "nome": "Hobgoblin",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "1/2",
+      "pe": 100,
+      "pagina": 364,
+      "file": "mostri/hobgoblin.json"
+    },
+    "idra": {
+      "nome": "Idra",
+      "tipo": "mostruosità",
+      "taglia": "Enorme",
+      "cr": "8",
+      "pe": 3900,
+      "pagina": 365,
+      "file": "mostri/idra.json"
+    },
+    "ippogrifo": {
+      "nome": "Ippogrifo",
+      "tipo": "mostruosità",
+      "taglia": "Grande",
+      "cr": "1",
+      "pe": 200,
+      "pagina": 365,
+      "file": "mostri/ippogrifo.json"
+    },
+    "kraken": {
+      "nome": "Kraken",
+      "tipo": "mostruosità",
+      "taglia": "Mastodontica",
+      "cr": "23",
+      "pe": 50000,
+      "pagina": 365,
+      "file": "mostri/kraken.json"
+    },
+    "lamia": {
+      "nome": "Lamia",
+      "tipo": "mostruosità",
+      "taglia": "Grande",
+      "cr": "4",
+      "pe": 1100,
+      "pagina": 366,
+      "file": "mostri/lamia.json"
+    },
+    "cinghiale_mannaro": {
+      "nome": "Cinghiale mannaro",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "4",
+      "pe": 1100,
+      "pagina": 367,
+      "file": "mostri/cinghiale_mannaro.json"
+    },
+    "lupo_mannaro": {
+      "nome": "Lupo mannaro",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "3",
+      "pe": 700,
+      "pagina": 367,
+      "file": "mostri/lupo_mannaro.json"
+    },
+    "orso_mannaro": {
+      "nome": "Orso mannaro",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "5",
+      "pe": 1800,
+      "pagina": 368,
+      "file": "mostri/orso_mannaro.json"
+    },
+    "tigre_mannara": {
+      "nome": "Tigre mannara",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "4",
+      "pe": 1100,
+      "pagina": 368,
+      "file": "mostri/tigre_mannara.json"
+    },
+    "topo_mannaro": {
+      "nome": "Topo mannaro",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 369,
+      "file": "mostri/topo_mannaro.json"
+    },
+    "lich": {
+      "nome": "Lich",
+      "tipo": "non morto",
+      "taglia": "Media",
+      "cr": "21",
+      "pe": 33000,
+      "pagina": 370,
+      "file": "mostri/lich.json"
+    },
+    "lucertoloide": {
+      "nome": "Lucertoloide",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "1/2",
+      "pe": 100,
+      "pagina": 371,
+      "file": "mostri/lucertoloide.json"
+    },
+    "magmin": {
+      "nome": "Magmin",
+      "tipo": "elementale",
+      "taglia": "Piccola",
+      "cr": "1/2",
+      "pe": 100,
+      "pagina": 371,
+      "file": "mostri/magmin.json"
+    },
+    "manticora": {
+      "nome": "Manticora",
+      "tipo": "mostruosità",
+      "taglia": "Grande",
+      "cr": "3",
+      "pe": 700,
+      "pagina": 371,
+      "file": "mostri/manticora.json"
+    },
+    "manto_assassino": {
+      "nome": "Manto assassino",
+      "tipo": "aberrazione",
+      "taglia": "Grande",
+      "cr": "8",
+      "pe": 3900,
+      "pagina": 372,
+      "file": "mostri/manto_assassino.json"
+    },
+    "mantoscuro": {
+      "nome": "Mantoscuro",
+      "tipo": "mostruosità",
+      "taglia": "Piccola",
+      "cr": "1/2",
+      "pe": 100,
+      "pagina": 372,
+      "file": "mostri/mantoscuro.json"
+    },
+    "marinide": {
+      "nome": "Marinide",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "1/8",
+      "pe": 25,
+      "pagina": 373,
+      "file": "mostri/marinide.json"
+    },
+    "medusa": {
+      "nome": "Medusa",
+      "tipo": "mostruosità",
+      "taglia": "Media",
+      "cr": "6",
+      "pe": 2300,
+      "pagina": 373,
+      "file": "mostri/medusa.json"
+    },
+    "megera_marina": {
+      "nome": "Megera marina",
+      "tipo": "folletto",
+      "taglia": "Media",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 374,
+      "file": "mostri/megera_marina.json"
+    },
+    "megera_notturna": {
+      "nome": "Megera notturna",
+      "tipo": "immondo",
+      "taglia": "Media",
+      "cr": "5",
+      "pe": 1800,
+      "pagina": 375,
+      "file": "mostri/megera_notturna.json"
+    },
+    "megera_verde": {
+      "nome": "Megera verde",
+      "tipo": "folletto",
+      "taglia": "Media",
+      "cr": "3",
+      "pe": 700,
+      "pagina": 375,
+      "file": "mostri/megera_verde.json"
+    },
+    "ameba_paglierina": {
+      "nome": "Ameba paglierina",
+      "tipo": "melma",
+      "taglia": "Grande",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 376,
+      "file": "mostri/ameba_paglierina.json"
+    },
+    "cubo_gelatinoso": {
+      "nome": "Cubo gelatinoso",
+      "tipo": "melma",
+      "taglia": "Grande",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 376,
+      "file": "mostri/cubo_gelatinoso.json"
+    },
+    "melma_grigia": {
+      "nome": "Melma grigia",
+      "tipo": "melma",
+      "taglia": "Media",
+      "cr": "1/2",
+      "pe": 100,
+      "pagina": 377,
+      "file": "mostri/melma_grigia.json"
+    },
+    "protoplasma_nero": {
+      "nome": "Protoplasma nero",
+      "tipo": "melma",
+      "taglia": "Grande",
+      "cr": "4",
+      "pe": 1100,
+      "pagina": 377,
+      "file": "mostri/protoplasma_nero.json"
+    },
+    "mephit_del_ghiaccio": {
+      "nome": "Mephit del ghiaccio",
+      "tipo": "elementale",
+      "taglia": "Piccola",
+      "cr": "1/2",
+      "pe": 100,
+      "pagina": 378,
+      "file": "mostri/mephit_del_ghiaccio.json"
+    },
+    "mephit_del_magma": {
+      "nome": "Mephit del magma",
+      "tipo": "elementale",
+      "taglia": "Piccola",
+      "cr": "1/2",
+      "pe": 100,
+      "pagina": 378,
+      "file": "mostri/mephit_del_magma.json"
+    },
+    "mephit_del_vapore": {
+      "nome": "Mephit del vapore",
+      "tipo": "elementale",
+      "taglia": "Piccola",
+      "cr": "1/4",
+      "pe": 50,
+      "pagina": 379,
+      "file": "mostri/mephit_del_vapore.json"
+    },
+    "mephit_della_polvere": {
+      "nome": "Mephit della polvere",
+      "tipo": "elementale",
+      "taglia": "Piccola",
+      "cr": "1/2",
+      "pe": 100,
+      "pagina": 379,
+      "file": "mostri/mephit_della_polvere.json"
+    },
+    "merrow": {
+      "nome": "Merrow",
+      "tipo": "mostruosità",
+      "taglia": "Grande",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 380,
+      "file": "mostri/merrow.json"
+    },
+    "mimic": {
+      "nome": "Mimic",
+      "tipo": "mostruosità",
+      "taglia": "Media",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 380,
+      "file": "mostri/mimic.json"
+    },
+    "minotauro": {
+      "nome": "Minotauro",
+      "tipo": "mostruosità",
+      "taglia": "Grande",
+      "cr": "3",
+      "pe": 700,
+      "pagina": 380,
+      "file": "mostri/minotauro.json"
+    },
+    "mummia": {
+      "nome": "Mummia",
+      "tipo": "non morto",
+      "taglia": "Media",
+      "cr": "3",
+      "pe": 700,
+      "pagina": 381,
+      "file": "mostri/mummia.json"
+    },
+    "signore_delle_mummie": {
+      "nome": "Signore delle mummie",
+      "tipo": "non morto",
+      "taglia": "Media",
+      "cr": "15",
+      "pe": 13000,
+      "pagina": 381,
+      "file": "mostri/signore_delle_mummie.json"
+    },
+    "naga_guardiana": {
+      "nome": "Naga guardiana",
+      "tipo": "mostruosità",
+      "taglia": "Grande",
+      "cr": "10",
+      "pe": 5900,
+      "pagina": 383,
+      "file": "mostri/naga_guardiana.json"
+    },
+    "naga_spirituale": {
+      "nome": "Naga spirituale",
+      "tipo": "mostruosità",
+      "taglia": "Grande",
+      "cr": "8",
+      "pe": 3900,
+      "pagina": 383,
+      "file": "mostri/naga_spirituale.json"
+    },
+    "armatura_animata": {
+      "nome": "Armatura animata",
+      "tipo": "costrutto",
+      "taglia": "Media",
+      "cr": "1",
+      "pe": 200,
+      "pagina": 384,
+      "file": "mostri/armatura_animata.json"
+    },
+    "spada_volante": {
+      "nome": "Spada volante",
+      "tipo": "costrutto",
+      "taglia": "Piccola",
+      "cr": "1/4",
+      "pe": 50,
+      "pagina": 384,
+      "file": "mostri/spada_volante.json"
+    },
+    "tappeto_soffocante": {
+      "nome": "Tappeto soffocante",
+      "tipo": "costrutto",
+      "taglia": "Grande",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 385,
+      "file": "mostri/tappeto_soffocante.json"
+    },
+    "ogre": {
+      "nome": "Ogre",
+      "tipo": "gigante",
+      "taglia": "Grande",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 385,
+      "file": "mostri/ogre.json"
+    },
+    "ombra": {
+      "nome": "Ombra",
+      "tipo": "non morto",
+      "taglia": "Media",
+      "cr": "1/2",
+      "pe": 100,
+      "pagina": 385,
+      "file": "mostri/ombra.json"
+    },
+    "omuncolo": {
+      "nome": "Omuncolo",
+      "tipo": "costrutto",
+      "taglia": "Minuscola",
+      "cr": "0",
+      "pe": 10,
+      "pagina": 386,
+      "file": "mostri/omuncolo.json"
+    },
+    "oni": {
+      "nome": "Oni",
+      "tipo": "gigante",
+      "taglia": "Grande",
+      "cr": "7",
+      "pe": 2900,
+      "pagina": 386,
+      "file": "mostri/oni.json"
+    },
+    "orco": {
+      "nome": "Orco",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "1/2",
+      "pe": 100,
+      "pagina": 387,
+      "file": "mostri/orco.json"
+    },
+    "orsogufo": {
+      "nome": "Orsogufo",
+      "tipo": "mostruosità",
+      "taglia": "Grande",
+      "cr": "3",
+      "pe": 700,
+      "pagina": 387,
+      "file": "mostri/orsogufo.json"
+    },
+    "otyugh": {
+      "nome": "Otyugh",
+      "tipo": "aberrazione",
+      "taglia": "Grande",
+      "cr": "5",
+      "pe": 1800,
+      "pagina": 387,
+      "file": "mostri/otyugh.json"
+    },
+    "pegaso": {
+      "nome": "Pegaso",
+      "tipo": "celestiale",
+      "taglia": "Grande",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 388,
+      "file": "mostri/pegaso.json"
+    },
+    "pseudodrago": {
+      "nome": "Pseudodrago",
+      "tipo": "drago",
+      "taglia": "Minuscola",
+      "cr": "1/4",
+      "pe": 50,
+      "pagina": 388,
+      "file": "mostri/pseudodrago.json"
+    },
+    "rakshasa": {
+      "nome": "Rakshasa",
+      "tipo": "immondo",
+      "taglia": "Media",
+      "cr": "13",
+      "pe": 10000,
+      "pagina": 388,
+      "file": "mostri/rakshasa.json"
+    },
+    "remorhaz": {
+      "nome": "Remorhaz",
+      "tipo": "mostruosità",
+      "taglia": "Enorme",
+      "cr": "11",
+      "pe": 7200,
+      "pagina": 389,
+      "file": "mostri/remorhaz.json"
+    },
+    "roc": {
+      "nome": "Roc",
+      "tipo": "mostruosità",
+      "taglia": "Mastodontica",
+      "cr": "11",
+      "pe": 7200,
+      "pagina": 390,
+      "file": "mostri/roc.json"
+    },
+    "rugginofago": {
+      "nome": "Rugginofago",
+      "tipo": "mostruosità",
+      "taglia": "Media",
+      "cr": "1/2",
+      "pe": 100,
+      "pagina": 390,
+      "file": "mostri/rugginofago.json"
+    },
+    "sahuagin": {
+      "nome": "Sahuagin",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "1/2",
+      "pe": 100,
+      "pagina": 390,
+      "file": "mostri/sahuagin.json"
+    },
+    "salamandra": {
+      "nome": "Salamandra",
+      "tipo": "elementale",
+      "taglia": "Grande",
+      "cr": "5",
+      "pe": 1800,
+      "pagina": 391,
+      "file": "mostri/salamandra.json"
+    },
+    "satiro": {
+      "nome": "Satiro",
+      "tipo": "folletto",
+      "taglia": "Media",
+      "cr": "1/2",
+      "pe": 100,
+      "pagina": 391,
+      "file": "mostri/satiro.json"
+    },
+    "scheletro": {
+      "nome": "Scheletro",
+      "tipo": "non morto",
+      "taglia": "Media",
+      "cr": "1/4",
+      "pe": 50,
+      "pagina": 392,
+      "file": "mostri/scheletro.json"
+    },
+    "scheletro_di_cavallo_da_guerra": {
+      "nome": "Scheletro di cavallo da guerra",
+      "tipo": "non morto",
+      "taglia": "Grande",
+      "cr": "1/2",
+      "pe": 100,
+      "pagina": 392,
+      "file": "mostri/scheletro_di_cavallo_da_guerra.json"
+    },
+    "scheletro_di_minotauro": {
+      "nome": "Scheletro di minotauro",
+      "tipo": "non morto",
+      "taglia": "Grande",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 392,
+      "file": "mostri/scheletro_di_minotauro.json"
+    },
+    "segugio_infernale": {
+      "nome": "Segugio infernale",
+      "tipo": "immondo",
+      "taglia": "Media",
+      "cr": "3",
+      "pe": 700,
+      "pagina": 392,
+      "file": "mostri/segugio_infernale.json"
+    },
+    "androsfinge": {
+      "nome": "Androsfinge",
+      "tipo": "mostruosità",
+      "taglia": "Grande",
+      "cr": "17",
+      "pe": 18000,
+      "pagina": 393,
+      "file": "mostri/androsfinge.json"
+    },
+    "ginosfinge": {
+      "nome": "Ginosfinge",
+      "tipo": "mostruosità",
+      "taglia": "Grande",
+      "cr": "11",
+      "pe": 7200,
+      "pagina": 394,
+      "file": "mostri/ginosfinge.json"
+    },
+    "spettro": {
+      "nome": "Spettro",
+      "tipo": "non morto",
+      "taglia": "Media",
+      "cr": "1",
+      "pe": 200,
+      "pagina": 395,
+      "file": "mostri/spettro.json"
+    },
+    "spiritello": {
+      "nome": "Spiritello",
+      "tipo": "folletto",
+      "taglia": "Minuscola",
+      "cr": "1/4",
+      "pe": 50,
+      "pagina": 395,
+      "file": "mostri/spiritello.json"
+    },
+    "succube_incubo": {
+      "nome": "Succube/Incubo",
+      "tipo": "immondo",
+      "taglia": "Media",
+      "cr": "4",
+      "pe": 1100,
+      "pagina": 395,
+      "file": "mostri/succube_incubo.json"
+    },
+    "tarrasque": {
+      "nome": "Tarrasque",
+      "tipo": "mostruosità",
+      "taglia": "Mastodontica",
+      "cr": "30",
+      "pe": 155000,
+      "pagina": 396,
+      "file": "mostri/tarrasque.json"
+    },
+    "testuggine_dragona": {
+      "nome": "Testuggine dragona",
+      "tipo": "drago",
+      "taglia": "Mastodontica",
+      "cr": "17",
+      "pe": 18000,
+      "pagina": 397,
+      "file": "mostri/testuggine_dragona.json"
+    },
+    "treant": {
+      "nome": "Treant",
+      "tipo": "vegetale",
+      "taglia": "Enorme",
+      "cr": "9",
+      "pe": 5000,
+      "pagina": 398,
+      "file": "mostri/treant.json"
+    },
+    "troll": {
+      "nome": "Troll",
+      "tipo": "gigante",
+      "taglia": "Grande",
+      "cr": "5",
+      "pe": 1800,
+      "pagina": 398,
+      "file": "mostri/troll.json"
+    },
+    "uccello_stigeo": {
+      "nome": "Uccello stigeo",
+      "tipo": "bestia",
+      "taglia": "Minuscola",
+      "cr": "1/8",
+      "pe": 25,
+      "pagina": 399,
+      "file": "mostri/uccello_stigeo.json"
+    },
+    "unicorno": {
+      "nome": "Unicorno",
+      "tipo": "celestiale",
+      "taglia": "Grande",
+      "cr": "5",
+      "pe": 1800,
+      "pagina": 399,
+      "file": "mostri/unicorno.json"
+    },
+    "progenie_vampirica": {
+      "nome": "Progenie vampirica",
+      "tipo": "non morto",
+      "taglia": "Media",
+      "cr": "5",
+      "pe": 1800,
+      "pagina": 400,
+      "file": "mostri/progenie_vampirica.json"
+    },
+    "vampiro": {
+      "nome": "Vampiro",
+      "tipo": "non morto",
+      "taglia": "Media",
+      "cr": "13",
+      "pe": 10000,
+      "pagina": 400,
+      "file": "mostri/vampiro.json"
+    },
+    "verme_purpureo": {
+      "nome": "Verme purpureo",
+      "tipo": "mostruosità",
+      "taglia": "Mastodontica",
+      "cr": "15",
+      "pe": 13000,
+      "pagina": 402,
+      "file": "mostri/verme_purpureo.json"
+    },
+    "viverna": {
+      "nome": "Viverna",
+      "tipo": "drago",
+      "taglia": "Grande",
+      "cr": "6",
+      "pe": 2300,
+      "pagina": 402,
+      "file": "mostri/viverna.json"
+    },
+    "wight": {
+      "nome": "Wight",
+      "tipo": "non morto",
+      "taglia": "Media",
+      "cr": "3",
+      "pe": 700,
+      "pagina": 403,
+      "file": "mostri/wight.json"
+    },
+    "wraith": {
+      "nome": "Wraith",
+      "tipo": "non morto",
+      "taglia": "Media",
+      "cr": "5",
+      "pe": 1800,
+      "pagina": 403,
+      "file": "mostri/wraith.json"
+    },
+    "xorn": {
+      "nome": "Xorn",
+      "tipo": "elementale",
+      "taglia": "Media",
+      "cr": "5",
+      "pe": 1800,
+      "pagina": 404,
+      "file": "mostri/xorn.json"
+    },
+    "zombi": {
+      "nome": "Zombi",
+      "tipo": "non morto",
+      "taglia": "Media",
+      "cr": "1/4",
+      "pe": 50,
+      "pagina": 404,
+      "file": "mostri/zombi.json"
+    },
+    "zombi_ogre": {
+      "nome": "Zombi ogre",
+      "tipo": "non morto",
+      "taglia": "Grande",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 405,
+      "file": "mostri/zombi_ogre.json"
+    },
+    "albero_risvegliato": {
+      "nome": "Albero risvegliato",
+      "tipo": "vegetale",
+      "taglia": "Enorme",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 414,
+      "file": "mostri/albero_risvegliato.json"
+    },
+    "alce": {
+      "nome": "Alce",
+      "tipo": "bestia",
+      "taglia": "Grande",
+      "cr": "1/4",
+      "pe": 50,
+      "pagina": 414,
+      "file": "mostri/alce.json"
+    },
+    "alce_gigante": {
+      "nome": "Alce gigante",
+      "tipo": "bestia",
+      "taglia": "Enorme",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 414,
+      "file": "mostri/alce_gigante.json"
+    },
+    "aquila": {
+      "nome": "Aquila",
+      "tipo": "bestia",
+      "taglia": "Piccola",
+      "cr": "0",
+      "pe": 10,
+      "pagina": 415,
+      "file": "mostri/aquila.json"
+    },
+    "aquila_gigante": {
+      "nome": "Aquila gigante",
+      "tipo": "bestia",
+      "taglia": "Grande",
+      "cr": "1",
+      "pe": 200,
+      "pagina": 415,
+      "file": "mostri/aquila_gigante.json"
+    },
+    "avvoltoio": {
+      "nome": "Avvoltoio",
+      "tipo": "bestia",
+      "taglia": "Media",
+      "cr": "0",
+      "pe": 10,
+      "pagina": 415,
+      "file": "mostri/avvoltoio.json"
+    },
+    "avvoltoio_gigante": {
+      "nome": "Avvoltoio gigante",
+      "tipo": "bestia",
+      "taglia": "Grande",
+      "cr": "1",
+      "pe": 200,
+      "pagina": 416,
+      "file": "mostri/avvoltoio_gigante.json"
+    },
+    "babbuino": {
+      "nome": "Babbuino",
+      "tipo": "bestia",
+      "taglia": "Piccola",
+      "cr": "0",
+      "pe": 10,
+      "pagina": 416,
+      "file": "mostri/babbuino.json"
+    },
+    "beccoaguzzo": {
+      "nome": "Beccoaguzzo",
+      "tipo": "bestia",
+      "taglia": "Grande",
+      "cr": "1/4",
+      "pe": 50,
+      "pagina": 416,
+      "file": "mostri/beccoaguzzo.json"
+    },
+    "cammello": {
+      "nome": "Cammello",
+      "tipo": "bestia",
+      "taglia": "Grande",
+      "cr": "1/8",
+      "pe": 25,
+      "pagina": 417,
+      "file": "mostri/cammello.json"
+    },
+    "cane_della_morte": {
+      "nome": "Cane della morte",
+      "tipo": "mostruosità",
+      "taglia": "Media",
+      "cr": "1",
+      "pe": 200,
+      "pagina": 417,
+      "file": "mostri/cane_della_morte.json"
+    },
+    "cane_intermittente": {
+      "nome": "Cane intermittente",
+      "tipo": "folletto",
+      "taglia": "Media",
+      "cr": "1/4",
+      "pe": 50,
+      "pagina": 417,
+      "file": "mostri/cane_intermittente.json"
+    },
+    "capra": {
+      "nome": "Capra",
+      "tipo": "bestia",
+      "taglia": "Media",
+      "cr": "0",
+      "pe": 10,
+      "pagina": 418,
+      "file": "mostri/capra.json"
+    },
+    "capra_gigante": {
+      "nome": "Capra gigante",
+      "tipo": "bestia",
+      "taglia": "Grande",
+      "cr": "1/2",
+      "pe": 100,
+      "pagina": 418,
+      "file": "mostri/capra_gigante.json"
+    },
+    "cavallo_da_galoppo": {
+      "nome": "Cavallo da galoppo",
+      "tipo": "bestia",
+      "taglia": "Grande",
+      "cr": "1/4",
+      "pe": 50,
+      "pagina": 418,
+      "file": "mostri/cavallo_da_galoppo.json"
+    },
+    "cavallo_da_guerra": {
+      "nome": "Cavallo da guerra",
+      "tipo": "bestia",
+      "taglia": "Grande",
+      "cr": "1/2",
+      "pe": 100,
+      "pagina": 418,
+      "file": "mostri/cavallo_da_guerra.json"
+    },
+    "cavallo_da_tiro": {
+      "nome": "Cavallo da tiro",
+      "tipo": "bestia",
+      "taglia": "Grande",
+      "cr": "1/4",
+      "pe": 50,
+      "pagina": 419,
+      "file": "mostri/cavallo_da_tiro.json"
+    },
+    "cavalluccio_marino": {
+      "nome": "Cavalluccio marino",
+      "tipo": "bestia",
+      "taglia": "Minuscola",
+      "cr": "0",
+      "pe": 0,
+      "pagina": 419,
+      "file": "mostri/cavalluccio_marino.json"
+    },
+    "cavalluccio_marino_gigante": {
+      "nome": "Cavalluccio marino gigante",
+      "tipo": "bestia",
+      "taglia": "Grande",
+      "cr": "1/2",
+      "pe": 100,
+      "pagina": 419,
+      "file": "mostri/cavalluccio_marino_gigante.json"
+    },
+    "cespuglio_risvegliato": {
+      "nome": "Cespuglio risvegliato",
+      "tipo": "vegetale",
+      "taglia": "Piccola",
+      "cr": "0",
+      "pe": 10,
+      "pagina": 419,
+      "file": "mostri/cespuglio_risvegliato.json"
+    },
+    "cinghiale": {
+      "nome": "Cinghiale",
+      "tipo": "bestia",
+      "taglia": "Media",
+      "cr": "1/4",
+      "pe": 50,
+      "pagina": 420,
+      "file": "mostri/cinghiale.json"
+    },
+    "cinghiale_gigante": {
+      "nome": "Cinghiale gigante",
+      "tipo": "bestia",
+      "taglia": "Grande",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 420,
+      "file": "mostri/cinghiale_gigante.json"
+    },
+    "coccodrillo": {
+      "nome": "Coccodrillo",
+      "tipo": "bestia",
+      "taglia": "Grande",
+      "cr": "1/2",
+      "pe": 100,
+      "pagina": 420,
+      "file": "mostri/coccodrillo.json"
+    },
+    "coccodrillo_gigante": {
+      "nome": "Coccodrillo gigante",
+      "tipo": "bestia",
+      "taglia": "Enorme",
+      "cr": "5",
+      "pe": 1800,
+      "pagina": 421,
+      "file": "mostri/coccodrillo_gigante.json"
+    },
+    "corvo": {
+      "nome": "Corvo",
+      "tipo": "bestia",
+      "taglia": "Minuscola",
+      "cr": "0",
+      "pe": 10,
+      "pagina": 421,
+      "file": "mostri/corvo.json"
+    },
+    "daino": {
+      "nome": "Daino",
+      "tipo": "bestia",
+      "taglia": "Media",
+      "cr": "0",
+      "pe": 10,
+      "pagina": 421,
+      "file": "mostri/daino.json"
+    },
+    "elefante": {
+      "nome": "Elefante",
+      "tipo": "bestia",
+      "taglia": "Enorme",
+      "cr": "4",
+      "pe": 1100,
+      "pagina": 421,
+      "file": "mostri/elefante.json"
+    },
+    "faina": {
+      "nome": "Faina",
+      "tipo": "bestia",
+      "taglia": "Minuscola",
+      "cr": "0",
+      "pe": 10,
+      "pagina": 422,
+      "file": "mostri/faina.json"
+    },
+    "faina_gigante": {
+      "nome": "Faina gigante",
+      "tipo": "bestia",
+      "taglia": "Media",
+      "cr": "1/8",
+      "pe": 25,
+      "pagina": 422,
+      "file": "mostri/faina_gigante.json"
+    },
+    "falco": {
+      "nome": "Falco",
+      "tipo": "bestia",
+      "taglia": "Minuscola",
+      "cr": "0",
+      "pe": 10,
+      "pagina": 422,
+      "file": "mostri/falco.json"
+    },
+    "falco_di_sangue": {
+      "nome": "Falco di sangue",
+      "tipo": "bestia",
+      "taglia": "Piccola",
+      "cr": "1/8",
+      "pe": 25,
+      "pagina": 422,
+      "file": "mostri/falco_di_sangue.json"
+    },
+    "gatto": {
+      "nome": "Gatto",
+      "tipo": "bestia",
+      "taglia": "Minuscola",
+      "cr": "0",
+      "pe": 10,
+      "pagina": 423,
+      "file": "mostri/gatto.json"
+    },
+    "gorilla": {
+      "nome": "Gorilla",
+      "tipo": "bestia",
+      "taglia": "Media",
+      "cr": "1/2",
+      "pe": 100,
+      "pagina": 423,
+      "file": "mostri/gorilla.json"
+    },
+    "gorilla_gigante": {
+      "nome": "Gorilla gigante",
+      "tipo": "bestia",
+      "taglia": "Enorme",
+      "cr": "7",
+      "pe": 2900,
+      "pagina": 423,
+      "file": "mostri/gorilla_gigante.json"
+    },
+    "granchio": {
+      "nome": "Granchio",
+      "tipo": "bestia",
+      "taglia": "Minuscola",
+      "cr": "0",
+      "pe": 10,
+      "pagina": 424,
+      "file": "mostri/granchio.json"
+    },
+    "granchio_gigante": {
+      "nome": "Granchio gigante",
+      "tipo": "bestia",
+      "taglia": "Media",
+      "cr": "1/8",
+      "pe": 25,
+      "pagina": 424,
+      "file": "mostri/granchio_gigante.json"
+    },
+    "gufo": {
+      "nome": "Gufo",
+      "tipo": "bestia",
+      "taglia": "Minuscola",
+      "cr": "0",
+      "pe": 10,
+      "pagina": 424,
+      "file": "mostri/gufo.json"
+    },
+    "gufo_gigante": {
+      "nome": "Gufo gigante",
+      "tipo": "bestia",
+      "taglia": "Grande",
+      "cr": "1/4",
+      "pe": 50,
+      "pagina": 424,
+      "file": "mostri/gufo_gigante.json"
+    },
+    "iena": {
+      "nome": "Iena",
+      "tipo": "bestia",
+      "taglia": "Media",
+      "cr": "0",
+      "pe": 10,
+      "pagina": 425,
+      "file": "mostri/iena.json"
+    },
+    "iena_gigante": {
+      "nome": "Iena gigante",
+      "tipo": "bestia",
+      "taglia": "Grande",
+      "cr": "1",
+      "pe": 200,
+      "pagina": 425,
+      "file": "mostri/iena_gigante.json"
+    },
+    "leone": {
+      "nome": "Leone",
+      "tipo": "bestia",
+      "taglia": "Grande",
+      "cr": "1",
+      "pe": 200,
+      "pagina": 425,
+      "file": "mostri/leone.json"
+    },
+    "lucertola": {
+      "nome": "Lucertola",
+      "tipo": "bestia",
+      "taglia": "Minuscola",
+      "cr": "0",
+      "pe": 10,
+      "pagina": 426,
+      "file": "mostri/lucertola.json"
+    },
+    "lucertola_gigante": {
+      "nome": "Lucertola gigante",
+      "tipo": "bestia",
+      "taglia": "Grande",
+      "cr": "1/4",
+      "pe": 50,
+      "pagina": 426,
+      "file": "mostri/lucertola_gigante.json"
+    },
+    "lupo": {
+      "nome": "Lupo",
+      "tipo": "bestia",
+      "taglia": "Media",
+      "cr": "1/4",
+      "pe": 50,
+      "pagina": 426,
+      "file": "mostri/lupo.json"
+    },
+    "lupo_feroce": {
+      "nome": "Lupo feroce",
+      "tipo": "bestia",
+      "taglia": "Grande",
+      "cr": "1",
+      "pe": 200,
+      "pagina": 426,
+      "file": "mostri/lupo_feroce.json"
+    },
+    "lupo_invernale": {
+      "nome": "Lupo invernale",
+      "tipo": "mostruosità",
+      "taglia": "Grande",
+      "cr": "3",
+      "pe": 700,
+      "pagina": 427,
+      "file": "mostri/lupo_invernale.json"
+    },
+    "mammut": {
+      "nome": "Mammut",
+      "tipo": "bestia",
+      "taglia": "Enorme",
+      "cr": "6",
+      "pe": 2300,
+      "pagina": 427,
+      "file": "mostri/mammut.json"
+    },
+    "mastino": {
+      "nome": "Mastino",
+      "tipo": "bestia",
+      "taglia": "Media",
+      "cr": "1/8",
+      "pe": 25,
+      "pagina": 428,
+      "file": "mostri/mastino.json"
+    },
+    "millepiedi_gigante": {
+      "nome": "Millepiedi gigante",
+      "tipo": "bestia",
+      "taglia": "Piccola",
+      "cr": "1/4",
+      "pe": 50,
+      "pagina": 428,
+      "file": "mostri/millepiedi_gigante.json"
+    },
+    "mulo": {
+      "nome": "Mulo",
+      "tipo": "bestia",
+      "taglia": "Media",
+      "cr": "1/8",
+      "pe": 25,
+      "pagina": 428,
+      "file": "mostri/mulo.json"
+    },
+    "orca_assassina": {
+      "nome": "Orca assassina",
+      "tipo": "bestia",
+      "taglia": "Enorme",
+      "cr": "3",
+      "pe": 700,
+      "pagina": 428,
+      "file": "mostri/orca_assassina.json"
+    },
+    "orso_bruno": {
+      "nome": "Orso bruno",
+      "tipo": "bestia",
+      "taglia": "Grande",
+      "cr": "1",
+      "pe": 200,
+      "pagina": 429,
+      "file": "mostri/orso_bruno.json"
+    },
+    "orso_nero": {
+      "nome": "Orso nero",
+      "tipo": "bestia",
+      "taglia": "Media",
+      "cr": "1/2",
+      "pe": 100,
+      "pagina": 429,
+      "file": "mostri/orso_nero.json"
+    },
+    "orso_polare": {
+      "nome": "Orso polare",
+      "tipo": "bestia",
+      "taglia": "Grande",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 429,
+      "file": "mostri/orso_polare.json"
+    },
+    "pantera": {
+      "nome": "Pantera",
+      "tipo": "bestia",
+      "taglia": "Media",
+      "cr": "1/4",
+      "pe": 50,
+      "pagina": 430,
+      "file": "mostri/pantera.json"
+    },
+    "piovra": {
+      "nome": "Piovra",
+      "tipo": "bestia",
+      "taglia": "Piccola",
+      "cr": "0",
+      "pe": 10,
+      "pagina": 430,
+      "file": "mostri/piovra.json"
+    },
+    "piovra_gigante": {
+      "nome": "Piovra gigante",
+      "tipo": "bestia",
+      "taglia": "Grande",
+      "cr": "1",
+      "pe": 200,
+      "pagina": 430,
+      "file": "mostri/piovra_gigante.json"
+    },
+    "pipistrello": {
+      "nome": "Pipistrello",
+      "tipo": "bestia",
+      "taglia": "Minuscola",
+      "cr": "0",
+      "pe": 10,
+      "pagina": 431,
+      "file": "mostri/pipistrello.json"
+    },
+    "pipistrello_gigante": {
+      "nome": "Pipistrello gigante",
+      "tipo": "bestia",
+      "taglia": "Grande",
+      "cr": "1/4",
+      "pe": 50,
+      "pagina": 431,
+      "file": "mostri/pipistrello_gigante.json"
+    },
+    "pony": {
+      "nome": "Pony",
+      "tipo": "bestia",
+      "taglia": "Media",
+      "cr": "1/8",
+      "pe": 25,
+      "pagina": 431,
+      "file": "mostri/pony.json"
+    },
+    "quipper": {
+      "nome": "Quipper",
+      "tipo": "bestia",
+      "taglia": "Minuscola",
+      "cr": "0",
+      "pe": 10,
+      "pagina": 431,
+      "file": "mostri/quipper.json"
+    },
+    "ragno": {
+      "nome": "Ragno",
+      "tipo": "bestia",
+      "taglia": "Minuscola",
+      "cr": "0",
+      "pe": 10,
+      "pagina": 432,
+      "file": "mostri/ragno.json"
+    },
+    "ragno_gigante": {
+      "nome": "Ragno gigante",
+      "tipo": "bestia",
+      "taglia": "Grande",
+      "cr": "1",
+      "pe": 200,
+      "pagina": 432,
+      "file": "mostri/ragno_gigante.json"
+    },
+    "ragno_lupo_gigante": {
+      "nome": "Ragno lupo gigante",
+      "tipo": "bestia",
+      "taglia": "Media",
+      "cr": "1/4",
+      "pe": 50,
+      "pagina": 433,
+      "file": "mostri/ragno_lupo_gigante.json"
+    },
+    "ragno_fase": {
+      "nome": "Ragno-fase",
+      "tipo": "mostruosità",
+      "taglia": "Grande",
+      "cr": "3",
+      "pe": 700,
+      "pagina": 433,
+      "file": "mostri/ragno_fase.json"
+    },
+    "rana": {
+      "nome": "Rana",
+      "tipo": "bestia",
+      "taglia": "Minuscola",
+      "cr": "0",
+      "pe": 0,
+      "pagina": 434,
+      "file": "mostri/rana.json"
+    },
+    "rana_gigante": {
+      "nome": "Rana gigante",
+      "tipo": "bestia",
+      "taglia": "Media",
+      "cr": "1/4",
+      "pe": 50,
+      "pagina": 434,
+      "file": "mostri/rana_gigante.json"
+    },
+    "rinoceronte": {
+      "nome": "Rinoceronte",
+      "tipo": "bestia",
+      "taglia": "Grande",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 434,
+      "file": "mostri/rinoceronte.json"
+    },
+    "rospo_gigante": {
+      "nome": "Rospo gigante",
+      "tipo": "bestia",
+      "taglia": "Grande",
+      "cr": "1",
+      "pe": 200,
+      "pagina": 435,
+      "file": "mostri/rospo_gigante.json"
+    },
+    "scarabeo_di_fuoco_gigante": {
+      "nome": "Scarabeo di fuoco gigante",
+      "tipo": "bestia",
+      "taglia": "Piccola",
+      "cr": "0",
+      "pe": 10,
+      "pagina": 435,
+      "file": "mostri/scarabeo_di_fuoco_gigante.json"
+    },
+    "sciacallo": {
+      "nome": "Sciacallo",
+      "tipo": "bestia",
+      "taglia": "Piccola",
+      "cr": "0",
+      "pe": 10,
+      "pagina": 435,
+      "file": "mostri/sciacallo.json"
+    },
+    "sciame_di_corvi": {
+      "nome": "Sciame di corvi",
+      "tipo": "sciame di bestie minuscole",
+      "taglia": "Media",
+      "cr": "1/4",
+      "pe": 50,
+      "pagina": 436,
+      "file": "mostri/sciame_di_corvi.json"
+    },
+    "sciame_di_insetti": {
+      "nome": "Sciame di insetti",
+      "tipo": "sciame di bestie minuscole",
+      "taglia": "Media",
+      "cr": "1/2",
+      "pe": 100,
+      "pagina": 436,
+      "file": "mostri/sciame_di_insetti.json"
+    },
+    "sciame_di_pipistrelli": {
+      "nome": "Sciame di pipistrelli",
+      "tipo": "sciame di bestie minuscole",
+      "taglia": "Media",
+      "cr": "1/4",
+      "pe": 50,
+      "pagina": 436,
+      "file": "mostri/sciame_di_pipistrelli.json"
+    },
+    "sciame_di_quipper": {
+      "nome": "Sciame di quipper",
+      "tipo": "sciame di bestie minuscole",
+      "taglia": "Media",
+      "cr": "1",
+      "pe": 200,
+      "pagina": 437,
+      "file": "mostri/sciame_di_quipper.json"
+    },
+    "sciame_di_serpenti_velenosi": {
+      "nome": "Sciame di serpenti velenosi",
+      "tipo": "sciame di bestie minuscole",
+      "taglia": "Media",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 437,
+      "file": "mostri/sciame_di_serpenti_velenosi.json"
+    },
+    "sciame_di_topi": {
+      "nome": "Sciame di topi",
+      "tipo": "sciame di bestie minuscole",
+      "taglia": "Media",
+      "cr": "1/4",
+      "pe": 50,
+      "pagina": 438,
+      "file": "mostri/sciame_di_topi.json"
+    },
+    "scorpione": {
+      "nome": "Scorpione",
+      "tipo": "bestia",
+      "taglia": "Minuscola",
+      "cr": "0",
+      "pe": 10,
+      "pagina": 438,
+      "file": "mostri/scorpione.json"
+    },
+    "scorpione_gigante": {
+      "nome": "Scorpione gigante",
+      "tipo": "bestia",
+      "taglia": "Grande",
+      "cr": "3",
+      "pe": 700,
+      "pagina": 438,
+      "file": "mostri/scorpione_gigante.json"
+    },
+    "serpente_stritolatore": {
+      "nome": "Serpente stritolatore",
+      "tipo": "bestia",
+      "taglia": "Grande",
+      "cr": "1/4",
+      "pe": 50,
+      "pagina": 438,
+      "file": "mostri/serpente_stritolatore.json"
+    },
+    "serpente_stritolatore_gigante": {
+      "nome": "Serpente stritolatore gigante",
+      "tipo": "bestia",
+      "taglia": "Enorme",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 439,
+      "file": "mostri/serpente_stritolatore_gigante.json"
+    },
+    "serpente_velenoso": {
+      "nome": "Serpente velenoso",
+      "tipo": "bestia",
+      "taglia": "Minuscola",
+      "cr": "1/8",
+      "pe": 25,
+      "pagina": 439,
+      "file": "mostri/serpente_velenoso.json"
+    },
+    "serpente_velenoso_gigante": {
+      "nome": "Serpente velenoso gigante",
+      "tipo": "bestia",
+      "taglia": "Media",
+      "cr": "1/4",
+      "pe": 50,
+      "pagina": 439,
+      "file": "mostri/serpente_velenoso_gigante.json"
+    },
+    "serpente_volante": {
+      "nome": "Serpente volante",
+      "tipo": "bestia",
+      "taglia": "Minuscola",
+      "cr": "1/8",
+      "pe": 25,
+      "pagina": 439,
+      "file": "mostri/serpente_volante.json"
+    },
+    "squalo_cacciatore": {
+      "nome": "Squalo cacciatore",
+      "tipo": "bestia",
+      "taglia": "Grande",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 440,
+      "file": "mostri/squalo_cacciatore.json"
+    },
+    "squalo_gigante": {
+      "nome": "Squalo gigante",
+      "tipo": "bestia",
+      "taglia": "Enorme",
+      "cr": "5",
+      "pe": 1800,
+      "pagina": 440,
+      "file": "mostri/squalo_gigante.json"
+    },
+    "squalo_tropicale": {
+      "nome": "Squalo tropicale",
+      "tipo": "bestia",
+      "taglia": "Media",
+      "cr": "1/2",
+      "pe": 100,
+      "pagina": 440,
+      "file": "mostri/squalo_tropicale.json"
+    },
+    "tasso": {
+      "nome": "Tasso",
+      "tipo": "bestia",
+      "taglia": "Minuscola",
+      "cr": "0",
+      "pe": 10,
+      "pagina": 441,
+      "file": "mostri/tasso.json"
+    },
+    "tasso_gigante": {
+      "nome": "Tasso gigante",
+      "tipo": "bestia",
+      "taglia": "Media",
+      "cr": "1/4",
+      "pe": 50,
+      "pagina": 441,
+      "file": "mostri/tasso_gigante.json"
+    },
+    "tigre": {
+      "nome": "Tigre",
+      "tipo": "bestia",
+      "taglia": "Grande",
+      "cr": "1",
+      "pe": 200,
+      "pagina": 441,
+      "file": "mostri/tigre.json"
+    },
+    "tigre_dai_denti_a_sciabola": {
+      "nome": "Tigre dai denti a sciabola",
+      "tipo": "bestia",
+      "taglia": "Grande",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 442,
+      "file": "mostri/tigre_dai_denti_a_sciabola.json"
+    },
+    "topo": {
+      "nome": "Topo",
+      "tipo": "bestia",
+      "taglia": "Minuscola",
+      "cr": "0",
+      "pe": 10,
+      "pagina": 442,
+      "file": "mostri/topo.json"
+    },
+    "topo_gigante": {
+      "nome": "Topo gigante",
+      "tipo": "bestia",
+      "taglia": "Piccola",
+      "cr": "1/8",
+      "pe": 25,
+      "pagina": 442,
+      "file": "mostri/topo_gigante.json"
+    },
+    "vespa_gigante": {
+      "nome": "Vespa gigante",
+      "tipo": "bestia",
+      "taglia": "Media",
+      "cr": "1/2",
+      "pe": 100,
+      "pagina": 443,
+      "file": "mostri/vespa_gigante.json"
+    },
+    "worg": {
+      "nome": "Worg",
+      "tipo": "mostruosità",
+      "taglia": "Grande",
+      "cr": "1/2",
+      "pe": 100,
+      "pagina": 443,
+      "file": "mostri/worg.json"
+    },
+    "accolito": {
+      "nome": "Accolito",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "1/4",
+      "pe": 50,
+      "pagina": 444,
+      "file": "mostri/accolito.json"
+    },
+    "arcimago": {
+      "nome": "Arcimago",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "12",
+      "pe": 8400,
+      "pagina": 444,
+      "file": "mostri/arcimago.json"
+    },
+    "assassino": {
+      "nome": "Assassino",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "8",
+      "pe": 3900,
+      "pagina": 445,
+      "file": "mostri/assassino.json"
+    },
+    "bandito": {
+      "nome": "Bandito",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "1/8",
+      "pe": 25,
+      "pagina": 446,
+      "file": "mostri/bandito.json"
+    },
+    "berserker": {
+      "nome": "Berserker",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 446,
+      "file": "mostri/berserker.json"
+    },
+    "capo_dei_banditi": {
+      "nome": "Capo dei banditi",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 446,
+      "file": "mostri/capo_dei_banditi.json"
+    },
+    "cavaliere": {
+      "nome": "Cavaliere",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "3",
+      "pe": 700,
+      "pagina": 447,
+      "file": "mostri/cavaliere.json"
+    },
+    "combattente_tribale": {
+      "nome": "Combattente tribale",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "1/8",
+      "pe": 25,
+      "pagina": 447,
+      "file": "mostri/combattente_tribale.json"
+    },
+    "cultista": {
+      "nome": "Cultista",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "1/8",
+      "pe": 25,
+      "pagina": 448,
+      "file": "mostri/cultista.json"
+    },
+    "cultista_fanatico": {
+      "nome": "Cultista fanatico",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 448,
+      "file": "mostri/cultista_fanatico.json"
+    },
+    "druido": {
+      "nome": "Druido",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 449,
+      "file": "mostri/druido.json"
+    },
+    "esploratore": {
+      "nome": "Esploratore",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "1/2",
+      "pe": 100,
+      "pagina": 449,
+      "file": "mostri/esploratore.json"
+    },
+    "gladiatore": {
+      "nome": "Gladiatore",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "5",
+      "pe": 1800,
+      "pagina": 449,
+      "file": "mostri/gladiatore.json"
+    },
+    "guardia": {
+      "nome": "Guardia",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "1/8",
+      "pe": 25,
+      "pagina": 450,
+      "file": "mostri/guardia.json"
+    },
+    "mago": {
+      "nome": "Mago",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "6",
+      "pe": 2300,
+      "pagina": 450,
+      "file": "mostri/mago.json"
+    },
+    "malvivente": {
+      "nome": "Malvivente",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "1/2",
+      "pe": 100,
+      "pagina": 451,
+      "file": "mostri/malvivente.json"
+    },
+    "nobile": {
+      "nome": "Nobile",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "1/8",
+      "pe": 25,
+      "pagina": 451,
+      "file": "mostri/nobile.json"
+    },
+    "popolano": {
+      "nome": "Popolano",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "0",
+      "pe": 10,
+      "pagina": 451,
+      "file": "mostri/popolano.json"
+    },
+    "sacerdote": {
+      "nome": "Sacerdote",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "2",
+      "pe": 450,
+      "pagina": 452,
+      "file": "mostri/sacerdote.json"
+    },
+    "spia": {
+      "nome": "Spia",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "1",
+      "pe": 200,
+      "pagina": 452,
+      "file": "mostri/spia.json"
+    },
+    "veterano": {
+      "nome": "Veterano",
+      "tipo": "umanoide",
+      "taglia": "Media",
+      "cr": "3",
+      "pe": 700,
+      "pagina": 453,
+      "file": "mostri/veterano.json"
+    }
+  }
+}

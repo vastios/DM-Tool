@@ -1,0 +1,96 @@
+{
+  "id": "treant",
+  "nome": "Treant",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 398
+  },
+  "tipo": "vegetale",
+  "taglia": "Enorme",
+  "allineamento": "caotico buono",
+  "caratteristiche": {
+    "for": 23,
+    "des": 8,
+    "cos": 21,
+    "int": 12,
+    "sag": 16,
+    "car": 12
+  },
+  "modificatori": {
+    "for": 6,
+    "des": -1,
+    "cos": 5,
+    "int": 1,
+    "sag": 3,
+    "car": 1
+  },
+  "ca": 16,
+  "ca_tipo": "armatura naturale",
+  "pf": 138,
+  "pf_dadi": "12d12 + 60",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "vulnerabilita_danni": "fuoco",
+  "sensi": "Percezione passiva 13",
+  "percezione_passiva": 13,
+  "linguaggi": "Comune, Druidico, Elfico, Silvano",
+  "cr": "9",
+  "pe": 5000,
+  "bonus_competenza": 4,
+  "tratti": [
+    {
+      "nome": "Falso aspetto",
+      "testo": "Finché il treant rimane immobile, non è possibile distinguerlo da un normale albero."
+    },
+    {
+      "nome": "Mostro da assedio",
+      "testo": "Il treant infligge danni doppi a oggetti e strutture."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il treant effettua due attacchi con schianto."
+    },
+    {
+      "nome": "Schianto",
+      "testo": "Attacco con arma da mischia: +10 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 16 (3d6 + 6) danni contundenti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 10,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 16,
+            "dadi": "3d6 + 6",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Roccia",
+      "testo": "Attacco con arma a distanza: +10 al tiro per colpire, gittata 18/54 m, un bersaglio. Colpito: 28 (4d10 + 6) danni contundenti.",
+      "attacco": {
+        "tipo": "distanza",
+        "tiro": 10,
+        "portata": "18/54 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 28,
+            "dadi": "4d10 + 6",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Fronde animate",
+      "testo": "Il treant anima magicamente uno o due alberi nel suo campo visivo in un raggio di 18 metri. Questi alberi possiedono le stesse statistiche del treant, a eccezione dei punteggi di Intelligenza e Carisma pari a 1. Inoltre, non possono parlare e possiedono soltanto l'opzione di azione Schianto. Un albero animato funge da alleato del treant. L'albero rimane animato per 1 giorno o finché non muore, fin quando il treant muore o si trova a più di 36 metri dall'albero, oppure finché il treant non compie un'azione bonus per trasformarlo di nuovo in un albero inanimato. Dopodiché, qualora possibile, l'albero mette radici.",
+      "uso": "1/giorno"
+    }
+  ]
+}

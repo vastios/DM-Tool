@@ -1,0 +1,86 @@
+{
+  "id": "aquila_gigante",
+  "nome": "Aquila gigante",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 415
+  },
+  "tipo": "bestia",
+  "taglia": "Grande",
+  "allineamento": "neutrale buona",
+  "caratteristiche": {
+    "for": 16,
+    "des": 17,
+    "cos": 13,
+    "int": 8,
+    "sag": 14,
+    "car": 10
+  },
+  "modificatori": {
+    "for": 3,
+    "des": 3,
+    "cos": 1,
+    "int": -1,
+    "sag": 2,
+    "car": 0
+  },
+  "ca": 13,
+  "pf": 26,
+  "pf_dadi": "4d10 + 4",
+  "velocita": {
+    "camminare": "3 m",
+    "volare": "24 m"
+  },
+  "sensi": "Percezione passiva 14",
+  "percezione_passiva": 14,
+  "linguaggi": "Aquila Gigante, capisce il Comune e l'Auran ma non li parla",
+  "cr": "1",
+  "pe": 200,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Vista acuta",
+      "testo": "L'aquila dispone di vantaggio alle prove di Saggezza (Percezione) basate sulla vista."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "L'aquila effettua due attacchi: uno con il becco e uno con gli artigli."
+    },
+    {
+      "nome": "Artigli",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 10 (2d6 + 3) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 10,
+            "dadi": "2d6 + 3",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Becco",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 6 (1d6 + 3) danni perforanti.\naquila gigante Un' è una nobile creatura che parla un proprio linguaggio e capisce il Comune. Una coppia di aquile giganti solitamente custodisce fino a quattro uova o cuccioli nel nido (considerati come aquile normali).",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 6,
+            "dadi": "1d6 + 3",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

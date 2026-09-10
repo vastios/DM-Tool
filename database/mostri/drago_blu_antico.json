@@ -1,0 +1,161 @@
+{
+  "id": "drago_blu_antico",
+  "nome": "Drago blu antico",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 337
+  },
+  "tipo": "drago",
+  "taglia": "Mastodontica",
+  "allineamento": "legale malvagio",
+  "caratteristiche": {
+    "for": 29,
+    "des": 10,
+    "cos": 27,
+    "int": 18,
+    "sag": 17,
+    "car": 21
+  },
+  "modificatori": {
+    "for": 9,
+    "des": 0,
+    "cos": 8,
+    "int": 4,
+    "sag": 3,
+    "car": 5
+  },
+  "ca": 22,
+  "ca_tipo": "armatura naturale",
+  "pf": 481,
+  "pf_dadi": "26d20 + 208",
+  "velocita": {
+    "camminare": "12 m",
+    "scavare": "12 m",
+    "volare": "24 m"
+  },
+  "competenze": {
+    "furtività": 17,
+    "percezione": 7
+  },
+  "immunita_danni": "fulmine",
+  "sensi": "Percezione passiva 27, scurovisione 36 m, vista cieca 18 m",
+  "percezione_passiva": 27,
+  "linguaggi": "Comune, Draconico",
+  "cr": "23",
+  "pe": 50000,
+  "bonus_competenza": 7,
+  "tratti": [
+    {
+      "nome": "Resistenza leggendaria",
+      "testo": "Se il drago fallisce un tiro salvezza, può scegliere di superarlo comunque.",
+      "uso": "3/giorno"
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il drago può usare la sua Presenza terrificante. Poi effettua tre attacchi: uno con il morso e due con gli artigli."
+    },
+    {
+      "nome": "Artiglio",
+      "testo": "Attacco con arma da mischia: +16 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 16 (2d6 + 9) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 16,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 16,
+            "dadi": "2d6 + 9",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Coda",
+      "testo": "Attacco con arma da mischia: +16 al tiro per colpire, portata 6 m, un bersaglio. Colpito: 18 (2d8 + 9) danni contundenti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 16,
+        "portata": "6 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 18,
+            "dadi": "2d8 + 9",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +16 al tiro per colpire, portata 4,5 m, un bersaglio. Colpito: 20 (2d10 + 9) danni perforanti più 11 (2d10) danni da fulmine.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 16,
+        "portata": "4",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 20,
+            "dadi": "2d10 + 9",
+            "tipo": "perforanti"
+          },
+          {
+            "media": 11,
+            "dadi": "2d10",
+            "tipo": "fulmine"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Presenza terrificante",
+      "testo": "Ogni creatura a scelta del drago situata entro 36 metri da esso e consapevole della sua presenza deve superare un tiro salvezza su Saggezza con CD 20, altrimenti è spaventata per 1 minuto. La creatura può ripetere il tiro salvezza alla fine di ogni suo turno e, se lo supera, l'effetto svanisce. Se una creatura supera il tiro salvezza o se l'effetto per lei termina, è immune alla Presenza terrificante del drago per le 24 ore successive.",
+      "salvataggio": {
+        "caratteristica": "sag",
+        "cd": 20
+      }
+    },
+    {
+      "nome": "Soffio di fulmini",
+      "testo": "Il drago esala una scarica di fulmini lunga 36 metri e larga 3 metri. Ogni creatura su quella linea deve effettuare un tiro salvezza su Destrezza con CD 23, subendo 88 (16d10) danni da fulmine in caso di fallimento, o la metà dei danni in caso di successo.",
+      "uso": "ricarica 5–6",
+      "salvataggio": {
+        "caratteristica": "des",
+        "cd": 23,
+        "danno_fallimento": {
+          "media": 88,
+          "dadi": "16d10",
+          "tipo": "fulmine"
+        },
+        "successo": "metà danni"
+      }
+    }
+  ],
+  "azioni_leggendarie": {
+    "intro": "Il drago può eseguire 3 azioni leggendarie a scelta tra le opzioni seguenti. È possibile utilizzare solo un'opzione di azione leggendaria alla volta e soltanto alla fine del turno di un'altra creatura. All'inizio del proprio turno, il drago recupera le azioni leggendarie effettuate.",
+    "opzioni": [
+      {
+        "nome": "Attacco di coda",
+        "testo": "Il drago effettua un attacco con la coda."
+      },
+      {
+        "nome": "Individuazione",
+        "testo": "Il drago effettua una prova di Saggezza (Percezione)."
+      },
+      {
+        "nome": "Attacco d'ala",
+        "testo": "Il drago sbatte le ali. Ogni creatura entro 4,5 metri dal drago deve superare un tiro salvezza su Destrezza con CD 24, altrimenti subisce 16 (2d6 + 9) danni contundenti e cade a terra prona. Il drago può poi volare fino a metà della sua velocità di volare.",
+        "uso": "costa 2 azioni",
+        "salvataggio": {
+          "caratteristica": "des",
+          "cd": 24
+        }
+      }
+    ]
+  }
+}

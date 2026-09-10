@@ -1,0 +1,90 @@
+{
+  "id": "ettin",
+  "nome": "Ettin",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 351
+  },
+  "tipo": "gigante",
+  "taglia": "Grande",
+  "allineamento": "caotico malvagio",
+  "caratteristiche": {
+    "for": 21,
+    "des": 8,
+    "cos": 17,
+    "int": 6,
+    "sag": 10,
+    "car": 8
+  },
+  "modificatori": {
+    "for": 5,
+    "des": -1,
+    "cos": 3,
+    "int": -2,
+    "sag": 0,
+    "car": -1
+  },
+  "ca": 12,
+  "ca_tipo": "armatura naturale",
+  "pf": 85,
+  "pf_dadi": "10d10 + 30",
+  "velocita": {
+    "camminare": "12 m"
+  },
+  "sensi": "Percezione passiva 14, scurovisione 18 m",
+  "percezione_passiva": 14,
+  "linguaggi": "Gigante, Orchesco",
+  "cr": "4",
+  "pe": 1100,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Bicefalo",
+      "testo": "L'ettin dispone di vantaggio alle prove di Saggezza (Percezione) e ai tiri salvezza contro le condizioni accecato, affascinato, assordato, privo di sensi, spaventato e stordito."
+    },
+    {
+      "nome": "Sempre all'erta",
+      "testo": "Quando una delle due teste dell'ettin dorme, l'altra testa è sveglia."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "L'ettin effettua due attacchi: uno con l'ascia da battaglia e uno con la mazza chiodata."
+    },
+    {
+      "nome": "Ascia da battaglia",
+      "testo": "Attacco con arma da mischia: +7 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 14 (2d8 + 5) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 14,
+            "dadi": "2d8 + 5",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Mazza chiodata",
+      "testo": "Attacco con arma da mischia: +7 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 14 (2d8 + 5) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 14,
+            "dadi": "2d8 + 5",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "id": "wraith",
+  "nome": "Wraith",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 403
+  },
+  "tipo": "non morto",
+  "taglia": "Media",
+  "allineamento": "neutrale malvagio",
+  "caratteristiche": {
+    "for": 6,
+    "des": 16,
+    "cos": 16,
+    "int": 12,
+    "sag": 14,
+    "car": 15
+  },
+  "modificatori": {
+    "for": -2,
+    "des": 3,
+    "cos": 3,
+    "int": 1,
+    "sag": 2,
+    "car": 2
+  },
+  "ca": 13,
+  "pf": 67,
+  "pf_dadi": "9d8 + 27",
+  "velocita": {
+    "camminare": "0 m",
+    "volare": "18 m (fluttuare)"
+  },
+  "immunita_danni": "necrotici, veleno",
+  "immunita_condizioni": "affascinato, afferrato, avvelenato, indebolimento, paralizzato, pietrificato, prono, trattenuto",
+  "sensi": "Percezione passiva 12, scurovisione 18 m",
+  "percezione_passiva": 12,
+  "linguaggi": "quelli conosciuti in vita",
+  "cr": "5",
+  "pe": 1800,
+  "bonus_competenza": 3,
+  "tratti": [
+    {
+      "nome": "Movimento incorporeo",
+      "testo": "Il wraith può muoversi attraverso altre creature e oggetti come se fossero terreno difficile. Subisce 5 (1d10) danni da forza se termina il proprio turno all'interno di un oggetto."
+    },
+    {
+      "nome": "Sensibilità al sole",
+      "testo": "Finché è esposto alla luce del sole, il wraith subisce svantaggio ai tiri per colpire, oltre che alle prove di Saggezza (Percezione) basate sulla vista."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Risucchio di vita",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 1,5 m, una creatura. Colpito: 21 (4d8 + 3) danni necrotici. Il bersaglio deve superare un tiro salvezza su Costituzione con CD 14, o i suoi punti ferita massimi vengono ridotti di un importo pari al danno subito. Questa riduzione dura finché il bersaglio non completa un riposo lungo. Il bersaglio muore se questo effetto riduce a 0 i suoi punti ferita massimi.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura",
+        "danni": [
+          {
+            "media": 21,
+            "dadi": "4d8 + 3",
+            "tipo": "necrotici"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 14
+      }
+    },
+    {
+      "nome": "Creare spettro",
+      "testo": "Il wraith bersaglia un umanoide situato entro 3 metri da lui, che non abbia perso la vita da più di 1 minuto e che sia morto di morte violenta. Lo spirito del bersaglio si anima come spettro nello spazio del suo cadavere o nello spazio libero più vicino. Lo spettro è sotto il controllo del wraith. Il wraith non può controllare più di sette spettri simultaneamente."
+    }
+  ]
+}

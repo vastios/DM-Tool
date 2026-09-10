@@ -1,0 +1,122 @@
+{
+  "id": "sacerdote",
+  "nome": "Sacerdote",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 452
+  },
+  "tipo": "umanoide",
+  "descrittore": "qualsiasi razza",
+  "taglia": "Media",
+  "allineamento": "qualsiasi allineamento",
+  "caratteristiche": {
+    "for": 10,
+    "des": 10,
+    "cos": 12,
+    "int": 13,
+    "sag": 16,
+    "car": 13
+  },
+  "modificatori": {
+    "for": 0,
+    "des": 0,
+    "cos": 1,
+    "int": 1,
+    "sag": 3,
+    "car": 1
+  },
+  "ca": 13,
+  "ca_tipo": "giaco di maglia",
+  "pf": 27,
+  "pf_dadi": "5d8 + 5",
+  "velocita": {
+    "camminare": "5 m"
+  },
+  "sensi": "Percezione passiva 13",
+  "percezione_passiva": 13,
+  "linguaggi": "due qualsiasi",
+  "cr": "2",
+  "pe": 450,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Eminenza divina",
+      "testo": "Come azione bonus, il sacerdote può spendere uno slot incantesimo per fare in modo che i suoi attacchi con arma da mischia infliggano magicamente 10 (3d6) danni radiosi extra a un bersaglio se vanno a segno. Questo beneficio permane fino alla fine del turno. Se il sacerdote spende uno slot incantesimo di livello pari o superiore al 2°, i danni extra aumentano di 1d6 per ogni livello oltre il 1°."
+    },
+    {
+      "nome": "Incantesimi",
+      "testo": "Il sacerdote è un incantatore di 5° livello: la sua caratteristica da incantatore è Saggezza (CD del tiro salvezza sull'incantesimo 13, +5 al tiro per colpire con attacco con incantesimo). Ha a disposizione i seguenti incantesimi da chierico: Trucchetti (a volontà): fiamma sacra, luce, taumaturgia 1° livello (4 slot): cura ferite, dardo tracciante, santuario 2° livello (3 slot): arma spirituale, ristorare inferiore 3° livello (2 slot): dissolvi magie, guardiani spirituali",
+      "incantesimi": {
+        "testo": "Il sacerdote è un incantatore di 5° livello: la sua caratteristica da incantatore è Saggezza (CD del tiro salvezza sull'incantesimo 13, +5 al tiro per colpire con attacco con incantesimo). Ha a disposizione i seguenti incantesimi da chierico: Trucchetti (a volontà): fiamma sacra, luce, taumaturgia 1° livello (4 slot): cura ferite, dardo tracciante, santuario 2° livello (3 slot): arma spirituale, ristorare inferiore 3° livello (2 slot): dissolvi magie, guardiani spirituali",
+        "gruppi": [
+          {
+            "tipo": "livello",
+            "livello": 5,
+            "incantesimi": [
+              "la sua caratteristica da incantatore è Saggezza (CD del tiro salvezza sull'incantesimo 13",
+              "+5 al tiro per colpire con attacco con incantesimo). Ha a disposizione i seguenti incantesimi da chierico:"
+            ]
+          },
+          {
+            "frequenza": "a volontà",
+            "tipo": "trucchetti",
+            "incantesimi": [
+              "fiamma sacra",
+              "luce",
+              "taumaturgia"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 1,
+            "slot": 4,
+            "incantesimi": [
+              "cura ferite",
+              "dardo tracciante",
+              "santuario"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 2,
+            "slot": 3,
+            "incantesimi": [
+              "arma spirituale",
+              "ristorare inferiore"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 3,
+            "slot": 2,
+            "incantesimi": [
+              "dissolvi magie",
+              "guardiani spirituali"
+            ]
+          }
+        ],
+        "caratteristica": "sag",
+        "cd": 13
+      }
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Mazza",
+      "testo": "Attacco con arma da mischia: +2 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 3 (1d6) danni contundenti.\nsacerdoti I diffondono gli insegnamenti delle loro divinità presso la gente comune. Sono i capi spirituali dei templi e dei santuari e spesso rivestono un ruolo influente all'interno delle loro comunità. I sacerdoti malvagi potrebbero lavorare apertamente sotto un tiranno, oppure potrebbero essere i capi di sette religiose nascoste nell'ombra della buona società, sovrintendendo a riti depravati. Un sacerdote in genere ha uno o più accoliti ad aiutarlo con le cerimonie religiose e altri doveri sacri.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 2,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 3,
+            "dadi": "1d6",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    }
+  ]
+}

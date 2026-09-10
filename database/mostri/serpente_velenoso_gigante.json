@@ -1,0 +1,69 @@
+{
+  "id": "serpente_velenoso_gigante",
+  "nome": "Serpente velenoso gigante",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 439
+  },
+  "tipo": "bestia",
+  "taglia": "Media",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 10,
+    "des": 18,
+    "cos": 13,
+    "int": 2,
+    "sag": 10,
+    "car": 3
+  },
+  "modificatori": {
+    "for": 0,
+    "des": 4,
+    "cos": 1,
+    "int": -4,
+    "sag": 0,
+    "car": -4
+  },
+  "ca": 14,
+  "pf": 11,
+  "pf_dadi": "2d8 + 2",
+  "velocita": {
+    "camminare": "9 m",
+    "nuotare": "9 m"
+  },
+  "sensi": "Percezione passiva 12, vista cieca 3 m",
+  "percezione_passiva": 12,
+  "linguaggi": "—",
+  "cr": "1/4",
+  "pe": 50,
+  "bonus_competenza": 2,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia : +6 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 6 (1d4 + 4) danni perforanti e il bersaglio deve effettuare un tiro salvezza su Costituzione con CD 11 subendo 10 (3d6) danni da veleno in caso di fallimento, o la metà in caso di successo.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 6,
+            "dadi": "1d4 + 4",
+            "tipo": "perforanti e"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 11,
+        "danno_fallimento": {
+          "media": 10,
+          "dadi": "3d6",
+          "tipo": "veleno"
+        }
+      }
+    }
+  ]
+}

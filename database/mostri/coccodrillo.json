@@ -1,0 +1,66 @@
+{
+  "id": "coccodrillo",
+  "nome": "Coccodrillo",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 420
+  },
+  "tipo": "bestia",
+  "taglia": "Grande",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 15,
+    "des": 10,
+    "cos": 13,
+    "int": 2,
+    "sag": 10,
+    "car": 5
+  },
+  "modificatori": {
+    "for": 2,
+    "des": 0,
+    "cos": 1,
+    "int": -4,
+    "sag": 0,
+    "car": -3
+  },
+  "ca": 12,
+  "ca_tipo": "armatura naturale",
+  "pf": 19,
+  "pf_dadi": "3d10 + 3",
+  "velocita": {
+    "camminare": "6 m",
+    "nuotare": "9 m"
+  },
+  "sensi": "Percezione passiva 10",
+  "percezione_passiva": 10,
+  "linguaggi": "—",
+  "cr": "1/2",
+  "pe": 100,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Apnea",
+      "testo": "Il coccodrillo può trattenere il respiro per 15 minuti."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, una creatura. Colpito: 7 (1d10 + 2) danni perforanti e il bersaglio viene afferrato (CD 12 per sfuggire). Finché la presa perdura, il bersaglio viene trattenuto e il coccodrillo non può morderne un altro.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura",
+        "danni": [
+          {
+            "media": 7,
+            "dadi": "1d10 + 2",
+            "tipo": "perforanti e"
+          }
+        ]
+      }
+    }
+  ]
+}

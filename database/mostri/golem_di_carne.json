@@ -1,0 +1,89 @@
+{
+  "id": "golem_di_carne",
+  "nome": "Golem di carne",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 360
+  },
+  "tipo": "costrutto",
+  "taglia": "Media",
+  "allineamento": "neutrale",
+  "caratteristiche": {
+    "for": 19,
+    "des": 9,
+    "cos": 18,
+    "int": 6,
+    "sag": 10,
+    "car": 5
+  },
+  "modificatori": {
+    "for": 4,
+    "des": -1,
+    "cos": 4,
+    "int": -2,
+    "sag": 0,
+    "car": -3
+  },
+  "ca": 9,
+  "pf": 93,
+  "pf_dadi": "11d8 + 44",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "immunita_condizioni": "affascinato, avvelenato, indebolimento, paralizzato, pietrificato, spaventato",
+  "sensi": "Percezione passiva 10, scurovisione 18 m",
+  "percezione_passiva": 10,
+  "linguaggi": "comprende i linguaggi del suo creatore ma non li sa parlare",
+  "cr": "5",
+  "pe": 1800,
+  "bonus_competenza": 3,
+  "tratti": [
+    {
+      "nome": "Armi magiche",
+      "testo": "Gli attacchi con arma del golem sono magici."
+    },
+    {
+      "nome": "Assorbimento del fulmine",
+      "testo": ". Ogni volta che il golem è soggetto a danni da fulmine, non subisce danni e anzi recupera un numero di punti ferita pari ai danni da fulmine inflitti."
+    },
+    {
+      "nome": "Avversione al fuoco",
+      "testo": "Se il golem subisce danni da fuoco, ha svantaggio ai tiri per colpire e alle prove di caratteristica fino alla fine del suo turno successivo."
+    },
+    {
+      "nome": "Berserk",
+      "testo": "Ogni volta che il golem inizia il suo turno con 40 punti ferita o meno, si tira un d6. Con un risultato di 6, il golem entra in uno stato di berserk. A ogni suo turno, finché è in stato di berserk, il golem attacca la creatura visibile più vicina. Se nessuna creatura è abbastanza vicina per un attacco, il golem prende di mira un oggetto, prediligendone uno più piccolo di lui. Una volta che il golem è in stato di berserk, non si arresta finché non viene distrutto o non recupera tutti i suoi punti ferita. Il creatore del golem, se si trova entro 18 metri dal golem berserk, può cercare di calmarlo parlandogli con fermezza e persuasione. Il golem deve essere in grado di udire il suo creatore, che userà un'azione per effettuare una prova di Carisma (Persuasione) con CD 15. Se la supera, il golem esce dallo stato di berserk. Se subisce danni mentre ha ancora 40 punti ferita o meno, il golem potrebbe entrare di nuovo in quello stato."
+    },
+    {
+      "nome": "Forma immutabile",
+      "testo": "Il golem è immune a qualsiasi incantesimo o effetto che ne altererebbe la forma."
+    },
+    {
+      "nome": "Resistenza alla magia",
+      "testo": "Il golem dispone di vantaggio ai tiri salvezza contro incantesimi e altri effetti magici."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il golem effettua due attacchi con schianto."
+    },
+    {
+      "nome": "Schianto",
+      "testo": "Attacco con arma da mischia: +7 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 13 (2d8 + 4) danni contundenti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 13,
+            "dadi": "2d8 + 4",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    }
+  ]
+}

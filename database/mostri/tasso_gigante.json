@@ -1,0 +1,84 @@
+{
+  "id": "tasso_gigante",
+  "nome": "Tasso gigante",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 441
+  },
+  "tipo": "bestia",
+  "taglia": "Media",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 13,
+    "des": 10,
+    "cos": 15,
+    "int": 2,
+    "sag": 12,
+    "car": 5
+  },
+  "modificatori": {
+    "for": 1,
+    "des": 0,
+    "cos": 2,
+    "int": -4,
+    "sag": 1,
+    "car": -3
+  },
+  "ca": 10,
+  "pf": 13,
+  "pf_dadi": "2d8 + 4",
+  "velocita": {
+    "camminare": "9 m",
+    "scavare": "3 m"
+  },
+  "linguaggi": "—",
+  "cr": "1/4",
+  "pe": 50,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Olfatto acuto",
+      "testo": "Il tasso dispone di vantaggio alle prove di Saggezza (Percezione) basate sull'olfatto."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il tasso effettua due attacchi: uno con il morso e uno con gli artigli."
+    },
+    {
+      "nome": "Artigli",
+      "testo": "Attacco con arma da mischia: +3 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 6 (2d4 + 1) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 3,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 6,
+            "dadi": "2d4 + 1",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +3 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 4 (1d6 + 1) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 3,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 4,
+            "dadi": "1d6 + 1",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

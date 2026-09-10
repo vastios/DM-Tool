@@ -1,0 +1,69 @@
+{
+  "id": "gufo",
+  "nome": "Gufo",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 424
+  },
+  "tipo": "bestia",
+  "taglia": "Minuscola",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 3,
+    "des": 13,
+    "cos": 8,
+    "int": 2,
+    "sag": 12,
+    "car": 7
+  },
+  "modificatori": {
+    "for": -4,
+    "des": 1,
+    "cos": -1,
+    "int": -4,
+    "sag": 1,
+    "car": -2
+  },
+  "ca": 11,
+  "pf": 1,
+  "pf_dadi": "1d4 - 1",
+  "velocita": {
+    "camminare": "5 m",
+    "volare": "18 m"
+  },
+  "sensi": "Percezione passiva 13, scurovisione 36 m",
+  "percezione_passiva": 13,
+  "linguaggi": "—",
+  "cr": "0",
+  "pe": 10,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Sfuggente",
+      "testo": "Il gufo non provoca attacchi d'opportunità quando vola oltre la portata di un nemico."
+    },
+    {
+      "nome": "Udito e vista acuti",
+      "testo": "Il gufo dispone di vantaggio alle prove di Saggezza (Percezione) basate sulla vista o sull'udito."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Artigli",
+      "testo": "Attacco con arma da mischia: +3 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 1 danno tagliente.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 3,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 1,
+            "dadi": "1",
+            "tipo": "tagliente"
+          }
+        ]
+      }
+    }
+  ]
+}

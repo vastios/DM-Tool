@@ -1,0 +1,63 @@
+{
+  "id": "babbuino",
+  "nome": "Babbuino",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 416
+  },
+  "tipo": "bestia",
+  "taglia": "Piccola",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 8,
+    "des": 14,
+    "cos": 11,
+    "int": 4,
+    "sag": 12,
+    "car": 6
+  },
+  "modificatori": {
+    "for": -1,
+    "des": 2,
+    "cos": 0,
+    "int": -3,
+    "sag": 1,
+    "car": -2
+  },
+  "ca": 12,
+  "pf": 3,
+  "pf_dadi": "1d6",
+  "velocita": {
+    "camminare": "9 m",
+    "scalare": "9 m"
+  },
+  "linguaggi": "—",
+  "cr": "0",
+  "pe": 10,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Tattiche del branco",
+      "testo": "Il babbuino dispone di un vantaggio nel tiro per colpire contro una creatura se almeno uno degli alleati del babbuino si trova entro 1,5 metri dalla creatura e non è incapacitato."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +1 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 1 (1d4 - 1) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 1,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 1,
+            "dadi": "1d4 - 1",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

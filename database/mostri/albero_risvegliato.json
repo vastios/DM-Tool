@@ -1,0 +1,66 @@
+{
+  "id": "albero_risvegliato",
+  "nome": "Albero risvegliato",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 414
+  },
+  "tipo": "vegetale",
+  "taglia": "Enorme",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 19,
+    "des": 6,
+    "cos": 15,
+    "int": 10,
+    "sag": 10,
+    "car": 7
+  },
+  "modificatori": {
+    "for": 4,
+    "des": -2,
+    "cos": 2,
+    "int": 0,
+    "sag": 0,
+    "car": -2
+  },
+  "ca": 13,
+  "ca_tipo": "armatura naturale",
+  "pf": 59,
+  "pf_dadi": "7d12 + 14",
+  "velocita": {
+    "camminare": "6 m"
+  },
+  "resistenze_danni": "contundenti, perforanti",
+  "sensi": "Percezione passiva 10",
+  "percezione_passiva": 10,
+  "linguaggi": "un linguaggio conosciuto dal suo creatore",
+  "cr": "2",
+  "pe": 450,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Falso aspetto",
+      "testo": "Finché questo essere rimane immobile, non è possibile distinguerlo da un normale albero."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Schianto",
+      "testo": "Attacco con arma da mischia : +6 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 14 (3d6 + 4) danni contundenti.\nalbero risvegliato Un è un albero comune diventato senziente e in grado di muoversi grazie all'incantesimo risveglio o ad altre magie simili.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 14,
+            "dadi": "3d6 + 4",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    }
+  ]
+}

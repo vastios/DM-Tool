@@ -1,0 +1,69 @@
+{
+  "id": "cane_intermittente",
+  "nome": "Cane intermittente",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 417
+  },
+  "tipo": "folletto",
+  "taglia": "Media",
+  "allineamento": "legale buono",
+  "caratteristiche": {
+    "for": 12,
+    "des": 17,
+    "cos": 12,
+    "int": 10,
+    "sag": 13,
+    "car": 11
+  },
+  "modificatori": {
+    "for": 1,
+    "des": 3,
+    "cos": 1,
+    "int": 0,
+    "sag": 1,
+    "car": 0
+  },
+  "ca": 13,
+  "pf": 22,
+  "pf_dadi": "4d8 + 4",
+  "velocita": {
+    "camminare": "12 m"
+  },
+  "sensi": "Percezione passiva 13",
+  "percezione_passiva": 13,
+  "linguaggi": "Cane Intermittente, capisce il Silvano ma non lo parla",
+  "cr": "1/4",
+  "pe": 50,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Udito e olfatto acuti",
+      "testo": "Il cane dispone di vantaggio alle prove di Saggezza (Percezione) basate sull'olfatto o sull'udito."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +3 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 4 (1d6 + 1) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 3,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 4,
+            "dadi": "1d6 + 1",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Teletrasporto",
+      "testo": "Il cane si teletrasporta magicamente, insieme a ogni oggetto che indossa o trasporta, fino a uno spazio libero visibile situato entro 12 metri. Prima o dopo essersi teletrasportato, il cane può effettuare un attacco con il morso. Un cane intermittente trae il nome dalla sua capacità di apparire e scomparire da un piano di esistenza, un talento che usa per attaccare con più efficacia ed evitare di essere ferito.",
+      "uso": "ricarica 4–6"
+    }
+  ]
+}

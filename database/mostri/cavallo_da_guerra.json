@@ -1,0 +1,66 @@
+{
+  "id": "cavallo_da_guerra",
+  "nome": "Cavallo da guerra",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 418
+  },
+  "tipo": "bestia",
+  "taglia": "Grande",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 18,
+    "des": 12,
+    "cos": 13,
+    "int": 2,
+    "sag": 12,
+    "car": 7
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 1,
+    "cos": 1,
+    "int": -4,
+    "sag": 1,
+    "car": -2
+  },
+  "ca": 11,
+  "pf": 19,
+  "pf_dadi": "3d10 + 3",
+  "velocita": {
+    "camminare": "18 m"
+  },
+  "linguaggi": "—",
+  "cr": "1/2",
+  "pe": 100,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Carica travolgente",
+      "testo": "Se il cavallo si muove di almeno 6 metri in linea retta verso una creatura e poi la colpisce con un attacco con gli zoccoli nello stesso turno, quel bersaglio deve superare un tiro salvezza su Forza con CD 14, altrimenti cade a terra prono. Se il bersaglio è prono, il cavallo può effettuare un altro attacco con gli zoccoli contro di esso come azione bonus.",
+      "salvataggio": {
+        "caratteristica": "for",
+        "cd": 14
+      }
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Zoccoli",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 11 (2d6 + 4) danni contundenti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 11,
+            "dadi": "2d6 + 4",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,131 @@
+{
+  "id": "balor",
+  "nome": "Balor",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 310
+  },
+  "tipo": "immondo",
+  "descrittore": "demone",
+  "taglia": "Enorme",
+  "allineamento": "caotico malvagio",
+  "caratteristiche": {
+    "for": 26,
+    "des": 15,
+    "cos": 22,
+    "int": 20,
+    "sag": 16,
+    "car": 22
+  },
+  "modificatori": {
+    "for": 8,
+    "des": 2,
+    "cos": 6,
+    "int": 5,
+    "sag": 3,
+    "car": 6
+  },
+  "ca": 19,
+  "ca_tipo": "armatura naturale",
+  "pf": 262,
+  "pf_dadi": "21d12 + 126",
+  "velocita": {
+    "camminare": "12 m",
+    "volare": "24 m"
+  },
+  "resistenze_danni": "freddo, fulmine; contundenti, perforanti e taglienti da attacchi non magici",
+  "immunita_danni": "fuoco, veleno",
+  "immunita_condizioni": "avvelenato",
+  "sensi": "Percezione passiva 13, vista pura 36 m",
+  "percezione_passiva": 13,
+  "linguaggi": "Abissale, telepatia 36 m",
+  "cr": "19",
+  "pe": 22000,
+  "bonus_competenza": 6,
+  "tratti": [
+    {
+      "nome": "Armi magiche",
+      "testo": "Gli attacchi con arma del balor sono magici."
+    },
+    {
+      "nome": "Aura di fuoco",
+      "testo": "All'inizio di ognuno dei turni del balor, ogni creatura situata entro 1,5 metri da lui subisce 10 (3d6) danni da fuoco e gli oggetti infiammabili nell'aura che non sono indossati o trasportati si incendiano. Una creatura che tocchi il balor o lo colpisca con un attacco in mischia mentre si trova entro 1,5 metri da lui subisce 10 (3d6) danni da fuoco."
+    },
+    {
+      "nome": "Resistenza alla magia",
+      "testo": "Il balor dispone di vantaggio ai tiri salvezza contro incantesimi e altri effetti magici."
+    },
+    {
+      "nome": "Spasmi di morte",
+      "testo": "Quando il balor muore, esplode e ogni creatura situata entro 9 metri da lui deve effettuare un tiro salvezza su Destrezza con CD 20, subendo 70 (20d6) danni da fuoco in caso di fallimento, o la metà dei danni in caso di successo. L'esplosione incendia gli oggetti infiammabili in quell'area che non sono indossati o trasportati e distrugge le armi del balor.",
+      "salvataggio": {
+        "caratteristica": "des",
+        "cd": 20,
+        "danno_fallimento": {
+          "media": 70,
+          "dadi": "20d6",
+          "tipo": "fuoco"
+        },
+        "successo": "metà danni"
+      }
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il balor effettua due attacchi: uno con la spada lunga e uno con la frusta."
+    },
+    {
+      "nome": "Frusta",
+      "testo": "Attacco con arma da mischia : +14 al tiro per colpire, portata 9 m, un bersaglio. Colpito: 15 (2d6 + 8) danni taglienti più 10 (3d6) danni da fuoco e il bersaglio deve superare un tiro salvezza su Forza con CD 20, altrimenti verrà tirato fino a 7,5 metri più vicino al balor.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 14,
+        "portata": "9 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 15,
+            "dadi": "2d6 + 8",
+            "tipo": "taglienti"
+          },
+          {
+            "media": 10,
+            "dadi": "3d6",
+            "tipo": "fuoco e"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "for",
+        "cd": 20
+      }
+    },
+    {
+      "nome": "Spada lunga",
+      "testo": "Attacco con arma da mischia : +14 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 21 (3d8 + 8) danni taglienti più 13 (3d8) danni da fulmine. Se il balor mette a segno un colpo critico, tira i dadi per i danni tre volte invece che due.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 14,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 21,
+            "dadi": "3d8 + 8",
+            "tipo": "taglienti"
+          },
+          {
+            "media": 13,
+            "dadi": "3d8",
+            "tipo": "fulmine"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Teletrasporto",
+      "testo": "Il balor si teletrasporta magicamente, insieme a ogni oggetto che indossa o trasporta, fino a uno spazio libero visibile entro 36 metri."
+    }
+  ]
+}

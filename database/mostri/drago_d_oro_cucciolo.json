@@ -1,0 +1,99 @@
+{
+  "id": "drago_d_oro_cucciolo",
+  "nome": "Drago d'oro cucciolo",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 332
+  },
+  "tipo": "drago",
+  "taglia": "Media",
+  "allineamento": "legale buono",
+  "caratteristiche": {
+    "for": 19,
+    "des": 14,
+    "cos": 17,
+    "int": 14,
+    "sag": 11,
+    "car": 16
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 2,
+    "cos": 3,
+    "int": 2,
+    "sag": 0,
+    "car": 3
+  },
+  "ca": 17,
+  "ca_tipo": "armatura naturale",
+  "pf": 60,
+  "pf_dadi": "8d8 + 24",
+  "velocita": {
+    "camminare": "9 m",
+    "nuotare": "9 m",
+    "volare": "18 m"
+  },
+  "competenze": {
+    "furtività": 4,
+    "percezione": 4
+  },
+  "immunita_danni": "fuoco",
+  "sensi": "Percezione passiva 14, scurovisione 18 m, vista cieca 3 m",
+  "percezione_passiva": 14,
+  "linguaggi": "Draconico",
+  "cr": "3",
+  "pe": 700,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Anfibio",
+      "testo": "Il drago può respirare in aria e in acqua."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 9 (1d10 + 4) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 9,
+            "dadi": "1d10 + 4",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Soffi",
+      "testo": "Il drago usa uno dei seguenti soffi.",
+      "uso": "ricarica 5–6"
+    },
+    {
+      "nome": "Soffio di fuoco",
+      "testo": "Il drago esala fuoco in un cono di 4,5 metri. Ogni creatura in quell'area deve effettuare un tiro salvezza su Destrezza con CD 13, subendo 22 (4d10) danni da fuoco in caso di fallimento, o la metà dei danni in caso di successo.",
+      "salvataggio": {
+        "caratteristica": "des",
+        "cd": 13,
+        "danno_fallimento": {
+          "media": 22,
+          "dadi": "4d10",
+          "tipo": "fuoco"
+        },
+        "successo": "metà danni"
+      }
+    },
+    {
+      "nome": "Soffio indebolente",
+      "testo": "Il drago esala gas in un cono di 4,5 metri. Ogni creatura in quell'area deve superare un tiro salvezza su Forza con CD 13, altrimenti subisce svantaggio ai tiri per colpire basati sulla Forza, alle prove di Forza e ai tiri salvezza su Forza per 1 minuto. La creatura può ripetere il tiro salvezza alla fine di ogni suo turno e, se lo supera, l'effetto svanisce. Drago d'ottone",
+      "salvataggio": {
+        "caratteristica": "for",
+        "cd": 13
+      }
+    }
+  ]
+}

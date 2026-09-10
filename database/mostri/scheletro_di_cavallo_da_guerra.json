@@ -1,0 +1,62 @@
+{
+  "id": "scheletro_di_cavallo_da_guerra",
+  "nome": "Scheletro di cavallo da guerra",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 392
+  },
+  "tipo": "non morto",
+  "taglia": "Grande",
+  "allineamento": "legale malvagio",
+  "caratteristiche": {
+    "for": 18,
+    "des": 12,
+    "cos": 15,
+    "int": 2,
+    "sag": 8,
+    "car": 5
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 1,
+    "cos": 2,
+    "int": -4,
+    "sag": -1,
+    "car": -3
+  },
+  "ca": 13,
+  "ca_tipo": "frammenti di bardatura",
+  "pf": 22,
+  "pf_dadi": "3d10 + 6",
+  "velocita": {
+    "camminare": "18 m"
+  },
+  "immunita_danni": "veleno",
+  "immunita_condizioni": "avvelenato, indebolimento",
+  "sensi": "Percezione passiva 9, scurovisione 18 m",
+  "percezione_passiva": 9,
+  "linguaggi": "—",
+  "cr": "1/2",
+  "pe": 100,
+  "bonus_competenza": 2,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Zoccoli",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 11 (2d6 + 4) danni contundenti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 11,
+            "dadi": "2d6 + 4",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    }
+  ]
+}

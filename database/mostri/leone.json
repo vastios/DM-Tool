@@ -1,0 +1,97 @@
+{
+  "id": "leone",
+  "nome": "Leone",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 425
+  },
+  "tipo": "bestia",
+  "taglia": "Grande",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 17,
+    "des": 15,
+    "cos": 13,
+    "int": 3,
+    "sag": 12,
+    "car": 8
+  },
+  "modificatori": {
+    "for": 3,
+    "des": 2,
+    "cos": 1,
+    "int": -4,
+    "sag": 1,
+    "car": -1
+  },
+  "ca": 12,
+  "pf": 26,
+  "pf_dadi": "4d10 + 4",
+  "velocita": {
+    "camminare": "15 m"
+  },
+  "sensi": "Percezione passiva 13",
+  "percezione_passiva": 13,
+  "linguaggi": "—",
+  "cr": "1",
+  "pe": 200,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Balzo",
+      "testo": "Se il leone si muove di almeno 6 metri in linea retta verso una creatura e poi la colpisce con un attacco con gli artigli nello stesso turno, quel bersaglio deve superare un tiro salvezza su Forza con CD 13, altrimenti cade a terra prono. Se il bersaglio è prono, il leone può effettuare un attacco con il morso contro di esso come azione bonus.",
+      "salvataggio": {
+        "caratteristica": "for",
+        "cd": 13
+      }
+    },
+    {
+      "nome": "Balzo in corsa",
+      "testo": "Dopo una rincorsa di 3 metri, il leone può effettuare un salto in lungo di un massimo di 7,5 metri."
+    },
+    {
+      "nome": "Olfatto acuto",
+      "testo": "Il leone dispone di vantaggio alle prove di Saggezza (Percezione) basate sull'olfatto."
+    },
+    {
+      "nome": "Tattiche del branco",
+      "testo": "Il leone dispone di vantaggio a un tiro per colpire contro una creatura se almeno uno degli alleati dell'animale si trova entro 1,5 metri dalla creatura e non è incapacitato."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Artiglio",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 6 (1d6 + 3) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 6,
+            "dadi": "1d6 + 3",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 7 (1d8 + 3) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 7,
+            "dadi": "1d8 + 3",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,186 @@
+{
+  "id": "arcimago",
+  "nome": "Arcimago",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 444
+  },
+  "tipo": "umanoide",
+  "descrittore": "qualsiasi razza",
+  "taglia": "Media",
+  "allineamento": "qualsiasi allineamento",
+  "caratteristiche": {
+    "for": 10,
+    "des": 14,
+    "cos": 12,
+    "int": 20,
+    "sag": 15,
+    "car": 16
+  },
+  "modificatori": {
+    "for": 0,
+    "des": 2,
+    "cos": 1,
+    "int": 5,
+    "sag": 2,
+    "car": 3
+  },
+  "ca": 12,
+  "ca_tipo": "15 con armatura magica",
+  "pf": 99,
+  "pf_dadi": "18d8 + 18",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "competenze": {
+    "arcano": 13,
+    "storia": 13
+  },
+  "resistenze_danni": "danni degli incantesimi; contundenti, perforanti e taglienti non magici (da pelle di pietra )",
+  "sensi": "Percezione passiva 12",
+  "percezione_passiva": 12,
+  "linguaggi": "sei qualsiasi",
+  "cr": "12",
+  "pe": 8400,
+  "bonus_competenza": 4,
+  "tratti": [
+    {
+      "nome": "Resistenza alla magia",
+      "testo": "L'arcimago dispone di vantaggio ai tiri salvezza contro incantesimi e altri effetti magici."
+    },
+    {
+      "nome": "Incantesimi",
+      "testo": "L'arcimago è un incantatore di 18° livello: la sua caratteristica da incantatore è Intelligenza (CD del tiro salvezza sull'incantesimo 17, +9 al tiro per colpire con attacco con incantesimo). L'arcimago può lanciare camuffare se stesso e invisibilità a volontà e ha a disposizione i seguenti incantesimi da mago: Trucchetti (a volontà): dardo di fuoco, luce, mano magica, prestidigitazione, stretta folgorante 1° livello (4 slot): armatura magica*, dardo incantato, identificare, individuazione del magico 2° livello (3 slot): immagine speculare, individuazione dei pensieri, passo velato 3° livello (3 slot): controincantesimo, fulmine, volare 4° livello (3 slot): esilio, pelle di pietra*, scudo di fuoco 5° livello (3 slot): cono di freddo, muro di forza, scrutare 6° livello (1 slot): globo di invulnerabilità 7° livello (1 slot): teletrasporto 8° livello (1 slot): vuoto mentale* 9° livello (1 slot): fermare il tempo * L'arcimago lancia questi incantesimi su se stesso prima del combattimento.",
+      "incantesimi": {
+        "testo": "L'arcimago è un incantatore di 18° livello: la sua caratteristica da incantatore è Intelligenza (CD del tiro salvezza sull'incantesimo 17, +9 al tiro per colpire con attacco con incantesimo). L'arcimago può lanciare camuffare se stesso e invisibilità a volontà e ha a disposizione i seguenti incantesimi da mago: Trucchetti (a volontà): dardo di fuoco, luce, mano magica, prestidigitazione, stretta folgorante 1° livello (4 slot): armatura magica*, dardo incantato, identificare, individuazione del magico 2° livello (3 slot): immagine speculare, individuazione dei pensieri, passo velato 3° livello (3 slot): controincantesimo, fulmine, volare 4° livello (3 slot): esilio, pelle di pietra*, scudo di fuoco 5° livello (3 slot): cono di freddo, muro di forza, scrutare 6° livello (1 slot): globo di invulnerabilità 7° livello (1 slot): teletrasporto 8° livello (1 slot): vuoto mentale* 9° livello (1 slot): fermare il tempo * L'arcimago lancia questi incantesimi su se stesso prima del combattimento.",
+        "gruppi": [
+          {
+            "tipo": "livello",
+            "livello": 18,
+            "incantesimi": [
+              "la sua caratteristica da incantatore è Intelligenza (CD del tiro salvezza sull'incantesimo 17",
+              "+9 al tiro per colpire con attacco con incantesimo). L'arcimago può lanciare camuffare se stesso",
+              "invisibilità a volontà",
+              "ha a disposizione i seguenti incantesimi da mago:"
+            ]
+          },
+          {
+            "frequenza": "a volontà",
+            "tipo": "trucchetti",
+            "incantesimi": [
+              "dardo di fuoco",
+              "luce",
+              "mano magica",
+              "prestidigitazione",
+              "stretta folgorante"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 1,
+            "slot": 4,
+            "incantesimi": [
+              "armatura magica*",
+              "dardo incantato",
+              "identificare",
+              "individuazione del magico"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 2,
+            "slot": 3,
+            "incantesimi": [
+              "immagine speculare",
+              "individuazione dei pensieri",
+              "passo velato"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 3,
+            "slot": 3,
+            "incantesimi": [
+              "controincantesimo",
+              "fulmine",
+              "volare"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 4,
+            "slot": 3,
+            "incantesimi": [
+              "esilio",
+              "pelle di pietra*",
+              "scudo di fuoco"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 5,
+            "slot": 3,
+            "incantesimi": [
+              "cono di freddo",
+              "muro di forza",
+              "scrutare"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 6,
+            "slot": 1,
+            "incantesimi": [
+              "globo di invulnerabilità"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 7,
+            "slot": 1,
+            "incantesimi": [
+              "teletrasporto"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 8,
+            "slot": 1,
+            "incantesimi": [
+              "vuoto mentale*"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 9,
+            "slot": 1,
+            "incantesimi": [
+              "fermare il tempo * L'arcimago lancia questi incantesimi su se stesso prima del combattimento"
+            ]
+          }
+        ],
+        "caratteristica": "int",
+        "cd": 17
+      }
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Pugnale",
+      "testo": "Attacco con arma da mischia o con arma a distanza: +6 al tiro per colpire, portata 1,5 m o gittata 6/18 m, un bersaglio. Colpito: 4 (1d4 + 2) danni perforanti.\narcimaghi Gli sono incantatori potenti (e di solito piuttosto anziani) dediti allo studio delle arti arcane. Quelli più benevoli fungono da consiglieri per re e regine, mentre quelli malvagi esercitano il potere tirannicamente e ambiscono a trasformarsi in lich. Quelli che non sono né buoni né malvagi si isolano all'interno di remote torri per poter praticare la loro magia indisturbati. Un arcimago solitamente è assistito da uno o più apprendisti maghi e protegge la sua dimora con numerose interdizioni e guardiani magici per scoraggiare eventuali intrusioni.",
+      "attacco": {
+        "tipo": "mischia o distanza",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m o gittata 6/18 m, un bersaglio",
+        "danni": [
+          {
+            "media": 4,
+            "dadi": "1d4 + 2",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

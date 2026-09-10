@@ -1,0 +1,57 @@
+{
+  "id": "cavallo_da_galoppo",
+  "nome": "Cavallo da galoppo",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 418
+  },
+  "tipo": "bestia",
+  "taglia": "Grande",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 16,
+    "des": 10,
+    "cos": 12,
+    "int": 2,
+    "sag": 11,
+    "car": 7
+  },
+  "modificatori": {
+    "for": 3,
+    "des": 0,
+    "cos": 1,
+    "int": -4,
+    "sag": 0,
+    "car": -2
+  },
+  "ca": 10,
+  "pf": 13,
+  "pf_dadi": "2d10 + 2",
+  "velocita": {
+    "camminare": "18 m"
+  },
+  "linguaggi": "—",
+  "cr": "1/4",
+  "pe": 50,
+  "bonus_competenza": 2,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Zoccoli",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 8 (2d4 + 3) danni contundenti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 8,
+            "dadi": "2d4 + 3",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    }
+  ]
+}

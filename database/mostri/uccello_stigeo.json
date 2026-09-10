@@ -1,0 +1,59 @@
+{
+  "id": "uccello_stigeo",
+  "nome": "Uccello stigeo",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 399
+  },
+  "tipo": "bestia",
+  "taglia": "Minuscola",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 4,
+    "des": 16,
+    "cos": 11,
+    "int": 2,
+    "sag": 8,
+    "car": 6
+  },
+  "modificatori": {
+    "for": -3,
+    "des": 3,
+    "cos": 0,
+    "int": -4,
+    "sag": -1,
+    "car": -2
+  },
+  "ca": 14,
+  "ca_tipo": "armatura naturale",
+  "pf": 2,
+  "pf_dadi": "1d4",
+  "velocita": {
+    "camminare": "3 m",
+    "volare": "12 m"
+  },
+  "linguaggi": "—",
+  "cr": "1/8",
+  "pe": 25,
+  "bonus_competenza": 2,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Risucchio di sangue",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, una creatura. Colpito: 5 (1d4 + 3) danni perforanti e l'uccello stigeo si avvinghia al bersaglio. Finché è avvinghiato, l'uccello stigeo non attacca. All'inizio di ogni turno del mostro, il bersaglio perde 5 (1d4 + 3) punti ferita a causa del dissanguamento. L'uccello stigeo può staccarsi da solo utilizzando 1,5 metri del suo movimento. Lo fa dopo aver risucchiato 10 punti ferita di sangue dal bersaglio o se il bersaglio muore. Una creatura, incluso il bersaglio, può usare la sua azione per staccare l'essere.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d4 + 3",
+            "tipo": "perforanti e"
+          }
+        ]
+      }
+    }
+  ]
+}

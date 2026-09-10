@@ -1,0 +1,86 @@
+{
+  "id": "orsogufo",
+  "nome": "Orsogufo",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 387
+  },
+  "tipo": "mostruosità",
+  "taglia": "Grande",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 20,
+    "des": 12,
+    "cos": 17,
+    "int": 3,
+    "sag": 12,
+    "car": 7
+  },
+  "modificatori": {
+    "for": 5,
+    "des": 1,
+    "cos": 3,
+    "int": -4,
+    "sag": 1,
+    "car": -2
+  },
+  "ca": 13,
+  "ca_tipo": "armatura naturale",
+  "pf": 59,
+  "pf_dadi": "7d10 + 21",
+  "velocita": {
+    "camminare": "12 m"
+  },
+  "sensi": "Percezione passiva 13, scurovisione 18 m",
+  "percezione_passiva": 13,
+  "linguaggi": "—",
+  "cr": "3",
+  "pe": 700,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Vista e olfatto acuti",
+      "testo": "L'orsogufo dispone di vantaggio nelle prove di Saggezza (Percezione) basate sulla vista o sull'olfatto."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "L'orsogufo effettua due attacchi: uno con il becco e uno con gli artigli."
+    },
+    {
+      "nome": "Artigli",
+      "testo": "Attacco con arma da mischia: +7 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 14 (2d8 + 5) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 14,
+            "dadi": "2d8 + 5",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Becco",
+      "testo": "Attacco con arma da mischia: +7 al tiro per colpire, portata 1,5 m, una creatura. Colpito: 10 (1d10 + 5) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura",
+        "danni": [
+          {
+            "media": 10,
+            "dadi": "1d10 + 5",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,150 @@
+{
+  "id": "naga_spirituale",
+  "nome": "Naga spirituale",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 383
+  },
+  "tipo": "mostruosità",
+  "taglia": "Grande",
+  "allineamento": "caotica malvagia",
+  "caratteristiche": {
+    "for": 18,
+    "des": 17,
+    "cos": 14,
+    "int": 16,
+    "sag": 15,
+    "car": 16
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 3,
+    "cos": 2,
+    "int": 3,
+    "sag": 2,
+    "car": 3
+  },
+  "ca": 15,
+  "ca_tipo": "armatura naturale",
+  "pf": 75,
+  "pf_dadi": "10d10 + 20",
+  "velocita": {
+    "camminare": "12 m"
+  },
+  "immunita_danni": "veleno",
+  "immunita_condizioni": "affascinato, avvelenato",
+  "sensi": "Percezione passiva 12, scurovisione 18 m",
+  "percezione_passiva": 12,
+  "linguaggi": "Abissale, Comune",
+  "cr": "8",
+  "pe": 3900,
+  "bonus_competenza": 3,
+  "tratti": [
+    {
+      "nome": "Incantesimi",
+      "testo": "La naga è un incantatore di 10° livello: la sua caratteristica da incantatore è Intelligenza (CD del tiro salvezza sull'incantesimo 14, +6 al tiro per colpire con attacco con incantesimo) e necessita solo di componenti verbali per lanciare i suoi incantesimi. Ha a disposizione gli incantesimi da mago seguenti: Trucchetti (a volontà): illusione minore, mano magica, raggio di gelo 1° livello (4 slot): charme su persone, individuazione del magico, sonno 2° livello (3 slot): blocca persone, individuazione dei pensieri 3° livello (3 slot): fulmine, respirare sott'acqua 4° livello (3 slot): inaridire, porta dimensionale 5° livello (2 slot): dominare persone",
+      "incantesimi": {
+        "testo": "La naga è un incantatore di 10° livello: la sua caratteristica da incantatore è Intelligenza (CD del tiro salvezza sull'incantesimo 14, +6 al tiro per colpire con attacco con incantesimo) e necessita solo di componenti verbali per lanciare i suoi incantesimi. Ha a disposizione gli incantesimi da mago seguenti: Trucchetti (a volontà): illusione minore, mano magica, raggio di gelo 1° livello (4 slot): charme su persone, individuazione del magico, sonno 2° livello (3 slot): blocca persone, individuazione dei pensieri 3° livello (3 slot): fulmine, respirare sott'acqua 4° livello (3 slot): inaridire, porta dimensionale 5° livello (2 slot): dominare persone",
+        "gruppi": [
+          {
+            "tipo": "livello",
+            "livello": 10,
+            "incantesimi": [
+              "la sua caratteristica da incantatore è Intelligenza (CD del tiro salvezza sull'incantesimo 14",
+              "+6 al tiro per colpire con attacco con incantesimo)",
+              "necessita solo di componenti verbali per lanciare i suoi incantesimi. Ha a disposizione gli incantesimi da mago seguenti:"
+            ]
+          },
+          {
+            "frequenza": "a volontà",
+            "tipo": "trucchetti",
+            "incantesimi": [
+              "illusione minore",
+              "mano magica",
+              "raggio di gelo"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 1,
+            "slot": 4,
+            "incantesimi": [
+              "charme su persone",
+              "individuazione del magico",
+              "sonno"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 2,
+            "slot": 3,
+            "incantesimi": [
+              "blocca persone",
+              "individuazione dei pensieri"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 3,
+            "slot": 3,
+            "incantesimi": [
+              "fulmine",
+              "respirare sott'acqua"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 4,
+            "slot": 3,
+            "incantesimi": [
+              "inaridire",
+              "porta dimensionale"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 5,
+            "slot": 2,
+            "incantesimi": [
+              "dominare persone"
+            ]
+          }
+        ],
+        "caratteristica": "int",
+        "cd": 14
+      }
+    },
+    {
+      "nome": "Rigenerazione",
+      "testo": "Se la naga muore, torna in vita 1d6 giorni dopo e recupera tutti i suoi punti ferita. Solo un incantesimo desiderio può impedire a questo tratto di funzionare."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +7 al tiro per colpire, portata 3 m, una creatura. Colpito: 7 (1d6 + 4) danni perforanti e il bersaglio deve effettuare un tiro salvezza su Costituzione con CD 13, subendo 31 (7d8) danni da veleno in caso di fallimento, o la metà in caso di successo.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "3 m",
+        "bersaglio": "una creatura",
+        "danni": [
+          {
+            "media": 7,
+            "dadi": "1d6 + 4",
+            "tipo": "perforanti e"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 13,
+        "danno_fallimento": {
+          "media": 31,
+          "dadi": "7d8",
+          "tipo": "veleno"
+        }
+      }
+    }
+  ]
+}

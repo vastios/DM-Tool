@@ -1,0 +1,96 @@
+{
+  "id": "xorn",
+  "nome": "Xorn",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 404
+  },
+  "tipo": "elementale",
+  "taglia": "Media",
+  "allineamento": "neutrale",
+  "caratteristiche": {
+    "for": 17,
+    "des": 10,
+    "cos": 22,
+    "int": 11,
+    "sag": 10,
+    "car": 11
+  },
+  "modificatori": {
+    "for": 3,
+    "des": 0,
+    "cos": 6,
+    "int": 0,
+    "sag": 0,
+    "car": 0
+  },
+  "ca": 19,
+  "ca_tipo": "armatura naturale",
+  "pf": 73,
+  "pf_dadi": "7d8 + 42",
+  "velocita": {
+    "camminare": "6 m",
+    "scavare": "6 m"
+  },
+  "resistenze_danni": "perforanti e taglienti da attacchi non magici non adamantini",
+  "sensi": "Percezione passiva 16, percezione tellurica 18 m, scurovisione 18 m",
+  "percezione_passiva": 16,
+  "linguaggi": "Terran",
+  "cr": "5",
+  "pe": 1800,
+  "bonus_competenza": 3,
+  "tratti": [
+    {
+      "nome": "Mimetizzazione rocciosa",
+      "testo": "Lo xorn dispone di vantaggio alle prove di Destrezza (Furtività) effettuate per nascondersi nei terreni rocciosi."
+    },
+    {
+      "nome": "Percezione dei tesori",
+      "testo": "Lo xorn può individuare, tramite l'olfatto, l'ubicazione precisa di metalli e pietre preziose, come monete o gemme, entro 18 metri da lui."
+    },
+    {
+      "nome": "Scivolare nella terra",
+      "testo": "Lo xorn può scavare attraverso la terra e la pietra non magiche e non lavorate senza disturbare il materiale attraverso cui si muove."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Lo xorn effettua tre attacchi con gli artigli e uno con il morso."
+    },
+    {
+      "nome": "Artiglio",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 6 (1d6 + 3) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 6,
+            "dadi": "1d6 + 3",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 13 (3d6 + 3) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 13,
+            "dadi": "3d6 + 3",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

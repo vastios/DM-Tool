@@ -1,0 +1,103 @@
+{
+  "id": "otyugh",
+  "nome": "Otyugh",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 387
+  },
+  "tipo": "aberrazione",
+  "taglia": "Grande",
+  "allineamento": "neutrale",
+  "caratteristiche": {
+    "for": 16,
+    "des": 11,
+    "cos": 19,
+    "int": 6,
+    "sag": 13,
+    "car": 6
+  },
+  "modificatori": {
+    "for": 3,
+    "des": 0,
+    "cos": 4,
+    "int": -2,
+    "sag": 1,
+    "car": -2
+  },
+  "ca": 14,
+  "ca_tipo": "armatura naturale",
+  "pf": 114,
+  "pf_dadi": "12d10 + 48",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "sensi": "Percezione passiva 11, scurovisione 36 m",
+  "percezione_passiva": 11,
+  "linguaggi": "Otyugh",
+  "cr": "5",
+  "pe": 1800,
+  "bonus_competenza": 3,
+  "tratti": [
+    {
+      "nome": "Telepatia limitata",
+      "testo": "L'otyugh può trasmettere magicamente messaggi e immagini semplici a qualsiasi creatura situata entro 36 metri da lui e che sia in grado di comprendere un linguaggio. Questa forma di telepatia non consente alla creatura che riceve il messaggio di rispondere telepaticamente."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "L'otyugh effettua tre attacchi: uno con il morso e due con i tentacoli."
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 12 (2d8 + 3) danni perforanti. Se il bersaglio è una creatura, deve superare un tiro salvezza su Costituzione con CD 15 contro le malattie, altrimenti è avvelenato finché la malattia non viene curata. Dopo ogni 24 ore, il bersaglio deve ripetere il tiro salvezza; riduce i suoi punti ferita massimi di 5 (1d10) in caso di fallimento, e viene curato dalla malattia in caso di successo. Se la malattia porta i suoi punti ferita massimi a 0, il bersaglio muore. Questa riduzione dei punti ferita massimi del bersaglio dura finché la malattia non viene curata.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 12,
+            "dadi": "2d8 + 3",
+            "tipo": "perforanti"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 15
+      }
+    },
+    {
+      "nome": "Tentacolo",
+      "testo": "Attacco con arma da mischia : +6 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 7 (1d8 + 3) danni contundenti più 4 (1d8) danni perforanti. Se il bersaglio è di taglia Media o inferiore, viene afferrato (CD 13 per sfuggire) e, finché l'otyugh non molla la presa, è trattenuto. Il mostro possiede due tentacoli, ognuno dei quali può afferrare un bersaglio.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 7,
+            "dadi": "1d8 + 3",
+            "tipo": "contundenti"
+          },
+          {
+            "media": 4,
+            "dadi": "1d8",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Schianto con tentacolo",
+      "testo": "L'otyugh scaglia le creature afferrate l'una contro l'altra o contro una superficie solida. Ogni creatura deve superare un tiro salvezza su Costituzione con CD 14, altrimenti subisce 10 (2d6 + 3) danni contundenti ed è stordita fino alla fine del turno successivo dell'otyugh. Se supera il tiro salvezza, il bersaglio subisce la metà dei danni contundenti e non è stordito.",
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 14
+      }
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "id": "diavolo_barbuto",
+  "nome": "Diavolo barbuto",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 314
+  },
+  "tipo": "immondo",
+  "descrittore": "diavolo",
+  "taglia": "Media",
+  "allineamento": "legale malvagio",
+  "caratteristiche": {
+    "for": 16,
+    "des": 15,
+    "cos": 15,
+    "int": 9,
+    "sag": 11,
+    "car": 11
+  },
+  "modificatori": {
+    "for": 3,
+    "des": 2,
+    "cos": 2,
+    "int": -1,
+    "sag": 0,
+    "car": 0
+  },
+  "ca": 13,
+  "ca_tipo": "armatura naturale",
+  "pf": 52,
+  "pf_dadi": "8d8 + 16",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "resistenze_danni": "freddo; contundenti, perforanti e taglienti da attacchi non magici non argentati",
+  "immunita_danni": "fuoco, veleno",
+  "immunita_condizioni": "avvelenato",
+  "sensi": "Percezione passiva 10, scurovisione 36 m",
+  "percezione_passiva": 10,
+  "linguaggi": "Infernale, telepatia 36 m",
+  "cr": "3",
+  "pe": 700,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Nervi saldi",
+      "testo": "Il diavolo non può essere spaventato finché vede una creatura alleata entro 9 metri da sé."
+    },
+    {
+      "nome": "Resistenza alla magia",
+      "testo": "Il diavolo dispone di vantaggio ai tiri salvezza contro incantesimi e altri effetti magici."
+    },
+    {
+      "nome": "Vista del diavolo",
+      "testo": "L'oscurità magica non ostacola la scurovisione del diavolo."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il diavolo effettua due attacchi: uno con la barba e uno con il falcione."
+    },
+    {
+      "nome": "Barba",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, una creatura. Colpito: 6 (1d8 + 2) danni perforanti e il bersaglio deve superare un tiro salvezza su Costituzione con CD 12, altrimenti è avvelenato per 1 minuto. Finché è avvelenato in questo modo, il bersaglio non può recuperare punti ferita. Il bersaglio può ripetere il tiro salvezza alla fine di ogni suo turno e, se lo supera, l'effetto svanisce.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura",
+        "danni": [
+          {
+            "media": 6,
+            "dadi": "1d8 + 2",
+            "tipo": "perforanti e"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 12
+      }
+    },
+    {
+      "nome": "Falcione",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 8 (1d10 + 3) danni taglienti. Se il bersaglio è una creatura diversa da un non morto o da un costrutto, deve superare un tiro salvezza su Costituzione con CD 12, altrimenti perde 5 (1d10) punti ferita all'inizio di ogni suo turno a causa di una ferita infernale. Ogni volta che il diavolo colpisce il bersaglio ferito con questo attacco, i danni inflitti dalla ferita aumentano di 5 (1d10). Una creatura qualsiasi può effettuare un'azione per tamponare la ferita superando una prova di Saggezza (Medicina) con CD 12. La ferita si richiude anche se il bersaglio riceve una qualsiasi forma di guarigione magica.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 8,
+            "dadi": "1d10 + 3",
+            "tipo": "taglienti"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 12
+      }
+    }
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "id": "oni",
+  "nome": "Oni",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 386
+  },
+  "tipo": "gigante",
+  "taglia": "Grande",
+  "allineamento": "legale malvagio",
+  "caratteristiche": {
+    "for": 19,
+    "des": 11,
+    "cos": 16,
+    "int": 14,
+    "sag": 12,
+    "car": 15
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 0,
+    "cos": 3,
+    "int": 2,
+    "sag": 1,
+    "car": 2
+  },
+  "ca": 16,
+  "ca_tipo": "cotta di maglia",
+  "pf": 110,
+  "pf_dadi": "13d10 + 39",
+  "velocita": {
+    "camminare": "9 m",
+    "volare": "9 m"
+  },
+  "competenze": {
+    "arcano": 5,
+    "inganno": 8,
+    "percezione": 4
+  },
+  "sensi": "Percezione passiva 14, scurovisione 18 m",
+  "percezione_passiva": 14,
+  "linguaggi": "Comune, Gigante",
+  "cr": "7",
+  "pe": 2900,
+  "bonus_competenza": 3,
+  "tratti": [
+    {
+      "nome": "Armi magiche",
+      "testo": "Gli attacchi con arma dell'oni sono magici."
+    },
+    {
+      "nome": "Incantesimi innati",
+      "testo": "La caratteristica innata da incantatore dell'oni è Carisma (CD del tiro salvezza sull'incantesimo 13). Per sua natura, è in grado di lanciare gli incantesimi indicati di seguito senza aver bisogno di componenti materiali: A volontà: invisibilità, oscurità 1/giorno ciascuno: charme su persone, cono di freddo, forma gassosa, sonno",
+      "incantesimi": {
+        "testo": "La caratteristica innata da incantatore dell'oni è Carisma (CD del tiro salvezza sull'incantesimo 13). Per sua natura, è in grado di lanciare gli incantesimi indicati di seguito senza aver bisogno di componenti materiali: A volontà: invisibilità, oscurità 1/giorno ciascuno: charme su persone, cono di freddo, forma gassosa, sonno",
+        "gruppi": [
+          {
+            "frequenza": "a volontà",
+            "incantesimi": [
+              "invisibilità",
+              "oscurità"
+            ]
+          },
+          {
+            "frequenza": "1/giorno ciascuno",
+            "incantesimi": [
+              "charme su persone",
+              "cono di freddo",
+              "forma gassosa",
+              "sonno"
+            ]
+          }
+        ],
+        "cd": 13
+      }
+    },
+    {
+      "nome": "Rigenerazione",
+      "testo": "L'oni recupera 10 punti ferita all'inizio del suo turno, se ha almeno 1 punto ferita."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "L'oni effettua due attacchi e può scegliere se con gli artigli o con il falcione."
+    },
+    {
+      "nome": "Artiglio",
+      "testo": "Attacco con arma da mischia: +7 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 8 (1d8 + 4) danni taglienti.",
+      "uso": "solo in forma di oni",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 8,
+            "dadi": "1d8 + 4",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Falcione",
+      "testo": "Attacco con arma da mischia: +7 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 15 (2d10 + 4) danni taglienti o 9 (1d10 + 4) danni taglienti in forma Piccola o Media.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 15,
+            "dadi": "2d10 + 4",
+            "tipo": "taglienti o"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Cambiare forma",
+      "testo": "L'oni si trasforma magicamente in un umanoide Piccolo o Medio, in un gigante Grande, o ritorna alla sua vera forma. A eccezione della taglia, le sue statistiche restano le stesse in ogni forma. L'unico oggetto del suo equipaggiamento che viene trasformato è il suo falcione, che si riduce in modo da poter essere impugnato in forma umanoide. Se l'oni muore, torna alla sua vera forma e il falcione torna alla sua taglia normale."
+    }
+  ]
+}

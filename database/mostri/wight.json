@@ -1,0 +1,110 @@
+{
+  "id": "wight",
+  "nome": "Wight",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 403
+  },
+  "tipo": "non morto",
+  "taglia": "Media",
+  "allineamento": "neutrale malvagio",
+  "caratteristiche": {
+    "for": 15,
+    "des": 14,
+    "cos": 16,
+    "int": 10,
+    "sag": 13,
+    "car": 15
+  },
+  "modificatori": {
+    "for": 2,
+    "des": 2,
+    "cos": 3,
+    "int": 0,
+    "sag": 1,
+    "car": 2
+  },
+  "ca": 14,
+  "ca_tipo": "cuoio borchiato",
+  "pf": 45,
+  "pf_dadi": "6d8 + 18",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "resistenze_danni": "necrotici; contundenti, perforanti e taglienti da attacchi non magici non argentati",
+  "immunita_danni": "veleno",
+  "immunita_condizioni": "avvelenato, indebolimento",
+  "sensi": "Percezione passiva 13, scurovisione 18 m",
+  "percezione_passiva": 13,
+  "linguaggi": "quelli conosciuti in vita",
+  "cr": "3",
+  "pe": 700,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Sensibilità al sole",
+      "testo": "Finché è esposto alla luce del sole, il wight subisce svantaggio ai tiri per colpire, oltre che alle prove di Saggezza (Percezione) basate sulla vista."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il wight effettua due attacchi con la spada lunga o con l'arco lungo. Può usare il Risucchio di vita al posto di un attacco con la spada lunga."
+    },
+    {
+      "nome": "Risucchio di vita",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, una creatura. Colpito: 5  (1d6 + 2) danni necrotici. Il bersaglio deve superare un tiro salvezza su Costituzione con CD 13, o i suoi punti ferita massimi vengono ridotti di un importo pari al danno subito. Questa riduzione dura finché il bersaglio non completa un riposo lungo. Il bersaglio muore se questo effetto riduce a 0 i suoi punti ferita massimi. Un umanoide ucciso da questo attacco si anima 24 ore dopo come zombi sotto il controllo del wight, a meno che l'umanoide non sia riportato in vita o il suo corpo non venga distrutto. Il wight non può controllare più di dodici zombi simultaneamente.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d6 + 2",
+            "tipo": "necrotici"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 13
+      }
+    },
+    {
+      "nome": "Spada lunga",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 6 (1d8 + 2) danni taglienti o 7 (1d10 + 2) danni taglienti se impugnata con due mani.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 6,
+            "dadi": "1d8 + 2",
+            "tipo": "taglienti o"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Arco lungo",
+      "testo": "Attacco con arma a distanza: +4 al tiro per colpire, gittata 45/180 m, un bersaglio. Colpito: 6 (1d8 + 2) danni perforanti.",
+      "attacco": {
+        "tipo": "distanza",
+        "tiro": 4,
+        "portata": "45/180 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 6,
+            "dadi": "1d8 + 2",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

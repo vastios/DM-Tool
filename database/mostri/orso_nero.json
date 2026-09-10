@@ -1,0 +1,87 @@
+{
+  "id": "orso_nero",
+  "nome": "Orso nero",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 429
+  },
+  "tipo": "bestia",
+  "taglia": "Media",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 15,
+    "des": 10,
+    "cos": 14,
+    "int": 2,
+    "sag": 12,
+    "car": 7
+  },
+  "modificatori": {
+    "for": 2,
+    "des": 0,
+    "cos": 2,
+    "int": -4,
+    "sag": 1,
+    "car": -2
+  },
+  "ca": 11,
+  "ca_tipo": "armatura naturale",
+  "pf": 19,
+  "pf_dadi": "3d8 + 6",
+  "velocita": {
+    "camminare": "12 m",
+    "scalare": "9 m"
+  },
+  "sensi": "Percezione passiva 13",
+  "percezione_passiva": 13,
+  "linguaggi": "—",
+  "cr": "1/2",
+  "pe": 100,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Olfatto acuto",
+      "testo": "L'orso dispone di vantaggio alle prove di Saggezza (Percezione) basate sull'olfatto."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "L'orso effettua due attacchi: uno con il morso e uno con gli artigli."
+    },
+    {
+      "nome": "Artigli",
+      "testo": "Attacco con arma da mischia: +3 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 7 (2d4 + 2) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 3,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 7,
+            "dadi": "2d4 + 2",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +3 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 5 (1d6 + 2) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 3,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d6 + 2",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

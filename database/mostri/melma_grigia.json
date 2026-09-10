@@ -1,0 +1,80 @@
+{
+  "id": "melma_grigia",
+  "nome": "Melma grigia",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 377
+  },
+  "tipo": "melma",
+  "taglia": "Media",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 12,
+    "des": 6,
+    "cos": 16,
+    "int": 1,
+    "sag": 6,
+    "car": 2
+  },
+  "modificatori": {
+    "for": 1,
+    "des": -2,
+    "cos": 3,
+    "int": -5,
+    "sag": -2,
+    "car": -4
+  },
+  "ca": 8,
+  "pf": 22,
+  "pf_dadi": "3d8 + 9",
+  "velocita": {
+    "camminare": "3 m",
+    "scalare": "3 m"
+  },
+  "resistenze_danni": "acido, freddo, fuoco",
+  "immunita_condizioni": "accecato, affascinato, assordato, indebolimento, prono, spaventato",
+  "sensi": "Percezione passiva 8, vista cieca 18 m (cecità oltre questo raggio)",
+  "percezione_passiva": 8,
+  "linguaggi": "—",
+  "cr": "1/2",
+  "pe": 100,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Amorfo",
+      "testo": "La melma può muoversi attraverso uno spazio stretto fino a 2,5 centimetri senza doversi stringere."
+    },
+    {
+      "nome": "Corrodere il metallo",
+      "testo": "Qualsiasi arma non magica fatta di metallo colpisca la melma si corrode. Dopo avere inflitto danni, l'arma subisce una penalità cumulativa e permanente di -1 ai tiri per i danni. Se la sua penalità scende a -5, l'arma viene distrutta. Le munizioni non magiche fatte di metallo che colpiscono la melma vengono distrutte dopo aver inflitto danni. La melma può corrodere fino a 5 centimetri di metallo non magico in 1 round."
+    },
+    {
+      "nome": "Falso aspetto",
+      "testo": "Finché la melma rimane immobile, non è distinguibile da una pozza oleosa o da una roccia umida."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Pseudopode",
+      "testo": "Attacco con arma da mischia: +3 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 4 (1d6 + 1) danni contundenti più 7 (2d6) danni da acido e, se il bersaglio indossa un'armatura di metallo non magica, quest'ultima viene in parte corrosa e subisce una penalità cumulativa e permanente di -1 alla CA che fornisce. Se la penalità riduce la sua CA a 10, l'armatura si distrugge.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 3,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 4,
+            "dadi": "1d6 + 1",
+            "tipo": "contundenti"
+          },
+          {
+            "media": 7,
+            "dadi": "2d6",
+            "tipo": "acido e"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "id": "fustigatore",
+  "nome": "Fustigatore",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 354
+  },
+  "tipo": "mostruosità",
+  "taglia": "Grande",
+  "allineamento": "neutrale malvagio",
+  "caratteristiche": {
+    "for": 18,
+    "des": 8,
+    "cos": 17,
+    "int": 7,
+    "sag": 16,
+    "car": 6
+  },
+  "modificatori": {
+    "for": 4,
+    "des": -1,
+    "cos": 3,
+    "int": -2,
+    "sag": 3,
+    "car": -2
+  },
+  "ca": 20,
+  "ca_tipo": "armatura naturale",
+  "pf": 93,
+  "pf_dadi": "11d10 + 33",
+  "velocita": {
+    "camminare": "3 m",
+    "scalare": "3 m"
+  },
+  "sensi": "Percezione passiva 16, scurovisione 18 m",
+  "percezione_passiva": 16,
+  "linguaggi": "—",
+  "cr": "5",
+  "pe": 1800,
+  "bonus_competenza": 3,
+  "tratti": [
+    {
+      "nome": "Falso aspetto",
+      "testo": "Finché il fustigatore rimane immobile, non è possibile distinguerlo da una normale formazione rocciosa, come una stalagmite."
+    },
+    {
+      "nome": "Movimenti del ragno",
+      "testo": "Il fustigatore può arrampicarsi su superfici difficili, compresi i soffitti (lungo i quali si muove a testa in giù), senza effettuare una prova di caratteristica."
+    },
+    {
+      "nome": "Tentacoli afferranti",
+      "testo": "Il fustigatore può avere al massimo sei tentacoli contemporaneamente. Ogni tentacolo può essere attaccato (CA 20; 10 punti ferita; immunità ai danni psichici e da veleno). La distruzione di un tentacolo non infligge danni al fustigatore, che può impiegare un tentacolo sostitutivo nel suo turno successivo. Un tentacolo può anche essere spezzato se una creatura effettua un'azione e supera una prova di Forza con CD 15 contro di esso."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il fustigatore effettua quattro attacchi con i tentacoli, usa riavvolgere ed esegue un attacco con il morso."
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +7 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 22 (4d8 + 4) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 22,
+            "dadi": "4d8 + 4",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Tentacolo",
+      "testo": "Attacco con arma da mischia: +7 al tiro per colpire, portata 15 m, una creatura. Colpito: il bersaglio è afferrato (CD 15 per sfuggire). Finché il fustigatore afferra il bersaglio, quest'ultimo è trattenuto e subisce svantaggio alle prove di Forza e ai tiri salvezza su Forza. Inoltre, il fustigatore non può usare lo stesso tentacolo su un altro bersaglio.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "15 m",
+        "bersaglio": "una creatura",
+        "danni": []
+      }
+    },
+    {
+      "nome": "Riavvolgere",
+      "testo": "Il fustigatore tira verso di sé ogni creatura che ha afferrato per un massimo di 7,5 metri."
+    }
+  ]
+}

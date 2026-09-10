@@ -1,0 +1,117 @@
+{
+  "id": "glabrezu",
+  "nome": "Glabrezu",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 311
+  },
+  "tipo": "immondo",
+  "descrittore": "demone",
+  "taglia": "Grande",
+  "allineamento": "caotico malvagio",
+  "caratteristiche": {
+    "for": 20,
+    "des": 15,
+    "cos": 21,
+    "int": 19,
+    "sag": 17,
+    "car": 16
+  },
+  "modificatori": {
+    "for": 5,
+    "des": 2,
+    "cos": 5,
+    "int": 4,
+    "sag": 3,
+    "car": 3
+  },
+  "ca": 17,
+  "ca_tipo": "armatura naturale",
+  "pf": 157,
+  "pf_dadi": "15d10 + 75",
+  "velocita": {
+    "camminare": "12 m"
+  },
+  "resistenze_danni": "freddo, fulmine, fuoco; contundenti, perforanti e taglienti da attacchi non magici",
+  "immunita_danni": "veleno",
+  "immunita_condizioni": "avvelenato",
+  "sensi": "Percezione passiva 13, vista pura 36 m",
+  "percezione_passiva": 13,
+  "linguaggi": "Abissale, telepatia 36 m",
+  "cr": "9",
+  "pe": 5000,
+  "bonus_competenza": 4,
+  "tratti": [
+    {
+      "nome": "Incantesimi innati",
+      "testo": "La caratteristica da incantatore del glabrezu è Intelligenza (CD del tiro salvezza sull'incantesimo 16). Per sua natura, il glabrezu è in grado di lanciare gli incantesimi indicati di seguito senza aver bisogno di componenti materiali: A volontà: dissolvi magie, individuazione del magico, oscurità 1/giorno ciascuno: confusione, parola del potere stordire, volare",
+      "incantesimi": {
+        "testo": "La caratteristica da incantatore del glabrezu è Intelligenza (CD del tiro salvezza sull'incantesimo 16). Per sua natura, il glabrezu è in grado di lanciare gli incantesimi indicati di seguito senza aver bisogno di componenti materiali: A volontà: dissolvi magie, individuazione del magico, oscurità 1/giorno ciascuno: confusione, parola del potere stordire, volare",
+        "gruppi": [
+          {
+            "frequenza": "a volontà",
+            "incantesimi": [
+              "dissolvi magie",
+              "individuazione del magico",
+              "oscurità"
+            ]
+          },
+          {
+            "frequenza": "1/giorno ciascuno",
+            "incantesimi": [
+              "confusione",
+              "parola del potere stordire",
+              "volare"
+            ]
+          }
+        ],
+        "caratteristica": "int",
+        "cd": 16
+      }
+    },
+    {
+      "nome": "Resistenza alla magia",
+      "testo": "Il glabrezu dispone di vantaggio ai tiri salvezza contro incantesimi e altri effetti magici."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il glabrezu effettua quattro attacchi: due con le tenaglie e due con i pugni. In alternativa, effettua due attacchi con le tenaglie e lancia un incantesimo."
+    },
+    {
+      "nome": "Pugno",
+      "testo": "Attacco con arma da mischia: +9 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 7 (2d4 + 2) danni contundenti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 9,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 7,
+            "dadi": "2d4 + 2",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Tenaglia",
+      "testo": "Attacco con arma da mischia: +9 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 16 (2d10 + 5) danni contundenti. Se il bersaglio è una creatura di taglia Media o inferiore, viene afferrato (CD 15 per sfuggire). Il glabrezu ha due tenaglie, ognuna delle quali può afferrare solo un bersaglio.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 9,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 16,
+            "dadi": "2d10 + 5",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    }
+  ]
+}

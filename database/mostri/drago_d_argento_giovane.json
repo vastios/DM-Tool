@@ -1,0 +1,116 @@
+{
+  "id": "drago_d_argento_giovane",
+  "nome": "Drago d'argento giovane",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 323
+  },
+  "tipo": "drago",
+  "taglia": "Grande",
+  "allineamento": "legale buono",
+  "caratteristiche": {
+    "for": 23,
+    "des": 10,
+    "cos": 21,
+    "int": 14,
+    "sag": 11,
+    "car": 19
+  },
+  "modificatori": {
+    "for": 6,
+    "des": 0,
+    "cos": 5,
+    "int": 2,
+    "sag": 0,
+    "car": 4
+  },
+  "ca": 18,
+  "ca_tipo": "armatura naturale",
+  "pf": 168,
+  "pf_dadi": "16d10 + 80",
+  "velocita": {
+    "camminare": "12 m",
+    "volare": "24 m"
+  },
+  "competenze": {
+    "arcano": 6,
+    "furtività": 4,
+    "percezione": 8,
+    "storia": 6
+  },
+  "immunita_danni": "freddo",
+  "sensi": "Percezione passiva 18, scurovisione 36 m, vista cieca 9 m",
+  "percezione_passiva": 18,
+  "linguaggi": "Comune, Draconico",
+  "cr": "9",
+  "pe": 5000,
+  "bonus_competenza": 4,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il drago effettua tre attacchi: uno con il morso e due con gli artigli."
+    },
+    {
+      "nome": "Artiglio",
+      "testo": "Attacco con arma da mischia: +10 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 13 (2d6 + 6) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 10,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 13,
+            "dadi": "2d6 + 6",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +10 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 17 (2d10 + 6) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 10,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 17,
+            "dadi": "2d10 + 6",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Soffi",
+      "testo": "Il drago usa uno dei seguenti soffi.",
+      "uso": "ricarica 5–6"
+    },
+    {
+      "nome": "Soffio di freddo",
+      "testo": "Il drago esala una folata gelida in un cono di 9 metri. Ogni creatura in quell'area deve effettuare un tiro salvezza su Costituzione con CD 17, subendo 54 (12d8) danni da freddo in caso di fallimento, o la metà dei danni in caso di successo.",
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 17,
+        "danno_fallimento": {
+          "media": 54,
+          "dadi": "12d8",
+          "tipo": "freddo"
+        },
+        "successo": "metà danni"
+      }
+    },
+    {
+      "nome": "Soffio paralizzante",
+      "testo": "Il drago esala gas paralizzante in un cono di 9 metri. Ogni creatura in quell'area deve superare un tiro salvezza su Costituzione con CD 17, altrimenti è paralizzata per 1 minuto. La creatura può ripetere il tiro salvezza alla fine di ogni suo turno e, se lo supera, l'effetto svanisce.",
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 17
+      }
+    }
+  ]
+}

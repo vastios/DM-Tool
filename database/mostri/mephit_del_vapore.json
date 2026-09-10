@@ -1,0 +1,94 @@
+{
+  "id": "mephit_del_vapore",
+  "nome": "Mephit del vapore",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 379
+  },
+  "tipo": "elementale",
+  "taglia": "Piccola",
+  "allineamento": "neutrale malvagio",
+  "caratteristiche": {
+    "for": 5,
+    "des": 11,
+    "cos": 10,
+    "int": 11,
+    "sag": 10,
+    "car": 12
+  },
+  "modificatori": {
+    "for": -3,
+    "des": 0,
+    "cos": 0,
+    "int": 0,
+    "sag": 0,
+    "car": 1
+  },
+  "ca": 10,
+  "pf": 21,
+  "pf_dadi": "6d6",
+  "velocita": {
+    "camminare": "9 m",
+    "volare": "9 m"
+  },
+  "immunita_condizioni": "avvelenato",
+  "sensi": "Percezione passiva 10, scurovisione 18 m",
+  "percezione_passiva": 10,
+  "linguaggi": "Aquan, Ignan",
+  "cr": "1/4",
+  "pe": 50,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Esplosione della morte",
+      "testo": "Quando il mephit muore, esplode in una nube di vapore. Ogni creatura situata entro 1,5 metri dal mephit deve superare un tiro salvezza su Destrezza con CD 10, altrimenti subisce 4 (1d8) danni da fuoco.",
+      "salvataggio": {
+        "caratteristica": "des",
+        "cd": 10
+      }
+    },
+    {
+      "nome": "Incantesimi innati",
+      "testo": "Il mephit può lanciare sfocatura come incantesimo innato senza aver bisogno di componenti materiali. La sua caratteristica innata da incantatore è Carisma.",
+      "uso": "1/giorno"
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Artigli",
+      "testo": "Attacco con arma da mischia: +2 al tiro per colpire, portata 1,5 m, una creatura. Colpito: 2 (1d4) danni taglienti più 2 (1d4) danni da fuoco.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 2,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura",
+        "danni": [
+          {
+            "media": 2,
+            "dadi": "1d4",
+            "tipo": "taglienti"
+          },
+          {
+            "media": 2,
+            "dadi": "1d4",
+            "tipo": "fuoco"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Soffio di vapore",
+      "testo": "Il mephit esala vapore ustionante in un cono di 4,5 metri. Ogni creatura in quell'area deve effettuare un tiro salvezza su Destrezza con CD 10, subendo 4 (1d8) danni da fuoco in caso di fallimento, o la metà in caso di successo.",
+      "uso": "ricarica 6",
+      "salvataggio": {
+        "caratteristica": "des",
+        "cd": 10,
+        "danno_fallimento": {
+          "media": 4,
+          "dadi": "1d8",
+          "tipo": "fuoco"
+        }
+      }
+    }
+  ]
+}

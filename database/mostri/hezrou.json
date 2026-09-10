@@ -1,0 +1,98 @@
+{
+  "id": "hezrou",
+  "nome": "Hezrou",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 312
+  },
+  "tipo": "immondo",
+  "descrittore": "demone",
+  "taglia": "Grande",
+  "allineamento": "caotico malvagio",
+  "caratteristiche": {
+    "for": 19,
+    "des": 17,
+    "cos": 20,
+    "int": 5,
+    "sag": 12,
+    "car": 13
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 3,
+    "cos": 5,
+    "int": -3,
+    "sag": 1,
+    "car": 1
+  },
+  "ca": 16,
+  "ca_tipo": "armatura naturale",
+  "pf": 136,
+  "pf_dadi": "13d10 + 65",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "resistenze_danni": "freddo, fulmine, fuoco; contundenti, perforanti e taglienti da attacchi non magici",
+  "immunita_danni": "veleno",
+  "immunita_condizioni": "avvelenato",
+  "sensi": "Percezione passiva 11, scurovisione 36 m",
+  "percezione_passiva": 11,
+  "linguaggi": "Abissale, telepatia 36 m",
+  "cr": "8",
+  "pe": 3900,
+  "bonus_competenza": 3,
+  "tratti": [
+    {
+      "nome": "Fetore",
+      "testo": "Ogni creatura che inizia il proprio turno entro 3 metri dall'hezrou deve superare un tiro salvezza su Costituzione con CD 14, altrimenti è avvelenata fino all'inizio del proprio turno successivo. Se supera il tiro salvezza, la creatura è immune al fetore dell'hezrou per 24 ore.",
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 14
+      }
+    },
+    {
+      "nome": "Resistenza alla magia",
+      "testo": "L'hezrou dispone di vantaggio ai tiri salvezza contro incantesimi e altri effetti magici."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "L'hezrou effettua tre attacchi: uno con il morso e due con gli artigli."
+    },
+    {
+      "nome": "Artiglio",
+      "testo": "Attacco con arma da mischia: +7 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 11 (2d6 + 4) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 11,
+            "dadi": "2d6 + 4",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +7 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 15 (2d10 + 4) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 15,
+            "dadi": "2d10 + 4",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

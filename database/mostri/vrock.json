@@ -1,0 +1,109 @@
+{
+  "id": "vrock",
+  "nome": "Vrock",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 314
+  },
+  "tipo": "immondo",
+  "descrittore": "demone",
+  "taglia": "Grande",
+  "allineamento": "caotico malvagio",
+  "caratteristiche": {
+    "for": 17,
+    "des": 15,
+    "cos": 18,
+    "int": 8,
+    "sag": 13,
+    "car": 8
+  },
+  "modificatori": {
+    "for": 3,
+    "des": 2,
+    "cos": 4,
+    "int": -1,
+    "sag": 1,
+    "car": -1
+  },
+  "ca": 15,
+  "ca_tipo": "armatura naturale",
+  "pf": 104,
+  "pf_dadi": "11d10 + 44",
+  "velocita": {
+    "camminare": "12 m",
+    "volare": "18 m"
+  },
+  "resistenze_danni": "freddo, fulmine, fuoco; contundenti, perforanti e taglienti da attacchi non magici",
+  "immunita_danni": "veleno",
+  "immunita_condizioni": "avvelenato",
+  "sensi": "Percezione passiva 11, scurovisione 36 m",
+  "percezione_passiva": 11,
+  "linguaggi": "Abissale, telepatia 36 m",
+  "cr": "6",
+  "pe": 2300,
+  "bonus_competenza": 3,
+  "tratti": [
+    {
+      "nome": "Resistenza alla magia",
+      "testo": "Il vrock dispone di vantaggio ai tiri salvezza contro incantesimi e altri effetti magici."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il vrock effettua due attacchi: uno con il becco e uno con gli artigli."
+    },
+    {
+      "nome": "Artigli",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 14 (2d10 + 3) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 14,
+            "dadi": "2d10 + 3",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Becco",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 10 (2d6 + 3) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 10,
+            "dadi": "2d6 + 3",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Spore",
+      "testo": "Il vrock diffonde una nube di spore tossiche in un raggio di 4,5 metri. Le spore si diffondono nell'ambiente. Ogni creatura in quell'area deve superare un tiro salvezza su Costituzione con CD 14, altrimenti viene avvelenata. Finché è avvelenato in questo modo, il bersaglio subisce 5 (1d10) danni da veleno all'inizio di ogni suo turno, ma può ripetere il tiro salvezza alla fine di ogni turno e, se lo supera, l'effetto svanisce. Anche svuotando una fiala d'acqua santa sul bersaglio si pone termine all'effetto su di lui.",
+      "uso": "ricarica 6",
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 14
+      }
+    },
+    {
+      "nome": "Stridio stordente",
+      "testo": "Il vrock emette un orrendo stridio. Ogni creatura situata entro 6 metri da esso che sia in grado di udirlo e che non sia un demone deve superare un tiro salvezza su Costituzione con CD 14, altrimenti è stordita fino alla fine del turno successivo del vrock.",
+      "uso": "1/giorno",
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 14
+      }
+    }
+  ]
+}

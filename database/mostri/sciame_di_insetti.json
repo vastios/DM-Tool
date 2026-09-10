@@ -1,0 +1,67 @@
+{
+  "id": "sciame_di_insetti",
+  "nome": "Sciame di insetti",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 436
+  },
+  "tipo": "sciame di bestie minuscole",
+  "taglia": "Media",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 3,
+    "des": 13,
+    "cos": 10,
+    "int": 1,
+    "sag": 7,
+    "car": 1
+  },
+  "modificatori": {
+    "for": -4,
+    "des": 1,
+    "cos": 0,
+    "int": -5,
+    "sag": -2,
+    "car": -5
+  },
+  "ca": 12,
+  "ca_tipo": "armatura naturale",
+  "pf": 22,
+  "pf_dadi": "5d8",
+  "velocita": {
+    "camminare": "6 m",
+    "scalare": "6 m"
+  },
+  "immunita_condizioni": "affascinato, afferrato, paralizzato, pietrificato, prono, spaventato, stordito, trattenuto",
+  "sensi": "Percezione passiva 8, vista cieca 3 m",
+  "percezione_passiva": 8,
+  "linguaggi": "—",
+  "cr": "1/2",
+  "pe": 100,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Sciame",
+      "testo": "Lo sciame può occupare lo spazio di un'altra creatura e viceversa, e può muoversi attraverso qualsiasi apertura sufficientemente larga da far passare un insetto Minuscolo. Lo sciame non può recuperare punti ferita, né ottenere punti ferita temporanei."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Morsi",
+      "testo": "Attacco con arma da mischia: +3 al tiro per colpire, portata 0 m, un bersaglio nello spazio dello sciame. Colpito: 10 (4d4) danni perforanti o 5 (2d4) danni perforanti se lo sciame ha la metà dei suoi punti ferita o meno.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 3,
+        "portata": "0 m",
+        "bersaglio": "un bersaglio nello spazio dello sciame",
+        "danni": [
+          {
+            "media": 10,
+            "dadi": "4d4",
+            "tipo": "perforanti o"
+          }
+        ]
+      }
+    }
+  ]
+}

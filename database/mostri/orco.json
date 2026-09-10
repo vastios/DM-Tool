@@ -1,0 +1,83 @@
+{
+  "id": "orco",
+  "nome": "Orco",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 387
+  },
+  "tipo": "umanoide",
+  "descrittore": "orco",
+  "taglia": "Media",
+  "allineamento": "caotico malvagio",
+  "caratteristiche": {
+    "for": 16,
+    "des": 12,
+    "cos": 16,
+    "int": 7,
+    "sag": 11,
+    "car": 10
+  },
+  "modificatori": {
+    "for": 3,
+    "des": 1,
+    "cos": 3,
+    "int": -2,
+    "sag": 0,
+    "car": 0
+  },
+  "ca": 13,
+  "ca_tipo": "armatura di pelle",
+  "pf": 15,
+  "pf_dadi": "2d8 + 6",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "sensi": "Percezione passiva 10, scurovisione 18 m",
+  "percezione_passiva": 10,
+  "linguaggi": "Comune, Orchesco",
+  "cr": "1/2",
+  "pe": 100,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Aggressivo",
+      "testo": "Come azione bonus, l'orco può muoversi fino alla sua velocità massima verso una creatura ostile nel suo campo visivo."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Ascia bipenne",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 9 (1d12 + 3) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 9,
+            "dadi": "1d12 + 3",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Giavellotto",
+      "testo": "Attacco con arma da mischia o a distanza: +5 al tiro per colpire, portata 1,5 m o gittata 9/36 m, un bersaglio. Colpito: 6 (1d6 + 3) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia o distanza",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m o gittata 9/36 m, un bersaglio",
+        "danni": [
+          {
+            "media": 6,
+            "dadi": "1d6 + 3",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "id": "gigante_delle_pietre",
+  "nome": "Gigante delle pietre",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 358
+  },
+  "tipo": "gigante",
+  "taglia": "Enorme",
+  "allineamento": "neutrale",
+  "caratteristiche": {
+    "for": 23,
+    "des": 15,
+    "cos": 20,
+    "int": 10,
+    "sag": 12,
+    "car": 9
+  },
+  "modificatori": {
+    "for": 6,
+    "des": 2,
+    "cos": 5,
+    "int": 0,
+    "sag": 1,
+    "car": -1
+  },
+  "ca": 17,
+  "ca_tipo": "armatura naturale",
+  "pf": 126,
+  "pf_dadi": "11d12 + 55",
+  "velocita": {
+    "camminare": "12 m"
+  },
+  "competenze": {
+    "atletica": 12,
+    "percezione": 4
+  },
+  "sensi": "Percezione passiva 14, scurovisione 18 m",
+  "percezione_passiva": 14,
+  "linguaggi": "Gigante",
+  "cr": "7",
+  "pe": 2900,
+  "bonus_competenza": 3,
+  "tratti": [
+    {
+      "nome": "Mimetizzazione rocciosa",
+      "testo": "Il gigante dispone di vantaggio alle prove di Destrezza (Furtività) effettuate per nascondersi nei terreni rocciosi."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il gigante effettua due attacchi con il randello pesante."
+    },
+    {
+      "nome": "Randello pesante",
+      "testo": "Attacco con arma da mischia: +9 al tiro per colpire, portata 4,5 m, un bersaglio. Colpito: 19 (3d8 + 6) danni contundenti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 9,
+        "portata": "4",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 19,
+            "dadi": "3d8 + 6",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Roccia",
+      "testo": "Attacco con arma a distanza : +9 al tiro per colpire, gittata 18/72 m, un bersaglio. Colpito: 28 (4d10 + 6) danni contundenti. Se il bersaglio è una creatura, deve superare un tiro salvezza su Forza con CD 17, altrimenti viene buttato a terra prono.",
+      "attacco": {
+        "tipo": "distanza",
+        "tiro": 9,
+        "portata": "18/72 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 28,
+            "dadi": "4d10 + 6",
+            "tipo": "contundenti"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "for",
+        "cd": 17
+      }
+    }
+  ],
+  "reazioni": [
+    {
+      "nome": "Afferrare roccia",
+      "testo": "Se una roccia o un oggetto simile viene scagliato contro il gigante, quest'ultimo può afferrarlo superando un tiro salvezza su Destrezza con CD 10, nel qual caso non subisce danni contundenti da esso.",
+      "salvataggio": {
+        "caratteristica": "des",
+        "cd": 10
+      }
+    }
+  ]
+}

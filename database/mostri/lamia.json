@@ -1,0 +1,118 @@
+{
+  "id": "lamia",
+  "nome": "Lamia",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 366
+  },
+  "tipo": "mostruosità",
+  "taglia": "Grande",
+  "allineamento": "caotico malvagio",
+  "caratteristiche": {
+    "for": 16,
+    "des": 13,
+    "cos": 15,
+    "int": 14,
+    "sag": 15,
+    "car": 16
+  },
+  "modificatori": {
+    "for": 3,
+    "des": 1,
+    "cos": 2,
+    "int": 2,
+    "sag": 2,
+    "car": 3
+  },
+  "ca": 13,
+  "ca_tipo": "armatura naturale",
+  "pf": 97,
+  "pf_dadi": "13d10 + 26",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "sensi": "Percezione passiva 12, scurovisione 18 m",
+  "percezione_passiva": 12,
+  "linguaggi": "Abissale, Comune",
+  "cr": "4",
+  "pe": 1100,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Incantesimi innati",
+      "testo": "La caratteristica innata da incantatore del lamia è Carisma (CD del tiro salvezza sull'incantesimo 13). Per sua natura, è in grado di lanciare gli incantesimi indicati di seguito senza aver bisogno di componenti materiali: A volontà: camuffare se stesso (qualsiasi forma umanoide), immagine maggiore 3/giorno ciascuno: charme su persone, immagine speculare, scrutare, suggestione 1/giorno: costrizione",
+      "incantesimi": {
+        "testo": "La caratteristica innata da incantatore del lamia è Carisma (CD del tiro salvezza sull'incantesimo 13). Per sua natura, è in grado di lanciare gli incantesimi indicati di seguito senza aver bisogno di componenti materiali: A volontà: camuffare se stesso (qualsiasi forma umanoide), immagine maggiore 3/giorno ciascuno: charme su persone, immagine speculare, scrutare, suggestione 1/giorno: costrizione",
+        "gruppi": [
+          {
+            "frequenza": "a volontà",
+            "incantesimi": [
+              "camuffare se stesso (qualsiasi forma umanoide)",
+              "immagine maggiore"
+            ]
+          },
+          {
+            "frequenza": "3/giorno ciascuno",
+            "incantesimi": [
+              "charme su persone",
+              "immagine speculare",
+              "scrutare",
+              "suggestione"
+            ]
+          },
+          {
+            "frequenza": "1/giorno",
+            "incantesimi": [
+              "costrizione"
+            ]
+          }
+        ],
+        "cd": 13
+      }
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il lamia effettua due attacchi: uno con gli artigli e uno con il pugnale o con il tocco intossicante."
+    },
+    {
+      "nome": "Artigli",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 14 (2d10 + 3) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 14,
+            "dadi": "2d10 + 3",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Pugnale",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 5 (1d4 + 3) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d4 + 3",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Tocco intossicante",
+      "testo": "Attacco in mischia con incantesimo: +5 al tiro per colpire, portata 1,5 m, una creatura. Colpito: Il bersaglio è magicamente maledetto per 1 ora. Finché la maledizione non termina, il bersaglio subisce svantaggio ai tiri salvezza su Saggezza e a tutte le prove di caratteristica."
+    }
+  ]
+}

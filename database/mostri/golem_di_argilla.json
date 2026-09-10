@@ -1,0 +1,95 @@
+{
+  "id": "golem_di_argilla",
+  "nome": "Golem di argilla",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 360
+  },
+  "tipo": "costrutto",
+  "taglia": "Grande",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 20,
+    "des": 9,
+    "cos": 18,
+    "int": 3,
+    "sag": 8,
+    "car": 1
+  },
+  "modificatori": {
+    "for": 5,
+    "des": -1,
+    "cos": 4,
+    "int": -4,
+    "sag": -1,
+    "car": -5
+  },
+  "ca": 14,
+  "ca_tipo": "armatura naturale",
+  "pf": 133,
+  "pf_dadi": "14d10 + 56",
+  "velocita": {
+    "camminare": "6 m"
+  },
+  "immunita_condizioni": "affascinato, avvelenato, indebolimento, paralizzato, pietrificato, spaventato",
+  "sensi": "Percezione passiva 9, scurovisione 18 m",
+  "percezione_passiva": 9,
+  "linguaggi": "comprende i linguaggi del suo creatore ma non li sa parlare",
+  "cr": "9",
+  "pe": 5000,
+  "bonus_competenza": 4,
+  "tratti": [
+    {
+      "nome": "Armi magiche",
+      "testo": "Gli attacchi con arma del golem sono magici."
+    },
+    {
+      "nome": "Assorbimento dell'acido",
+      "testo": "Ogni volta che il golem riceve danni da acido, non subisce danni e anzi recupera un numero di punti ferita pari ai danni da acido inflitti."
+    },
+    {
+      "nome": "Berserk",
+      "testo": "Ogni volta che il golem inizia il suo turno con 60 punti ferita o meno, si tira un d6. Con un risultato di 6, il golem entra in uno stato di berserk. A ogni suo turno, finché è in stato di berserk, il golem attacca la creatura visibile più vicina. Se nessuna creatura è abbastanza vicina per un attacco, il golem prende di mira un oggetto, prediligendone uno più piccolo di lui. Una volta che il golem è in stato di berserk, non si arresta finché non viene distrutto o non recupera tutti i suoi punti ferita."
+    },
+    {
+      "nome": "Forma immutabile",
+      "testo": "Il golem è immune a qualsiasi incantesimo o effetto che ne altererebbe la forma."
+    },
+    {
+      "nome": "Resistenza alla magia",
+      "testo": "Il golem dispone di vantaggio ai tiri salvezza contro incantesimi e altri effetti magici."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il golem effettua due attacchi con schianto."
+    },
+    {
+      "nome": "Schianto",
+      "testo": "Attacco con arma da mischia: +8 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 16 (2d10 + 5) danni contundenti. Se il bersaglio è una creatura, deve superare un tiro salvezza su Costituzione con CD 15, altrimenti i suoi punti ferita massimi vengono ridotti di un importo pari ai danni inflitti. Il bersaglio muore se questo attacco riduce a 0 i suoi punti ferita massimi. La riduzione permane finché non viene rimossa da un incantesimo ristorare superiore o altre magie analoghe.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 8,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 16,
+            "dadi": "2d10 + 5",
+            "tipo": "contundenti"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 15
+      }
+    },
+    {
+      "nome": "Velocità",
+      "testo": "Fino alla fine del suo turno successivo, il golem ottiene magicamente un bonus di +2 alla CA, dispone di vantaggio ai tiri salvezza su Destrezza e può usare il suo attacco con schianto come azione bonus.",
+      "uso": "ricarica 5–6"
+    }
+  ]
+}

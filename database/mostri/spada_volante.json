@@ -1,0 +1,72 @@
+{
+  "id": "spada_volante",
+  "nome": "Spada volante",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 384
+  },
+  "tipo": "costrutto",
+  "taglia": "Piccola",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 12,
+    "des": 15,
+    "cos": 11,
+    "int": 1,
+    "sag": 5,
+    "car": 1
+  },
+  "modificatori": {
+    "for": 1,
+    "des": 2,
+    "cos": 0,
+    "int": -5,
+    "sag": -3,
+    "car": -5
+  },
+  "ca": 17,
+  "ca_tipo": "armatura naturale",
+  "pf": 17,
+  "pf_dadi": "5d6",
+  "velocita": {
+    "camminare": "0 m",
+    "volare": "15 m (fluttuare)"
+  },
+  "immunita_danni": "psichici, veleno",
+  "immunita_condizioni": "accecato, affascinato, assordato, avvelenato, paralizzato, pietrificato, spaventato",
+  "sensi": "Percezione passiva 7, vista cieca 18 m (cecità oltre questo raggio)",
+  "percezione_passiva": 7,
+  "linguaggi": "—",
+  "cr": "1/4",
+  "pe": 50,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Falso aspetto",
+      "testo": "Finché la spada non vola e rimane immobile, non è distinguibile da una spada normale."
+    },
+    {
+      "nome": "Suscettibilità all'anti-magia",
+      "testo": "La spada è incapacitata finché si trova nell'area di un campo anti-magia . Se bersagliata da un incantesimo dissolvi magie , la spada deve superare un tiro salvezza su Costituzione contro la CD del tiro salvezza sull'incantesimo, altrimenti è priva di sensi per 1 minuto."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Spada lunga",
+      "testo": "Attacco con arma da mischia : +3 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 5 (1d8 + 1) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 3,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d8 + 1",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "id": "golem_di_pietra",
+  "nome": "Golem di pietra",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 362
+  },
+  "tipo": "costrutto",
+  "taglia": "Grande",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 22,
+    "des": 9,
+    "cos": 20,
+    "int": 3,
+    "sag": 11,
+    "car": 1
+  },
+  "modificatori": {
+    "for": 6,
+    "des": -1,
+    "cos": 5,
+    "int": -4,
+    "sag": 0,
+    "car": -5
+  },
+  "ca": 17,
+  "ca_tipo": "armatura naturale",
+  "pf": 178,
+  "pf_dadi": "17d10 + 85",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "immunita_condizioni": "affascinato, avvelenato, indebolimento, paralizzato, pietrificato, spaventato",
+  "sensi": "Percezione passiva 10, scurovisione 36 m",
+  "percezione_passiva": 10,
+  "linguaggi": "comprende i linguaggi del suo creatore ma non li sa parlare",
+  "cr": "10",
+  "pe": 5900,
+  "bonus_competenza": 4,
+  "tratti": [
+    {
+      "nome": "Armi magiche",
+      "testo": "Gli attacchi con arma del golem sono magici."
+    },
+    {
+      "nome": "Forma immutabile",
+      "testo": "Il golem è immune a qualsiasi incantesimo o effetto che ne altererebbe la forma."
+    },
+    {
+      "nome": "Resistenza alla magia",
+      "testo": "Il golem dispone di vantaggio ai tiri salvezza contro incantesimi e altri effetti magici."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il golem effettua due attacchi con schianto."
+    },
+    {
+      "nome": "Schianto",
+      "testo": "Attacco con arma da mischia: +10 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 19 (3d8 + 6) danni contundenti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 10,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 19,
+            "dadi": "3d8 + 6",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Lentezza",
+      "testo": "Il golem prende di mira una o più creature visibili entro 3 metri da lui. Ogni bersaglio deve effettuare un tiro salvezza su Saggezza con CD 17 contro questa magia; se lo fallisce, non può usare reazioni, la sua velocità è dimezzata e non può effettuare più di un attacco nel suo turno. Inoltre, nel suo turno il bersaglio può effettuare un'azione o un'azione bonus, ma non entrambe. Questi effetti durano 1 minuto. Un bersaglio può ripetere il tiro salvezza alla fine di ogni suo turno e, se lo supera, l'effetto svanisce.",
+      "uso": "ricarica 5–6",
+      "salvataggio": {
+        "caratteristica": "sag",
+        "cd": 17
+      }
+    }
+  ]
+}

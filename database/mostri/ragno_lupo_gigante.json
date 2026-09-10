@@ -1,0 +1,82 @@
+{
+  "id": "ragno_lupo_gigante",
+  "nome": "Ragno lupo gigante",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 433
+  },
+  "tipo": "bestia",
+  "taglia": "Media",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 12,
+    "des": 16,
+    "cos": 13,
+    "int": 3,
+    "sag": 12,
+    "car": 4
+  },
+  "modificatori": {
+    "for": 1,
+    "des": 3,
+    "cos": 1,
+    "int": -4,
+    "sag": 1,
+    "car": -3
+  },
+  "ca": 13,
+  "pf": 11,
+  "pf_dadi": "2d8 + 2",
+  "velocita": {
+    "camminare": "12 m",
+    "scalare": "12 m"
+  },
+  "sensi": "Percezione passiva 13, scurovisione 18 m, vista cieca 3 m",
+  "percezione_passiva": 13,
+  "linguaggi": "—",
+  "cr": "1/4",
+  "pe": 50,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Arrampicatele",
+      "testo": "Il ragno ignora le restrizioni di movimento causate dalle ragnatele."
+    },
+    {
+      "nome": "Movimenti del ragno",
+      "testo": "Il ragno può scalare le superfici difficili, compresi i soffitti (lungo i quali si muove a testa in giù), senza effettuare una prova di caratteristica."
+    },
+    {
+      "nome": "Percezione della Ragnatela",
+      "testo": "Finché è in contatto con una ragnatela, il ragno conosce l'ubicazione esatta di ogni altra creatura a contatto con la stessa ragnatela."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +3 al tiro per colpire, portata 1,5 m, una creatura. Colpito: 4 (1d6 + 1) danni perforanti e il bersaglio deve effettuare un tiro salvezza su Costituzione con CD 11 subendo 7 (2d6) danni da veleno in caso di fallimento, o la metà in caso di successo. Se i danni da veleno riducono i punti ferita del bersaglio a 0, esso è stabile ma avvelenato per 1 ora anche dopo aver recuperato punti ferita e, mentre è avvelenato in questo modo, è paralizzato.\nragno lupo gigante Un , più piccolo di un ragno gigante, dà la caccia alle sue prede sui terreni aperti o si nasconde in fossi, crepacci o cavità tra i detriti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 3,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura",
+        "danni": [
+          {
+            "media": 4,
+            "dadi": "1d6 + 1",
+            "tipo": "perforanti e"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 11,
+        "danno_fallimento": {
+          "media": 7,
+          "dadi": "2d6",
+          "tipo": "veleno"
+        }
+      }
+    }
+  ]
+}

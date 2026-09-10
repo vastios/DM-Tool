@@ -1,0 +1,102 @@
+{
+  "id": "manticora",
+  "nome": "Manticora",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 371
+  },
+  "tipo": "mostruosità",
+  "taglia": "Grande",
+  "allineamento": "legale malvagia",
+  "caratteristiche": {
+    "for": 17,
+    "des": 16,
+    "cos": 17,
+    "int": 7,
+    "sag": 12,
+    "car": 8
+  },
+  "modificatori": {
+    "for": 3,
+    "des": 3,
+    "cos": 3,
+    "int": -2,
+    "sag": 1,
+    "car": -1
+  },
+  "ca": 14,
+  "ca_tipo": "armatura naturale",
+  "pf": 68,
+  "pf_dadi": "8d10 + 24",
+  "velocita": {
+    "camminare": "9 m",
+    "volare": "15 m"
+  },
+  "linguaggi": "Comune",
+  "cr": "3",
+  "pe": 700,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Ricrescita degli aculei caudali",
+      "testo": "La manticora possiede ventiquattro aculei caudali. Quelli usati ricrescono quando la manticora completa un riposo lungo."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "La manticora effettua tre attacchi: uno con il morso e due con gli artigli oppure tre con gli aculei caudali."
+    },
+    {
+      "nome": "Artiglio",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 6 (1d6 + 3) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 6,
+            "dadi": "1d6 + 3",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 7 (1d8 + 3) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 7,
+            "dadi": "1d8 + 3",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Aculeo caudale",
+      "testo": "Attacco con arma a distanza: +5 al tiro per colpire, gittata 30/60 m, un bersaglio. Colpito: 7 (1d8 + 3) danni perforanti.",
+      "attacco": {
+        "tipo": "distanza",
+        "tiro": 5,
+        "portata": "30/60 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 7,
+            "dadi": "1d8 + 3",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

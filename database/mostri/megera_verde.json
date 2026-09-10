@@ -1,0 +1,95 @@
+{
+  "id": "megera_verde",
+  "nome": "Megera verde",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 375
+  },
+  "tipo": "folletto",
+  "taglia": "Media",
+  "allineamento": "neutrale malvagio",
+  "caratteristiche": {
+    "for": 18,
+    "des": 12,
+    "cos": 16,
+    "int": 13,
+    "sag": 14,
+    "car": 14
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 1,
+    "cos": 3,
+    "int": 1,
+    "sag": 2,
+    "car": 2
+  },
+  "ca": 17,
+  "ca_tipo": "armatura naturale",
+  "pf": 82,
+  "pf_dadi": "11d8 + 33",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "sensi": "Percezione passiva 14, scurovisione 18 m",
+  "percezione_passiva": 14,
+  "linguaggi": "Comune, Draconico, Silvano",
+  "cr": "3",
+  "pe": 700,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Anfibio",
+      "testo": "La megera può respirare in aria e in acqua."
+    },
+    {
+      "nome": "Imitare",
+      "testo": "La megera può imitare i versi degli animali e le voci degli umanoidi. Una creatura che oda tali suoni riesce a capire che si tratta di imitazioni superando una prova di Saggezza (Intuizione) con CD 14."
+    },
+    {
+      "nome": "Incantesimi innati",
+      "testo": "La caratteristica innata da incantatore della megera è Carisma (CD del tiro salvezza sull'incantesimo 12). Per sua natura, è in grado di lanciare gli incantesimi indicati di seguito senza aver bisogno di componenti materiali: A volontà: beffa crudele, illusione minore, luci danzanti",
+      "incantesimi": {
+        "testo": "La caratteristica innata da incantatore della megera è Carisma (CD del tiro salvezza sull'incantesimo 12). Per sua natura, è in grado di lanciare gli incantesimi indicati di seguito senza aver bisogno di componenti materiali: A volontà: beffa crudele, illusione minore, luci danzanti",
+        "gruppi": [
+          {
+            "frequenza": "a volontà",
+            "incantesimi": [
+              "beffa crudele",
+              "illusione minore",
+              "luci danzanti"
+            ]
+          }
+        ],
+        "cd": 12
+      }
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Artigli",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 13 (2d8 + 4) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 13,
+            "dadi": "2d8 + 4",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Aspetto illusorio",
+      "testo": "La megera avvolge se stessa e tutto ciò che indossa o trasporta in un'illusione magica che la fa apparire come un'altra creatura di taglia e di forma umanoide simile alla sua. L'illusione termina se la megera usa un'azione bonus per terminarla o se muore. I cambiamenti apportati da questo effetto non passano il vaglio di un'ispezione fisica. Per esempio, la megera potrebbe apparire dotata di una pelle liscia, ma chiunque la toccasse sentirebbe che la sua pelle è ruvida. Sotto ogni altro aspetto, una creatura deve effettuare un'azione per ispezionare l'illusione e superare una prova di Intelligenza (Indagare) con CD 20 per capire che la megera è camuffata."
+    },
+    {
+      "nome": "Passaggio invisibile",
+      "testo": ". La megera diventa invisibile magicamente finché non attacca o lancia un incantesimo, o finché non perde la concentrazione (come se si concentrasse su un incantesimo). Mentre è invisibile, non lascia alcuna traccia fisica del suo passaggio, quindi è possibile seguirla solo tramite la magia. Ogni oggetto che indossa o trasporta diventa invisibile insieme a lei."
+    }
+  ]
+}

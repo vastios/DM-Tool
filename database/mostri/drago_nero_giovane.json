@@ -1,0 +1,113 @@
+{
+  "id": "drago_nero_giovane",
+  "nome": "Drago nero giovane",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 341
+  },
+  "tipo": "drago",
+  "taglia": "Grande",
+  "allineamento": "caotico malvagio",
+  "caratteristiche": {
+    "for": 19,
+    "des": 14,
+    "cos": 17,
+    "int": 12,
+    "sag": 11,
+    "car": 15
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 2,
+    "cos": 3,
+    "int": 1,
+    "sag": 0,
+    "car": 2
+  },
+  "ca": 18,
+  "ca_tipo": "armatura naturale",
+  "pf": 127,
+  "pf_dadi": "15d10 + 45",
+  "velocita": {
+    "camminare": "12 m",
+    "nuotare": "12 m",
+    "volare": "24 m"
+  },
+  "competenze": {
+    "furtività": 5,
+    "percezione": 6
+  },
+  "immunita_danni": "acido",
+  "sensi": "Percezione passiva 16, scurovisione 36 m, vista cieca 9 m",
+  "percezione_passiva": 16,
+  "linguaggi": "Comune, Draconico",
+  "cr": "7",
+  "pe": 2900,
+  "bonus_competenza": 3,
+  "tratti": [
+    {
+      "nome": "Anfibio",
+      "testo": "Il drago può respirare in aria e in acqua."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il drago effettua tre attacchi: uno con il morso e due con gli artigli."
+    },
+    {
+      "nome": "Artiglio",
+      "testo": "Attacco con arma da mischia: +7 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 11 (2d6 + 4) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 11,
+            "dadi": "2d6 + 4",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +7 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 15 (2d10 + 4) danni perforanti più 4 (1d8) danni da acido.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 15,
+            "dadi": "2d10 + 4",
+            "tipo": "perforanti"
+          },
+          {
+            "media": 4,
+            "dadi": "1d8",
+            "tipo": "acido"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Soffio di acido",
+      "testo": "Il drago esala una scia di acido lunga 9 metri e larga 1,5 metri. Ogni creatura su quella scia deve effettuare un tiro salvezza su Destrezza con CD 14, subendo 49 (11d8) danni da acido in caso di fallimento, o la metà dei danni in caso di successo.",
+      "uso": "ricarica 5–6",
+      "salvataggio": {
+        "caratteristica": "des",
+        "cd": 14,
+        "danno_fallimento": {
+          "media": 49,
+          "dadi": "11d8",
+          "tipo": "acido"
+        },
+        "successo": "metà danni"
+      }
+    }
+  ]
+}

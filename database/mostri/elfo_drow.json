@@ -1,0 +1,115 @@
+{
+  "id": "elfo_drow",
+  "nome": "Elfo drow",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 350
+  },
+  "tipo": "umanoide",
+  "descrittore": "elfo",
+  "taglia": "Media",
+  "allineamento": "neutrale malvagio",
+  "caratteristiche": {
+    "for": 10,
+    "des": 14,
+    "cos": 10,
+    "int": 11,
+    "sag": 11,
+    "car": 12
+  },
+  "modificatori": {
+    "for": 0,
+    "des": 2,
+    "cos": 0,
+    "int": 0,
+    "sag": 0,
+    "car": 1
+  },
+  "ca": 15,
+  "ca_tipo": "giaco di maglia",
+  "pf": 13,
+  "pf_dadi": "3d8",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "sensi": "Percezione passiva 12, scurovisione 36 m",
+  "percezione_passiva": 12,
+  "linguaggi": "Elfico, Sottocomune",
+  "cr": "1/4",
+  "pe": 50,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Incantesimi innati",
+      "testo": "La caratteristica da incantatore del drow è Carisma (CD del tiro salvezza sull'incantesimo 11). Per sua natura, è in grado di lanciare gli incantesimi indicati di seguito senza aver bisogno di componenti materiali: A volontà: luci danzanti 1/giorno ciascuno: luminescenza, oscurità",
+      "incantesimi": {
+        "testo": "La caratteristica da incantatore del drow è Carisma (CD del tiro salvezza sull'incantesimo 11). Per sua natura, è in grado di lanciare gli incantesimi indicati di seguito senza aver bisogno di componenti materiali: A volontà: luci danzanti 1/giorno ciascuno: luminescenza, oscurità",
+        "gruppi": [
+          {
+            "frequenza": "a volontà",
+            "incantesimi": [
+              "luci danzanti"
+            ]
+          },
+          {
+            "frequenza": "1/giorno ciascuno",
+            "incantesimi": [
+              "luminescenza",
+              "oscurità"
+            ]
+          }
+        ],
+        "caratteristica": "car",
+        "cd": 11
+      }
+    },
+    {
+      "nome": "Retaggio fatato",
+      "testo": "Il drow dispone di vantaggio ai tiri salvezza contro la condizione di affascinato e non può essere addormentato tramite la magia."
+    },
+    {
+      "nome": "Sensibilità al sole",
+      "testo": "Mentre è alla luce del sole, il drow ha uno svantaggio nei tiri per colpire, così come nelle prove di Saggezza (Percezione) che si basano sulla vista."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Spada corta",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 5 (1d6 + 2) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d6 + 2",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Balestra a mano",
+      "testo": "Attacco con arma a distanza: +4 al tiro per colpire, gittata 9/36 m, un bersaglio. Colpito: 5 (1d6 + 2) danni perforanti e il bersaglio deve superare un tiro salvezza su Costituzione con CD 13, altrimenti viene avvelenato per 1 ora. Se il tiro salvezza fallisce di 5 o più, il bersaglio avvelenato rimane anche privo di sensi. Il bersaglio si risveglia se subisce danni o se un'altra creatura usa un'azione per svegliarlo scuotendolo.",
+      "attacco": {
+        "tipo": "distanza",
+        "tiro": 4,
+        "portata": "9/36 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d6 + 2",
+            "tipo": "perforanti e"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 13
+      }
+    }
+  ]
+}

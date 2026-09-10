@@ -1,0 +1,86 @@
+{
+  "id": "gigante_del_fuoco",
+  "nome": "Gigante del fuoco",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 357
+  },
+  "tipo": "gigante",
+  "taglia": "Enorme",
+  "allineamento": "legale malvagio",
+  "caratteristiche": {
+    "for": 25,
+    "des": 9,
+    "cos": 23,
+    "int": 10,
+    "sag": 14,
+    "car": 13
+  },
+  "modificatori": {
+    "for": 7,
+    "des": -1,
+    "cos": 6,
+    "int": 0,
+    "sag": 2,
+    "car": 1
+  },
+  "ca": 18,
+  "ca_tipo": "piastre",
+  "pf": 162,
+  "pf_dadi": "13d12 + 78",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "competenze": {
+    "atletica": 11,
+    "percezione": 6
+  },
+  "immunita_danni": "fuoco",
+  "sensi": "Percezione passiva 16",
+  "percezione_passiva": 16,
+  "linguaggi": "Gigante",
+  "cr": "9",
+  "pe": 5000,
+  "bonus_competenza": 4,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il gigante effettua due attacchi con lo spadone."
+    },
+    {
+      "nome": "Spadone",
+      "testo": "Attacco con arma da mischia: +11 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 28 (6d6 + 7) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 11,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 28,
+            "dadi": "6d6 + 7",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Roccia",
+      "testo": "Attacco con arma a distanza : +11 al tiro per colpire, gittata 18/72 m, un bersaglio. Colpito: 29 (4d10 + 7) danni contundenti.",
+      "attacco": {
+        "tipo": "distanza",
+        "tiro": 11,
+        "portata": "18/72 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 29,
+            "dadi": "4d10 + 7",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    }
+  ]
+}

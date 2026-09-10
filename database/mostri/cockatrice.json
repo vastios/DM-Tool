@@ -1,0 +1,62 @@
+{
+  "id": "cockatrice",
+  "nome": "Cockatrice",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 309
+  },
+  "tipo": "mostruosità",
+  "taglia": "Piccola",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 6,
+    "des": 12,
+    "cos": 12,
+    "int": 2,
+    "sag": 13,
+    "car": 5
+  },
+  "modificatori": {
+    "for": -2,
+    "des": 1,
+    "cos": 1,
+    "int": -4,
+    "sag": 1,
+    "car": -3
+  },
+  "ca": 11,
+  "pf": 27,
+  "pf_dadi": "6d6 + 6",
+  "velocita": {
+    "camminare": "6 m",
+    "volare": "12 m"
+  },
+  "linguaggi": "—",
+  "cr": "1/2",
+  "pe": 100,
+  "bonus_competenza": 2,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +3 al tiro per colpire, portata 1,5 m, una creatura. Colpito: 3 (1d4 + 1) danni perforanti e il bersaglio deve superare un tiro salvezza su Costituzione con CD 11 per non essere pietrificato magicamente. Se la creatura fallisce il tiro salvezza, inizia a trasformarsi in pietra ed è trattenuta. Deve ripetere il tiro salvezza alla fine del suo turno successivo. Se lo supera, l'effetto svanisce. Se lo fallisce, è pietrificata per 24 ore.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 3,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura",
+        "danni": [
+          {
+            "media": 3,
+            "dadi": "1d4 + 1",
+            "tipo": "perforanti e"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 11
+      }
+    }
+  ]
+}

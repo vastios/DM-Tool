@@ -1,0 +1,149 @@
+{
+  "id": "drider",
+  "nome": "Drider",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 347
+  },
+  "tipo": "mostruosità",
+  "taglia": "Grande",
+  "allineamento": "caotico malvagio",
+  "caratteristiche": {
+    "for": 16,
+    "des": 16,
+    "cos": 18,
+    "int": 13,
+    "sag": 14,
+    "car": 12
+  },
+  "modificatori": {
+    "for": 3,
+    "des": 3,
+    "cos": 4,
+    "int": 1,
+    "sag": 2,
+    "car": 1
+  },
+  "ca": 19,
+  "ca_tipo": "armatura naturale",
+  "pf": 123,
+  "pf_dadi": "13d10 + 52",
+  "velocita": {
+    "camminare": "9 m",
+    "scalare": "9 m"
+  },
+  "sensi": "Percezione passiva 15, scurovisione 36 m",
+  "percezione_passiva": 15,
+  "linguaggi": "Elfico, Sottocomune",
+  "cr": "6",
+  "pe": 2300,
+  "bonus_competenza": 3,
+  "tratti": [
+    {
+      "nome": "Arrampicatele",
+      "testo": "Il drider ignora le restrizioni di movimento causate dalle ragnatele."
+    },
+    {
+      "nome": "Incantesimi innati",
+      "testo": "La caratteristica innata da incantatore del drider è Saggezza (CD del tiro salvezza sull'incantesimo 13). Per sua natura, il drider è in grado di lanciare gli incantesimi indicati di seguito senza aver bisogno di componenti materiali: A volontà: luci danzanti 1/giorno ciascuno: luminescenza, oscurità",
+      "incantesimi": {
+        "testo": "La caratteristica innata da incantatore del drider è Saggezza (CD del tiro salvezza sull'incantesimo 13). Per sua natura, il drider è in grado di lanciare gli incantesimi indicati di seguito senza aver bisogno di componenti materiali: A volontà: luci danzanti 1/giorno ciascuno: luminescenza, oscurità",
+        "gruppi": [
+          {
+            "frequenza": "a volontà",
+            "incantesimi": [
+              "luci danzanti"
+            ]
+          },
+          {
+            "frequenza": "1/giorno ciascuno",
+            "incantesimi": [
+              "luminescenza",
+              "oscurità"
+            ]
+          }
+        ],
+        "cd": 13
+      }
+    },
+    {
+      "nome": "Movimenti del ragno",
+      "testo": "Il drider può scalare le superfici difficili, inclusi i soffitti, lungo i quali si muove a testa in giù, senza effettuare una prova di caratteristica."
+    },
+    {
+      "nome": "Retaggio fatato",
+      "testo": "Il drider dispone di vantaggio ai tiri salvezza contro la condizione di affascinato e non può essere addormentato tramite la magia."
+    },
+    {
+      "nome": "Sensibilità al sole",
+      "testo": "Finché è esposto alla luce del sole, il drider subisce svantaggio ai tiri per colpire, oltre che alle prove di Saggezza (Percezione) basate sulla vista."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il drider effettua tre attacchi a scelta con la spada lunga o con l'arco lungo. Può sostituire una di queste mosse con un morso."
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 1,5 m, una creatura. Colpito: 2 (1d4) danni perforanti più 9 (2d8) danni da veleno.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura",
+        "danni": [
+          {
+            "media": 2,
+            "dadi": "1d4",
+            "tipo": "perforanti"
+          },
+          {
+            "media": 9,
+            "dadi": "2d8",
+            "tipo": "veleno"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Spada lunga",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 7 (1d8 + 3) danni taglienti o 8 (1d10 + 3) danni taglienti se impugnata con due mani.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 7,
+            "dadi": "1d8 + 3",
+            "tipo": "taglienti o"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Arco lungo",
+      "testo": "Attacco con arma a distanza: +6 al tiro per colpire, gittata 45/180 m, un bersaglio. Colpito: 7 (1d8 + 3) danni perforanti più 4 (1d8) danni da veleno.",
+      "attacco": {
+        "tipo": "distanza",
+        "tiro": 6,
+        "portata": "45/180 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 7,
+            "dadi": "1d8 + 3",
+            "tipo": "perforanti"
+          },
+          {
+            "media": 4,
+            "dadi": "1d8",
+            "tipo": "veleno"
+          }
+        ]
+      }
+    }
+  ]
+}

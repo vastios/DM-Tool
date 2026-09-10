@@ -1,0 +1,99 @@
+{
+  "id": "drago_di_bronzo_cucciolo",
+  "nome": "Drago di bronzo cucciolo",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 326
+  },
+  "tipo": "drago",
+  "taglia": "Media",
+  "allineamento": "legale buono",
+  "caratteristiche": {
+    "for": 17,
+    "des": 10,
+    "cos": 15,
+    "int": 12,
+    "sag": 11,
+    "car": 15
+  },
+  "modificatori": {
+    "for": 3,
+    "des": 0,
+    "cos": 2,
+    "int": 1,
+    "sag": 0,
+    "car": 2
+  },
+  "ca": 17,
+  "ca_tipo": "armatura naturale",
+  "pf": 32,
+  "pf_dadi": "5d8 + 10",
+  "velocita": {
+    "camminare": "9 m",
+    "nuotare": "9 m",
+    "volare": "18 m"
+  },
+  "competenze": {
+    "furtività": 2,
+    "percezione": 4
+  },
+  "immunita_danni": "fulmine",
+  "sensi": "Percezione passiva 14, scurovisione 18 m, vista cieca 3 m",
+  "percezione_passiva": 14,
+  "linguaggi": "Draconico",
+  "cr": "2",
+  "pe": 450,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Anfibio",
+      "testo": "Il drago può respirare in aria e in acqua."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 8 (1d10 + 3) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 8,
+            "dadi": "1d10 + 3",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Soffi",
+      "testo": "Il drago usa uno dei seguenti soffi.",
+      "uso": "ricarica 5–6"
+    },
+    {
+      "nome": "Soffio di fulmini",
+      "testo": "Il drago esala una scarica di fulmini lunga 12 metri e larga 1,5 metri. Ogni creatura su quella linea deve effettuare un tiro salvezza su Destrezza con CD 12, subendo 16 (3d10) danni da fulmine in caso di fallimento, o la metà dei danni in caso di successo.",
+      "salvataggio": {
+        "caratteristica": "des",
+        "cd": 12,
+        "danno_fallimento": {
+          "media": 16,
+          "dadi": "3d10",
+          "tipo": "fulmine"
+        },
+        "successo": "metà danni"
+      }
+    },
+    {
+      "nome": "Soffio repulsivo",
+      "testo": "Il drago esala energia repulsiva in un cono di 9 metri. Ogni creatura in quell'area deve superare un tiro salvezza su Forza con CD 12. Se lo fallisce, viene scagliata a 9 metri dal drago. Drago di rame",
+      "salvataggio": {
+        "caratteristica": "for",
+        "cd": 12
+      }
+    }
+  ]
+}

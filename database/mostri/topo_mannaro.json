@@ -1,0 +1,116 @@
+{
+  "id": "topo_mannaro",
+  "nome": "Topo mannaro",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 369
+  },
+  "tipo": "umanoide",
+  "descrittore": "umano, mutaforma",
+  "taglia": "Media",
+  "allineamento": "legale malvagio",
+  "caratteristiche": {
+    "for": 10,
+    "des": 15,
+    "cos": 12,
+    "int": 11,
+    "sag": 10,
+    "car": 8
+  },
+  "modificatori": {
+    "for": 0,
+    "des": 2,
+    "cos": 1,
+    "int": 0,
+    "sag": 0,
+    "car": -1
+  },
+  "ca": 12,
+  "pf": 33,
+  "pf_dadi": "6d8 + 6",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "immunita_danni": "contundenti, perforanti e taglienti da attacchi non magici con armi non argentate",
+  "sensi": "Percezione passiva 12, scurovisione 18 m (solo in forma di topo)",
+  "percezione_passiva": 12,
+  "linguaggi": "Comune (non può parlare in forma di topo)",
+  "cr": "2",
+  "pe": 450,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Mutaforma",
+      "testo": "Il topo mannaro può usare la sua azione per trasformarsi in un ibrido umanoide-topo o in un topo gigante, o per tornare alla sua forma naturale, che è umanoide. Le sue statistiche, a eccezione della taglia, restano le stesse in ogni forma. Ogni oggetto che indossa o trasporta non viene trasformato. Se muore, torna alla sua forma naturale."
+    },
+    {
+      "nome": "Olfatto acuto",
+      "testo": "Il topo mannaro dispone di vantaggio alle prove di Saggezza (Percezione) basate sull'olfatto."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il topo mannaro effettua due attacchi, di cui solo uno può essere un morso.",
+      "uso": "solo in forma umanoide o ibrida"
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 4 (1d4 + 2) danni perforanti. Se il bersaglio è un umanoide, deve superare un tiro salvezza su Costituzione con CD 11, altrimenti è costretto a trasformarsi in un topo mannaro.",
+      "uso": "Solo in forma di topo o ibrida",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 4,
+            "dadi": "1d4 + 2",
+            "tipo": "perforanti"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 11
+      }
+    },
+    {
+      "nome": "Spada corta",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 5 (1d6 + 2) danni perforanti.",
+      "uso": "solo in forma umanoide o ibrida",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d6 + 2",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Balestra a mano",
+      "testo": "Attacco con arma a distanza: +4 al tiro per colpire, gittata 9/36 m, un bersaglio. Colpito: 5 (1d6 + 2) danni perforanti.",
+      "uso": "solo in forma umanoide o ibrida",
+      "attacco": {
+        "tipo": "distanza",
+        "tiro": 4,
+        "portata": "9/36 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d6 + 2",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

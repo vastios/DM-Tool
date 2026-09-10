@@ -1,0 +1,93 @@
+{
+  "id": "drago_d_argento_cucciolo",
+  "nome": "Drago d'argento cucciolo",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 323
+  },
+  "tipo": "drago",
+  "taglia": "Media",
+  "allineamento": "legale buono",
+  "caratteristiche": {
+    "for": 19,
+    "des": 10,
+    "cos": 17,
+    "int": 12,
+    "sag": 11,
+    "car": 15
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 0,
+    "cos": 3,
+    "int": 1,
+    "sag": 0,
+    "car": 2
+  },
+  "ca": 17,
+  "ca_tipo": "armatura naturale",
+  "pf": 45,
+  "pf_dadi": "6d8 + 18",
+  "velocita": {
+    "camminare": "9 m",
+    "volare": "18 m"
+  },
+  "competenze": {
+    "furtività": 2,
+    "percezione": 4
+  },
+  "immunita_danni": "freddo",
+  "sensi": "Percezione passiva 14, scurovisione 18 m, vista cieca 3 m",
+  "percezione_passiva": 14,
+  "linguaggi": "Draconico",
+  "cr": "2",
+  "pe": 450,
+  "bonus_competenza": 2,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 9 (1d10 + 4) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 9,
+            "dadi": "1d10 + 4",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Soffi",
+      "testo": "Il drago usa uno dei seguenti soffi.",
+      "uso": "ricarica 5–6"
+    },
+    {
+      "nome": "Soffio di freddo",
+      "testo": "Il drago esala una folata gelida in un cono di 4,5 metri. Ogni creatura in quell'area deve effettuare un tiro salvezza su Costituzione con CD 13, subendo 18 (4d8) danni da freddo in caso di fallimento, o la metà dei danni in caso di successo.",
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 13,
+        "danno_fallimento": {
+          "media": 18,
+          "dadi": "4d8",
+          "tipo": "freddo"
+        },
+        "successo": "metà danni"
+      }
+    },
+    {
+      "nome": "Soffio paralizzante",
+      "testo": "Il drago esala gas paralizzante in un cono di 4,5 metri. Ogni creatura in quell'area deve superare un tiro salvezza su Costituzione con CD 13, altrimenti è paralizzata per 1 minuto. La creatura può ripetere il tiro salvezza alla fine di ogni suo turno e, se lo supera, l'effetto svanisce. Drago di bronzo",
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 13
+      }
+    }
+  ]
+}

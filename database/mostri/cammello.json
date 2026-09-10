@@ -1,0 +1,57 @@
+{
+  "id": "cammello",
+  "nome": "Cammello",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 417
+  },
+  "tipo": "bestia",
+  "taglia": "Grande",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 16,
+    "des": 8,
+    "cos": 14,
+    "int": 2,
+    "sag": 8,
+    "car": 5
+  },
+  "modificatori": {
+    "for": 3,
+    "des": -1,
+    "cos": 2,
+    "int": -4,
+    "sag": -1,
+    "car": -3
+  },
+  "ca": 9,
+  "pf": 15,
+  "pf_dadi": "2d10 + 4",
+  "velocita": {
+    "camminare": "15 m"
+  },
+  "linguaggi": "—",
+  "cr": "1/8",
+  "pe": 25,
+  "bonus_competenza": 2,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 2 (1d4) danni contundenti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 2,
+            "dadi": "1d4",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    }
+  ]
+}

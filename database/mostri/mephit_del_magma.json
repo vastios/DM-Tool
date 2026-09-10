@@ -1,0 +1,105 @@
+{
+  "id": "mephit_del_magma",
+  "nome": "Mephit del magma",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 378
+  },
+  "tipo": "elementale",
+  "taglia": "Piccola",
+  "allineamento": "neutrale malvagio",
+  "caratteristiche": {
+    "for": 8,
+    "des": 12,
+    "cos": 12,
+    "int": 7,
+    "sag": 10,
+    "car": 10
+  },
+  "modificatori": {
+    "for": -1,
+    "des": 1,
+    "cos": 1,
+    "int": -2,
+    "sag": 0,
+    "car": 0
+  },
+  "ca": 11,
+  "pf": 22,
+  "pf_dadi": "5d6 + 5",
+  "velocita": {
+    "camminare": "9 m",
+    "volare": "9 m"
+  },
+  "immunita_danni": "fuoco, veleno",
+  "vulnerabilita_danni": "freddo",
+  "immunita_condizioni": "avvelenato",
+  "sensi": "Percezione passiva 10, scurovisione 18 m",
+  "percezione_passiva": 10,
+  "linguaggi": "Ignan, Terran",
+  "cr": "1/2",
+  "pe": 100,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Esplosione della morte",
+      "testo": "Quando il mephit muore, esplode in un fiume di lava. Ogni creatura situata entro 1,5 metri dal mephit deve effettuare un tiro salvezza su Destrezza con CD 11, subendo 7 (2d6) danni da fuoco in caso di fallimento, o la metà in caso di successo.",
+      "salvataggio": {
+        "caratteristica": "des",
+        "cd": 11,
+        "danno_fallimento": {
+          "media": 7,
+          "dadi": "2d6",
+          "tipo": "fuoco"
+        }
+      }
+    },
+    {
+      "nome": "Falso aspetto",
+      "testo": "Finché il mephit rimane immobile, non è possibile distinguerlo da un normale cumulo di magma."
+    },
+    {
+      "nome": "Incantesimi innati",
+      "testo": "Il mephit può lanciare riscaldare il metallo (CD del tiro salvezza sull'incantesimo 10) come incantesimo innato senza aver bisogno di componenti materiali. La sua caratteristica innata da incantatore è Carisma.",
+      "uso": "1/giorno"
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Artigli",
+      "testo": "Attacco con arma da mischia: +3 al tiro per colpire, portata 1,5 m, una creatura. Colpito: 3 (1d4 + 1) danni taglienti più 2 (1d4) danni da fuoco.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 3,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura",
+        "danni": [
+          {
+            "media": 3,
+            "dadi": "1d4 + 1",
+            "tipo": "taglienti"
+          },
+          {
+            "media": 2,
+            "dadi": "1d4",
+            "tipo": "fuoco"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Soffio di fuoco",
+      "testo": "Il mephit esala aria fredda in un cono di 4,5 metri. Ogni creatura in quell'area deve effettuare un tiro salvezza su Destrezza con CD 11, subendo 7 (2d6) danni da fuoco in caso di fallimento, o la metà in caso di successo.",
+      "uso": "ricarica 6",
+      "salvataggio": {
+        "caratteristica": "des",
+        "cd": 11,
+        "danno_fallimento": {
+          "media": 7,
+          "dadi": "2d6",
+          "tipo": "fuoco"
+        }
+      }
+    }
+  ]
+}

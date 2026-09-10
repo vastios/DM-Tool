@@ -1,0 +1,79 @@
+{
+  "id": "magmin",
+  "nome": "Magmin",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 371
+  },
+  "tipo": "elementale",
+  "taglia": "Piccola",
+  "allineamento": "caotico neutrale",
+  "caratteristiche": {
+    "for": 7,
+    "des": 15,
+    "cos": 12,
+    "int": 8,
+    "sag": 11,
+    "car": 10
+  },
+  "modificatori": {
+    "for": -2,
+    "des": 2,
+    "cos": 1,
+    "int": -1,
+    "sag": 0,
+    "car": 0
+  },
+  "ca": 14,
+  "ca_tipo": "armatura naturale",
+  "pf": 9,
+  "pf_dadi": "2d6 + 2",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "immunita_danni": "fuoco",
+  "sensi": "Percezione passiva 10, scurovisione 18 m",
+  "percezione_passiva": 10,
+  "linguaggi": "Ignan",
+  "cr": "1/2",
+  "pe": 100,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Esplosione della morte",
+      "testo": "Quando il magmin muore, esplode in una deflagrazione di magma e lava. Ogni creatura situata entro 3 metri da lui deve effettuare un tiro salvezza su Destrezza con CD 11, subendo 7 (2d6) danni da fuoco in caso di fallimento, o la metà in caso di successo. Gli oggetti infiammabili non indossati o trasportati che si trovano in quell'area prendono fuoco.",
+      "salvataggio": {
+        "caratteristica": "des",
+        "cd": 11,
+        "danno_fallimento": {
+          "media": 7,
+          "dadi": "2d6",
+          "tipo": "fuoco"
+        }
+      }
+    },
+    {
+      "nome": "Illuminazione fiammeggiante",
+      "testo": "Come azione bonus, il magmin può infiammarsi o estinguere le proprie fiamme. Quando si infiamma, proietta luce intensa in un raggio di 3 metri e luce fioca per altri 3 metri."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Tocco",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 7 (2d6) danni da fuoco. Se il bersaglio è una creatura o un oggetto infiammabile, prende fuoco. Finché una creatura non usa un'azione per estinguere le fiamme, il bersaglio subisce 3 (1d6) danni da fuoco alla fine di ogni suo turno.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 7,
+            "dadi": "2d6",
+            "tipo": "fuoco"
+          }
+        ]
+      }
+    }
+  ]
+}

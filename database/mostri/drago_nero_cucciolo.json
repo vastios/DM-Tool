@@ -1,0 +1,92 @@
+{
+  "id": "drago_nero_cucciolo",
+  "nome": "Drago nero cucciolo",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 341
+  },
+  "tipo": "drago",
+  "taglia": "Media",
+  "allineamento": "caotico malvagio",
+  "caratteristiche": {
+    "for": 15,
+    "des": 14,
+    "cos": 13,
+    "int": 10,
+    "sag": 11,
+    "car": 13
+  },
+  "modificatori": {
+    "for": 2,
+    "des": 2,
+    "cos": 1,
+    "int": 0,
+    "sag": 0,
+    "car": 1
+  },
+  "ca": 17,
+  "ca_tipo": "armatura naturale",
+  "pf": 33,
+  "pf_dadi": "6d8 + 6",
+  "velocita": {
+    "camminare": "9 m",
+    "nuotare": "9 m",
+    "volare": "18 m"
+  },
+  "competenze": {
+    "furtività": 4,
+    "percezione": 4
+  },
+  "immunita_danni": "acido",
+  "sensi": "Percezione passiva 14, scurovisione 18 m, vista cieca 3 m",
+  "percezione_passiva": 14,
+  "linguaggi": "Draconico",
+  "cr": "2",
+  "pe": 450,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Anfibio",
+      "testo": "Il drago può respirare in aria e in acqua."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 7 (1d10 + 2) danni perforanti più 2 (1d4) danni da acido.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 7,
+            "dadi": "1d10 + 2",
+            "tipo": "perforanti"
+          },
+          {
+            "media": 2,
+            "dadi": "1d4",
+            "tipo": "acido"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Soffio di acido",
+      "testo": "Il drago esala una scia di acido lunga 4,5 metri e larga 1,5 metri. Ogni creatura su quella scia deve effettuare un tiro salvezza su Destrezza con CD 11, subendo 22 (5d8) danni da acido in caso di fallimento, o la metà dei danni in caso di successo. Drago rosso",
+      "uso": "ricarica 5–6",
+      "salvataggio": {
+        "caratteristica": "des",
+        "cd": 11,
+        "danno_fallimento": {
+          "media": 22,
+          "dadi": "5d8",
+          "tipo": "acido"
+        },
+        "successo": "metà danni"
+      }
+    }
+  ]
+}

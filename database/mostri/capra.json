@@ -1,0 +1,70 @@
+{
+  "id": "capra",
+  "nome": "Capra",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 418
+  },
+  "tipo": "bestia",
+  "taglia": "Media",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 12,
+    "des": 10,
+    "cos": 11,
+    "int": 2,
+    "sag": 10,
+    "car": 5
+  },
+  "modificatori": {
+    "for": 1,
+    "des": 0,
+    "cos": 0,
+    "int": -4,
+    "sag": 0,
+    "car": -3
+  },
+  "ca": 10,
+  "pf": 4,
+  "pf_dadi": "1d8",
+  "velocita": {
+    "camminare": "12 m"
+  },
+  "linguaggi": "—",
+  "cr": "0",
+  "pe": 10,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Ben piantato",
+      "testo": "La capra ha vantaggio ai tiri salvezza su Forza e Destrezza contro effetti che la farebbero cadere prona."
+    },
+    {
+      "nome": "Carica",
+      "testo": "Se la capra si muove di almeno 6 metri in linea retta verso un bersaglio e poi lo colpisce con un attacco da sfondamento nello stesso turno, il bersaglio subisce 2 (1d4) danni contundenti extra. Se il bersaglio è una creatura, deve superare un tiro salvezza su Forza con CD 10, altrimenti cade a terra prono.",
+      "salvataggio": {
+        "caratteristica": "for",
+        "cd": 10
+      }
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Sfondamento",
+      "testo": "Attacco con arma da mischia: +3 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 3 (1d4 + 1) danni contundenti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 3,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 3,
+            "dadi": "1d4 + 1",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    }
+  ]
+}

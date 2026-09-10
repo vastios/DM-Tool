@@ -1,0 +1,65 @@
+{
+  "id": "falco",
+  "nome": "Falco",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 422
+  },
+  "tipo": "bestia",
+  "taglia": "Minuscola",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 5,
+    "des": 16,
+    "cos": 8,
+    "int": 2,
+    "sag": 14,
+    "car": 6
+  },
+  "modificatori": {
+    "for": -3,
+    "des": 3,
+    "cos": -1,
+    "int": -4,
+    "sag": 2,
+    "car": -2
+  },
+  "ca": 13,
+  "pf": 1,
+  "pf_dadi": "1d4 - 1",
+  "velocita": {
+    "camminare": "3 m",
+    "volare": "18 m"
+  },
+  "sensi": "Percezione passiva 14",
+  "percezione_passiva": 14,
+  "linguaggi": "—",
+  "cr": "0",
+  "pe": 10,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Vista acuta",
+      "testo": "Il falco dispone di vantaggio alle prove di Saggezza (Percezione) basate sulla vista."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Artigli",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 1 danno tagliente.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 1,
+            "dadi": "1",
+            "tipo": "tagliente"
+          }
+        ]
+      }
+    }
+  ]
+}

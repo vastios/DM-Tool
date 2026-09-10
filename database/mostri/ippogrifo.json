@@ -1,0 +1,86 @@
+{
+  "id": "ippogrifo",
+  "nome": "Ippogrifo",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 365
+  },
+  "tipo": "mostruosità",
+  "taglia": "Grande",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 17,
+    "des": 13,
+    "cos": 13,
+    "int": 2,
+    "sag": 12,
+    "car": 8
+  },
+  "modificatori": {
+    "for": 3,
+    "des": 1,
+    "cos": 1,
+    "int": -4,
+    "sag": 1,
+    "car": -1
+  },
+  "ca": 11,
+  "pf": 19,
+  "pf_dadi": "3d10 + 3",
+  "velocita": {
+    "camminare": "12 m",
+    "volare": "18 m"
+  },
+  "sensi": "Percezione passiva 15",
+  "percezione_passiva": 15,
+  "linguaggi": "—",
+  "cr": "1",
+  "pe": 200,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Vista acuta",
+      "testo": "L'ippogrifo dispone di vantaggio alle prove di Saggezza (Percezione) basate sulla vista."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "L'ippogrifo effettua due attacchi: uno con il becco e uno con gli artigli."
+    },
+    {
+      "nome": "Artigli",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 10 (2d6 + 3) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 10,
+            "dadi": "2d6 + 3",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Becco",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 8 (1d10 + 3) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 8,
+            "dadi": "1d10 + 3",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "id": "salamandra",
+  "nome": "Salamandra",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 391
+  },
+  "tipo": "elementale",
+  "taglia": "Grande",
+  "allineamento": "neutrale malvagia",
+  "caratteristiche": {
+    "for": 18,
+    "des": 14,
+    "cos": 15,
+    "int": 11,
+    "sag": 10,
+    "car": 12
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 2,
+    "cos": 2,
+    "int": 0,
+    "sag": 0,
+    "car": 1
+  },
+  "ca": 15,
+  "ca_tipo": "armatura naturale",
+  "pf": 90,
+  "pf_dadi": "12d10 + 24",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "resistenze_danni": "contundenti, perforanti e taglienti da attacchi non magici",
+  "immunita_danni": "fuoco",
+  "sensi": "Percezione passiva 10, scurovisione 18 m",
+  "percezione_passiva": 10,
+  "linguaggi": "Ignan",
+  "cr": "5",
+  "pe": 1800,
+  "bonus_competenza": 3,
+  "tratti": [
+    {
+      "nome": "Armi surriscaldate",
+      "testo": "Ogni arma da mischia di metallo impugnata dalla salamandra infligge 3 (1d6) danni da fuoco extra se il colpo va a segno (già inclusi nell'attacco)."
+    },
+    {
+      "nome": "Corpo surriscaldato",
+      "testo": "Una creatura che tocchi la salamandra o la colpisca con un attacco in mischia trovandosi entro 1,5 metri da essa subisce 7 (2d6) danni da fuoco."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "La salamandra effettua due attacchi: uno con la lancia e uno con la coda."
+    },
+    {
+      "nome": "Coda",
+      "testo": "Attacco con arma da mischia: +7 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 11 (2d6 + 4) danni contundenti più 7 (2d6) danni da fuoco e il bersaglio è afferrato (CD 14 per sfuggire). Finché la presa perdura, il bersaglio è trattenuto e la salamandra può colpirlo automaticamente con la coda e non può effettuare attacchi di questo tipo contro altri.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 11,
+            "dadi": "2d6 + 4",
+            "tipo": "contundenti"
+          },
+          {
+            "media": 7,
+            "dadi": "2d6",
+            "tipo": "fuoco e"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Lancia",
+      "testo": "Attacco con arma da mischia o a distanza: +7 al tiro per colpire, portata 1,5 m o gittata 6/18 m, un bersaglio. Colpito: 11 (2d6 + 4) danni perforanti, o 13 (2d8 + 4) danni perforanti se usata a due mani per effettuare un attacco in mischia, più 3 (1d6) danni da fuoco.",
+      "attacco": {
+        "tipo": "mischia o distanza",
+        "tiro": 7,
+        "portata": "1",
+        "bersaglio": "5 m o gittata 6/18 m, un bersaglio",
+        "danni": [
+          {
+            "media": 11,
+            "dadi": "2d6 + 4",
+            "tipo": "perforanti"
+          },
+          {
+            "media": 3,
+            "dadi": "1d6",
+            "tipo": "fuoco"
+          }
+        ]
+      }
+    }
+  ]
+}

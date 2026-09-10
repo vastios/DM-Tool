@@ -1,0 +1,63 @@
+{
+  "id": "millepiedi_gigante",
+  "nome": "Millepiedi gigante",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 428
+  },
+  "tipo": "bestia",
+  "taglia": "Piccola",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 5,
+    "des": 14,
+    "cos": 12,
+    "int": 1,
+    "sag": 7,
+    "car": 3
+  },
+  "modificatori": {
+    "for": -3,
+    "des": 2,
+    "cos": 1,
+    "int": -5,
+    "sag": -2,
+    "car": -4
+  },
+  "ca": 13,
+  "ca_tipo": "armatura naturale",
+  "pf": 4,
+  "pf_dadi": "1d6 + 1",
+  "velocita": {
+    "camminare": "9 m",
+    "scalare": "9 m"
+  },
+  "linguaggi": "—",
+  "cr": "1/4",
+  "pe": 50,
+  "bonus_competenza": 2,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, una creatura. Colpito: 4 (1d4 + 2) danni perforanti e il bersaglio deve superare un tiro salvezza su Costituzione con CD 11, altrimenti subisce 10 (3d6) danni da veleno. Se i danni da veleno riducono i punti ferita del bersaglio a 0, esso è stabile ma avvelenato per 1 ora anche dopo aver recuperato punti ferita e, mentre è avvelenato in questo modo, è paralizzato.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura",
+        "danni": [
+          {
+            "media": 4,
+            "dadi": "1d4 + 2",
+            "tipo": "perforanti e"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 11
+      }
+    }
+  ]
+}

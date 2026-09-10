@@ -1,0 +1,66 @@
+{
+  "id": "plesiosauro",
+  "nome": "Plesiosauro",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 320
+  },
+  "tipo": "bestia",
+  "taglia": "Grande",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 18,
+    "des": 15,
+    "cos": 16,
+    "int": 2,
+    "sag": 12,
+    "car": 5
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 2,
+    "cos": 3,
+    "int": -4,
+    "sag": 1,
+    "car": -3
+  },
+  "ca": 13,
+  "ca_tipo": "armatura naturale",
+  "pf": 68,
+  "pf_dadi": "8d10 + 24",
+  "velocita": {
+    "camminare": "6 m",
+    "nuotare": "12 m"
+  },
+  "sensi": "Percezione passiva 13",
+  "percezione_passiva": 13,
+  "linguaggi": "—",
+  "cr": "2",
+  "pe": 450,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Apnea",
+      "testo": "Il plesiosauro può trattenere il respiro per 1 ora."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia : +6 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 14 (3d6 + 4) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 14,
+            "dadi": "3d6 + 4",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

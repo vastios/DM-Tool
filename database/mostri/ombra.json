@@ -1,0 +1,76 @@
+{
+  "id": "ombra",
+  "nome": "Ombra",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 385
+  },
+  "tipo": "non morto",
+  "taglia": "Media",
+  "allineamento": "caotica malvagia",
+  "caratteristiche": {
+    "for": 6,
+    "des": 14,
+    "cos": 13,
+    "int": 6,
+    "sag": 10,
+    "car": 8
+  },
+  "modificatori": {
+    "for": -2,
+    "des": 2,
+    "cos": 1,
+    "int": -2,
+    "sag": 0,
+    "car": -1
+  },
+  "ca": 12,
+  "pf": 16,
+  "pf_dadi": "3d8 + 3",
+  "velocita": {
+    "camminare": "12 m"
+  },
+  "resistenze_danni": "acido, freddo, fuoco, fulmine, tuono; contundenti, perforanti e taglienti da attacchi non magici",
+  "immunita_danni": "necrotici, veleno",
+  "vulnerabilita_danni": "radiosi",
+  "immunita_condizioni": "afferrato, avvelenato, indebolimento, paralizzato, pietrificato, prono, spaventato, trattenuto",
+  "sensi": "Percezione passiva 10, scurovisione 18 m",
+  "percezione_passiva": 10,
+  "linguaggi": "—",
+  "cr": "1/2",
+  "pe": 100,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Amorfo",
+      "testo": "L'ombra può muoversi attraverso uno spazio stretto fino a 2,5 centimetri senza doversi stringere."
+    },
+    {
+      "nome": "Debolezza al sole",
+      "testo": "Quando è esposta alla luce del sole, l'ombra subisce svantaggio ai tiri per colpire, alle prove di caratteristica e ai tiri salvezza."
+    },
+    {
+      "nome": "Furtività d'ombra",
+      "testo": "Quando si trova in condizioni di luce fioca o oscurità, l'ombra può nascondersi come azione bonus."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Risucchio di forza",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, una creatura. Colpito: 9 (2d6 + 2) danni necrotici e il punteggio di Forza del bersaglio è ridotto di 1d4. Se questo porta la sua Forza a 0, il bersaglio muore. Altrimenti, questa riduzione dura finché il bersaglio non termina un riposo breve o lungo. Se a causa di questo attacco muore un umanoide non malvagio, una nuova ombra emerge dal cadavere 1d4 ore dopo.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura",
+        "danni": [
+          {
+            "media": 9,
+            "dadi": "2d6 + 2",
+            "tipo": "necrotici e"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "id": "bandito",
+  "nome": "Bandito",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 446
+  },
+  "tipo": "umanoide",
+  "descrittore": "qualsiasi razza",
+  "taglia": "Media",
+  "allineamento": "qualsiasi allineamento non legale",
+  "caratteristiche": {
+    "for": 11,
+    "des": 12,
+    "cos": 12,
+    "int": 10,
+    "sag": 10,
+    "car": 10
+  },
+  "modificatori": {
+    "for": 0,
+    "des": 1,
+    "cos": 1,
+    "int": 0,
+    "sag": 0,
+    "car": 0
+  },
+  "ca": 12,
+  "ca_tipo": "armatura di cuoio",
+  "pf": 11,
+  "pf_dadi": "2d8 + 2",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "linguaggi": "uno qualsiasi (di solito Comune)",
+  "cr": "1/8",
+  "pe": 25,
+  "bonus_competenza": 2,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Scimitarra",
+      "testo": "Attacco con arma da mischia: +3 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 4 (1d6 + 1) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 3,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 4,
+            "dadi": "1d6 + 1",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Balestra leggera",
+      "testo": "Attacco con arma a distanza: +3 al tiro per colpire, gittata 24/96 m, un bersaglio. Colpito: 5 (1d8 + 1) danni perforanti.\nbanditi I agiscono in gruppo e a volte sono guidati da malviventi, veterani o incantatori. Non tutti i banditi sono malvagi: a volte l'oppressione, una calamità, una malattia o una carestia può spingere un individuo onesto a darsi al banditismo.\npirati I sono banditi dei mari. Possono agire da semplici predoni, interessati solo ad accumulare tesori e massacrare i nemici, oppure possono essere corsari autorizzati dalla corona ad attaccare e saccheggiare i vascelli delle nazioni nemiche.",
+      "attacco": {
+        "tipo": "distanza",
+        "tiro": 3,
+        "portata": "24/96 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d8 + 1",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

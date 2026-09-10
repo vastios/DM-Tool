@@ -1,0 +1,185 @@
+{
+  "id": "naga_guardiana",
+  "nome": "Naga guardiana",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 383
+  },
+  "tipo": "mostruosità",
+  "taglia": "Grande",
+  "allineamento": "legale buona",
+  "caratteristiche": {
+    "for": 19,
+    "des": 18,
+    "cos": 16,
+    "int": 16,
+    "sag": 19,
+    "car": 18
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 4,
+    "cos": 3,
+    "int": 3,
+    "sag": 4,
+    "car": 4
+  },
+  "ca": 18,
+  "ca_tipo": "armatura naturale",
+  "pf": 127,
+  "pf_dadi": "15d10 + 45",
+  "velocita": {
+    "camminare": "12 m"
+  },
+  "immunita_danni": "veleno",
+  "immunita_condizioni": "affascinato, avvelenato",
+  "sensi": "Percezione passiva 14, scurovisione 18 m",
+  "percezione_passiva": 14,
+  "linguaggi": "Celestiale, Comune",
+  "cr": "10",
+  "pe": 5900,
+  "bonus_competenza": 4,
+  "tratti": [
+    {
+      "nome": "Incantesimi",
+      "testo": "La naga è un incantatore di 11° livello: la sua caratteristica da incantatore è Saggezza (CD del tiro salvezza sull'incantesimo 16, +8 al tiro per colpire con attacco con incantesimo) e necessita solo di componenti verbali per lanciare i suoi incantesimi. Ha a disposizione i seguenti incantesimi da chierico: Trucchetti (a volontà): fiamma sacra, riparare, taumaturgia 1° livello (4 slot): comando, cura ferite, scudo della fede 2° livello (3 slot): blocca persone, calmare emozioni 3° livello (3 slot): chiaroveggenza, scagliare maledizione 4° livello (3 slot): esilio, libertà di movimento 5° livello (2 slot): colpo infuocato, costrizione 6° livello (1 slot): visione del vero",
+      "incantesimi": {
+        "testo": "La naga è un incantatore di 11° livello: la sua caratteristica da incantatore è Saggezza (CD del tiro salvezza sull'incantesimo 16, +8 al tiro per colpire con attacco con incantesimo) e necessita solo di componenti verbali per lanciare i suoi incantesimi. Ha a disposizione i seguenti incantesimi da chierico: Trucchetti (a volontà): fiamma sacra, riparare, taumaturgia 1° livello (4 slot): comando, cura ferite, scudo della fede 2° livello (3 slot): blocca persone, calmare emozioni 3° livello (3 slot): chiaroveggenza, scagliare maledizione 4° livello (3 slot): esilio, libertà di movimento 5° livello (2 slot): colpo infuocato, costrizione 6° livello (1 slot): visione del vero",
+        "gruppi": [
+          {
+            "tipo": "livello",
+            "livello": 11,
+            "incantesimi": [
+              "la sua caratteristica da incantatore è Saggezza (CD del tiro salvezza sull'incantesimo 16",
+              "+8 al tiro per colpire con attacco con incantesimo)",
+              "necessita solo di componenti verbali per lanciare i suoi incantesimi. Ha a disposizione i seguenti incantesimi da chierico:"
+            ]
+          },
+          {
+            "frequenza": "a volontà",
+            "tipo": "trucchetti",
+            "incantesimi": [
+              "fiamma sacra",
+              "riparare",
+              "taumaturgia"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 1,
+            "slot": 4,
+            "incantesimi": [
+              "comando",
+              "cura ferite",
+              "scudo della fede"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 2,
+            "slot": 3,
+            "incantesimi": [
+              "blocca persone",
+              "calmare emozioni"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 3,
+            "slot": 3,
+            "incantesimi": [
+              "chiaroveggenza",
+              "scagliare maledizione"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 4,
+            "slot": 3,
+            "incantesimi": [
+              "esilio",
+              "libertà di movimento"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 5,
+            "slot": 2,
+            "incantesimi": [
+              "colpo infuocato",
+              "costrizione"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 6,
+            "slot": 1,
+            "incantesimi": [
+              "visione del vero"
+            ]
+          }
+        ],
+        "caratteristica": "sag",
+        "cd": 16
+      }
+    },
+    {
+      "nome": "Rigenerazione",
+      "testo": "Se la naga muore, torna in vita 1d6 giorni dopo e recupera tutti i suoi punti ferita. Solo un incantesimo desiderio può impedire a questo tratto di funzionare."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +8 al tiro per colpire, portata 3 m, una creatura. Colpito: 8 (1d8 + 4) danni perforanti e il bersaglio deve effettuare un tiro salvezza su Costituzione con CD 15, subendo 45 (10d8) danni da veleno in caso di fallimento, o la metà in caso di successo.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 8,
+        "portata": "3 m",
+        "bersaglio": "una creatura",
+        "danni": [
+          {
+            "media": 8,
+            "dadi": "1d8 + 4",
+            "tipo": "perforanti e"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 15,
+        "danno_fallimento": {
+          "media": 45,
+          "dadi": "10d8",
+          "tipo": "veleno"
+        }
+      }
+    },
+    {
+      "nome": "Sputo velenoso",
+      "testo": "Attacco con arma a distanza : +8 al tiro per colpire, gittata 4,5/9 m, una creatura. Colpito: il bersaglio deve effettuare un tiro salvezza su Costituzione con CD 15, subendo 45 (10d8) danni da veleno in caso di fallimento, o la metà in caso di successo.",
+      "attacco": {
+        "tipo": "distanza",
+        "tiro": 8,
+        "portata": "4",
+        "bersaglio": "5/9 m, una creatura",
+        "danni": [
+          {
+            "media": 45,
+            "dadi": "10d8",
+            "tipo": "veleno in"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 15,
+        "danno_fallimento": {
+          "media": 45,
+          "dadi": "10d8",
+          "tipo": "veleno"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "id": "gigante_delle_nuvole",
+  "nome": "Gigante delle nuvole",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 357
+  },
+  "tipo": "gigante",
+  "descrittore": "50%",
+  "taglia": "Enorme",
+  "allineamento": "neutrale buono o neutrale malvagio (50%)",
+  "caratteristiche": {
+    "for": 27,
+    "des": 10,
+    "cos": 22,
+    "int": 12,
+    "sag": 16,
+    "car": 16
+  },
+  "modificatori": {
+    "for": 8,
+    "des": 0,
+    "cos": 6,
+    "int": 1,
+    "sag": 3,
+    "car": 3
+  },
+  "ca": 14,
+  "ca_tipo": "armatura naturale",
+  "pf": 200,
+  "pf_dadi": "16d12 + 96",
+  "velocita": {
+    "camminare": "12 m"
+  },
+  "competenze": {
+    "intuizione": 7,
+    "percezione": 7
+  },
+  "sensi": "Percezione passiva 17",
+  "percezione_passiva": 17,
+  "linguaggi": "Comune, Gigante",
+  "cr": "9",
+  "pe": 5000,
+  "bonus_competenza": 4,
+  "tratti": [
+    {
+      "nome": "Incantesimi innati",
+      "testo": "La caratteristica innata da incantatore del gigante è Carisma. Per sua natura, è in grado di lanciare gli incantesimi indicati di seguito senza aver bisogno di componenti materiali: A volontà: individuazione del magico, luce, nube di nebbia 3/giorno ciascuno: caduta morbida, passo velato, telecinesi, volare 1/giorno ciascuno: controllare tempo atmosferico, forma gassosa",
+      "incantesimi": {
+        "testo": "La caratteristica innata da incantatore del gigante è Carisma. Per sua natura, è in grado di lanciare gli incantesimi indicati di seguito senza aver bisogno di componenti materiali: A volontà: individuazione del magico, luce, nube di nebbia 3/giorno ciascuno: caduta morbida, passo velato, telecinesi, volare 1/giorno ciascuno: controllare tempo atmosferico, forma gassosa",
+        "gruppi": [
+          {
+            "frequenza": "a volontà",
+            "incantesimi": [
+              "individuazione del magico",
+              "luce",
+              "nube di nebbia"
+            ]
+          },
+          {
+            "frequenza": "3/giorno ciascuno",
+            "incantesimi": [
+              "caduta morbida",
+              "passo velato",
+              "telecinesi",
+              "volare"
+            ]
+          },
+          {
+            "frequenza": "1/giorno ciascuno",
+            "incantesimi": [
+              "controllare tempo atmosferico",
+              "forma gassosa"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Olfatto acuto",
+      "testo": "Il gigante dispone di vantaggio alle prove di Saggezza (Percezione) basate sull'olfatto."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il gigante effettua due attacchi con la mazza chiodata."
+    },
+    {
+      "nome": "Mazza chiodata",
+      "testo": "Attacco con arma da mischia: +12 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 21 (3d8 + 8) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 12,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 21,
+            "dadi": "3d8 + 8",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Roccia",
+      "testo": "Attacco con arma a distanza : +12 al tiro per colpire, gittata 18/72 m, un bersaglio. Colpito: 30 (4d10 + 8) danni contundenti.",
+      "attacco": {
+        "tipo": "distanza",
+        "tiro": 12,
+        "portata": "18/72 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 30,
+            "dadi": "4d10 + 8",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,105 @@
+{
+  "id": "gladiatore",
+  "nome": "Gladiatore",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 449
+  },
+  "tipo": "umanoide",
+  "descrittore": "qualsiasi razza",
+  "taglia": "Media",
+  "allineamento": "qualsiasi allineamento",
+  "caratteristiche": {
+    "for": 18,
+    "des": 15,
+    "cos": 16,
+    "int": 10,
+    "sag": 12,
+    "car": 15
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 2,
+    "cos": 3,
+    "int": 0,
+    "sag": 1,
+    "car": 2
+  },
+  "ca": 16,
+  "ca_tipo": "cuoio borchiato, scudo",
+  "pf": 112,
+  "pf_dadi": "15d8 + 45",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "competenze": {
+    "atletica": 10,
+    "intimidire": 5
+  },
+  "sensi": "Percezione passiva 11",
+  "percezione_passiva": 11,
+  "linguaggi": "uno qualsiasi (di solito Comune)",
+  "cr": "5",
+  "pe": 1800,
+  "bonus_competenza": 3,
+  "tratti": [
+    {
+      "nome": "Bruto",
+      "testo": "Quando il gladiatore colpisce con un'arma da mischia, l'attacco infligge un dado extra del tipo di danno dell'arma (già incluso nell'attacco)."
+    },
+    {
+      "nome": "Impavido",
+      "testo": "Il gladiatore dispone di vantaggio ai tiri salvezza contro la condizione spaventato."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il gladiatore sferra tre attacchi in mischia o due attacchi a distanza."
+    },
+    {
+      "nome": "Lancia",
+      "testo": "Attacco con arma da mischia o con arma a distanza: +7 al tiro per colpire, portata 1,5 m o gittata 6/18 m, un bersaglio. Colpito: 11 (2d6 + 4) danni perforanti o 13 (2d8 + 4) danni perforanti se usata a due mani per effettuare un attacco in mischia.",
+      "attacco": {
+        "tipo": "mischia o distanza",
+        "tiro": 7,
+        "portata": "1",
+        "bersaglio": "5 m o gittata 6/18 m, un bersaglio",
+        "danni": [
+          {
+            "media": 11,
+            "dadi": "2d6 + 4",
+            "tipo": "perforanti o"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Scudo da sfondamento",
+      "testo": "Attacco con arma da mischia: +7 al tiro per colpire, portata 1,5 m, una creatura. Colpito: 9 (2d4 + 4) danni contundenti. Se il bersaglio è una creatura di taglia Media o inferiore, deve superare un tiro salvezza su Forza con CD 15, altrimenti viene buttato a terra prono.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura",
+        "danni": [
+          {
+            "media": 9,
+            "dadi": "2d4 + 4",
+            "tipo": "contundenti"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "for",
+        "cd": 15
+      }
+    }
+  ],
+  "reazioni": [
+    {
+      "nome": "Parata",
+      "testo": "Il gladiatore aggiunge 3 alla sua CA contro un attacco in mischia che lo colpirebbe. Per farlo, deve vedere l'attaccante e deve impugnare un'arma da mischia.\ngladiatori I combattono per intrattenere ampie folle in tumulto. Alcuni gladiatori sono brutali lottatori clandestini che affrontano ogni scontro come se fosse una questione di vita o di morte, mentre altri sono duellanti professionisti che esigono tariffe esorbitanti ma raramente combattono fino alla morte."
+    }
+  ]
+}

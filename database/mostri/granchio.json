@@ -1,0 +1,66 @@
+{
+  "id": "granchio",
+  "nome": "Granchio",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 424
+  },
+  "tipo": "bestia",
+  "taglia": "Minuscola",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 2,
+    "des": 11,
+    "cos": 10,
+    "int": 1,
+    "sag": 8,
+    "car": 2
+  },
+  "modificatori": {
+    "for": -4,
+    "des": 0,
+    "cos": 0,
+    "int": -5,
+    "sag": -1,
+    "car": -4
+  },
+  "ca": 11,
+  "ca_tipo": "armatura naturale",
+  "pf": 2,
+  "pf_dadi": "1d4",
+  "velocita": {
+    "camminare": "6 m",
+    "nuotare": "6 m"
+  },
+  "sensi": "Percezione passiva 9, vista cieca 9 m",
+  "percezione_passiva": 9,
+  "linguaggi": "—",
+  "cr": "0",
+  "pe": 10,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Anfibio",
+      "testo": "Il granchio può respirare in aria e in acqua."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Artiglio",
+      "testo": "Attacco con arma da mischia: +0 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 1 danno contundente.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 0,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 1,
+            "dadi": "1",
+            "tipo": "contundente"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "id": "doppelganger",
+  "nome": "Doppelganger",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 321
+  },
+  "tipo": "mostruosità",
+  "descrittore": "mutaforma",
+  "taglia": "Media",
+  "allineamento": "neutrale",
+  "caratteristiche": {
+    "for": 11,
+    "des": 18,
+    "cos": 14,
+    "int": 11,
+    "sag": 12,
+    "car": 14
+  },
+  "modificatori": {
+    "for": 0,
+    "des": 4,
+    "cos": 2,
+    "int": 0,
+    "sag": 1,
+    "car": 2
+  },
+  "ca": 14,
+  "pf": 52,
+  "pf_dadi": "8d8 + 16",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "immunita_condizioni": "affascinato",
+  "sensi": "Percezione passiva 11, scurovisione 18 m",
+  "percezione_passiva": 11,
+  "linguaggi": "Comune",
+  "cr": "3",
+  "pe": 700,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Mutaforma",
+      "testo": "Il doppelganger può usare la sua azione per trasformarsi in un umanoide Piccolo o Medio che abbia visto in precedenza, o per tornare alla sua forma naturale. Le sue statistiche, a eccezione della taglia, restano le stesse in ogni forma. Ogni oggetto che indossa o trasporta non viene trasformato. Se muore, torna alla sua forma naturale."
+    },
+    {
+      "nome": "Attacco a sorpresa",
+      "testo": "Se il doppelganger sorprende una creatura e la colpisce con un attacco durante il primo round di combattimento, il bersaglio subisce 10 (3d6) danni extra dall'attacco."
+    },
+    {
+      "nome": "Imboscata",
+      "testo": "Nel primo round di un combattimento, il doppelganger dispone di vantaggio ai tiri per colpire contro qualsiasi creatura che riesca a cogliere di sorpresa."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il doppelganger effettua due attacchi in mischia."
+    },
+    {
+      "nome": "Schianto",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 7 (1d6 + 4) danni contundenti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 7,
+            "dadi": "1d6 + 4",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Lettura del pensiero",
+      "testo": "Il doppelganger può leggere magicamente i pensieri superficiali di una creatura entro 18 metri da lui. Questo effetto può penetrare le barriere, ma 90 centimetri di legno o terriccio, 60 centimetri di pietra, 5 centimetri di metallo o una sottile lamina di piombo lo bloccano. Mentre il bersaglio si trova entro gittata, il doppelganger può continuare a leggere i suoi pensieri finché non perde la concentrazione (come se si concentrasse su un incantesimo). Quando legge i pensieri del bersaglio, il doppelganger dispone di vantaggio alle prove di Saggezza (Intuizione) e Carisma (Inganno, Intimidire e Persuasione) contro il bersaglio."
+    }
+  ]
+}

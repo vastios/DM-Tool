@@ -1,0 +1,71 @@
+{
+  "id": "lemure",
+  "nome": "Lemure",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 319
+  },
+  "tipo": "immondo",
+  "descrittore": "diavolo",
+  "taglia": "Media",
+  "allineamento": "legale malvagio",
+  "caratteristiche": {
+    "for": 10,
+    "des": 5,
+    "cos": 11,
+    "int": 1,
+    "sag": 11,
+    "car": 3
+  },
+  "modificatori": {
+    "for": 0,
+    "des": -3,
+    "cos": 0,
+    "int": -5,
+    "sag": 0,
+    "car": -4
+  },
+  "ca": 7,
+  "pf": 13,
+  "pf_dadi": "3d8",
+  "velocita": {
+    "camminare": "5 m"
+  },
+  "immunita_danni": "fuoco, veleno",
+  "immunita_condizioni": "affascinato, avvelenato, spaventato",
+  "sensi": "Percezione passiva 10, scurovisione 36 m",
+  "percezione_passiva": 10,
+  "linguaggi": "capisce l'Infernale ma non lo parla",
+  "cr": "0",
+  "pe": 10,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Ringiovanimento infernale",
+      "testo": "Se un lemure muore nei Nove Inferi, torna in vita con tutti i suoi punti ferita dopo 1d10 giorni, a meno che non sia ucciso da una creatura di allineamento buono su cui sia stato lanciato un incantesimo benedizione o che sui suoi resti non venga spruzzata dell'acqua santa."
+    },
+    {
+      "nome": "Vista del diavolo",
+      "testo": "L'oscurità magica non ostacola la scurovisione del lemure."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Pugno",
+      "testo": "Attacco con arma da mischia: +3 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 2 (1d4) danni contundenti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 3,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 2,
+            "dadi": "1d4",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    }
+  ]
+}

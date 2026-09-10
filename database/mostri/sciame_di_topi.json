@@ -1,0 +1,69 @@
+{
+  "id": "sciame_di_topi",
+  "nome": "Sciame di topi",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 438
+  },
+  "tipo": "sciame di bestie minuscole",
+  "taglia": "Media",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 9,
+    "des": 11,
+    "cos": 9,
+    "int": 2,
+    "sag": 10,
+    "car": 3
+  },
+  "modificatori": {
+    "for": -1,
+    "des": 0,
+    "cos": -1,
+    "int": -4,
+    "sag": 0,
+    "car": -4
+  },
+  "ca": 10,
+  "pf": 24,
+  "pf_dadi": "7d8 - 7",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "immunita_condizioni": "affascinato, afferrato, paralizzato, pietrificato, prono, spaventato, stordito, trattenuto",
+  "sensi": "Percezione passiva 10, scurovisione 9 m",
+  "percezione_passiva": 10,
+  "linguaggi": "—",
+  "cr": "1/4",
+  "pe": 50,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Olfatto acuto",
+      "testo": "Lo sciame dispone di vantaggio alle prove di Saggezza (Percezione) basate sull'olfatto."
+    },
+    {
+      "nome": "Sciame",
+      "testo": "Lo sciame può occupare lo spazio di un'altra creatura e viceversa, e può muoversi attraverso qualsiasi apertura abbastanza grande per un ratto Minuscolo. Lo sciame non può recuperare punti ferita, né ottenere punti ferita temporanei."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Morsi",
+      "testo": "Attacco con arma da mischia: +2 al tiro per colpire, portata 0 m, un bersaglio nello spazio dello sciame. Colpito: 7 (2d6) danni perforanti o 3 (1d6) danni perforanti se lo sciame possiede la metà dei suoi punti ferita o meno.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 2,
+        "portata": "0 m",
+        "bersaglio": "un bersaglio nello spazio dello sciame",
+        "danni": [
+          {
+            "media": 7,
+            "dadi": "2d6",
+            "tipo": "perforanti o"
+          }
+        ]
+      }
+    }
+  ]
+}

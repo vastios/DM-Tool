@@ -1,0 +1,59 @@
+{
+  "id": "lucertola_gigante",
+  "nome": "Lucertola gigante",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 426
+  },
+  "tipo": "bestia",
+  "taglia": "Grande",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 15,
+    "des": 12,
+    "cos": 13,
+    "int": 2,
+    "sag": 10,
+    "car": 5
+  },
+  "modificatori": {
+    "for": 2,
+    "des": 1,
+    "cos": 1,
+    "int": -4,
+    "sag": 0,
+    "car": -3
+  },
+  "ca": 12,
+  "ca_tipo": "armatura naturale",
+  "pf": 19,
+  "pf_dadi": "3d10 + 3",
+  "velocita": {
+    "camminare": "9 m",
+    "scalare": "9 m"
+  },
+  "linguaggi": "—",
+  "cr": "1/4",
+  "pe": 50,
+  "bonus_competenza": 2,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 6 (1d8 + 2) danni perforanti.\nlucertola gigante Una può essere cavalcata o usata come bestia da soma. I lucertoloidi le usano anche come animali da compagnia. Le varianti sotterranee sono invece usate come cavalcature e bestie da soma da drow, duergar e altri.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 6,
+            "dadi": "1d8 + 2",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

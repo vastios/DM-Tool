@@ -1,0 +1,65 @@
+{
+  "id": "aquila",
+  "nome": "Aquila",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 415
+  },
+  "tipo": "bestia",
+  "taglia": "Piccola",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 6,
+    "des": 15,
+    "cos": 10,
+    "int": 2,
+    "sag": 14,
+    "car": 7
+  },
+  "modificatori": {
+    "for": -2,
+    "des": 2,
+    "cos": 0,
+    "int": -4,
+    "sag": 2,
+    "car": -2
+  },
+  "ca": 12,
+  "pf": 3,
+  "pf_dadi": "1d6",
+  "velocita": {
+    "camminare": "3 m",
+    "volare": "18 m"
+  },
+  "sensi": "Percezione passiva 14",
+  "percezione_passiva": 14,
+  "linguaggi": "—",
+  "cr": "0",
+  "pe": 10,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Vista acuta",
+      "testo": "L'aquila dispone di vantaggio alle prove di Saggezza (Percezione) basate sulla vista."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Artigli",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 4 (1d4 + 2) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 4,
+            "dadi": "1d4 + 2",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    }
+  ]
+}

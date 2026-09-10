@@ -1,0 +1,116 @@
+{
+  "id": "drago_d_ottone_giovane",
+  "nome": "Drago d'ottone giovane",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 334
+  },
+  "tipo": "drago",
+  "taglia": "Grande",
+  "allineamento": "caotico buono",
+  "caratteristiche": {
+    "for": 19,
+    "des": 10,
+    "cos": 17,
+    "int": 12,
+    "sag": 11,
+    "car": 15
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 0,
+    "cos": 3,
+    "int": 1,
+    "sag": 0,
+    "car": 2
+  },
+  "ca": 17,
+  "ca_tipo": "armatura naturale",
+  "pf": 110,
+  "pf_dadi": "13d10 + 39",
+  "velocita": {
+    "camminare": "12 m",
+    "scavare": "6 m",
+    "volare": "24 m"
+  },
+  "competenze": {
+    "furtività": 3,
+    "percezione": 6,
+    "persuasione": 5
+  },
+  "immunita_danni": "fuoco",
+  "sensi": "Percezione passiva 16, scurovisione 36 m, vista cieca 9 m",
+  "percezione_passiva": 16,
+  "linguaggi": "Comune, Draconico",
+  "cr": "6",
+  "pe": 2300,
+  "bonus_competenza": 3,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il drago effettua tre attacchi: uno con il morso e due con gli artigli."
+    },
+    {
+      "nome": "Artiglio",
+      "testo": "Attacco con arma da mischia: +7 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 11 (2d6 + 4) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 11,
+            "dadi": "2d6 + 4",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +7 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 15 (2d10 + 4) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 15,
+            "dadi": "2d10 + 4",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Soffi",
+      "testo": "Il drago usa uno dei seguenti soffi.",
+      "uso": "ricarica 5–6"
+    },
+    {
+      "nome": "Soffio di fuoco",
+      "testo": "Il drago esala una scia di fuoco lunga 12 metri e larga 1,5 metri. Ogni creatura su quella scia deve effettuare un tiro salvezza su Destrezza con CD 14, subendo 42 (12d6) danni da fuoco in caso di fallimento, o la metà dei danni in caso di successo.",
+      "salvataggio": {
+        "caratteristica": "des",
+        "cd": 14,
+        "danno_fallimento": {
+          "media": 42,
+          "dadi": "12d6",
+          "tipo": "fuoco"
+        },
+        "successo": "metà danni"
+      }
+    },
+    {
+      "nome": "Soffio di sonno",
+      "testo": "Il drago esala gas soporifero in un cono di 9 metri. Ogni creatura nell'area deve superare un tiro salvezza su Costituzione con CD 14, altrimenti diventa priva di sensi per 5 minuti. Questo effetto termina se la creatura subisce danni o se qualcuno usa un'azione per svegliarla.",
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 14
+      }
+    }
+  ]
+}

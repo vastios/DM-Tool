@@ -1,0 +1,85 @@
+{
+  "id": "elementale_dell_acqua",
+  "nome": "Elementale dell'acqua",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 349
+  },
+  "tipo": "elementale",
+  "taglia": "Grande",
+  "allineamento": "neutrale",
+  "caratteristiche": {
+    "for": 18,
+    "des": 14,
+    "cos": 18,
+    "int": 5,
+    "sag": 10,
+    "car": 8
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 2,
+    "cos": 4,
+    "int": -3,
+    "sag": 0,
+    "car": -1
+  },
+  "ca": 14,
+  "ca_tipo": "armatura naturale",
+  "pf": 114,
+  "pf_dadi": "12d10 + 48",
+  "velocita": {
+    "camminare": "9 m",
+    "nuotare": "27 m"
+  },
+  "immunita_danni": "veleno",
+  "immunita_condizioni": "afferrato, avvelenato, indebolimento, paralizzato, pietrificato, privo di sensi, prono, trattenuto",
+  "sensi": "Percezione passiva 10, scurovisione 18 m",
+  "percezione_passiva": 10,
+  "linguaggi": "Aquan",
+  "cr": "5",
+  "pe": 1800,
+  "bonus_competenza": 3,
+  "tratti": [
+    {
+      "nome": "Congelamento",
+      "testo": "Se l'elementale subisce danni da freddo, si congela parzialmente; la sua velocità è ridotta di 6 metri fino alla fine del suo turno successivo."
+    },
+    {
+      "nome": "Forma d'acqua",
+      "testo": "L'elementale può entrare nello spazio di una creatura ostile e soffermarvisi. Può muoversi attraverso uno spazio stretto fino a 2,5 centimetri senza doversi stringere."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "L'elementale effettua due attacchi con schianto."
+    },
+    {
+      "nome": "Schianto",
+      "testo": "Attacco con arma da mischia: +7 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 13 (2d8 + 4) danni contundenti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 13,
+            "dadi": "2d8 + 4",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Sommergere",
+      "testo": "Ogni creatura nello spazio dell'elementale deve effettuare un tiro salvezza su Forza con CD 15; se lo fallisce, subisce 13 (2d8 + 4) danni contundenti. Se la creatura è di taglia Grande o inferiore, viene anche afferrata (CD 14 per sfuggire). Finché la presa perdura, il bersaglio è trattenuto e non può respirare a meno che non riesca a respirare in acqua. Se il bersaglio supera il tiro salvezza, viene spinto fuori dallo spazio dell'elementale. L'elementale può afferrare una creatura Grande o un massimo di due creature Medie o di taglia inferiore contemporaneamente tramite questa capacità. All'inizio di ogni turno dell'elementale, ogni bersaglio afferrato subisce 13 (2d8 + 4) danni contundenti. Con un'azione, una creatura entro 1,5 metri dall'elementale può tirare fuori da esso una creatura o un oggetto effettuando con successo una prova di Forza con CD 14.",
+      "uso": "ricarica 4–6",
+      "salvataggio": {
+        "caratteristica": "for",
+        "cd": 15
+      }
+    }
+  ]
+}

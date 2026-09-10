@@ -1,0 +1,67 @@
+{
+  "id": "pipistrello_gigante",
+  "nome": "Pipistrello gigante",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 431
+  },
+  "tipo": "bestia",
+  "taglia": "Grande",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 15,
+    "des": 16,
+    "cos": 11,
+    "int": 2,
+    "sag": 12,
+    "car": 6
+  },
+  "modificatori": {
+    "for": 2,
+    "des": 3,
+    "cos": 0,
+    "int": -4,
+    "sag": 1,
+    "car": -2
+  },
+  "ca": 13,
+  "pf": 22,
+  "pf_dadi": "4d10",
+  "velocita": {
+    "camminare": "3 m",
+    "volare": "18 m"
+  },
+  "linguaggi": "—",
+  "cr": "1/4",
+  "pe": 50,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Senso radar",
+      "testo": "Il pipistrello non può usare vista cieca se è assordato."
+    },
+    {
+      "nome": "Udito acuto",
+      "testo": "Il pipistrello dispone di vantaggio alle prove di Saggezza (Percezione) basate sull'udito."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, una creatura. Colpito: 5 (1d6 + 2) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d6 + 2",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

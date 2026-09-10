@@ -1,0 +1,97 @@
+{
+  "id": "duergar",
+  "nome": "Duergar",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 347
+  },
+  "tipo": "umanoide",
+  "descrittore": "nano",
+  "taglia": "Media",
+  "allineamento": "legale malvagio",
+  "caratteristiche": {
+    "for": 14,
+    "des": 11,
+    "cos": 14,
+    "int": 11,
+    "sag": 10,
+    "car": 9
+  },
+  "modificatori": {
+    "for": 2,
+    "des": 0,
+    "cos": 2,
+    "int": 0,
+    "sag": 0,
+    "car": -1
+  },
+  "ca": 16,
+  "ca_tipo": "corazza a scaglie, scudo",
+  "pf": 26,
+  "pf_dadi": "4d8 + 8",
+  "velocita": {
+    "camminare": "5 m"
+  },
+  "sensi": "Percezione passiva 10, scurovisione 36 m",
+  "percezione_passiva": 10,
+  "linguaggi": "Nanico, Sottocomune",
+  "cr": "1",
+  "pe": 200,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Resilienza del duergar",
+      "testo": "Il duergar dispone di vantaggio ai tiri salvezza contro veleno, incantesimi e illusioni, nonché per resistere alle condizioni di affascinato o paralizzato."
+    },
+    {
+      "nome": "Sensibilità al sole",
+      "testo": "Finché è esposto alla luce del sole, il duergar subisce svantaggio ai tiri per colpire, oltre che alle prove di Saggezza (Percezione) basate sulla vista."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Ingrandire",
+      "testo": "Per 1 minuto, la taglia del duergar aumenta magicamente, insieme a ogni oggetto che indossa o trasporta. Mentre è ingrandito, il duergar è Grande, raddoppia i suoi dadi di danno per gli attacchi con armi basati sulla Forza (inclusi negli attacchi) ed effettua prove di Forza e tiri salvezza su Forza con un vantaggio. Se il duergar non ha lo spazio per diventare Grande, raggiunge la dimensione massima possibile nello spazio disponibile.",
+      "uso": "ricarica dopo un riposo breve o lungo"
+    },
+    {
+      "nome": "Piccone da guerra",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 6 (1d8 + 2) danni perforanti o 11 (2d8 + 2) danni perforanti quando è ingrandito.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 6,
+            "dadi": "1d8 + 2",
+            "tipo": "perforanti o"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Giavellotto",
+      "testo": "Attacco con arma da mischia o a distanza: +4 al tiro per colpire, portata 1,5 m o gittata 9/36 m, un bersaglio. Colpito: 5 (1d6 + 2) danni perforanti o 9 (2d6 + 2) danni perforanti quando è ingrandito.",
+      "attacco": {
+        "tipo": "mischia o distanza",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m o gittata 9/36 m, un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d6 + 2",
+            "tipo": "perforanti o"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Invisibilità",
+      "testo": "Il duergar diventa magicamente invisibile finché non attacca, non lancia un incantesimo o non usa Ingrandire, oppure finché non perde la concentrazione, fino a un massimo di 1 ora (come se si concentrasse su un incantesimo). Qualsiasi equipaggiamento che il duergar indossa o trasporta diventa invisibile.",
+      "uso": "ricarica dopo un riposo breve o lungo"
+    }
+  ]
+}

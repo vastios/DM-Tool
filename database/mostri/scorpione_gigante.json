@@ -1,0 +1,88 @@
+{
+  "id": "scorpione_gigante",
+  "nome": "Scorpione gigante",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 438
+  },
+  "tipo": "bestia",
+  "taglia": "Grande",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 15,
+    "des": 13,
+    "cos": 15,
+    "int": 1,
+    "sag": 9,
+    "car": 3
+  },
+  "modificatori": {
+    "for": 2,
+    "des": 1,
+    "cos": 2,
+    "int": -5,
+    "sag": -1,
+    "car": -4
+  },
+  "ca": 15,
+  "ca_tipo": "armatura naturale",
+  "pf": 52,
+  "pf_dadi": "7d10 + 14",
+  "velocita": {
+    "camminare": "12 m"
+  },
+  "linguaggi": "—",
+  "cr": "3",
+  "pe": 700,
+  "bonus_competenza": 2,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Lo scorpione effettua tre attacchi: due con gli artigli e uno con il pungiglione."
+    },
+    {
+      "nome": "Artiglio",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 6 (1d8 + 2) danni contundenti e il bersaglio è afferrato (CD 12 per sfuggire). Lo scorpione ha due artigli, ognuno dei quali può afferrare un solo bersaglio.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 6,
+            "dadi": "1d8 + 2",
+            "tipo": "contundenti e"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Pungiglione",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, una creatura. Colpito: 7 (1d10 + 2) danni perforanti e il bersaglio deve effettuare un tiro salvezza su Costituzione con CD 12, subendo 22 (4d10) danni da veleno in caso di fallimento, o la metà in caso di successo.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura",
+        "danni": [
+          {
+            "media": 7,
+            "dadi": "1d10 + 2",
+            "tipo": "perforanti e"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 12,
+        "danno_fallimento": {
+          "media": 22,
+          "dadi": "4d10",
+          "tipo": "veleno"
+        }
+      }
+    }
+  ]
+}

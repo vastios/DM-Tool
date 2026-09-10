@@ -1,0 +1,62 @@
+{
+  "id": "spettro",
+  "nome": "Spettro",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 395
+  },
+  "tipo": "non morto",
+  "taglia": "Media",
+  "allineamento": "caotico malvagio",
+  "caratteristiche": {
+    "for": 1,
+    "des": 14,
+    "cos": 11,
+    "int": 10,
+    "sag": 10,
+    "car": 11
+  },
+  "modificatori": {
+    "for": -5,
+    "des": 2,
+    "cos": 0,
+    "int": 0,
+    "sag": 0,
+    "car": 0
+  },
+  "ca": 12,
+  "pf": 22,
+  "pf_dadi": "5d8",
+  "velocita": {
+    "camminare": "0 m",
+    "volare": "15 m (fluttuare)"
+  },
+  "immunita_danni": "necrotici, veleno",
+  "immunita_condizioni": "affascinato, afferrato, avvelenato, indebolimento, paralizzato, pietrificato, privo di sensi, prono, trattenuto",
+  "sensi": "Percezione passiva 10, scurovisione 18 m",
+  "percezione_passiva": 10,
+  "linguaggi": "capisce quelli che conosceva in vita, ma non è in grado di parlarli",
+  "cr": "1",
+  "pe": 200,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Movimento incorporeo",
+      "testo": "Lo spettro può muoversi attraverso altre creature e oggetti come se fossero terreno difficile. Subisce 5 (1d10) danni da forza se termina il proprio turno all'interno di un oggetto."
+    },
+    {
+      "nome": "Sensibilità al sole",
+      "testo": "Finché è esposto alla luce del sole, lo spettro subisce svantaggio ai tiri per colpire, oltre che alle prove di Saggezza (Percezione) basate sulla vista."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Risucchio di vita",
+      "testo": "Attacco in mischia con incantesimo: +4 al tiro per colpire, portata 1,5 m, una creatura. Colpito: 10 (3d6) danni necrotici. Il bersaglio deve superare un tiro salvezza su Costituzione con CD 10, o i suoi punti ferita massimi vengono ridotti di un importo pari al danno subito. Tale riduzione perdura finché la creatura non termina un riposo lungo. Il bersaglio muore se questo effetto riduce a 0 i suoi punti ferita massimi.",
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 10
+      }
+    }
+  ]
+}

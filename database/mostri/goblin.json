@@ -1,0 +1,83 @@
+{
+  "id": "goblin",
+  "nome": "Goblin",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 360
+  },
+  "tipo": "umanoide",
+  "descrittore": "goblinoide",
+  "taglia": "Piccola",
+  "allineamento": "neutrale malvagio",
+  "caratteristiche": {
+    "for": 8,
+    "des": 14,
+    "cos": 10,
+    "int": 10,
+    "sag": 8,
+    "car": 8
+  },
+  "modificatori": {
+    "for": -1,
+    "des": 2,
+    "cos": 0,
+    "int": 0,
+    "sag": -1,
+    "car": -1
+  },
+  "ca": 15,
+  "ca_tipo": "armatura di cuoio, scudo",
+  "pf": 7,
+  "pf_dadi": "2d6",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "sensi": "Percezione passiva 9, scurovisione 18 m",
+  "percezione_passiva": 9,
+  "linguaggi": "Comune, Goblin",
+  "cr": "1/4",
+  "pe": 50,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Fuga agile",
+      "testo": "Il goblin può utilizzare l'azione disimpegno o nascondersi come azione bonus a ogni suo turno."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Scimitarra",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 5 (1d6 + 2) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d6 + 2",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Arco corto",
+      "testo": "Attacco con arma a distanza : +4 al tiro per colpire, gittata 24/96 m, un bersaglio. Colpito: 5 (1d6 + 2) danni perforanti.",
+      "attacco": {
+        "tipo": "distanza",
+        "tiro": 4,
+        "portata": "24/96 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d6 + 2",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

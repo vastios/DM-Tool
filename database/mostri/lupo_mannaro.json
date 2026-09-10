@@ -1,0 +1,117 @@
+{
+  "id": "lupo_mannaro",
+  "nome": "Lupo mannaro",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 367
+  },
+  "tipo": "umanoide",
+  "descrittore": "umano, mutaforma",
+  "taglia": "Media",
+  "allineamento": "caotico malvagio",
+  "caratteristiche": {
+    "for": 15,
+    "des": 13,
+    "cos": 14,
+    "int": 10,
+    "sag": 11,
+    "car": 10
+  },
+  "modificatori": {
+    "for": 2,
+    "des": 1,
+    "cos": 2,
+    "int": 0,
+    "sag": 0,
+    "car": 0
+  },
+  "ca": 11,
+  "ca_nota": "in forma umanoide, 12 (armatura naturale) in forma di lupo o ibrida",
+  "pf": 58,
+  "pf_dadi": "9d8 + 18",
+  "velocita": {
+    "camminare": "9 m (12 m in forma di lupo)"
+  },
+  "immunita_danni": "contundenti, perforanti e taglienti da attacchi non magici con armi non argentate",
+  "sensi": "Percezione passiva 14",
+  "percezione_passiva": 14,
+  "linguaggi": "Comune (non può parlare in forma di lupo)",
+  "cr": "3",
+  "pe": 700,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Mutaforma",
+      "testo": "Il lupo mannaro può usare la sua azione per trasformarsi in un ibrido umanoide-lupo o in un lupo, o per tornare alla sua forma naturale, che è umanoide. Le sue statistiche, a eccezione della CA, restano le stesse in ogni forma. Ogni oggetto che indossa o trasporta non viene trasformato. Se muore, torna alla sua forma naturale."
+    },
+    {
+      "nome": "Udito e olfatto acuti",
+      "testo": "Il lupo mannaro dispone di vantaggio alle prove di Saggezza (Percezione) basate sull'olfatto o sull'udito."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il lupo mannaro effettua due attacchi: uno con il morso e uno con gli artigli o la lancia.",
+      "uso": "solo in forma umanoide o ibrida"
+    },
+    {
+      "nome": "Artigli",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, una creatura. Colpito: 7 (2d4 + 2) danni taglienti.",
+      "uso": "solo in forma ibrida",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura",
+        "danni": [
+          {
+            "media": 7,
+            "dadi": "2d4 + 2",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 6 (1d8 + 2) danni perforanti. Se il bersaglio è un umanoide, deve superare un tiro salvezza su Costituzione con CD 12, altrimenti è costretto a trasformarsi in un lupo mannaro.",
+      "uso": "solo in forma di lupo o ibrida",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 6,
+            "dadi": "1d8 + 2",
+            "tipo": "perforanti"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 12
+      }
+    },
+    {
+      "nome": "Lancia",
+      "testo": "Attacco con arma da mischia o a distanza: +4 al tiro per colpire, portata 1,5 m o gittata 6/18 m, una creatura. Colpito: 5 (1d6 + 2) danni perforanti o 6 (1d8 + 2) danni perforanti se impugnata con due mani per effettuare un attacco in mischia.",
+      "uso": "solo in forma umanoide",
+      "attacco": {
+        "tipo": "mischia o distanza",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m o gittata 6/18 m, una creatura",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d6 + 2",
+            "tipo": "perforanti o"
+          }
+        ]
+      }
+    }
+  ]
+}

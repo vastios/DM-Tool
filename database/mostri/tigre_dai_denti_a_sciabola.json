@@ -1,0 +1,89 @@
+{
+  "id": "tigre_dai_denti_a_sciabola",
+  "nome": "Tigre dai denti a sciabola",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 442
+  },
+  "tipo": "bestia",
+  "taglia": "Grande",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 18,
+    "des": 14,
+    "cos": 15,
+    "int": 3,
+    "sag": 12,
+    "car": 8
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 2,
+    "cos": 2,
+    "int": -4,
+    "sag": 1,
+    "car": -1
+  },
+  "ca": 12,
+  "pf": 52,
+  "pf_dadi": "7d10 + 14",
+  "velocita": {
+    "camminare": "12 m"
+  },
+  "sensi": "Percezione passiva 13",
+  "percezione_passiva": 13,
+  "linguaggi": "—",
+  "cr": "2",
+  "pe": 450,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Balzo",
+      "testo": "Se la tigre si muove di almeno 6 metri in linea retta verso una creatura e poi la colpisce con un attacco con gli artigli nello stesso turno, quel bersaglio deve superare un tiro salvezza su Forza con CD 14, altrimenti cade a terra prono. Se il bersaglio è prono, la tigre può effettuare un attacco con il morso contro di esso come azione bonus.",
+      "salvataggio": {
+        "caratteristica": "for",
+        "cd": 14
+      }
+    },
+    {
+      "nome": "Olfatto acuto",
+      "testo": "La tigre dispone di vantaggio alle prove di Saggezza (Percezione) basate sull'olfatto."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Artiglio",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 12 (2d6 + 5) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 12,
+            "dadi": "2d6 + 5",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 10 (1d10 + 5) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 10,
+            "dadi": "1d10 + 5",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

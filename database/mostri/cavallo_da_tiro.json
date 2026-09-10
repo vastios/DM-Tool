@@ -1,0 +1,57 @@
+{
+  "id": "cavallo_da_tiro",
+  "nome": "Cavallo da tiro",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 419
+  },
+  "tipo": "bestia",
+  "taglia": "Grande",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 18,
+    "des": 10,
+    "cos": 12,
+    "int": 2,
+    "sag": 11,
+    "car": 7
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 0,
+    "cos": 1,
+    "int": -4,
+    "sag": 0,
+    "car": -2
+  },
+  "ca": 10,
+  "pf": 19,
+  "pf_dadi": "3d10 + 3",
+  "velocita": {
+    "camminare": "12 m"
+  },
+  "linguaggi": "—",
+  "cr": "1/4",
+  "pe": 50,
+  "bonus_competenza": 2,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Zoccoli",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 9 (2d4 + 4) danni contundenti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 9,
+            "dadi": "2d4 + 4",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    }
+  ]
+}

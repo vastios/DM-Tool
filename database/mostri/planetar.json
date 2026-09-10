@@ -1,0 +1,130 @@
+{
+  "id": "planetar",
+  "nome": "Planetar",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 301
+  },
+  "tipo": "celestiale",
+  "taglia": "Grande",
+  "allineamento": "legale buono",
+  "caratteristiche": {
+    "for": 24,
+    "des": 20,
+    "cos": 24,
+    "int": 19,
+    "sag": 22,
+    "car": 25
+  },
+  "modificatori": {
+    "for": 7,
+    "des": 5,
+    "cos": 7,
+    "int": 4,
+    "sag": 6,
+    "car": 7
+  },
+  "ca": 19,
+  "ca_tipo": "armatura naturale",
+  "pf": 200,
+  "pf_dadi": "16d10 + 112",
+  "velocita": {
+    "camminare": "12 m",
+    "volare": "36 m"
+  },
+  "competenze": {
+    "percezione": 11
+  },
+  "resistenze_danni": "radiosi, contundenti, perforanti e taglienti da attacchi non magici",
+  "immunita_condizioni": "affascinato, indebolimento, spaventato",
+  "sensi": "Percezione passiva 21, vista pura 36 m",
+  "percezione_passiva": 21,
+  "linguaggi": "tutti, telepatia 36 m",
+  "cr": "16",
+  "pe": 15000,
+  "bonus_competenza": 5,
+  "tratti": [
+    {
+      "nome": "Armi angeliche",
+      "testo": "Gli attacchi con arma del planetar sono magici. Quando il planetar colpisce con qualsiasi arma, la sua arma infligge 5d8 danni radiosi extra (già inclusi nell'attacco)."
+    },
+    {
+      "nome": "Consapevolezza divina",
+      "testo": "Il planetar sa riconoscere le menzogne."
+    },
+    {
+      "nome": "Incantesimi innati",
+      "testo": "La caratteristica da incantatore del planetar è Carisma (CD del tiro salvezza sull'incantesimo 20). Per sua natura, il planetar è in grado di lanciare gli incantesimi indicati di seguito senza aver bisogno di componenti materiali: A volontà: individuazione del bene e del male, invisibilità (solo se stesso) 3/giorno ciascuno: barriera di lame, colpo infuocato, dissolvi il bene e il male, rianimare morti 1/giorno ciascuno: comunione, controllare tempo atmosferico, piaga degli insetti",
+      "incantesimi": {
+        "testo": "La caratteristica da incantatore del planetar è Carisma (CD del tiro salvezza sull'incantesimo 20). Per sua natura, il planetar è in grado di lanciare gli incantesimi indicati di seguito senza aver bisogno di componenti materiali: A volontà: individuazione del bene e del male, invisibilità (solo se stesso) 3/giorno ciascuno: barriera di lame, colpo infuocato, dissolvi il bene e il male, rianimare morti 1/giorno ciascuno: comunione, controllare tempo atmosferico, piaga degli insetti",
+        "gruppi": [
+          {
+            "frequenza": "a volontà",
+            "incantesimi": [
+              "individuazione del bene",
+              "del male",
+              "invisibilità (solo se stesso)"
+            ]
+          },
+          {
+            "frequenza": "3/giorno ciascuno",
+            "incantesimi": [
+              "barriera di lame",
+              "colpo infuocato",
+              "dissolvi il bene",
+              "il male",
+              "rianimare morti"
+            ]
+          },
+          {
+            "frequenza": "1/giorno ciascuno",
+            "incantesimi": [
+              "comunione",
+              "controllare tempo atmosferico",
+              "piaga degli insetti"
+            ]
+          }
+        ],
+        "caratteristica": "car",
+        "cd": 20
+      }
+    },
+    {
+      "nome": "Resistenza alla magia",
+      "testo": "Il planetar dispone di vantaggio ai tiri salvezza contro incantesimi e altri effetti magici."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il planetar effettua due attacchi in mischia."
+    },
+    {
+      "nome": "Spadone",
+      "testo": "Attacco con arma da mischia: +12 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 21 (4d6 + 7) danni taglienti più 22 (5d8) danni radiosi.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 12,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 21,
+            "dadi": "4d6 + 7",
+            "tipo": "taglienti"
+          },
+          {
+            "media": 22,
+            "dadi": "5d8",
+            "tipo": "radiosi"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Tocco Guaritore",
+      "testo": "Il planetar tocca un'altra creatura. Il bersaglio recupera magicamente 30 (6d8 + 3) punti ferita ed è liberato da qualsiasi maledizione, malattia, veleno, cecità o sordità.",
+      "uso": "4/giorno"
+    }
+  ]
+}

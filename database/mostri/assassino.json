@@ -1,0 +1,122 @@
+{
+  "id": "assassino",
+  "nome": "Assassino",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 445
+  },
+  "tipo": "umanoide",
+  "descrittore": "qualsiasi razza",
+  "taglia": "Media",
+  "allineamento": "qualsiasi allineamento non buono",
+  "caratteristiche": {
+    "for": 11,
+    "des": 16,
+    "cos": 14,
+    "int": 13,
+    "sag": 11,
+    "car": 10
+  },
+  "modificatori": {
+    "for": 0,
+    "des": 3,
+    "cos": 2,
+    "int": 1,
+    "sag": 0,
+    "car": 0
+  },
+  "ca": 15,
+  "ca_tipo": "cuoio borchiato",
+  "pf": 78,
+  "pf_dadi": "12d8 + 24",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "competenze": {
+    "acrobazia": 6,
+    "furtività": 9,
+    "inganno": 3,
+    "percezione": 3
+  },
+  "resistenze_danni": "veleno",
+  "sensi": "Percezione passiva 13",
+  "percezione_passiva": 13,
+  "linguaggi": "Gergo Ladresco più due qualsiasi",
+  "cr": "8",
+  "pe": 3900,
+  "bonus_competenza": 3,
+  "tratti": [
+    {
+      "nome": "Assassinare",
+      "testo": "Durante il suo primo turno, l'assassino dispone di vantaggio ai tiri per colpire contro ogni creatura che non abbia ancora svolto il proprio turno. Ogni colpo che va a segno contro una creatura sorpresa è considerato un colpo critico."
+    },
+    {
+      "nome": "Elusione",
+      "testo": "Se l'assassino è soggetto a un effetto che gli consente di effettuare un tiro salvezza su Destrezza per subire danni dimezzati, non subisce alcun danno in caso di successo, e ne subisce solo metà in caso di fallimento."
+    },
+    {
+      "nome": "Attacco furtivo",
+      "testo": "Una volta per turno, l'assassino infligge 14 (4d6) danni extra quando colpisce un bersaglio con un attacco con un'arma e ha vantaggio al tiro per colpire, oppure quando il bersaglio si trova entro 1,5 metri da un alleato dell'assassino (purché l'alleato non sia incapacitato e l'assassino non subisca svantaggio al tiro per colpire)."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "L'assassino effettua due attacchi con la spada corta."
+    },
+    {
+      "nome": "Spada corta",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 6 (1d6 + 3) danni perforanti e il bersaglio deve effettuare un tiro salvezza su Costituzione con CD 15, subendo 24 (7d6) danni da veleno in caso di fallimento, o la metà dei danni in caso di successo",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 6,
+            "dadi": "1d6 + 3",
+            "tipo": "perforanti e"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 15,
+        "danno_fallimento": {
+          "media": 24,
+          "dadi": "7d6",
+          "tipo": "veleno"
+        },
+        "successo": "metà danni"
+      }
+    },
+    {
+      "nome": "Balestra leggera",
+      "testo": "Attacco con arma a distanza: +6 al tiro per colpire, gittata 24/96 m, un bersaglio. Colpito: 7 (1d8 + 3) danni perforanti e il bersaglio deve effettuare un tiro salvezza su Costituzione con CD 15, subendo 24 (7d6) danni da veleno in caso di fallimento, o la metà dei danni in caso di successo\nassassini Gli , addestrati nell'uso dei veleni, sono killer spietati che agiscono per conto di nobili, maestri di gilda, sovrani e di chiunque li paghi debitamente.",
+      "attacco": {
+        "tipo": "distanza",
+        "tiro": 6,
+        "portata": "24/96 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 7,
+            "dadi": "1d8 + 3",
+            "tipo": "perforanti e"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 15,
+        "danno_fallimento": {
+          "media": 24,
+          "dadi": "7d6",
+          "tipo": "veleno"
+        },
+        "successo": "metà danni"
+      }
+    }
+  ]
+}

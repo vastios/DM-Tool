@@ -1,0 +1,117 @@
+{
+  "id": "cultista_fanatico",
+  "nome": "Cultista fanatico",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 448
+  },
+  "tipo": "umanoide",
+  "descrittore": "qualsiasi razza",
+  "taglia": "Media",
+  "allineamento": "qualsiasi allineamento non buono",
+  "caratteristiche": {
+    "for": 11,
+    "des": 14,
+    "cos": 12,
+    "int": 10,
+    "sag": 13,
+    "car": 14
+  },
+  "modificatori": {
+    "for": 0,
+    "des": 2,
+    "cos": 1,
+    "int": 0,
+    "sag": 1,
+    "car": 2
+  },
+  "ca": 13,
+  "ca_tipo": "armatura di cuoio",
+  "pf": 33,
+  "pf_dadi": "6d8 + 6",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "sensi": "Percezione passiva 11",
+  "percezione_passiva": 11,
+  "linguaggi": "uno qualsiasi (di solito Comune)",
+  "cr": "2",
+  "pe": 450,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Devozione oscura",
+      "testo": "Il fanatico dispone di vantaggio ai tiri salvezza contro le condizioni affascinato e spaventato."
+    },
+    {
+      "nome": "Incantesimi",
+      "testo": "Il fanatico è un incantatore di 4° livello: la sua caratteristica da incantatore è Saggezza (CD del tiro salvezza sull'incantesimo 11, +3 al tiro per colpire con attacco con incantesimo). Il fanatico ha a disposizione i seguenti incantesimi da chierico: Trucchetti (a volontà): fiamma sacra, luce, taumaturgia 1° livello (4 slot): comando, infliggi ferite, scudo della fede 2° livello (3 slot): arma spirituale, blocca persone",
+      "incantesimi": {
+        "testo": "Il fanatico è un incantatore di 4° livello: la sua caratteristica da incantatore è Saggezza (CD del tiro salvezza sull'incantesimo 11, +3 al tiro per colpire con attacco con incantesimo). Il fanatico ha a disposizione i seguenti incantesimi da chierico: Trucchetti (a volontà): fiamma sacra, luce, taumaturgia 1° livello (4 slot): comando, infliggi ferite, scudo della fede 2° livello (3 slot): arma spirituale, blocca persone",
+        "gruppi": [
+          {
+            "tipo": "livello",
+            "livello": 4,
+            "incantesimi": [
+              "la sua caratteristica da incantatore è Saggezza (CD del tiro salvezza sull'incantesimo 11",
+              "+3 al tiro per colpire con attacco con incantesimo). Il fanatico ha a disposizione i seguenti incantesimi da chierico:"
+            ]
+          },
+          {
+            "frequenza": "a volontà",
+            "tipo": "trucchetti",
+            "incantesimi": [
+              "fiamma sacra",
+              "luce",
+              "taumaturgia"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 1,
+            "slot": 4,
+            "incantesimi": [
+              "comando",
+              "infliggi ferite",
+              "scudo della fede"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 2,
+            "slot": 3,
+            "incantesimi": [
+              "arma spirituale",
+              "blocca persone"
+            ]
+          }
+        ],
+        "caratteristica": "sag",
+        "cd": 11
+      }
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il fanatico effettua due attacchi in mischia."
+    },
+    {
+      "nome": "Pugnale",
+      "testo": "Attacco con arma da mischia o a distanza: +4 al tiro per colpire, portata 1,5 m o gittata 6/18 m, una creatura. Colpito: 4 (1d4 + 2) danni perforanti.\nfanatici I fanno spesso parte di un culto e usano il loro carisma e i dogmi che conoscono per influenzare i deboli e approfittarsi di loro. Molti sono interessati al potere personale più di qualsiasi altra cosa.",
+      "attacco": {
+        "tipo": "mischia o distanza",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m o gittata 6/18 m, una creatura",
+        "danni": [
+          {
+            "media": 4,
+            "dadi": "1d4 + 2",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "id": "azer",
+  "nome": "Azer",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 304
+  },
+  "tipo": "elementale",
+  "taglia": "Media",
+  "allineamento": "legale neutrale",
+  "caratteristiche": {
+    "for": 17,
+    "des": 12,
+    "cos": 15,
+    "int": 12,
+    "sag": 13,
+    "car": 10
+  },
+  "modificatori": {
+    "for": 3,
+    "des": 1,
+    "cos": 2,
+    "int": 1,
+    "sag": 1,
+    "car": 0
+  },
+  "ca": 17,
+  "ca_tipo": "armatura naturale, scudo",
+  "pf": 39,
+  "pf_dadi": "6d8 + 12",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "immunita_danni": "fuoco, veleno",
+  "immunita_condizioni": "avvelenato",
+  "sensi": "Percezione passiva 11",
+  "percezione_passiva": 11,
+  "linguaggi": "Ignan",
+  "cr": "2",
+  "pe": 450,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Armi surriscaldate",
+      "testo": "Quando l'azer colpisce con un'arma da mischia in metallo, infligge 3 (1d6) danni da fuoco extra (già inclusi nell'attacco)."
+    },
+    {
+      "nome": "Corpo surriscaldato",
+      "testo": "Una creatura che tocchi l'azer o lo colpisca con un attacco in mischia mentre si trova a 1,5 metri da esso subisce 5 (1d10) danni da fuoco."
+    },
+    {
+      "nome": "Illuminazione",
+      "testo": "L'azer emana luce intensa in un raggio di 3 metri e luce fioca per ulteriori 3 metri."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Martello da guerra",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 7 (1d8 + 3) danni contundenti, o 8 (1d10 + 3) danni contundenti se usato a due mani per effettuare un attacco in mischia, più 3 (1d6) danni da fuoco.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 7,
+            "dadi": "1d8 + 3",
+            "tipo": "contundenti"
+          },
+          {
+            "media": 3,
+            "dadi": "1d6",
+            "tipo": "fuoco"
+          }
+        ]
+      }
+    }
+  ]
+}

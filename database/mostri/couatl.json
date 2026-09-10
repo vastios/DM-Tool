@@ -1,0 +1,138 @@
+{
+  "id": "couatl",
+  "nome": "Couatl",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 309
+  },
+  "tipo": "celestiale",
+  "taglia": "Media",
+  "allineamento": "legale buono",
+  "caratteristiche": {
+    "for": 16,
+    "des": 20,
+    "cos": 17,
+    "int": 18,
+    "sag": 20,
+    "car": 18
+  },
+  "modificatori": {
+    "for": 3,
+    "des": 5,
+    "cos": 3,
+    "int": 4,
+    "sag": 5,
+    "car": 4
+  },
+  "ca": 19,
+  "ca_tipo": "armatura naturale",
+  "pf": 97,
+  "pf_dadi": "13d8 + 39",
+  "velocita": {
+    "camminare": "9 m",
+    "volare": "27 m"
+  },
+  "resistenze_danni": "radiosi",
+  "immunita_danni": "psichici; contundenti, perforanti e taglienti da attacchi non magici",
+  "sensi": "Percezione passiva 15, vista pura 36 m",
+  "percezione_passiva": 15,
+  "linguaggi": "tutti, telepatia 36 m",
+  "cr": "4",
+  "pe": 1100,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Armi magiche",
+      "testo": "Gli attacchi con arma del couatl sono magici."
+    },
+    {
+      "nome": "Incantesimi innati",
+      "testo": "La caratteristica da incantatore del couatl è Carisma (CD del tiro salvezza sull'incantesimo 14). Il couatl può lanciare i seguenti incantesimi innati, che richiedono solo componenti verbali: A volontà: individuazione dei pensieri, individuazione del bene e del male, individuazione del magico 3/giorno ciascuno: benedizione, creare cibo e acqua, cura ferite, protezione dai veleni, ristorare inferiore, santuario, scudo 1/giorno ciascuno: ristorare superiore, scrutare, sogno",
+      "incantesimi": {
+        "testo": "La caratteristica da incantatore del couatl è Carisma (CD del tiro salvezza sull'incantesimo 14). Il couatl può lanciare i seguenti incantesimi innati, che richiedono solo componenti verbali: A volontà: individuazione dei pensieri, individuazione del bene e del male, individuazione del magico 3/giorno ciascuno: benedizione, creare cibo e acqua, cura ferite, protezione dai veleni, ristorare inferiore, santuario, scudo 1/giorno ciascuno: ristorare superiore, scrutare, sogno",
+        "gruppi": [
+          {
+            "frequenza": "a volontà",
+            "incantesimi": [
+              "individuazione dei pensieri",
+              "individuazione del bene",
+              "del male",
+              "individuazione del magico"
+            ]
+          },
+          {
+            "frequenza": "3/giorno ciascuno",
+            "incantesimi": [
+              "benedizione",
+              "creare cibo",
+              "acqua",
+              "cura ferite",
+              "protezione dai veleni",
+              "ristorare inferiore",
+              "santuario",
+              "scudo"
+            ]
+          },
+          {
+            "frequenza": "1/giorno ciascuno",
+            "incantesimi": [
+              "ristorare superiore",
+              "scrutare",
+              "sogno"
+            ]
+          }
+        ],
+        "caratteristica": "car",
+        "cd": 14
+      }
+    },
+    {
+      "nome": "Mente schermata",
+      "testo": "Il couatl è immune agli scrutamenti e a qualsiasi effetto che possa percepire le sue emozioni, leggere i suoi pensieri o individuare la sua posizione."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +8 al tiro per colpire, portata 1,5 m, una creatura. Colpito: 8 (1d6 + 5) danni perforanti e il bersaglio deve superare un tiro salvezza su Costituzione con CD 13, altrimenti viene avvelenato per 24 ore. Finché questo veleno non termina, il bersaglio è privo di sensi. Un'altra creatura può usare un'azione per scuotere il bersaglio e risvegliarlo.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 8,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura",
+        "danni": [
+          {
+            "media": 8,
+            "dadi": "1d6 + 5",
+            "tipo": "perforanti e"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 13
+      }
+    },
+    {
+      "nome": "Stritolare",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 3 m, una creatura di taglia Media o inferiore. Colpito: 10 (2d6 + 3) danni contundenti e il bersaglio è afferrato (CD 15 per sfuggire). Finché la presa perdura, il bersaglio è trattenuto e il couatl non può stritolarne un altro.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "3 m",
+        "bersaglio": "una creatura di taglia Media o inferiore",
+        "danni": [
+          {
+            "media": 10,
+            "dadi": "2d6 + 3",
+            "tipo": "contundenti e"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Cambiare forma",
+      "testo": "Il couatl si trasforma magicamente in una bestia o in un umanoide con grado di sfida pari o inferiore al proprio, o ritorna alla sua vera forma. Se muore, torna alla sua forma naturale. Ogni oggetto che indossava o trasportava è assorbito o trasportato dalla sua nuova forma (a scelta del couatl). In una nuova forma, il couatl conserva le sue statistiche di gioco e la capacità di parlare, ma CA, modalità di movimento, Forza, Destrezza e altre azioni sono sostituite da quelle della nuova forma. Inoltre, il couatl ottiene le eventuali statistiche e capacità (eccetto i privilegi di classe, le azioni leggendarie e le azioni di tana) che la nuova forma possiede, ma di cui egli è privo. Se la nuova forma ha un attacco con morso, il couatl può usare il suo morso in quella forma."
+    }
+  ]
+}

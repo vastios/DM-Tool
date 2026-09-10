@@ -1,0 +1,74 @@
+{
+  "id": "mantoscuro",
+  "nome": "Mantoscuro",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 372
+  },
+  "tipo": "mostruosità",
+  "taglia": "Piccola",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 16,
+    "des": 12,
+    "cos": 13,
+    "int": 2,
+    "sag": 10,
+    "car": 5
+  },
+  "modificatori": {
+    "for": 3,
+    "des": 1,
+    "cos": 1,
+    "int": -4,
+    "sag": 0,
+    "car": -3
+  },
+  "ca": 11,
+  "pf": 22,
+  "pf_dadi": "5d6 + 5",
+  "velocita": {
+    "camminare": "3 m",
+    "volare": "9 m"
+  },
+  "sensi": "Percezione passiva 10, vista cieca 18 m",
+  "percezione_passiva": 10,
+  "linguaggi": "—",
+  "cr": "1/2",
+  "pe": 100,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Falso aspetto",
+      "testo": "Finché il mantoscuro rimane immobile, non è distinguibile da una formazione rocciosa come una stalattite o una stalagmite."
+    },
+    {
+      "nome": "Senso radar",
+      "testo": "Il mantoscuro non può usare vista cieca se è assordato."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Schiacciare",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, una creatura. Colpito: 6 (1d6 + 3) danni contundenti e il mantoscuro si avvinghia al bersaglio. Se il bersaglio è di taglia Media o inferiore e il mantoscuro dispone di vantaggio al tiro per colpire, quest'ultimo si avvinghia avviluppandosi alla testa del bersaglio: il bersaglio è anche accecato e non può respirare finché il mantoscuro resta avvinghiato in questo modo. Finché è avvinghiato al bersaglio, il mantoscuro può attaccare solamente il bersaglio, ma dispone di vantaggio ai suoi tiri per colpire. Inoltre, il mantoscuro si muove insieme al bersaglio, la sua velocità diventa 0 e non può beneficiare di alcun bonus alla velocità. Una creatura può staccare il mantoscuro con un'azione effettuando con successo una prova di Forza con CD 13. Nel suo turno, il mantoscuro può staccarsi spontaneamente dal bersaglio usando 1,5 metri di movimento.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura",
+        "danni": [
+          {
+            "media": 6,
+            "dadi": "1d6 + 3",
+            "tipo": "contundenti e"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Aura di oscurità",
+      "testo": "Un'oscurità magica si estende dal mantoscuro in un raggio di 4,5 metri, spostandosi insieme a lui e diffondendosi nell'ambiente. L'oscurità permane finché il mantoscuro mantiene la concentrazione (come se si concentrasse su un incantesimo) fino a un massimo di 10 minuti. La scurovisione non riesce a penetrare questo tipo di oscurità e nessuna luce naturale può illuminarla. Se una qualsiasi parte di oscurità si sovrappone a un'area di luce creata da un incantesimo di 2° livello o inferiore, l'incantesimo che crea la luce è dissolto.",
+      "uso": "1/giorno"
+    }
+  ]
+}

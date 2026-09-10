@@ -1,0 +1,74 @@
+{
+  "id": "orca_assassina",
+  "nome": "Orca assassina",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 428
+  },
+  "tipo": "bestia",
+  "taglia": "Enorme",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 19,
+    "des": 10,
+    "cos": 13,
+    "int": 3,
+    "sag": 12,
+    "car": 7
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 0,
+    "cos": 1,
+    "int": -4,
+    "sag": 1,
+    "car": -2
+  },
+  "ca": 12,
+  "ca_tipo": "armatura naturale",
+  "pf": 90,
+  "pf_dadi": "12d12 + 12",
+  "velocita": {
+    "camminare": "0 m",
+    "nuotare": "18 m"
+  },
+  "sensi": "Percezione passiva 13, vista cieca 36 m",
+  "percezione_passiva": 13,
+  "linguaggi": "—",
+  "cr": "3",
+  "pe": 700,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Apnea",
+      "testo": "L'orca può trattenere il respiro per 30 minuti."
+    },
+    {
+      "nome": "Senso radar",
+      "testo": "L'orca non può usare vista cieca se è assordata."
+    },
+    {
+      "nome": "Udito acuto",
+      "testo": "L'orca dispone di vantaggio alle prove di Saggezza (Percezione) basate sull'udito."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 21 (5d6 + 4) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 21,
+            "dadi": "5d6 + 4",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

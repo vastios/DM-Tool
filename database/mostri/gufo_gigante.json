@@ -1,0 +1,69 @@
+{
+  "id": "gufo_gigante",
+  "nome": "Gufo gigante",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 424
+  },
+  "tipo": "bestia",
+  "taglia": "Grande",
+  "allineamento": "neutrale",
+  "caratteristiche": {
+    "for": 13,
+    "des": 15,
+    "cos": 12,
+    "int": 8,
+    "sag": 13,
+    "car": 10
+  },
+  "modificatori": {
+    "for": 1,
+    "des": 2,
+    "cos": 1,
+    "int": -1,
+    "sag": 1,
+    "car": 0
+  },
+  "ca": 12,
+  "pf": 19,
+  "pf_dadi": "3d10 + 3",
+  "velocita": {
+    "camminare": "5 m",
+    "volare": "18 m"
+  },
+  "sensi": "Percezione passiva 15, scurovisione 36 m",
+  "percezione_passiva": 15,
+  "linguaggi": "Gufo gigante, capisce il Comune, l'Elfico e il Silvano ma non li parla",
+  "cr": "1/4",
+  "pe": 50,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Sfuggente",
+      "testo": "Il gufo non provoca attacchi d'opportunità quando vola oltre la portata di un nemico."
+    },
+    {
+      "nome": "Udito e vista acuti",
+      "testo": "Il gufo dispone di vantaggio alle prove di Saggezza (Percezione) basate sulla vista o sull'udito."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Artigli",
+      "testo": "Attacco con arma da mischia: +3 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 8 (2d6 + 1) danni taglienti.\ngufi giganti I spesso fanno amicizia con i folletti e le altre creature silvane e vigilano sui reami boschivi in cui vivono.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 3,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 8,
+            "dadi": "2d6 + 1",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    }
+  ]
+}

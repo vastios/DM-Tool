@@ -1,0 +1,87 @@
+{
+  "id": "topo_gigante",
+  "nome": "Topo gigante",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 442
+  },
+  "tipo": "bestia",
+  "taglia": "Piccola",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 7,
+    "des": 15,
+    "cos": 11,
+    "int": 2,
+    "sag": 10,
+    "car": 4
+  },
+  "modificatori": {
+    "for": -2,
+    "des": 2,
+    "cos": 0,
+    "int": -4,
+    "sag": 0,
+    "car": -3
+  },
+  "ca": 12,
+  "pf": 7,
+  "pf_dadi": "2d6",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "linguaggi": "—",
+  "cr": "1/8",
+  "pe": 25,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Olfatto acuto",
+      "testo": "Il topo dispone di vantaggio alle prove di Saggezza (Percezione) basate sull'olfatto."
+    },
+    {
+      "nome": "Tattiche del branco",
+      "testo": "Il topo dispone di vantaggio nel tiro per colpire contro una creatura se almeno uno degli alleati del topo si trova entro 1,5 metri da essa e non è incapacitato."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 4 (1d4 + 2) danni perforanti. Variante: topi giganti contagiosi Alcuni topi giganti sono portatori di orrende malattie che trasmettono con il morso. Un topo gigante contagioso ha un grado di sfida pari a 1/8 (25 PE) e possiede l'azione seguente al posto del normale attacco con il morso.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 4,
+            "dadi": "1d4 + 2",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 4 (1d4 + 2) danni perforanti. Se il bersaglio è una creatura, deve superare un tiro salvezza su Costituzione con CD 10, altrimenti contrae una malattia. Finché la malattia non viene curata, il bersaglio non può recuperare punti ferita se non tramite mezzi magici e i suoi punti ferita massimi si riducono di 3 (1d6) ogni 24 ore. Se la malattia fa scendere i suoi punti ferita massimi a 0, il bersaglio muore.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 4,
+            "dadi": "1d4 + 2",
+            "tipo": "perforanti"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 10
+      }
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "id": "scheletro",
+  "nome": "Scheletro",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 392
+  },
+  "tipo": "non morto",
+  "taglia": "Media",
+  "allineamento": "legale malvagio",
+  "caratteristiche": {
+    "for": 10,
+    "des": 14,
+    "cos": 15,
+    "int": 6,
+    "sag": 8,
+    "car": 5
+  },
+  "modificatori": {
+    "for": 0,
+    "des": 2,
+    "cos": 2,
+    "int": -2,
+    "sag": -1,
+    "car": -3
+  },
+  "ca": 13,
+  "ca_tipo": "frammenti di armatura",
+  "pf": 13,
+  "pf_dadi": "2d8 + 4",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "immunita_danni": "veleno",
+  "immunita_condizioni": "avvelenato, indebolimento",
+  "sensi": "Percezione passiva 9, scurovisione 18 m",
+  "percezione_passiva": 9,
+  "linguaggi": "capisce quelli che conosceva in vita, ma non è in grado di parlarli",
+  "cr": "1/4",
+  "pe": 50,
+  "bonus_competenza": 2,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Spada corta",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 5 (1d6 + 2) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d6 + 2",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Arco corto",
+      "testo": "Attacco con arma a distanza : +4 al tiro per colpire, gittata 24/96 m, un bersaglio. Colpito: 5 (1d6 + 2) danni perforanti.",
+      "attacco": {
+        "tipo": "distanza",
+        "tiro": 4,
+        "portata": "24/96 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d6 + 2",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

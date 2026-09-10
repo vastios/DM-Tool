@@ -1,0 +1,82 @@
+{
+  "id": "idra",
+  "nome": "Idra",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 365
+  },
+  "tipo": "mostruosità",
+  "taglia": "Enorme",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 20,
+    "des": 12,
+    "cos": 20,
+    "int": 2,
+    "sag": 10,
+    "car": 7
+  },
+  "modificatori": {
+    "for": 5,
+    "des": 1,
+    "cos": 5,
+    "int": -4,
+    "sag": 0,
+    "car": -2
+  },
+  "ca": 15,
+  "ca_tipo": "armatura naturale",
+  "pf": 172,
+  "pf_dadi": "15d12 + 75",
+  "velocita": {
+    "camminare": "9 m",
+    "nuotare": "9 m"
+  },
+  "sensi": "Percezione passiva 16, scurovisione 18 m",
+  "percezione_passiva": 16,
+  "linguaggi": "—",
+  "cr": "8",
+  "pe": 3900,
+  "bonus_competenza": 3,
+  "tratti": [
+    {
+      "nome": "Apnea",
+      "testo": "L'idra può trattenere il respiro per 1 ora."
+    },
+    {
+      "nome": "Policefalia",
+      "testo": "L'idra possiede cinque teste. Finché ha più di una testa, dispone di vantaggio ai tiri salvezza contro le condizioni accecato, affascinato, assordato, privo di sensi, spaventato e stordito. Ogni volta che l'idra subisce 25 o più danni in un singolo turno, una delle teste muore. Se tutte le teste muoiono, l'idra muore. Alla fine del suo turno, due teste ricrescono per ogni testa morta dal suo ultimo turno, a meno che nel corso di tale periodo non abbia subito danni da fuoco. L'idra recupera 10 punti ferita per ogni testa ricresciuta in questo modo."
+    },
+    {
+      "nome": "Sempre all'erta",
+      "testo": "Mentre l'idra dorme, almeno una delle sue teste rimane vigile."
+    },
+    {
+      "nome": "Teste reattive",
+      "testo": "Per ogni testa che l'idra possiede oltre la prima, riceve una reazione extra che può essere usata soltanto per gli attacchi di opportunità."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "L'idra effettua un numero di attacchi con il morso pari al numero di teste che possiede."
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia : +8 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 10 (1d10 + 5) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 8,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 10,
+            "dadi": "1d10 + 5",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

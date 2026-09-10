@@ -1,0 +1,171 @@
+{
+  "id": "diavolo_della_fossa",
+  "nome": "Diavolo della fossa",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 316
+  },
+  "tipo": "immondo",
+  "descrittore": "diavolo",
+  "taglia": "Grande",
+  "allineamento": "legale malvagio",
+  "caratteristiche": {
+    "for": 26,
+    "des": 14,
+    "cos": 24,
+    "int": 22,
+    "sag": 18,
+    "car": 24
+  },
+  "modificatori": {
+    "for": 8,
+    "des": 2,
+    "cos": 7,
+    "int": 6,
+    "sag": 4,
+    "car": 7
+  },
+  "ca": 19,
+  "ca_tipo": "armatura naturale",
+  "pf": 300,
+  "pf_dadi": "24d10 + 168",
+  "velocita": {
+    "camminare": "9 m",
+    "volare": "18 m"
+  },
+  "resistenze_danni": "freddo; contundenti, perforanti e taglienti da attacchi non magici non argentati",
+  "immunita_danni": "fuoco, veleno",
+  "immunita_condizioni": "avvelenato",
+  "sensi": "Percezione passiva 14, vista pura 36 m",
+  "percezione_passiva": 14,
+  "linguaggi": "Infernale, telepatia 36 m",
+  "cr": "20",
+  "pe": 25000,
+  "bonus_competenza": 6,
+  "tratti": [
+    {
+      "nome": "Armi magiche",
+      "testo": "Gli attacchi con arma del diavolo della fossa sono magici."
+    },
+    {
+      "nome": "Aura di paura",
+      "testo": "Ogni creatura ostile al diavolo della fossa che inizi il proprio turno entro 6 metri da esso deve effettuare un tiro salvezza su Saggezza con CD 21, a meno che il diavolo della fossa non sia incapacitato. Se fallisce, la creatura è spaventata fino all'inizio del proprio turno successivo. Se lo supera, invece, è immune all'Aura di paura del diavolo della fossa per le 24 ore successive.",
+      "salvataggio": {
+        "caratteristica": "sag",
+        "cd": 21
+      }
+    },
+    {
+      "nome": "Incantesimi innati",
+      "testo": "La caratteristica da incantatore del diavolo della fossa è Carisma (CD del tiro salvezza sull'incantesimo 21). Per sua natura, il diavolo della fossa è in grado di lanciare gli incantesimi indicati di seguito senza aver bisogno di componenti materiali: A volontà: individuazione del magico, palla di fuoco 3/giorno ciascuno: blocca mostri, muro di fuoco",
+      "incantesimi": {
+        "testo": "La caratteristica da incantatore del diavolo della fossa è Carisma (CD del tiro salvezza sull'incantesimo 21). Per sua natura, il diavolo della fossa è in grado di lanciare gli incantesimi indicati di seguito senza aver bisogno di componenti materiali: A volontà: individuazione del magico, palla di fuoco 3/giorno ciascuno: blocca mostri, muro di fuoco",
+        "gruppi": [
+          {
+            "frequenza": "a volontà",
+            "incantesimi": [
+              "individuazione del magico",
+              "palla di fuoco"
+            ]
+          },
+          {
+            "frequenza": "3/giorno ciascuno",
+            "incantesimi": [
+              "blocca mostri",
+              "muro di fuoco"
+            ]
+          }
+        ],
+        "caratteristica": "car",
+        "cd": 21
+      }
+    },
+    {
+      "nome": "Resistenza alla magia",
+      "testo": "Il diavolo della fossa dispone di vantaggio ai tiri salvezza contro incantesimi e altri effetti magici."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il diavolo della fossa effettua quattro attacchi: uno con il morso, uno con gli artigli, uno con la mazza e uno con la coda."
+    },
+    {
+      "nome": "Artiglio",
+      "testo": "Attacco con arma da mischia : +14 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 17 (2d8 + 8) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 14,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 17,
+            "dadi": "2d8 + 8",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Coda",
+      "testo": "Attacco con arma da mischia : +14 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 24 (3d10 + 8) danni contundenti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 14,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 24,
+            "dadi": "3d10 + 8",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Mazza",
+      "testo": "Attacco con arma da mischia : +14 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 15 (2d6 + 8) danni contundenti più 21 (6d6) danni da fuoco.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 14,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 15,
+            "dadi": "2d6 + 8",
+            "tipo": "contundenti"
+          },
+          {
+            "media": 21,
+            "dadi": "6d6",
+            "tipo": "fuoco"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +14 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 22 (4d6 + 8) danni perforanti. Il bersaglio deve superare un tiro salvezza su Costituzione con CD 21, altrimenti viene avvelenato. Finché è avvelenato in questo modo, il bersaglio non può recuperare punti ferita e subisce 21 (6d6) danni da veleno all'inizio di ogni suo turno. La creatura avvelenata può ripetere il tiro salvezza alla fine di ogni suo turno e, se lo supera, l'effetto svanisce.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 14,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 22,
+            "dadi": "4d6 + 8",
+            "tipo": "perforanti"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 21
+      }
+    }
+  ]
+}

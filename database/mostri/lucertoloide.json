@@ -1,0 +1,122 @@
+{
+  "id": "lucertoloide",
+  "nome": "Lucertoloide",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 371
+  },
+  "tipo": "umanoide",
+  "descrittore": "lucertoloide",
+  "taglia": "Media",
+  "allineamento": "neutrale",
+  "caratteristiche": {
+    "for": 15,
+    "des": 10,
+    "cos": 13,
+    "int": 7,
+    "sag": 12,
+    "car": 7
+  },
+  "modificatori": {
+    "for": 2,
+    "des": 0,
+    "cos": 1,
+    "int": -2,
+    "sag": 1,
+    "car": -2
+  },
+  "ca": 15,
+  "ca_tipo": "armatura naturale, scudo",
+  "pf": 22,
+  "pf_dadi": "4d8 + 4",
+  "velocita": {
+    "camminare": "9 m",
+    "nuotare": "9 m"
+  },
+  "sensi": "Percezione passiva 13",
+  "percezione_passiva": 13,
+  "linguaggi": "Draconico",
+  "cr": "1/2",
+  "pe": 100,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Apnea",
+      "testo": "Il lucertoloide può trattenere il respiro per 15 minuti."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il lucertoloide effettua due attacchi in mischia, ognuno con un'arma diversa."
+    },
+    {
+      "nome": "Mazza pesante",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 5 (1d6 + 2) danni contundenti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d6 + 2",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 5 (1d6 + 2) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d6 + 2",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Scudo chiodato",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 5 (1d6 + 2) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d6 + 2",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Giavellotto",
+      "testo": "Attacco con arma da mischia o a distanza: +4 al tiro per colpire, portata 1,5 m o gittata 9/36 m, un bersaglio. Colpito: 5 (1d6 + 2) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia o distanza",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m o gittata 9/36 m, un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d6 + 2",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

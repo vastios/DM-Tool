@@ -1,0 +1,57 @@
+{
+  "id": "beccoaguzzo",
+  "nome": "Beccoaguzzo",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 416
+  },
+  "tipo": "bestia",
+  "taglia": "Grande",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 14,
+    "des": 12,
+    "cos": 12,
+    "int": 2,
+    "sag": 10,
+    "car": 5
+  },
+  "modificatori": {
+    "for": 2,
+    "des": 1,
+    "cos": 1,
+    "int": -4,
+    "sag": 0,
+    "car": -3
+  },
+  "ca": 11,
+  "pf": 19,
+  "pf_dadi": "3d10 + 3",
+  "velocita": {
+    "camminare": "15 m"
+  },
+  "linguaggi": "—",
+  "cr": "1/4",
+  "pe": 50,
+  "bonus_competenza": 2,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Becco",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 6 (1d8 + 2) danni taglienti.\nbeccoaguzzo Un è un uccello alto, incapace di volare, con zampe robuste e un grosso becco acuminato. Ha un caratteraccio e tende ad attaccare qualsiasi creatura sconosciuta gli si avvicini troppo.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 6,
+            "dadi": "1d8 + 2",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    }
+  ]
+}

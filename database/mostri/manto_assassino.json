@@ -1,0 +1,108 @@
+{
+  "id": "manto_assassino",
+  "nome": "Manto assassino",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 372
+  },
+  "tipo": "aberrazione",
+  "taglia": "Grande",
+  "allineamento": "caotico neutrale",
+  "caratteristiche": {
+    "for": 17,
+    "des": 15,
+    "cos": 12,
+    "int": 13,
+    "sag": 12,
+    "car": 14
+  },
+  "modificatori": {
+    "for": 3,
+    "des": 2,
+    "cos": 1,
+    "int": 1,
+    "sag": 1,
+    "car": 2
+  },
+  "ca": 14,
+  "ca_tipo": "armatura naturale",
+  "pf": 78,
+  "pf_dadi": "12d10 + 12",
+  "velocita": {
+    "camminare": "3 m",
+    "volare": "12 m"
+  },
+  "sensi": "Percezione passiva 11, scurovisione 18 m",
+  "percezione_passiva": 11,
+  "linguaggi": "Gergo delle profondità, Sottocomune",
+  "cr": "8",
+  "pe": 3900,
+  "bonus_competenza": 3,
+  "tratti": [
+    {
+      "nome": "Falso aspetto",
+      "testo": "Finché il manto assassino rimane immobile e non rende visibile il suo lato inferiore, non è possibile distinguerlo da un mantello di cuoio scuro."
+    },
+    {
+      "nome": "Sensibilità alla luce",
+      "testo": "Finché è esposto alla luce intensa, il manto assassino subisce svantaggio ai tiri per colpire e alle prove di Saggezza (Percezione) basate sulla vista."
+    },
+    {
+      "nome": "Trasferire danni",
+      "testo": "Finché è avvinghiato a una creatura, il manto assassino subisce solo metà dei danni che gli vengono inflitti (arrotondati per difetto) e quella creatura subisce l'altra metà."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il manto assassino effettua due attacchi: uno con il morso e uno con la coda."
+    },
+    {
+      "nome": "Coda",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 3 m, una creatura. Colpito: 7 (1d8 + 3) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "3 m",
+        "bersaglio": "una creatura",
+        "danni": [
+          {
+            "media": 7,
+            "dadi": "1d8 + 3",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 1,5 m, una creatura. Colpito: 10 (2d6 + 3) danni perforanti e, se il bersaglio è di taglia Grande o inferiore, il manto assassino si avvinghia a esso. Se il manto assassino dispone di vantaggio contro il bersaglio, si avvinghia alla testa del bersaglio, che è accecato e impossibilitato a respirare finché il manto assassino resta attaccato. Mentre è avvinghiato, il manto assassino può effettuare questo attacco solo contro il bersaglio e dispone di vantaggio al tiro per colpire. Il manto assassino può staccarsi da solo spendendo 1,5 metri del suo movimento. Una creatura, incluso il bersaglio, può usare la sua azione per staccare il manto assassino, se effettua con successo una prova di Forza con CD 16.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura",
+        "danni": [
+          {
+            "media": 10,
+            "dadi": "2d6 + 3",
+            "tipo": "perforanti e"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Allucinazioni",
+      "testo": "Il manto assassino crea magicamente tre duplicati illusori di se stesso se non è esposto alla luce intensa. I duplicati si muovono insieme a lui e imitano le sue azioni, scambiandosi di posizione in modo che sia impossibile capire quale manto assassino sia quello vero. Se il manto assassino si trova in un'area di luce intensa, i duplicati scompaiono. Ogni volta che una creatura bersaglia il manto assassino con un attacco o un incantesimo dannoso finché permane un duplicato, quella creatura effettua un tiro casuale per determinare se bersaglia il manto assassino o uno dei suoi duplicati. Una creatura non è influenzata da questo effetto magico se non può vedere o se si affida a sensi diversi dalla vista. Un duplicato possiede la CA del manto assassino e usa i suoi tiri salvezza. Se un attacco colpisce un duplicato o se un duplicato fallisce un tiro salvezza contro un effetto che infligge danni, quel duplicato scompare.",
+      "uso": "ricarica dopo un riposo breve o lungo"
+    },
+    {
+      "nome": "Gemito",
+      "testo": "Ogni creatura entro 18 metri dal manto assassino che possa sentire il suo gemito e che non sia un'aberrazione deve superare un tiro salvezza su Saggezza con CD 13, altrimenti è spaventata fino alla fine del turno successivo del manto assassino. Se la creatura supera il tiro salvezza, è immune al gemito del manto assassino per le 24 ore successive.",
+      "salvataggio": {
+        "caratteristica": "sag",
+        "cd": 13
+      }
+    }
+  ]
+}

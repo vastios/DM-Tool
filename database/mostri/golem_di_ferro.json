@@ -1,0 +1,114 @@
+{
+  "id": "golem_di_ferro",
+  "nome": "Golem di ferro",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 361
+  },
+  "tipo": "costrutto",
+  "taglia": "Grande",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 24,
+    "des": 9,
+    "cos": 20,
+    "int": 3,
+    "sag": 11,
+    "car": 1
+  },
+  "modificatori": {
+    "for": 7,
+    "des": -1,
+    "cos": 5,
+    "int": -4,
+    "sag": 0,
+    "car": -5
+  },
+  "ca": 20,
+  "ca_tipo": "armatura naturale",
+  "pf": 210,
+  "pf_dadi": "20d10 + 100",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "immunita_condizioni": "affascinato, avvelenato, indebolimento, paralizzato, pietrificato, spaventato",
+  "sensi": "Percezione passiva 10, scurovisione 36 m",
+  "percezione_passiva": 10,
+  "linguaggi": "comprende i linguaggi del suo creatore ma non li sa parlare",
+  "cr": "16",
+  "pe": 15000,
+  "bonus_competenza": 5,
+  "tratti": [
+    {
+      "nome": "Armi magiche",
+      "testo": "Gli attacchi con arma del golem sono magici."
+    },
+    {
+      "nome": "Assorbimento del fuoco",
+      "testo": "Ogni volta che il golem riceve danni da fuoco, non subisce danni e anzi recupera invece un numero di punti ferita pari ai danni da fuoco inflitti."
+    },
+    {
+      "nome": "Forma immutabile",
+      "testo": "Il golem è immune a qualsiasi incantesimo o effetto che ne altererebbe la forma."
+    },
+    {
+      "nome": "Resistenza alla magia",
+      "testo": "Il golem dispone di vantaggio ai tiri salvezza contro incantesimi e altri effetti magici."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il golem effettua due attacchi in mischia."
+    },
+    {
+      "nome": "Schianto",
+      "testo": "Attacco con arma da mischia: +13 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 20 (3d8 + 7) danni contundenti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 13,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 20,
+            "dadi": "3d8 + 7",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Spada",
+      "testo": "Attacco con arma da mischia: +13 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 23 (3d10 + 7) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 13,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 23,
+            "dadi": "3d10 + 7",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Soffio di veleno",
+      "testo": "Il golem esala gas velenoso in un cono di 4,5 metri. Ogni creatura in quell'area deve effettuare un tiro salvezza su Costituzione con CD 19, subendo 45 (10d8) danni da veleno in caso di fallimento, o la metà dei danni in caso di successo.",
+      "uso": "ricarica 6",
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 19,
+        "danno_fallimento": {
+          "media": 45,
+          "dadi": "10d8",
+          "tipo": "veleno"
+        },
+        "successo": "metà danni"
+      }
+    }
+  ]
+}

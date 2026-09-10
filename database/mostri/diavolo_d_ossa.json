@@ -1,0 +1,108 @@
+{
+  "id": "diavolo_d_ossa",
+  "nome": "Diavolo d'ossa",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 317
+  },
+  "tipo": "immondo",
+  "descrittore": "diavolo",
+  "taglia": "Grande",
+  "allineamento": "legale malvagio",
+  "caratteristiche": {
+    "for": 18,
+    "des": 16,
+    "cos": 18,
+    "int": 13,
+    "sag": 14,
+    "car": 16
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 3,
+    "cos": 4,
+    "int": 1,
+    "sag": 2,
+    "car": 3
+  },
+  "ca": 19,
+  "ca_tipo": "armatura naturale",
+  "pf": 142,
+  "pf_dadi": "15d10 + 60",
+  "velocita": {
+    "camminare": "12 m",
+    "volare": "12 m"
+  },
+  "competenze": {
+    "inganno": 7,
+    "intuizione": 6
+  },
+  "resistenze_danni": "freddo; contundenti, perforanti e taglienti da attacchi non magici non argentati",
+  "immunita_danni": "fuoco, veleno",
+  "immunita_condizioni": "avvelenato",
+  "sensi": "Percezione passiva 12, scurovisione 36 m",
+  "percezione_passiva": 12,
+  "linguaggi": "Infernale, telepatia 36 m",
+  "cr": "9",
+  "pe": 5000,
+  "bonus_competenza": 4,
+  "tratti": [
+    {
+      "nome": "Resistenza alla magia",
+      "testo": "Il diavolo dispone di vantaggio ai tiri salvezza contro incantesimi e altri effetti magici."
+    },
+    {
+      "nome": "Vista del diavolo",
+      "testo": "L'oscurità magica non ostacola la scurovisione del diavolo."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il diavolo effettua tre attacchi: due con gli artigli e uno con il pungiglione."
+    },
+    {
+      "nome": "Artiglio",
+      "testo": "Attacco con arma da mischia : +8 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 8 (1d8 + 4) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 8,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 8,
+            "dadi": "1d8 + 4",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Pungiglione",
+      "testo": "Attacco con arma da mischia: +8 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 13 (2d8 + 4) danni perforanti più 17 (5d6) danni da veleno e il bersaglio deve superare un tiro salvezza su Costituzione con CD 14, altrimenti è avvelenato per 1 minuto. Il bersaglio può ripetere il tiro salvezza alla fine di ogni suo turno e, se lo supera, l'effetto svanisce.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 8,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 13,
+            "dadi": "2d8 + 4",
+            "tipo": "perforanti"
+          },
+          {
+            "media": 17,
+            "dadi": "5d6",
+            "tipo": "veleno e"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 14
+      }
+    }
+  ]
+}

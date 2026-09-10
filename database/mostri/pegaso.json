@@ -1,0 +1,63 @@
+{
+  "id": "pegaso",
+  "nome": "Pegaso",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 388
+  },
+  "tipo": "celestiale",
+  "taglia": "Grande",
+  "allineamento": "caotico buono",
+  "caratteristiche": {
+    "for": 18,
+    "des": 15,
+    "cos": 16,
+    "int": 10,
+    "sag": 15,
+    "car": 13
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 2,
+    "cos": 3,
+    "int": 0,
+    "sag": 2,
+    "car": 1
+  },
+  "ca": 12,
+  "pf": 59,
+  "pf_dadi": "7d10 + 21",
+  "velocita": {
+    "camminare": "18 m",
+    "volare": "27 m"
+  },
+  "competenze": {
+    "percezione": 6
+  },
+  "sensi": "Percezione passiva 16",
+  "percezione_passiva": 16,
+  "linguaggi": "comprende Celestiale, Comune, Elfico e Silvano ma non li parla",
+  "cr": "2",
+  "pe": 450,
+  "bonus_competenza": 2,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Zoccoli",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 11 (2d6 + 4) danni contundenti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 11,
+            "dadi": "2d6 + 4",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    }
+  ]
+}

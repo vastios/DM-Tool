@@ -1,0 +1,87 @@
+{
+  "id": "malvivente",
+  "nome": "Malvivente",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 451
+  },
+  "tipo": "umanoide",
+  "descrittore": "qualsiasi razza",
+  "taglia": "Media",
+  "allineamento": "qualsiasi allineamento non buono",
+  "caratteristiche": {
+    "for": 15,
+    "des": 11,
+    "cos": 14,
+    "int": 10,
+    "sag": 10,
+    "car": 11
+  },
+  "modificatori": {
+    "for": 2,
+    "des": 0,
+    "cos": 2,
+    "int": 0,
+    "sag": 0,
+    "car": 0
+  },
+  "ca": 11,
+  "ca_tipo": "armatura di cuoio",
+  "pf": 32,
+  "pf_dadi": "5d8 + 10",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "sensi": "Percezione passiva 10",
+  "percezione_passiva": 10,
+  "linguaggi": "uno qualsiasi (di solito Comune)",
+  "cr": "1/2",
+  "pe": 100,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Tattiche del branco",
+      "testo": "Il malvivente dispone di vantaggio nel tiro per colpire contro una creatura se almeno uno degli alleati del malvivente si trova entro 1,5 metri dalla creatura e non è incapacitato."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il malvivente effettua due attacchi in mischia."
+    },
+    {
+      "nome": "Mazza",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, una creatura. Colpito: 5 (1d6 + 2) danni contundenti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d6 + 2",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Balestra pesante",
+      "testo": "Attacco con arma a distanza: +2 al tiro per colpire, gittata 30/120 m, un bersaglio. Colpito: 5 (1d10) danni perforanti.\nmalviventi I sono spietati criminali specializzati nell'intimidazione e nella violenza. Lavorano per soldi e non si fanno scrupoli.",
+      "attacco": {
+        "tipo": "distanza",
+        "tiro": 2,
+        "portata": "30/120 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d10",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

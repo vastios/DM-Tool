@@ -1,0 +1,58 @@
+{
+  "id": "lucertola",
+  "nome": "Lucertola",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 426
+  },
+  "tipo": "bestia",
+  "taglia": "Minuscola",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 2,
+    "des": 11,
+    "cos": 10,
+    "int": 1,
+    "sag": 8,
+    "car": 3
+  },
+  "modificatori": {
+    "for": -4,
+    "des": 0,
+    "cos": 0,
+    "int": -5,
+    "sag": -1,
+    "car": -4
+  },
+  "ca": 10,
+  "pf": 2,
+  "pf_dadi": "1d4",
+  "velocita": {
+    "camminare": "6 m",
+    "scalare": "6 m"
+  },
+  "linguaggi": "—",
+  "cr": "0",
+  "pe": 10,
+  "bonus_competenza": 2,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +0 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 1 danno perforante.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 0,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 1,
+            "dadi": "1",
+            "tipo": "perforante"
+          }
+        ]
+      }
+    }
+  ]
+}

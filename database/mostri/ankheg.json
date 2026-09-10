@@ -1,0 +1,80 @@
+{
+  "id": "ankheg",
+  "nome": "Ankheg",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 303
+  },
+  "tipo": "mostruosità",
+  "taglia": "Grande",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 17,
+    "des": 11,
+    "cos": 13,
+    "int": 1,
+    "sag": 13,
+    "car": 6
+  },
+  "modificatori": {
+    "for": 3,
+    "des": 0,
+    "cos": 1,
+    "int": -5,
+    "sag": 1,
+    "car": -2
+  },
+  "ca": 14,
+  "ca_tipo": "armatura naturale",
+  "ca_nota": "11 se prono",
+  "pf": 39,
+  "pf_dadi": "6d10 + 6",
+  "velocita": {
+    "camminare": "9 m",
+    "scavare": "3 m"
+  },
+  "linguaggi": "—",
+  "cr": "2",
+  "pe": 450,
+  "bonus_competenza": 2,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 10 (2d6 + 3) danni taglienti più 3 (1d6) danni da acido. Se il bersaglio è una creatura di taglia Grande o inferiore, è afferrato (CD 13 per sfuggire). Finché la presa perdura, l'ankheg può mordere soltanto la creatura afferrata e dispone di vantaggio ai tiri per colpire per farlo.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 10,
+            "dadi": "2d6 + 3",
+            "tipo": "taglienti"
+          },
+          {
+            "media": 3,
+            "dadi": "1d6",
+            "tipo": "acido"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Spruzzo acido",
+      "testo": "L'ankheg sputa acido in una linea lunga 9 metri e larga 1,5 metri, purché non abbia afferrato alcuna creatura. Ogni creatura su quella linea deve effettuare un tiro salvezza su Destrezza con CD 13, subendo 10 (3d6) danni da acido in caso di fallimento, o la metà dei danni in caso di successo.",
+      "uso": "ricarica 6",
+      "salvataggio": {
+        "caratteristica": "des",
+        "cd": 13,
+        "danno_fallimento": {
+          "media": 10,
+          "dadi": "3d6",
+          "tipo": "acido"
+        },
+        "successo": "metà danni"
+      }
+    }
+  ]
+}

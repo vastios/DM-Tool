@@ -1,0 +1,75 @@
+{
+  "id": "ogre",
+  "nome": "Ogre",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 385
+  },
+  "tipo": "gigante",
+  "taglia": "Grande",
+  "allineamento": "caotico malvagio",
+  "caratteristiche": {
+    "for": 19,
+    "des": 8,
+    "cos": 16,
+    "int": 5,
+    "sag": 7,
+    "car": 7
+  },
+  "modificatori": {
+    "for": 4,
+    "des": -1,
+    "cos": 3,
+    "int": -3,
+    "sag": -2,
+    "car": -2
+  },
+  "ca": 11,
+  "ca_tipo": "armatura di pelle",
+  "pf": 59,
+  "pf_dadi": "7d10 + 21",
+  "velocita": {
+    "camminare": "12 m"
+  },
+  "linguaggi": "Comune, Gigante",
+  "cr": "2",
+  "pe": 450,
+  "bonus_competenza": 2,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Randello pesante",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 13 (2d8 + 4) danni contundenti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 13,
+            "dadi": "2d8 + 4",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Giavellotto",
+      "testo": "Attacco con arma da mischia o a distanza: +6 al tiro per colpire, portata 1,5 m o gittata 9/36 m, un bersaglio. Colpito: 11 (2d6 + 4) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia o distanza",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m o gittata 9/36 m, un bersaglio",
+        "danni": [
+          {
+            "media": 11,
+            "dadi": "2d6 + 4",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

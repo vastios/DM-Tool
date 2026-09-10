@@ -1,0 +1,63 @@
+{
+  "id": "scarabeo_di_fuoco_gigante",
+  "nome": "Scarabeo di fuoco gigante",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 435
+  },
+  "tipo": "bestia",
+  "taglia": "Piccola",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 8,
+    "des": 10,
+    "cos": 12,
+    "int": 1,
+    "sag": 7,
+    "car": 3
+  },
+  "modificatori": {
+    "for": -1,
+    "des": 0,
+    "cos": 1,
+    "int": -5,
+    "sag": -2,
+    "car": -4
+  },
+  "ca": 13,
+  "ca_tipo": "armatura naturale",
+  "pf": 4,
+  "pf_dadi": "1d6 + 1",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "linguaggi": "—",
+  "cr": "0",
+  "pe": 10,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Illuminazione",
+      "testo": "Lo scarabeo proietta luce intensa in un raggio di 3 metri e luce fioca per altri 3 metri."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +1 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 2 (1d6 - 1) danni taglienti.\nscarabeo di fuoco gigante Uno è una creatura notturna che trae il suo nome da un paio di ghiandole fosforescenti che emanano luce. I minatori e gli avventurieri danno grande valore a queste creature, in quanto le ghiandole di uno scarabeo di fuoco gigante continuano a proiettare luce per 1d6 giorni dopo la morte dello scarabeo. Questi animali sono diffusi soprattutto sottoterra e nelle foreste più buie.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 1,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 2,
+            "dadi": "1d6 - 1",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    }
+  ]
+}

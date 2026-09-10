@@ -1,0 +1,84 @@
+{
+  "id": "megera_marina",
+  "nome": "Megera marina",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 374
+  },
+  "tipo": "folletto",
+  "taglia": "Media",
+  "allineamento": "caotica malvagia",
+  "caratteristiche": {
+    "for": 16,
+    "des": 13,
+    "cos": 16,
+    "int": 12,
+    "sag": 12,
+    "car": 13
+  },
+  "modificatori": {
+    "for": 3,
+    "des": 1,
+    "cos": 3,
+    "int": 1,
+    "sag": 1,
+    "car": 1
+  },
+  "ca": 14,
+  "ca_tipo": "armatura naturale",
+  "pf": 52,
+  "pf_dadi": "7d8 + 21",
+  "velocita": {
+    "camminare": "9 m",
+    "nuotare": "12 m"
+  },
+  "linguaggi": "Aquan, Comune, Gigante",
+  "cr": "2",
+  "pe": 450,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Anfibio",
+      "testo": "La megera può respirare in aria e in acqua."
+    },
+    {
+      "nome": "Aspetto orripilante",
+      "testo": "Qualsiasi umanoide inizi il proprio turno nel campo visivo della megera, entro un raggio di 9 metri da lei, può vederne la vera forma e deve effettuare un tiro salvezza su Saggezza con CD 11; se lo fallisce, è spaventato per 1 minuto. Una creatura può ripetere il tiro salvezza alla fine di ogni suo turno, subendo svantaggio se la megera è situata nel suo campo visivo; se lo supera, l'effetto svanisce. Se una creatura supera il tiro salvezza o se l'effetto per lei termina, diventa immune all'Aspetto orripilante della megera per le 24 ore successive. A meno che il bersaglio non sia sorpreso o la rivelazione della vera forma della megera non sia improvvisa, il bersaglio può distogliere lo sguardo ed evitare di effettuare il tiro salvezza iniziale. Fino all'inizio del proprio turno successivo, una creatura che distoglie lo sguardo subisce svantaggio ai tiri per colpire contro la megera.",
+      "salvataggio": {
+        "caratteristica": "sag",
+        "cd": 11
+      }
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Artigli",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 10 (2d6 + 3) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 10,
+            "dadi": "2d6 + 3",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Aspetto illusorio",
+      "testo": "La megera avvolge se stessa e tutto ciò che indossa o trasporta in un'illusione magica che la fa apparire come un creatura brutta, di taglia e di forma umanoide simile alla sua. L'illusione termina se la megera usa un'azione bonus per terminarla o se muore. I cambiamenti apportati da questo effetto non passano il vaglio di un'ispezione fisica. Per esempio, la megera potrebbe apparire priva di artigli, ma chiunque toccasse la sua mano sentirebbe che è artigliata. Sotto ogni altro aspetto, una creatura deve usare un'azione per ispezionare l'illusione e superare una prova di Intelligenza (Indagare) con CD 16 per capire che la megera è camuffata."
+    },
+    {
+      "nome": "Sguardo mortale",
+      "testo": "La megera prende di mira una creatura spaventata visibile entro un raggio di 9 metri. Se il bersaglio può vedere la megera, deve superare un tiro salvezza su Saggezza con CD 11 contro questa magia, altrimenti scende a 0 punti ferita.",
+      "salvataggio": {
+        "caratteristica": "sag",
+        "cd": 11
+      }
+    }
+  ]
+}

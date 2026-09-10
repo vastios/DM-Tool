@@ -1,0 +1,99 @@
+{
+  "id": "accolito",
+  "nome": "Accolito",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 444
+  },
+  "tipo": "umanoide",
+  "descrittore": "qualsiasi razza",
+  "taglia": "Media",
+  "allineamento": "qualsiasi allineamento",
+  "caratteristiche": {
+    "for": 10,
+    "des": 10,
+    "cos": 10,
+    "int": 10,
+    "sag": 14,
+    "car": 11
+  },
+  "modificatori": {
+    "for": 0,
+    "des": 0,
+    "cos": 0,
+    "int": 0,
+    "sag": 2,
+    "car": 0
+  },
+  "ca": 10,
+  "pf": 9,
+  "pf_dadi": "2d8",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "sensi": "Percezione passiva 12",
+  "percezione_passiva": 12,
+  "linguaggi": "uno qualsiasi (di solito Comune)",
+  "cr": "1/4",
+  "pe": 50,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Incantesimi",
+      "testo": "L'accolito è un incantatore di 1° livello: la sua caratteristica da incantatore è Saggezza (CD del tiro salvezza sull'incantesimo 12, +4 al tiro per colpire con attacco con incantesimo). L'accolito ha a disposizione i seguenti incantesimi da chierico: Trucchetti (a volontà): fiamma sacra, luce, taumaturgia 1° livello (3 slot): benedizione, cura ferite, santuario",
+      "incantesimi": {
+        "testo": "L'accolito è un incantatore di 1° livello: la sua caratteristica da incantatore è Saggezza (CD del tiro salvezza sull'incantesimo 12, +4 al tiro per colpire con attacco con incantesimo). L'accolito ha a disposizione i seguenti incantesimi da chierico: Trucchetti (a volontà): fiamma sacra, luce, taumaturgia 1° livello (3 slot): benedizione, cura ferite, santuario",
+        "gruppi": [
+          {
+            "tipo": "livello",
+            "livello": 1,
+            "incantesimi": [
+              "la sua caratteristica da incantatore è Saggezza (CD del tiro salvezza sull'incantesimo 12",
+              "+4 al tiro per colpire con attacco con incantesimo). L'accolito ha a disposizione i seguenti incantesimi da chierico:"
+            ]
+          },
+          {
+            "frequenza": "a volontà",
+            "tipo": "trucchetti",
+            "incantesimi": [
+              "fiamma sacra",
+              "luce",
+              "taumaturgia"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 1,
+            "slot": 3,
+            "incantesimi": [
+              "benedizione",
+              "cura ferite",
+              "santuario"
+            ]
+          }
+        ],
+        "caratteristica": "sag",
+        "cd": 12
+      }
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Randello",
+      "testo": "Attacco con arma da mischia: +2 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 2 (1d4) danni contundenti. Gli accoliti sono i membri più giovani di un clericato, solitamente al servizio di un sacerdote. Svolgono varie funzioni all'interno di un tempio e ricevono alcuni poteri minori come incantatori dalle loro divinità.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 2,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 2,
+            "dadi": "1d4",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    }
+  ]
+}

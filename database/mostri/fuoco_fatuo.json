@@ -1,0 +1,74 @@
+{
+  "id": "fuoco_fatuo",
+  "nome": "Fuoco fatuo",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 353
+  },
+  "tipo": "non morto",
+  "taglia": "Minuscola",
+  "allineamento": "caotico malvagio",
+  "caratteristiche": {
+    "for": 1,
+    "des": 28,
+    "cos": 10,
+    "int": 13,
+    "sag": 14,
+    "car": 11
+  },
+  "modificatori": {
+    "for": -5,
+    "des": 9,
+    "cos": 0,
+    "int": 1,
+    "sag": 2,
+    "car": 0
+  },
+  "ca": 19,
+  "pf": 22,
+  "pf_dadi": "9d4",
+  "velocita": {
+    "camminare": "0 m",
+    "volare": "15 m (fluttuare)"
+  },
+  "resistenze_danni": "acido, freddo, fuoco, necrotici, tuono; contundenti, perforanti e taglienti da attacchi non magici",
+  "immunita_condizioni": "afferrato, avvelenato, indebolimento, paralizzato, privo di sensi, prono, trattenuto",
+  "sensi": "Percezione passiva 12, scurovisione 36 m",
+  "percezione_passiva": 12,
+  "linguaggi": "quelli conosciuti in vita",
+  "cr": "2",
+  "pe": 450,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Assorbire vita",
+      "testo": "Con un'azione bonus, il fuoco fatuo può prendere di mira una creatura nel suo campo visivo in un raggio di 1,5 metri che abbia 0 punti ferita e sia ancora viva. Il bersaglio deve superare un tiro salvezza su Costituzione con CD 10 contro questa magia, altrimenti muore. Se il bersaglio muore, il fuoco fatuo recupera 10 (3d6) punti ferita.",
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 10
+      }
+    },
+    {
+      "nome": "Effimero",
+      "testo": "Il fuoco fatuo non può indossare o trasportare niente."
+    },
+    {
+      "nome": "Illuminazione variabile",
+      "testo": "Il fuoco fatuo proietta luce intensa in un raggio da 1,5 a 6 metri e luce fioca per un numero aggiuntivo di metri pari al raggio scelto. Il fuoco fatuo può alterare il raggio con un'azione bonus."
+    },
+    {
+      "nome": "Movimento incorporeo",
+      "testo": "Il fuoco fatuo è in grado di attraversare oggetti e creature come se si trattasse di terreno difficile. Subisce 5 (1d10) danni da forza se termina il proprio turno all'interno di un oggetto."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Folgore",
+      "testo": "Attacco in mischia con incantesimo: +4 al tiro per colpire, portata 1,5 m, una creatura. Colpito: 9 (2d8) danni da fulmine."
+    },
+    {
+      "nome": "Invisibilità",
+      "testo": "Il fuoco fatuo e la sua luce diventano magicamente invisibili finché esso non attacca, non usa Assorbire vita o non perde la concentrazione (come se si concentrasse su un incantesimo)."
+    }
+  ]
+}

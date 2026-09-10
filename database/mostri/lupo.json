@@ -1,0 +1,73 @@
+{
+  "id": "lupo",
+  "nome": "Lupo",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 426
+  },
+  "tipo": "bestia",
+  "taglia": "Media",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 12,
+    "des": 15,
+    "cos": 12,
+    "int": 3,
+    "sag": 12,
+    "car": 6
+  },
+  "modificatori": {
+    "for": 1,
+    "des": 2,
+    "cos": 1,
+    "int": -4,
+    "sag": 1,
+    "car": -2
+  },
+  "ca": 13,
+  "ca_tipo": "armatura naturale",
+  "pf": 11,
+  "pf_dadi": "2d8 + 2",
+  "velocita": {
+    "camminare": "12 m"
+  },
+  "sensi": "Percezione passiva 13",
+  "percezione_passiva": 13,
+  "linguaggi": "—",
+  "cr": "1/4",
+  "pe": 50,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Tattiche del branco",
+      "testo": "Il lupo dispone di vantaggio ai tiri per colpire contro una creatura se almeno uno degli alleati del lupo si trova entro 1,5 metri dalla creatura e non è incapacitato."
+    },
+    {
+      "nome": "Udito e olfatto acuti",
+      "testo": "Il lupo dispone di vantaggio alle prove di Saggezza (Percezione) basate sull'olfatto o sull'udito."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 7 (2d4 + 2) danni perforanti. Se il bersaglio è una creatura, deve superare un tiro salvezza su Forza con CD 11, altrimenti cade a terra prono.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 7,
+            "dadi": "2d4 + 2",
+            "tipo": "perforanti"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "for",
+        "cd": 11
+      }
+    }
+  ]
+}

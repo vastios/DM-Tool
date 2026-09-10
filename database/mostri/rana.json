@@ -1,0 +1,51 @@
+{
+  "id": "rana",
+  "nome": "Rana",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 434
+  },
+  "tipo": "bestia",
+  "taglia": "Minuscola",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 1,
+    "des": 13,
+    "cos": 8,
+    "int": 1,
+    "sag": 8,
+    "car": 3
+  },
+  "modificatori": {
+    "for": -5,
+    "des": 1,
+    "cos": -1,
+    "int": -5,
+    "sag": -1,
+    "car": -4
+  },
+  "ca": 11,
+  "pf": 1,
+  "pf_dadi": "1d4 - 1",
+  "velocita": {
+    "camminare": "6 m",
+    "nuotare": "6 m"
+  },
+  "sensi": "Percezione passiva 11, scurovisione 9 m",
+  "percezione_passiva": 11,
+  "linguaggi": "—",
+  "cr": "0",
+  "pe": 0,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Anfibio",
+      "testo": "La rana può respirare in aria e in acqua."
+    },
+    {
+      "nome": "Balzo da fermo",
+      "testo": "La rana può compiere un salto in lungo di un massimo di 3 metri e uno in alto di un massimo di 1,5 metri, con o senza rincorsa.\nrana La non possiede alcun tipo di attacco efficace. Si nutre di piccoli insetti e in genere dimora vicino all'acqua, sugli alberi o sottoterra. Le statistiche della rana possono essere utilizzate anche per descrivere\nrospo un ."
+    }
+  ],
+  "azioni": []
+}

@@ -1,0 +1,69 @@
+{
+  "id": "serpente_volante",
+  "nome": "Serpente volante",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 439
+  },
+  "tipo": "bestia",
+  "taglia": "Minuscola",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 4,
+    "des": 18,
+    "cos": 11,
+    "int": 2,
+    "sag": 12,
+    "car": 5
+  },
+  "modificatori": {
+    "for": -3,
+    "des": 4,
+    "cos": 0,
+    "int": -4,
+    "sag": 1,
+    "car": -3
+  },
+  "ca": 14,
+  "pf": 5,
+  "pf_dadi": "2d4",
+  "velocita": {
+    "camminare": "9 m",
+    "nuotare": "9 m",
+    "volare": "18 m"
+  },
+  "linguaggi": "—",
+  "cr": "1/8",
+  "pe": 25,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Sfuggente",
+      "testo": "Il serpente non provoca attacchi d'opportunità quando vola oltre la portata di un nemico."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 1 danno perforante più 7 (3d4) danni da veleno.\nserpente volante Un è un serpente alato dai colori sgargianti che si annida nelle giungle più remote. Le popolazioni tribali e i cultisti a volte addomesticano tali creature per usarle come messaggere, trasportando pergamene strette tra le loro spire.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 1,
+            "dadi": "1",
+            "tipo": "perforante"
+          },
+          {
+            "media": 7,
+            "dadi": "3d4",
+            "tipo": "veleno"
+          }
+        ]
+      }
+    }
+  ]
+}

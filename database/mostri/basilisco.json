@@ -1,0 +1,72 @@
+{
+  "id": "basilisco",
+  "nome": "Basilisco",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 305
+  },
+  "tipo": "mostruosità",
+  "taglia": "Media",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 16,
+    "des": 8,
+    "cos": 15,
+    "int": 2,
+    "sag": 8,
+    "car": 7
+  },
+  "modificatori": {
+    "for": 3,
+    "des": -1,
+    "cos": 2,
+    "int": -4,
+    "sag": -1,
+    "car": -2
+  },
+  "ca": 15,
+  "ca_tipo": "armatura naturale",
+  "pf": 52,
+  "pf_dadi": "8d8 + 16",
+  "velocita": {
+    "camminare": "6 m"
+  },
+  "linguaggi": "—",
+  "cr": "3",
+  "pe": 700,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Sguardo pietrificante",
+      "testo": "Se una creatura inizia il proprio turno entro 9 metri dal basilisco e i due sono in grado di vedersi a vicenda, il basilisco può obbligare la creatura a effettuare un tiro salvezza su Costituzione con CD 12 (se non è incapacitato). Se la creatura fallisce, inizia a trasformarsi magicamente in pietra ed è trattenuta. Deve ripetere il tiro salvezza alla fine del suo turno successivo. Se lo supera, l'effetto svanisce. In caso di fallimento, la creatura rimane pietrificata finché non viene liberata dall'incantesimo ristorare superiore o da altre magie. A meno che non venga colta di sorpresa, una creatura può distogliere lo sguardo per evitare il tiro salvezza all'inizio del suo turno. Se lo fa, non può vedere il basilisco fino all'inizio del proprio turno successivo, quando potrà distogliere lo sguardo di nuovo. Se nel frattempo guarda il basilisco, deve immediatamente effettuare il tiro salvezza. Se il basilisco vede il suo riflesso entro 9 metri da sé in condizioni di luce intensa, crede erroneamente che il suo riflesso sia un rivale e bersaglia se stesso col suo sguardo.",
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 12
+      }
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 10 (2d6 + 3) danni perforanti più 7 (2d6) danni da veleno.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 10,
+            "dadi": "2d6 + 3",
+            "tipo": "perforanti"
+          },
+          {
+            "media": 7,
+            "dadi": "2d6",
+            "tipo": "veleno"
+          }
+        ]
+      }
+    }
+  ]
+}

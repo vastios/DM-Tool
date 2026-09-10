@@ -1,0 +1,90 @@
+{
+  "id": "quasit",
+  "nome": "Quasit",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 313
+  },
+  "tipo": "immondo",
+  "descrittore": "demone, mutaforma",
+  "taglia": "Minuscola",
+  "allineamento": "caotico malvagio",
+  "caratteristiche": {
+    "for": 5,
+    "des": 17,
+    "cos": 10,
+    "int": 7,
+    "sag": 10,
+    "car": 10
+  },
+  "modificatori": {
+    "for": -3,
+    "des": 3,
+    "cos": 0,
+    "int": -2,
+    "sag": 0,
+    "car": 0
+  },
+  "ca": 13,
+  "pf": 7,
+  "pf_dadi": "3d4",
+  "velocita": {
+    "camminare": "12 m"
+  },
+  "resistenze_danni": "freddo, fulmine, fuoco; contundenti, perforanti e taglienti da attacchi non magici",
+  "immunita_danni": "veleno",
+  "immunita_condizioni": "avvelenato",
+  "sensi": "Percezione passiva 10, scurovisione 36 m",
+  "percezione_passiva": 10,
+  "linguaggi": "Abissale, Comune",
+  "cr": "1",
+  "pe": 200,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Mutaforma",
+      "testo": "Il quasit può usare la sua azione per assumere la forma bestiale di un pipistrello (velocità 3 m, volare 12 m), di un millepiedi (12 m, scalare 12 m) o di un rospo (12 m, nuotare 12 m) oppure riassumere la sua vera forma. Le sue statistiche restano le stesse in ogni forma, a eccezione dei cambiamenti di velocità menzionati. Ogni oggetto che indossa o trasporta non viene trasformato. Se muore, torna alla sua forma naturale."
+    },
+    {
+      "nome": "Resistenza alla magia",
+      "testo": "Il quasit dispone di vantaggio ai tiri salvezza contro incantesimi e altri effetti magici."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Artigli",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 5 (1d4 + 3) danni perforanti e il bersaglio deve superare un tiro salvezza su Costituzione con CD 10, altrimenti subisce 5 (2d4) danni da veleno e diventa avvelenato per 1 minuto. Il bersaglio può ripetere il tiro salvezza alla fine di ogni suo turno e, se lo supera, l'effetto svanisce.",
+      "uso": "morso in forma bestiale",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d4 + 3",
+            "tipo": "perforanti e"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 10
+      }
+    },
+    {
+      "nome": "Invisibilità",
+      "testo": "Il quasit diventa magicamente invisibile finché non attacca, non usa Spaventare o finché non perde la concentrazione (come se si concentrasse su un incantesimo). Gli oggetti che il quasit indossa o trasporta diventano invisibili insieme a lui."
+    },
+    {
+      "nome": "Spaventare",
+      "testo": "Una creatura a scelta del quasit e situata entro 6 metri da lui deve superare un tiro salvezza su Saggezza con CD 10, altrimenti è spaventata per 1 minuto. Il bersaglio può ripetere il tiro salvezza alla fine di ogni suo turno, subendo svantaggio se il quasit si trova entro il suo campo visivo: se il bersaglio lo supera, l'effetto svanisce.",
+      "uso": "1/giorno",
+      "salvataggio": {
+        "caratteristica": "sag",
+        "cd": 10
+      }
+    }
+  ]
+}

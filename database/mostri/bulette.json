@@ -1,0 +1,70 @@
+{
+  "id": "bulette",
+  "nome": "Bulette",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 306
+  },
+  "tipo": "mostruosità",
+  "taglia": "Grande",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 19,
+    "des": 11,
+    "cos": 21,
+    "int": 2,
+    "sag": 10,
+    "car": 5
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 0,
+    "cos": 5,
+    "int": -4,
+    "sag": 0,
+    "car": -3
+  },
+  "ca": 17,
+  "ca_tipo": "armatura naturale",
+  "pf": 94,
+  "pf_dadi": "9d10 + 45",
+  "velocita": {
+    "camminare": "12 m",
+    "scavare": "12 m"
+  },
+  "sensi": "Percezione passiva 16, percezione tellurica 18 m, scurovisione 18 m",
+  "percezione_passiva": 16,
+  "linguaggi": "—",
+  "cr": "5",
+  "pe": 1800,
+  "bonus_competenza": 3,
+  "tratti": [
+    {
+      "nome": "Balzo da fermo",
+      "testo": "Il bulette può compiere un salto in lungo di un massimo di 9 metri e un salto in alto di un massimo di 4,5 metri, con o senza rincorsa."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +7 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 30 (4d12 + 4) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 30,
+            "dadi": "4d12 + 4",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Balzo letale",
+      "testo": "Se il bulette salta di almeno 4,5 metri come parte del suo movimento, poi può usare questa azione per atterrare in piedi in uno spazio che contenga una o più creature oltre a lui. Ognuna di queste creature deve effettuare un tiro salvezza su Forza o Destrezza con CD 16 (a scelta del bersaglio); se lo fallisce, viene buttata a terra prona e subisce 14 (3d6 + 4) danni contundenti più 14 (3d6 + 4) danni taglienti. Se invece lo supera, subisce la metà di quei danni, non è buttata a terra prona e viene spinta di 1,5 metri fuori dallo spazio del bulette fino a uno spazio libero a scelta della creatura. Se non c'è alcuno spazio libero entro gittata, la creatura cade invece a terra prona nello spazio del bulette."
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "id": "troll",
+  "nome": "Troll",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 398
+  },
+  "tipo": "gigante",
+  "taglia": "Grande",
+  "allineamento": "caotico malvagio",
+  "caratteristiche": {
+    "for": 18,
+    "des": 13,
+    "cos": 20,
+    "int": 7,
+    "sag": 9,
+    "car": 7
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 1,
+    "cos": 5,
+    "int": -2,
+    "sag": -1,
+    "car": -2
+  },
+  "ca": 15,
+  "ca_tipo": "armatura naturale",
+  "pf": 84,
+  "pf_dadi": "8d10 + 40",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "sensi": "Percezione passiva 12, scurovisione 18 m",
+  "percezione_passiva": 12,
+  "linguaggi": "Gigante",
+  "cr": "5",
+  "pe": 1800,
+  "bonus_competenza": 3,
+  "tratti": [
+    {
+      "nome": "Olfatto acuto",
+      "testo": "Il troll dispone di vantaggio alle prove di Saggezza (Percezione) basate sull'olfatto."
+    },
+    {
+      "nome": "Rigenerazione",
+      "testo": "Il troll recupera 10 punti ferita all'inizio del suo turno. Se il troll subisce danni da acido o fuoco, questo tratto non funziona all'inizio del suo turno successivo. Il troll muore solo se inizia il turno con 0 punti ferita e non si rigenera."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il troll effettua tre attacchi: uno con il morso e due con gli artigli."
+    },
+    {
+      "nome": "Artiglio",
+      "testo": "Attacco con arma da mischia: +7 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 11 (2d6 + 4) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 11,
+            "dadi": "2d6 + 4",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +7 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 7 (1d6 + 4) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 7,
+            "dadi": "1d6 + 4",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

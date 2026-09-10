@@ -1,0 +1,98 @@
+{
+  "id": "gnoll",
+  "nome": "Gnoll",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 359
+  },
+  "tipo": "umanoide",
+  "descrittore": "gnoll",
+  "taglia": "Media",
+  "allineamento": "caotico malvagio",
+  "caratteristiche": {
+    "for": 14,
+    "des": 12,
+    "cos": 11,
+    "int": 6,
+    "sag": 10,
+    "car": 7
+  },
+  "modificatori": {
+    "for": 2,
+    "des": 1,
+    "cos": 0,
+    "int": -2,
+    "sag": 0,
+    "car": -2
+  },
+  "ca": 15,
+  "ca_tipo": "armatura di pelle, scudo",
+  "pf": 22,
+  "pf_dadi": "5d8",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "linguaggi": "Gnoll",
+  "cr": "1/2",
+  "pe": 100,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Furia",
+      "testo": "Quando lo gnoll riduce una creatura a 0 punti ferita con un attacco in mischia nel suo turno, il mostro può effettuare un'azione bonus per muoversi fino a metà della sua velocità ed effettuare un attacco con il morso."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, una creatura. Colpito: 4 (1d4 + 2) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura",
+        "danni": [
+          {
+            "media": 4,
+            "dadi": "1d4 + 2",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Lancia",
+      "testo": "Attacco con arma da mischia o a distanza: +4 al tiro per colpire, portata 1,5 m o gittata 6/18 m, un bersaglio. Colpito: 5 (1d6 + 2) danni perforanti o 6 (1d8 + 2) danni perforanti se impugnata con due mani per effettuare un attacco in mischia.",
+      "attacco": {
+        "tipo": "mischia o distanza",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m o gittata 6/18 m, un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d6 + 2",
+            "tipo": "perforanti o"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Arco lungo",
+      "testo": "Attacco con arma a distanza: +3 al tiro per colpire, gittata 45/180 m, un bersaglio. Colpito: 5 (1d8 + 1) danni perforanti.",
+      "attacco": {
+        "tipo": "distanza",
+        "tiro": 3,
+        "portata": "45/180 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d8 + 1",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

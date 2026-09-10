@@ -1,0 +1,79 @@
+{
+  "id": "cavallo_degli_incubi",
+  "nome": "Cavallo degli incubi",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 307
+  },
+  "tipo": "immondo",
+  "taglia": "Grande",
+  "allineamento": "neutrale malvagio",
+  "caratteristiche": {
+    "for": 18,
+    "des": 15,
+    "cos": 16,
+    "int": 10,
+    "sag": 13,
+    "car": 15
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 2,
+    "cos": 3,
+    "int": 0,
+    "sag": 1,
+    "car": 2
+  },
+  "ca": 13,
+  "ca_tipo": "armatura naturale",
+  "pf": 68,
+  "pf_dadi": "8d10 + 24",
+  "velocita": {
+    "camminare": "18 m",
+    "volare": "27 m"
+  },
+  "sensi": "Percezione passiva 11",
+  "percezione_passiva": 11,
+  "linguaggi": "capisce Abissale, Comune e Infernale ma non li parla",
+  "cr": "3",
+  "pe": 700,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Conferire resistenza al fuoco",
+      "testo": "Il cavallo degli incubi può conferire resistenza ai danni da fuoco a chiunque lo cavalchi."
+    },
+    {
+      "nome": "Illuminazione",
+      "testo": "Il cavallo degli incubi emana luce intensa in un raggio di 3 metri e luce fioca per ulteriori 3 metri."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Zoccoli",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 13 (2d8 + 4) danni contundenti più 7 (2d6) danni da fuoco.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 13,
+            "dadi": "2d8 + 4",
+            "tipo": "contundenti"
+          },
+          {
+            "media": 7,
+            "dadi": "2d6",
+            "tipo": "fuoco"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Passo etereo",
+      "testo": "Il cavallo degli incubi e un massimo di tre creature consenzienti situate entro 1,5 metri da esso passano magicamente dal Piano Materiale al Piano Etereo o viceversa."
+    }
+  ]
+}

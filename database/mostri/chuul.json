@@ -1,0 +1,84 @@
+{
+  "id": "chuul",
+  "nome": "Chuul",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 308
+  },
+  "tipo": "aberrazione",
+  "taglia": "Grande",
+  "allineamento": "caotico malvagio",
+  "caratteristiche": {
+    "for": 19,
+    "des": 10,
+    "cos": 16,
+    "int": 5,
+    "sag": 11,
+    "car": 5
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 0,
+    "cos": 3,
+    "int": -3,
+    "sag": 0,
+    "car": -3
+  },
+  "ca": 16,
+  "ca_tipo": "armatura naturale",
+  "pf": 93,
+  "pf_dadi": "11d10 + 33",
+  "velocita": {
+    "camminare": "9 m",
+    "nuotare": "9 m"
+  },
+  "immunita_danni": "veleno",
+  "immunita_condizioni": "avvelenato",
+  "sensi": "Percezione passiva 14, scurovisione 18 m",
+  "percezione_passiva": 14,
+  "linguaggi": "capisce il Gergo delle profondità ma non lo parla",
+  "cr": "4",
+  "pe": 1100,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Anfibio",
+      "testo": "Il chuul può respirare in aria e in acqua."
+    },
+    {
+      "nome": "Percezione della magia",
+      "testo": "Il chuul percepisce la magia entro 36 metri da sé a volontà. Sotto ogni altro aspetto questo tratto funziona come l'incantesimo individuazione del magico , ma di per sé non è magico."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il chuul effettua due attacchi con le tenaglie. Se il chuul afferra una creatura, può usare anche i tentacoli una volta."
+    },
+    {
+      "nome": "Tenaglia",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 11 (2d6 + 4) danni contundenti. Il bersaglio è afferrato (CD 14 per sfuggire) se si tratta di una creatura di taglia Grande o inferiore e il chuul non è in lotta con altre due creature.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 11,
+            "dadi": "2d6 + 4",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Tentacoli",
+      "testo": "Una creatura afferrata dal chuul deve superare un tiro salvezza su Costituzione con CD 13, altrimenti è avvelenata per 1 minuto. Finché l'avvelenamento non termina, il bersaglio è paralizzato. Il bersaglio può ripetere il tiro salvezza alla fine di ogni suo turno e, se lo supera, l'effetto svanisce.",
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 13
+      }
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "id": "cavaliere",
+  "nome": "Cavaliere",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 447
+  },
+  "tipo": "umanoide",
+  "descrittore": "qualsiasi razza",
+  "taglia": "Media",
+  "allineamento": "qualsiasi allineamento",
+  "caratteristiche": {
+    "for": 16,
+    "des": 11,
+    "cos": 14,
+    "int": 11,
+    "sag": 11,
+    "car": 15
+  },
+  "modificatori": {
+    "for": 3,
+    "des": 0,
+    "cos": 2,
+    "int": 0,
+    "sag": 0,
+    "car": 2
+  },
+  "ca": 18,
+  "ca_tipo": "piastre",
+  "pf": 52,
+  "pf_dadi": "8d8 + 16",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "sensi": "Percezione passiva 10",
+  "percezione_passiva": 10,
+  "linguaggi": "uno qualsiasi (di solito Comune)",
+  "cr": "3",
+  "pe": 700,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Impavido",
+      "testo": "Il cavaliere dispone di vantaggio ai tiri salvezza contro la condizione spaventato."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il cavaliere effettua due attacchi in mischia."
+    },
+    {
+      "nome": "Spadone",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 10 (2d6 + 3) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 10,
+            "dadi": "2d6 + 3",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Balestra pesante",
+      "testo": "Attacco con arma a distanza: +2 al tiro per colpire, gittata 30/120 m, un bersaglio. Colpito: 5 (1d10) danni perforanti.",
+      "attacco": {
+        "tipo": "distanza",
+        "tiro": 2,
+        "portata": "30/120 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d10",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Autorità",
+      "testo": "Per 1 minuto, il cavaliere può pronunciare un comando speciale o un monito ogni volta che una creatura non ostile visibile entro 9 metri da lui effettua un tiro per colpire o un tiro salvezza. La creatura può aggiungere un d4 al suo tiro a patto che possa udire e comprendere il cavaliere. Una creatura può beneficiare di un solo dado Autorità alla volta. Questo effetto termina se il cavaliere è incapacitato.",
+      "uso": "ricarica dopo un riposo breve o lungo"
+    }
+  ],
+  "reazioni": [
+    {
+      "nome": "Parata",
+      "testo": "Il cavaliere aggiunge 2 alla sua CA contro un attacco in mischia che lo colpirebbe. Per farlo, deve vedere l'attaccante e deve impugnare un'arma da mischia.\ncavalieri I sono combattenti votati al servizio di un reggente, di un ordine religioso o di una nobile causa. L'allineamento di un cavaliere determina la misura in cui un giuramento viene onorato. Che si tratti di intraprendere una missione o di pattugliare un regno, un cavaliere spesso viaggia accompagnato da un seguito che comprende i suoi scudieri e alcuni popolani come gregari."
+    }
+  ]
+}

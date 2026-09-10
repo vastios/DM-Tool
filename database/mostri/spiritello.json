@@ -1,0 +1,94 @@
+{
+  "id": "spiritello",
+  "nome": "Spiritello",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 395
+  },
+  "tipo": "folletto",
+  "taglia": "Minuscola",
+  "allineamento": "neutrale buono",
+  "caratteristiche": {
+    "for": 3,
+    "des": 18,
+    "cos": 10,
+    "int": 14,
+    "sag": 13,
+    "car": 11
+  },
+  "modificatori": {
+    "for": -4,
+    "des": 4,
+    "cos": 0,
+    "int": 2,
+    "sag": 1,
+    "car": 0
+  },
+  "ca": 15,
+  "ca_tipo": "armatura di cuoio",
+  "pf": 2,
+  "pf_dadi": "1d4",
+  "velocita": {
+    "camminare": "3 m",
+    "volare": "12 m"
+  },
+  "sensi": "Percezione passiva 13",
+  "percezione_passiva": 13,
+  "linguaggi": "Comune, Elfico, Silvano",
+  "cr": "1/4",
+  "pe": 50,
+  "bonus_competenza": 2,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Spada lunga",
+      "testo": "Attacco con arma da mischia: +2 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 1 danno tagliente.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 2,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 1,
+            "dadi": "1",
+            "tipo": "tagliente"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Arco corto",
+      "testo": "Attacco con arma a distanza : +6 al tiro per colpire, gittata 12/48 m, un bersaglio. Colpito: 1 danno perforante e il bersaglio deve superare un tiro salvezza su Costituzione con CD 10, altrimenti è avvelenato per 1 minuto. Se il risultato del tiro salvezza è pari o inferiore a 5, il bersaglio avvelenato perde conoscenza ed è privo di sensi per la stessa durata, finché non subisce danni o finché un'altra creatura non usa un'azione per risvegliarlo scuotendolo.",
+      "attacco": {
+        "tipo": "distanza",
+        "tiro": 6,
+        "portata": "12/48 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 1,
+            "dadi": "1",
+            "tipo": "perforante"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 10
+      }
+    },
+    {
+      "nome": "Invisibilità",
+      "testo": "Lo spiritello diventa magicamente invisibile finché non attacca, non lancia un incantesimo o finché non perde la concentrazione (come se si concentrasse su un incantesimo). Ogni oggetto che lo spiritello indossa o trasporta diventa invisibile insieme a lui."
+    },
+    {
+      "nome": "Vista del cuore",
+      "testo": "Lo spiritello tocca una creatura e capisce magicamente il suo stato emotivo attuale. Se il bersaglio fallisce un tiro salvezza su Carisma con CD 10, lo spiritello apprende anche l'allineamento della creatura. I celestiali, gli immondi e i non morti falliscono automaticamente il tiro salvezza.",
+      "salvataggio": {
+        "caratteristica": "car",
+        "cd": 10
+      }
+    }
+  ]
+}

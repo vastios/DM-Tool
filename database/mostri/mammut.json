@@ -1,0 +1,84 @@
+{
+  "id": "mammut",
+  "nome": "Mammut",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 427
+  },
+  "tipo": "bestia",
+  "taglia": "Enorme",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 24,
+    "des": 9,
+    "cos": 21,
+    "int": 3,
+    "sag": 11,
+    "car": 6
+  },
+  "modificatori": {
+    "for": 7,
+    "des": -1,
+    "cos": 5,
+    "int": -4,
+    "sag": 0,
+    "car": -2
+  },
+  "ca": 13,
+  "ca_tipo": "armatura naturale",
+  "pf": 126,
+  "pf_dadi": "11d12 + 55",
+  "velocita": {
+    "camminare": "12 m"
+  },
+  "linguaggi": "—",
+  "cr": "6",
+  "pe": 2300,
+  "bonus_competenza": 3,
+  "tratti": [
+    {
+      "nome": "Carica travolgente",
+      "testo": "Se il mammut si muove di almeno 6 metri in linea retta verso una creatura e poi la colpisce effettuando un'incornata con le zanne nello stesso turno, quel bersaglio deve superare un tiro salvezza su Forza con CD 18, altrimenti cade a terra prono. Se il bersaglio è prono, il mammut può effettuare un pestone contro di esso come azione bonus.",
+      "salvataggio": {
+        "caratteristica": "for",
+        "cd": 18
+      }
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Incornata",
+      "testo": "Attacco con arma da mischia: +10 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 25 (4d8 + 7) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 10,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 25,
+            "dadi": "4d8 + 7",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Pestone",
+      "testo": "Attacco con arma da mischia: +10 al tiro per colpire, portata 1,5 m, una creatura prona. Colpito: 29 (4d10 + 7) danni contundenti.\nmammut Un è una creatura simile a un elefante, dalla pelliccia folta e le zanne lunghe. È più tarchiato e feroce dei normali elefanti e può vivere in diversi habitat, da quelli subartici a quelli subtropicali.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 10,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura prona",
+        "danni": [
+          {
+            "media": 29,
+            "dadi": "4d10 + 7",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    }
+  ]
+}

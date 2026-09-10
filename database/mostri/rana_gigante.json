@@ -1,0 +1,73 @@
+{
+  "id": "rana_gigante",
+  "nome": "Rana gigante",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 434
+  },
+  "tipo": "bestia",
+  "taglia": "Media",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 12,
+    "des": 13,
+    "cos": 11,
+    "int": 2,
+    "sag": 10,
+    "car": 3
+  },
+  "modificatori": {
+    "for": 1,
+    "des": 1,
+    "cos": 0,
+    "int": -4,
+    "sag": 0,
+    "car": -4
+  },
+  "ca": 11,
+  "pf": 18,
+  "pf_dadi": "4d8",
+  "velocita": {
+    "camminare": "9 m",
+    "nuotare": "9 m"
+  },
+  "sensi": "Percezione passiva 12, scurovisione 9 m",
+  "percezione_passiva": 12,
+  "linguaggi": "—",
+  "cr": "1/4",
+  "pe": 50,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Anfibio",
+      "testo": "La rana può respirare in aria e in acqua."
+    },
+    {
+      "nome": "Balzo da fermo",
+      "testo": "La rana può compiere un salto in lungo di un massimo di 6 metri e uno in alto di un massimo di 3 metri, con o senza rincorsa."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +3 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 4 (1d6 + 1) danni perforanti e il bersaglio è afferrato (CD 11 per sfuggire). Finché la presa perdura, il bersaglio viene trattenuto e la rana non può morderne un altro.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 3,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 4,
+            "dadi": "1d6 + 1",
+            "tipo": "perforanti e"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Inghiottire",
+      "testo": "La rana effettua un attacco con il morso contro un bersaglio di taglia Piccola o inferiore con cui sta lottando. Se l'attacco va a segno, il bersaglio viene inghiottito e la lotta termina. Mentre è inghiottito, il bersaglio è accecato e trattenuto, beneficia di copertura totale contro gli attacchi e altri effetti al di fuori della rana e subisce 5 (2d4) danni da acido all'inizio di ogni turno dell'animale, che può inghiottire soltanto un bersaglio alla volta. Se la rana muore, la creatura inghiottita non è più trattenuta dal mostro e può sfuggire usando 1,5 metri di movimento, uscendo prona dall'animale."
+    }
+  ]
+}

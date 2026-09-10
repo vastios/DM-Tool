@@ -1,0 +1,81 @@
+{
+  "id": "piovra",
+  "nome": "Piovra",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 430
+  },
+  "tipo": "bestia",
+  "taglia": "Piccola",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 4,
+    "des": 15,
+    "cos": 11,
+    "int": 3,
+    "sag": 10,
+    "car": 4
+  },
+  "modificatori": {
+    "for": -3,
+    "des": 2,
+    "cos": 0,
+    "int": -4,
+    "sag": 0,
+    "car": -3
+  },
+  "ca": 12,
+  "pf": 3,
+  "pf_dadi": "1d6",
+  "velocita": {
+    "camminare": "5 m",
+    "nuotare": "9 m"
+  },
+  "sensi": "Percezione passiva 12, scurovisione 9 m",
+  "percezione_passiva": 12,
+  "linguaggi": "—",
+  "cr": "0",
+  "pe": 10,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Apnea",
+      "testo": "Mentre è fuori dall'acqua, la piova può trattenere il respiro per 30 minuti."
+    },
+    {
+      "nome": "Mimetismo acquatico",
+      "testo": "La piovra dispone di vantaggio alle prove di Destrezza (Furtività) effettuate sott'acqua."
+    },
+    {
+      "nome": "Respirare sott'acqua",
+      "testo": "La piovra può respirare soltanto sott'acqua."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Tentacoli",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 1 danno contundente e il bersaglio è afferrato (CD 10 per sfuggire). Finché la presa perdura, la piovra non può usare i suoi tentacoli su altri.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 1,
+            "dadi": "1",
+            "tipo": "contundente"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Nube di inchiostro (ricarica dopo un riposo breve",
+      "testo": ""
+    },
+    {
+      "nome": "o lungo)",
+      "testo": "Una nube di inchiostro del raggio di 1,5 metri si diffonde tutt'intorno alla piovra se quest'ultima si trova sott'acqua. L'area è pesantemente oscurata per 1 minuto, ma una corrente molto intensa può disperdere l'inchiostro. Dopo avere emesso tale sostanza, la piovra può usare l'azione di Scatto come azione bonus."
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "id": "orso_polare",
+  "nome": "Orso polare",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 429
+  },
+  "tipo": "bestia",
+  "taglia": "Grande",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 20,
+    "des": 10,
+    "cos": 16,
+    "int": 2,
+    "sag": 13,
+    "car": 7
+  },
+  "modificatori": {
+    "for": 5,
+    "des": 0,
+    "cos": 3,
+    "int": -4,
+    "sag": 1,
+    "car": -2
+  },
+  "ca": 12,
+  "ca_tipo": "armatura naturale",
+  "pf": 42,
+  "pf_dadi": "5d10 + 15",
+  "velocita": {
+    "camminare": "12 m",
+    "nuotare": "9 m"
+  },
+  "sensi": "Percezione passiva 13",
+  "percezione_passiva": 13,
+  "linguaggi": "—",
+  "cr": "2",
+  "pe": 450,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Olfatto acuto",
+      "testo": "L'orso dispone di vantaggio alle prove di Saggezza (Percezione) basate sull'olfatto."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "L'orso effettua due attacchi: uno con il morso e uno con gli artigli."
+    },
+    {
+      "nome": "Artigli",
+      "testo": "Attacco con arma da mischia: +7 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 12 (2d6 + 5) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 12,
+            "dadi": "2d6 + 5",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +7 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 9 (1d8 + 5) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 9,
+            "dadi": "1d8 + 5",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "id": "guardia",
+  "nome": "Guardia",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 450
+  },
+  "tipo": "umanoide",
+  "descrittore": "qualsiasi razza",
+  "taglia": "Media",
+  "allineamento": "qualsiasi allineamento",
+  "caratteristiche": {
+    "for": 13,
+    "des": 12,
+    "cos": 12,
+    "int": 10,
+    "sag": 11,
+    "car": 10
+  },
+  "modificatori": {
+    "for": 1,
+    "des": 1,
+    "cos": 1,
+    "int": 0,
+    "sag": 0,
+    "car": 0
+  },
+  "ca": 16,
+  "ca_tipo": "giaco di maglia, scudo",
+  "pf": 11,
+  "pf_dadi": "2d8 + 2",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "sensi": "Percezione passiva 12",
+  "percezione_passiva": 12,
+  "linguaggi": "uno qualsiasi (di solito Comune)",
+  "cr": "1/8",
+  "pe": 25,
+  "bonus_competenza": 2,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Lancia",
+      "testo": "Attacco con arma da mischia o a distanza: +3 al tiro per colpire, portata 1,5 m o gittata 6/18 m, un bersaglio. Colpito: 4 (1d6 + 1) danni perforanti o 5 (1d8 + 1) danni perforanti se usata a due mani per effettuare un attacco in mischia.\nguardie Le includono i membri della guardia cittadina, le sentinelle di una cittadella o di un paese fortificato e le guardie del corpo di nobili e mercanti.",
+      "attacco": {
+        "tipo": "mischia o distanza",
+        "tiro": 3,
+        "portata": "1",
+        "bersaglio": "5 m o gittata 6/18 m, un bersaglio",
+        "danni": [
+          {
+            "media": 4,
+            "dadi": "1d6 + 1",
+            "tipo": "perforanti o"
+          }
+        ]
+      }
+    }
+  ]
+}

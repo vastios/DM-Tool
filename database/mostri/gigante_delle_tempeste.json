@@ -1,0 +1,136 @@
+{
+  "id": "gigante_delle_tempeste",
+  "nome": "Gigante delle tempeste",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 358
+  },
+  "tipo": "gigante",
+  "taglia": "Enorme",
+  "allineamento": "caotico buono",
+  "caratteristiche": {
+    "for": 29,
+    "des": 14,
+    "cos": 20,
+    "int": 16,
+    "sag": 18,
+    "car": 18
+  },
+  "modificatori": {
+    "for": 9,
+    "des": 2,
+    "cos": 5,
+    "int": 3,
+    "sag": 4,
+    "car": 4
+  },
+  "ca": 16,
+  "ca_tipo": "corazza a scaglie",
+  "pf": 230,
+  "pf_dadi": "20d12 + 100",
+  "velocita": {
+    "camminare": "15 m",
+    "nuotare": "15 m"
+  },
+  "competenze": {
+    "arcano": 8,
+    "atletica": 14,
+    "percezione": 9,
+    "storia": 8
+  },
+  "resistenze_danni": "freddo",
+  "immunita_danni": "fulmine, tuono",
+  "sensi": "Percezione passiva 19",
+  "percezione_passiva": 19,
+  "linguaggi": "Comune, Gigante",
+  "cr": "13",
+  "pe": 10000,
+  "bonus_competenza": 5,
+  "tratti": [
+    {
+      "nome": "Anfibio",
+      "testo": "Il gigante può respirare in aria e in acqua."
+    },
+    {
+      "nome": "Incantesimi innati",
+      "testo": "La caratteristica innata da incantatore del gigante è Carisma (CD del tiro salvezza sull'incantesimo 17). Per sua natura, è in grado di lanciare gli incantesimi indicati di seguito senza aver bisogno di componenti materiali: A volontà: caduta morbida, individuazione del magico, levitazione, luce 3/giorno ciascuno: controllare tempo atmosferico, respirare sott'acqua",
+      "incantesimi": {
+        "testo": "La caratteristica innata da incantatore del gigante è Carisma (CD del tiro salvezza sull'incantesimo 17). Per sua natura, è in grado di lanciare gli incantesimi indicati di seguito senza aver bisogno di componenti materiali: A volontà: caduta morbida, individuazione del magico, levitazione, luce 3/giorno ciascuno: controllare tempo atmosferico, respirare sott'acqua",
+        "gruppi": [
+          {
+            "frequenza": "a volontà",
+            "incantesimi": [
+              "caduta morbida",
+              "individuazione del magico",
+              "levitazione",
+              "luce"
+            ]
+          },
+          {
+            "frequenza": "3/giorno ciascuno",
+            "incantesimi": [
+              "controllare tempo atmosferico",
+              "respirare sott'acqua"
+            ]
+          }
+        ],
+        "cd": 17
+      }
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il gigante effettua due attacchi con lo spadone."
+    },
+    {
+      "nome": "Spadone",
+      "testo": "Attacco con arma da mischia : +14 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 30 (6d6 + 9) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 14,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 30,
+            "dadi": "6d6 + 9",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Roccia",
+      "testo": "Attacco con arma a distanza : +14 al tiro per colpire, gittata 18/72 m, un bersaglio. Colpito: 35 (4d12 + 9) danni contundenti.",
+      "attacco": {
+        "tipo": "distanza",
+        "tiro": 14,
+        "portata": "18/72 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 35,
+            "dadi": "4d12 + 9",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Colpo di fulmine",
+      "testo": "Il gigante scaglia un fulmine magico verso un punto che riesce a vedere entro 150 metri. Ogni creatura entro 3 metri da quel punto deve effettuare un tiro salvezza su Destrezza con CD 17, subendo 54 (12d8) danni da fulmine in caso di fallimento, o la metà dei danni in caso di successo.",
+      "uso": "ricarica 5–6",
+      "salvataggio": {
+        "caratteristica": "des",
+        "cd": 17,
+        "danno_fallimento": {
+          "media": 54,
+          "dadi": "12d8",
+          "tipo": "fulmine"
+        },
+        "successo": "metà danni"
+      }
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "id": "pantera",
+  "nome": "Pantera",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 430
+  },
+  "tipo": "bestia",
+  "taglia": "Media",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 14,
+    "des": 15,
+    "cos": 10,
+    "int": 3,
+    "sag": 14,
+    "car": 7
+  },
+  "modificatori": {
+    "for": 2,
+    "des": 2,
+    "cos": 0,
+    "int": -4,
+    "sag": 2,
+    "car": -2
+  },
+  "ca": 12,
+  "pf": 13,
+  "pf_dadi": "3d8",
+  "velocita": {
+    "camminare": "15 m",
+    "scalare": "12 m"
+  },
+  "sensi": "Percezione passiva 14",
+  "percezione_passiva": 14,
+  "linguaggi": "—",
+  "cr": "1/4",
+  "pe": 50,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Balzo",
+      "testo": "Se la pantera si muove di almeno 6 metri in linea retta verso una creatura e poi la colpisce con un attacco con gli artigli nello stesso turno, quel bersaglio deve superare un tiro salvezza su Forza con CD 12, altrimenti cade a terra prono. Se il bersaglio è prono, la pantera può effettuare un attacco con il morso contro di esso come azione bonus.",
+      "salvataggio": {
+        "caratteristica": "for",
+        "cd": 12
+      }
+    },
+    {
+      "nome": "Olfatto acuto",
+      "testo": "La pantera dispone di vantaggio alle prove di Saggezza (Percezione) basate sull'olfatto."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Artiglio",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 4 (1d4 + 2) danni taglienti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 4,
+            "dadi": "1d4 + 2",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +4 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 5 (1d6 + 2) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 4,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d6 + 2",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

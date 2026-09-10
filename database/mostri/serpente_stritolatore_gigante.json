@@ -1,0 +1,77 @@
+{
+  "id": "serpente_stritolatore_gigante",
+  "nome": "Serpente stritolatore gigante",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 439
+  },
+  "tipo": "bestia",
+  "taglia": "Enorme",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 19,
+    "des": 14,
+    "cos": 12,
+    "int": 1,
+    "sag": 10,
+    "car": 3
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 2,
+    "cos": 1,
+    "int": -5,
+    "sag": 0,
+    "car": -4
+  },
+  "ca": 12,
+  "pf": 60,
+  "pf_dadi": "8d12 + 8",
+  "velocita": {
+    "camminare": "9 m",
+    "nuotare": "9 m"
+  },
+  "sensi": "Percezione passiva 12, vista cieca 3 m",
+  "percezione_passiva": 12,
+  "linguaggi": "—",
+  "cr": "2",
+  "pe": 450,
+  "bonus_competenza": 2,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 3 m, una creatura. Colpito: 11 (2d6 + 4) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "3 m",
+        "bersaglio": "una creatura",
+        "danni": [
+          {
+            "media": 11,
+            "dadi": "2d6 + 4",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Stritolare",
+      "testo": "Attacco con arma da mischia: +6 al tiro per colpire, portata 1,5 m, una creatura. Colpito: 13 (2d8 + 4) danni contundenti e il bersaglio è afferrato (CD 16 per sfuggire). Finché è afferrato, il bersaglio è trattenuto e il serpente non può stritolarne un altro.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 6,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura",
+        "danni": [
+          {
+            "media": 13,
+            "dadi": "2d8 + 4",
+            "tipo": "contundenti e"
+          }
+        ]
+      }
+    }
+  ]
+}

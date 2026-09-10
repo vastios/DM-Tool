@@ -1,0 +1,69 @@
+{
+  "id": "worg",
+  "nome": "Worg",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 443
+  },
+  "tipo": "mostruosità",
+  "taglia": "Grande",
+  "allineamento": "neutrale malvagio",
+  "caratteristiche": {
+    "for": 16,
+    "des": 13,
+    "cos": 13,
+    "int": 7,
+    "sag": 11,
+    "car": 8
+  },
+  "modificatori": {
+    "for": 3,
+    "des": 1,
+    "cos": 1,
+    "int": -2,
+    "sag": 0,
+    "car": -1
+  },
+  "ca": 13,
+  "ca_tipo": "armatura naturale",
+  "pf": 26,
+  "pf_dadi": "4d10 + 4",
+  "velocita": {
+    "camminare": "15 m"
+  },
+  "sensi": "Percezione passiva 14, scurovisione 18 m",
+  "percezione_passiva": 14,
+  "linguaggi": "Goblin, Worg",
+  "cr": "1/2",
+  "pe": 100,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Udito e olfatto acuti",
+      "testo": "Il worg dispone di vantaggio alle prove di Saggezza (Percezione) basate sull'olfatto o sull'udito."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 10 (2d6 + 3) danni perforanti. Se il bersaglio è una creatura, deve superare un tiro salvezza su Forza con CD 13, altrimenti cade a terra prono. Un worg è un malvagio predatore che si diverte a cacciare e divorare creature più deboli di lui. Scaltre e maligne, queste creature vagano per le terre selvagge più remote. Vengono allevate da goblin e hobgoblin, talvolta venendo anche usate come cavalcature da questi ultimi. Un worg non esiterà però a rivoltarsi contro il suo cavaliere se si sente maltrattato o malnutrito. I worg parlano il loro linguaggio personale e il Goblin. Alcuni imparano anche a parlare il Comune. Quest'appendice elenca le statistiche per vari personaggi umanoidi non giocanti (PNG) che gli avventurieri potrebbero incontrare nel corso di una campagna, dagli umili cittadini comuni ai potenti arcimaghi. Queste schede delle statistiche possono essere usate per rappresentare PNG sia umani che non umani.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 10,
+            "dadi": "2d6 + 3",
+            "tipo": "perforanti"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "for",
+        "cd": 13
+      }
+    }
+  ]
+}

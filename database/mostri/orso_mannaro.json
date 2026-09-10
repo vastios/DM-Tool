@@ -1,0 +1,117 @@
+{
+  "id": "orso_mannaro",
+  "nome": "Orso mannaro",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 368
+  },
+  "tipo": "umanoide",
+  "descrittore": "umano, mutaforma",
+  "taglia": "Media",
+  "allineamento": "neutrale buono",
+  "caratteristiche": {
+    "for": 19,
+    "des": 10,
+    "cos": 17,
+    "int": 11,
+    "sag": 12,
+    "car": 12
+  },
+  "modificatori": {
+    "for": 4,
+    "des": 0,
+    "cos": 3,
+    "int": 0,
+    "sag": 1,
+    "car": 1
+  },
+  "ca": 10,
+  "ca_nota": "in forma umanoide, 11 (armatura naturale) in forma di orso e ibrida",
+  "pf": 135,
+  "pf_dadi": "18d8 + 54",
+  "velocita": {
+    "camminare": "9 m (12 m",
+    "scalare": "9 m in forma di orso o ibrida)"
+  },
+  "immunita_danni": "contundenti, perforanti e taglienti da attacchi non magici con armi non argentate",
+  "sensi": "Percezione passiva 17",
+  "percezione_passiva": 17,
+  "linguaggi": "Comune (non può parlare in forma di orso)",
+  "cr": "5",
+  "pe": 1800,
+  "bonus_competenza": 3,
+  "tratti": [
+    {
+      "nome": "Mutaforma",
+      "testo": "L'orso mannaro può usare la sua azione per trasformarsi in un ibrido umanoide-orso o in un orso Grande, o per tornare alla sua forma naturale, che è umanoide. Le sue statistiche, a eccezione della taglia e della CA, restano le stesse in ogni forma. Ogni oggetto che indossa o trasporta non viene trasformato. Se muore, torna alla sua forma naturale."
+    },
+    {
+      "nome": "Olfatto acuto",
+      "testo": "L'orso mannaro dispone di vantaggio alle prove di Saggezza (Percezione) basate sull'olfatto."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "In forma di orso, l'orso mannaro effettua due attacchi con gli artigli. In forma umanoide, effettua due attacchi con l'ascia bipenne. In forma ibrida, può attaccare come orso o come umanoide."
+    },
+    {
+      "nome": "Artiglio",
+      "testo": "Attacco con arma da mischia: +7 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 13 (2d8 + 4) danni taglienti.",
+      "uso": "solo in forma di orso o ibrida",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 13,
+            "dadi": "2d8 + 4",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Ascia bipenne",
+      "testo": "Attacco con arma da mischia: +7 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 10 (1d12 + 4) danni taglienti.",
+      "uso": "solo in forma umanoide o ibrida",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 10,
+            "dadi": "1d12 + 4",
+            "tipo": "taglienti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia : +7 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 15 (2d10 + 4) danni perforanti. Se il bersaglio è un umanoide, deve superare un tiro salvezza su Costituzione con CD 14, altrimenti è costretto a trasformarsi in un orso mannaro.",
+      "uso": "solo in forma di orso o ibrida",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 7,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 15,
+            "dadi": "2d10 + 4",
+            "tipo": "perforanti"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 14
+      }
+    }
+  ]
+}

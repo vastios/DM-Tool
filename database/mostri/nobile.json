@@ -1,0 +1,67 @@
+{
+  "id": "nobile",
+  "nome": "Nobile",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 451
+  },
+  "tipo": "umanoide",
+  "descrittore": "qualsiasi razza",
+  "taglia": "Media",
+  "allineamento": "qualsiasi allineamento",
+  "caratteristiche": {
+    "for": 11,
+    "des": 12,
+    "cos": 11,
+    "int": 12,
+    "sag": 14,
+    "car": 16
+  },
+  "modificatori": {
+    "for": 0,
+    "des": 1,
+    "cos": 0,
+    "int": 1,
+    "sag": 2,
+    "car": 3
+  },
+  "ca": 15,
+  "ca_tipo": "corazza",
+  "pf": 9,
+  "pf_dadi": "2d8",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "sensi": "Percezione passiva 12",
+  "percezione_passiva": 12,
+  "linguaggi": "due qualsiasi",
+  "cr": "1/8",
+  "pe": 25,
+  "bonus_competenza": 2,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Stocco",
+      "testo": "Attacco con arma da mischia: +3 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 5 (1d8 + 1) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 3,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d8 + 1",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ],
+  "reazioni": [
+    {
+      "nome": "Parata",
+      "testo": "Il nobile aggiunge 2 alla sua CA contro un attacco in mischia che lo colpirebbe. Per farlo, deve vedere l'attaccante e deve impugnare un'arma da mischia.\nnobili I esercitano grande autorità e influenza come membri della classe agiata, dal momento che possiedono ricchezza e contatti che possono renderli potenti quanto monarchi e generali. Un nobile viaggia spesso in compagnia di guardie, oltre che di servitori popolani. Le statistiche del nobile possono anche essere\ncortigiani usate per rappresentare con origini non nobili."
+    }
+  ]
+}

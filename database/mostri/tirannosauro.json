@@ -1,0 +1,81 @@
+{
+  "id": "tirannosauro",
+  "nome": "Tirannosauro",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 320
+  },
+  "tipo": "bestia",
+  "taglia": "Enorme",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 25,
+    "des": 10,
+    "cos": 19,
+    "int": 2,
+    "sag": 12,
+    "car": 9
+  },
+  "modificatori": {
+    "for": 7,
+    "des": 0,
+    "cos": 4,
+    "int": -4,
+    "sag": 1,
+    "car": -1
+  },
+  "ca": 13,
+  "ca_tipo": "armatura naturale",
+  "pf": 136,
+  "pf_dadi": "13d12 + 52",
+  "velocita": {
+    "camminare": "15 m"
+  },
+  "sensi": "Percezione passiva 14",
+  "percezione_passiva": 14,
+  "linguaggi": "—",
+  "cr": "8",
+  "pe": 3900,
+  "bonus_competenza": 3,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il tirannosauro effettua due attacchi: uno con il morso e uno con la coda. Non può effettuare entrambi gli attacchi contro lo stesso bersaglio."
+    },
+    {
+      "nome": "Coda",
+      "testo": "Attacco con arma da mischia: +10 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 20 (3d8 + 7) danni contundenti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 10,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 20,
+            "dadi": "3d8 + 7",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Morso",
+      "testo": "Attacco con arma da mischia: +10 al tiro per colpire, portata 3 m, un bersaglio. Colpito: 33 (4d12 + 7) danni perforanti. Se il bersaglio è una creatura di taglia Media o inferiore, viene afferrato (CD 17 per sfuggire). Finché la presa perdura, il bersaglio è trattenuto e il tirannosauro non può morderne un altro.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 10,
+        "portata": "3 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 33,
+            "dadi": "4d12 + 7",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    }
+  ]
+}

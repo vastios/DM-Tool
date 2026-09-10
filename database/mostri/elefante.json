@@ -1,0 +1,84 @@
+{
+  "id": "elefante",
+  "nome": "Elefante",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 421
+  },
+  "tipo": "bestia",
+  "taglia": "Enorme",
+  "allineamento": "senza allineamento",
+  "caratteristiche": {
+    "for": 22,
+    "des": 9,
+    "cos": 17,
+    "int": 3,
+    "sag": 11,
+    "car": 6
+  },
+  "modificatori": {
+    "for": 6,
+    "des": -1,
+    "cos": 3,
+    "int": -4,
+    "sag": 0,
+    "car": -2
+  },
+  "ca": 12,
+  "ca_tipo": "armatura naturale",
+  "pf": 76,
+  "pf_dadi": "8d12 + 24",
+  "velocita": {
+    "camminare": "12 m"
+  },
+  "linguaggi": "—",
+  "cr": "4",
+  "pe": 1100,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Carica travolgente",
+      "testo": "Se l'elefante si muove di almeno 6 metri in linea retta verso una creatura e poi la colpisce effettuando un'incornata con le zanne nello stesso turno, quel bersaglio deve superare un tiro salvezza su Forza con CD 12, altrimenti cade a terra prono. Se il bersaglio è prono, l'elefante può effettuare un pestone contro di esso come azione bonus.",
+      "salvataggio": {
+        "caratteristica": "for",
+        "cd": 12
+      }
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Incornata",
+      "testo": "Attacco con arma da mischia: +8 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 19 (3d8 + 6) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 8,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 19,
+            "dadi": "3d8 + 6",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Pestone",
+      "testo": "Attacco con arma da mischia: +8 al tiro per colpire, portata 1,5 m, una creatura prona. Colpito: 22 (3d10 + 6) danni contundenti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 8,
+        "portata": "1",
+        "bersaglio": "5 m, una creatura prona",
+        "danni": [
+          {
+            "media": 22,
+            "dadi": "3d10 + 6",
+            "tipo": "contundenti"
+          }
+        ]
+      }
+    }
+  ]
+}

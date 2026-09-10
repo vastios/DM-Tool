@@ -1,0 +1,115 @@
+{
+  "id": "mezzodrago_rosso_veterano",
+  "nome": "Mezzodrago rosso veterano",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 303
+  },
+  "tipo": "umanoide",
+  "descrittore": "umano",
+  "taglia": "Media",
+  "allineamento": "qualsiasi allineamento",
+  "caratteristiche": {
+    "for": 16,
+    "des": 13,
+    "cos": 14,
+    "int": 10,
+    "sag": 11,
+    "car": 10
+  },
+  "modificatori": {
+    "for": 3,
+    "des": 1,
+    "cos": 2,
+    "int": 0,
+    "sag": 0,
+    "car": 0
+  },
+  "ca": 18,
+  "ca_tipo": "piastre",
+  "pf": 65,
+  "pf_dadi": "10d8 + 20",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "resistenze_danni": "fuoco",
+  "sensi": "Percezione passiva 12, scurovisione 18 m, vista cieca 3 m",
+  "percezione_passiva": 12,
+  "linguaggi": "Comune, Draconico",
+  "cr": "5",
+  "pe": 1800,
+  "bonus_competenza": 3,
+  "tratti": [],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il veterano sferra due attacchi con la spada lunga. Se ha sfoderato una spada corta, può effettuare anche un attacco con quest'ultima."
+    },
+    {
+      "nome": "Spada corta",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 6 (1d6 + 3) danni perforanti.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 6,
+            "dadi": "1d6 + 3",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Spada lunga",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 7 (1d8 + 3) danni taglienti o 8 (1d10 + 3) danni taglienti se impugnata con due mani.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 7,
+            "dadi": "1d8 + 3",
+            "tipo": "taglienti o"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Balestra pesante",
+      "testo": "Attacco con arma a distanza : +3 al tiro per colpire, gittata 30/120 m, un bersaglio. Colpito: 6 (1d10 + 1) danni perforanti.",
+      "attacco": {
+        "tipo": "distanza",
+        "tiro": 3,
+        "portata": "30/120 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 6,
+            "dadi": "1d10 + 1",
+            "tipo": "perforanti"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Soffio di fuoco",
+      "testo": "Il veterano esala fuoco in un cono di 4,5 metri. Ogni creatura in quell'area deve effettuare un tiro salvezza su Destrezza con CD 15, subendo 24 (7d6) danni da fuoco in caso di fallimento, o la metà dei danni in caso di successo.",
+      "uso": "ricarica 5–6",
+      "salvataggio": {
+        "caratteristica": "des",
+        "cd": 15,
+        "danno_fallimento": {
+          "media": 24,
+          "dadi": "7d6",
+          "tipo": "fuoco"
+        },
+        "successo": "metà danni"
+      }
+    }
+  ]
+}

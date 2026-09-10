@@ -1,0 +1,192 @@
+{
+  "id": "solar",
+  "nome": "Solar",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 302
+  },
+  "tipo": "celestiale",
+  "taglia": "Grande",
+  "allineamento": "legale buono",
+  "caratteristiche": {
+    "for": 26,
+    "des": 22,
+    "cos": 26,
+    "int": 25,
+    "sag": 25,
+    "car": 30
+  },
+  "modificatori": {
+    "for": 8,
+    "des": 6,
+    "cos": 8,
+    "int": 7,
+    "sag": 7,
+    "car": 10
+  },
+  "ca": 21,
+  "ca_tipo": "armatura naturale",
+  "pf": 243,
+  "pf_dadi": "18d10 + 144",
+  "velocita": {
+    "camminare": "15 m",
+    "volare": "45 m"
+  },
+  "competenze": {
+    "percezione": 14
+  },
+  "resistenze_danni": "radiosi, contundenti, perforanti e taglienti da attacchi non magici",
+  "immunita_danni": "necrotici, veleno",
+  "immunita_condizioni": "affascinato, avvelenato, indebolimento, spaventato",
+  "sensi": "Percezione passiva 24, vista pura 36 m",
+  "percezione_passiva": 24,
+  "linguaggi": "tutti, telepatia 36 m",
+  "cr": "21",
+  "pe": 33000,
+  "bonus_competenza": 7,
+  "tratti": [
+    {
+      "nome": "Armi angeliche",
+      "testo": "Gli attacchi con arma del solar sono magici. Quando il solar colpisce con qualsiasi arma, la sua arma infligge 6d8 danni radiosi extra (già inclusi nell'attacco)."
+    },
+    {
+      "nome": "Consapevolezza divina",
+      "testo": "Il solar sa riconoscere le menzogne."
+    },
+    {
+      "nome": "Incantesimi innati",
+      "testo": "La caratteristica da incantatore del solar è Carisma (CD del tiro salvezza sull'incantesimo 25). Per sua natura, è in grado di lanciare gli incantesimi indicati di seguito senza aver bisogno di componenti materiali: A volontà: individuazione del bene e del male, invisibilità (solo se stesso) 3/giorno ciascuno: barriera di lame, dissolvi il bene e il male, resurrezione 1/giorno ciascuno: comunione, controllare tempo atmosferico",
+      "incantesimi": {
+        "testo": "La caratteristica da incantatore del solar è Carisma (CD del tiro salvezza sull'incantesimo 25). Per sua natura, è in grado di lanciare gli incantesimi indicati di seguito senza aver bisogno di componenti materiali: A volontà: individuazione del bene e del male, invisibilità (solo se stesso) 3/giorno ciascuno: barriera di lame, dissolvi il bene e il male, resurrezione 1/giorno ciascuno: comunione, controllare tempo atmosferico",
+        "gruppi": [
+          {
+            "frequenza": "a volontà",
+            "incantesimi": [
+              "individuazione del bene",
+              "del male",
+              "invisibilità (solo se stesso)"
+            ]
+          },
+          {
+            "frequenza": "3/giorno ciascuno",
+            "incantesimi": [
+              "barriera di lame",
+              "dissolvi il bene",
+              "il male",
+              "resurrezione"
+            ]
+          },
+          {
+            "frequenza": "1/giorno ciascuno",
+            "incantesimi": [
+              "comunione",
+              "controllare tempo atmosferico"
+            ]
+          }
+        ],
+        "caratteristica": "car",
+        "cd": 25
+      }
+    },
+    {
+      "nome": "Resistenza alla magia",
+      "testo": "Il solar dispone di vantaggio ai tiri salvezza contro incantesimi e altri effetti magici."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Multiattacco",
+      "testo": "Il solar effettua due attacchi con lo spadone."
+    },
+    {
+      "nome": "Spadone",
+      "testo": "Attacco con arma da mischia : +15 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 22 (4d6 + 8) danni taglienti più 27 (6d8) danni radiosi.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 15,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 22,
+            "dadi": "4d6 + 8",
+            "tipo": "taglienti"
+          },
+          {
+            "media": 27,
+            "dadi": "6d8",
+            "tipo": "radiosi"
+          }
+        ]
+      }
+    },
+    {
+      "nome": "Arco lungo assassino",
+      "testo": "Attacco con arma a distanza: +13 al tiro per colpire, gittata 45/180 m, un bersaglio. Colpito: 15 (2d8 + 6) danni perforanti più 27 (6d8) danni radiosi. Se il bersaglio è una creatura con 100 punti ferita o meno, deve superare un tiro salvezza su Costituzione con CD 15, altrimenti muore.",
+      "attacco": {
+        "tipo": "distanza",
+        "tiro": 13,
+        "portata": "45/180 m",
+        "bersaglio": "un bersaglio",
+        "danni": [
+          {
+            "media": 15,
+            "dadi": "2d8 + 6",
+            "tipo": "perforanti"
+          },
+          {
+            "media": 27,
+            "dadi": "6d8",
+            "tipo": "radiosi"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 15
+      }
+    },
+    {
+      "nome": "Spada volante",
+      "testo": "Il solar lascia andare il suo spadone, che fluttua magicamente in uno spazio libero entro 1,5 metri da lui. Se il solar è in grado di vedere lo spadone, come azione bonus può ordinargli mentalmente di volare fino a un massimo di 15 metri e di sferrare un attacco contro un bersaglio o di tornare nella sua mano. Se la spada fluttuante è bersagliata da un qualsiasi effetto, è comunque considerata impugnata dal solar. Se il solar muore, la spada fluttuante cade a terra."
+    },
+    {
+      "nome": "Tocco Guaritore",
+      "testo": "Il solar tocca un'altra creatura. Il bersaglio recupera magicamente 40 (8d8 + 4) punti ferita ed è liberato da qualsiasi maledizione, malattia, veleno, cecità o sordità.",
+      "uso": "4/giorno"
+    }
+  ],
+  "azioni_leggendarie": {
+    "intro": "Il solar può eseguire 3 azioni leggendarie a scelta tra le opzioni seguenti. È possibile utilizzare solo un'opzione di azione leggendaria alla volta e soltanto alla fine del turno di un'altra creatura. All'inizio del turno, il solar recupera le azioni leggendarie effettuate.",
+    "opzioni": [
+      {
+        "nome": "Teletrasporto",
+        "testo": "Il solar si teletrasporta magicamente, insieme a ogni oggetto che indossa o trasporta, fino a uno spazio libero visibile entro 36 metri."
+      },
+      {
+        "nome": "Esplosione incandescente",
+        "testo": "Il solar emette un'onda di energia magica divina. Ogni creatura a sua scelta entro un raggio di 3 metri deve effettuare un tiro salvezza su Destrezza con CD 23, subendo 14 (4d6) danni da fuoco più 14 (4d6) danni radiosi in caso di fallimento, o la metà dei danni in caso di successo.",
+        "uso": "costa 2 azioni",
+        "salvataggio": {
+          "caratteristica": "des",
+          "cd": 23,
+          "danno_fallimento": {
+            "media": 14,
+            "dadi": "4d6",
+            "tipo": "fuoco"
+          },
+          "successo": "metà danni"
+        }
+      },
+      {
+        "nome": "Sguardo accecante",
+        "testo": "Il solar prende di mira una creatura nel suo campo visivo in un raggio di 9 metri. Se il bersaglio è in grado di vedere il solar, deve superare un tiro salvezza su Costituzione con CD 15, altrimenti è accecato finché una magia come ristorare inferiore non rimuove la cecità.",
+        "uso": "costa 3 azioni",
+        "salvataggio": {
+          "caratteristica": "cos",
+          "cd": 15
+        }
+      }
+    ]
+  }
+}

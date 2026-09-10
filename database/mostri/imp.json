@@ -1,0 +1,87 @@
+{
+  "id": "imp",
+  "nome": "Imp",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 319
+  },
+  "tipo": "immondo",
+  "descrittore": "diavolo, mutaforma",
+  "taglia": "Minuscola",
+  "allineamento": "legale malvagio",
+  "caratteristiche": {
+    "for": 6,
+    "des": 17,
+    "cos": 13,
+    "int": 11,
+    "sag": 12,
+    "car": 14
+  },
+  "modificatori": {
+    "for": -2,
+    "des": 3,
+    "cos": 1,
+    "int": 0,
+    "sag": 1,
+    "car": 2
+  },
+  "ca": 13,
+  "pf": 10,
+  "pf_dadi": "3d4 + 3",
+  "velocita": {
+    "camminare": "6 m",
+    "volare": "12 m"
+  },
+  "resistenze_danni": "freddo; contundenti, perforanti e taglienti da attacchi non magici non argentati",
+  "immunita_danni": "fuoco, veleno",
+  "immunita_condizioni": "avvelenato",
+  "sensi": "Percezione passiva 11, scurovisione 36 m",
+  "percezione_passiva": 11,
+  "linguaggi": "Comune, Infernale",
+  "cr": "1",
+  "pe": 200,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Mutaforma",
+      "testo": "L'imp può usare la sua azione per assumere la forma bestiale di un topo (velocità 6 m), un corvo (6 m, volare 18 m), un ragno (6 m, scalare 6 m) o riassumere la sua vera forma. Le sue statistiche restano le stesse in ogni forma, a eccezione dei cambiamenti di velocità menzionati. Ogni oggetto che indossa o trasporta non viene trasformato. Se muore, torna alla sua forma naturale."
+    },
+    {
+      "nome": "Resistenza alla magia",
+      "testo": "L'imp dispone di vantaggio ai tiri salvezza contro incantesimi e altri effetti magici."
+    },
+    {
+      "nome": "Vista del diavolo",
+      "testo": "L'oscurità magica non ostacola la scurovisione dell'imp."
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Pungiglione",
+      "testo": "Attacco con arma da mischia: +5 al tiro per colpire, portata 1,5 m, un bersaglio. Colpito: 5 (1d4 + 3) danni perforanti e il bersaglio deve effettuare un tiro salvezza su Costituzione con CD 11. Subisce 10 (3d6) danni da veleno in caso di fallimento, o la metà dei danni in caso di successo.",
+      "uso": "morso in forma bestiale",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 5,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 5,
+            "dadi": "1d4 + 3",
+            "tipo": "perforanti e"
+          }
+        ]
+      },
+      "salvataggio": {
+        "caratteristica": "cos",
+        "cd": 11,
+        "successo": "metà danni"
+      }
+    },
+    {
+      "nome": "Invisibilità",
+      "testo": "L'imp diventa magicamente invisibile finché non attacca o finché non perde la concentrazione (come se si concentrasse su un incantesimo). Ogni oggetto che l'imp indossa o trasporta diventa invisibile insieme a lui."
+    }
+  ]
+}

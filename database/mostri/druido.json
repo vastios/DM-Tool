@@ -1,0 +1,111 @@
+{
+  "id": "druido",
+  "nome": "Druido",
+  "fonte": {
+    "documento": "SRD 5.1 IT",
+    "pagina": 449
+  },
+  "tipo": "umanoide",
+  "descrittore": "qualsiasi razza",
+  "taglia": "Media",
+  "allineamento": "qualsiasi allineamento",
+  "caratteristiche": {
+    "for": 10,
+    "des": 12,
+    "cos": 13,
+    "int": 12,
+    "sag": 15,
+    "car": 11
+  },
+  "modificatori": {
+    "for": 0,
+    "des": 1,
+    "cos": 1,
+    "int": 1,
+    "sag": 2,
+    "car": 0
+  },
+  "ca": 11,
+  "ca_tipo": "16 con pelle coriacea",
+  "pf": 27,
+  "pf_dadi": "5d8 + 5",
+  "velocita": {
+    "camminare": "9 m"
+  },
+  "sensi": "Percezione passiva 14",
+  "percezione_passiva": 14,
+  "linguaggi": "Druidico più altri due qualsiasi",
+  "cr": "2",
+  "pe": 450,
+  "bonus_competenza": 2,
+  "tratti": [
+    {
+      "nome": "Incantesimi",
+      "testo": "Il druido è un incantatore di 4° livello: la sua caratteristica da incantatore è Saggezza (CD del tiro salvezza sull'incantesimo 12, +4 al tiro per colpire con attacco con incantesimo). Ha a disposizione i seguenti incantesimi da druido: Trucchetti (a volontà): artificio druidico, produrre fiamma, randello incantato 1° livello (4 slot): intralciare, onda tonante, parlare con gli animali, passo veloce 2° livello (3 slot): animale messaggero, pelle coriacea",
+      "incantesimi": {
+        "testo": "Il druido è un incantatore di 4° livello: la sua caratteristica da incantatore è Saggezza (CD del tiro salvezza sull'incantesimo 12, +4 al tiro per colpire con attacco con incantesimo). Ha a disposizione i seguenti incantesimi da druido: Trucchetti (a volontà): artificio druidico, produrre fiamma, randello incantato 1° livello (4 slot): intralciare, onda tonante, parlare con gli animali, passo veloce 2° livello (3 slot): animale messaggero, pelle coriacea",
+        "gruppi": [
+          {
+            "tipo": "livello",
+            "livello": 4,
+            "incantesimi": [
+              "la sua caratteristica da incantatore è Saggezza (CD del tiro salvezza sull'incantesimo 12",
+              "+4 al tiro per colpire con attacco con incantesimo). Ha a disposizione i seguenti incantesimi da druido:"
+            ]
+          },
+          {
+            "frequenza": "a volontà",
+            "tipo": "trucchetti",
+            "incantesimi": [
+              "artificio druidico",
+              "produrre fiamma",
+              "randello incantato"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 1,
+            "slot": 4,
+            "incantesimi": [
+              "intralciare",
+              "onda tonante",
+              "parlare con gli animali",
+              "passo veloce"
+            ]
+          },
+          {
+            "tipo": "livello",
+            "livello": 2,
+            "slot": 3,
+            "incantesimi": [
+              "animale messaggero",
+              "pelle coriacea"
+            ]
+          }
+        ],
+        "caratteristica": "sag",
+        "cd": 12
+      }
+    }
+  ],
+  "azioni": [
+    {
+      "nome": "Bastone ferrato",
+      "testo": "Attacco con arma da mischia: +2 al tiro per colpire (+4 con randello incantato ), portata 1,5 m, un bersaglio. Colpito: 3 (1d6) danni contundenti, 4 (1d8) danni contundenti se usato a due mani o 6 (1d8 + 2) danni contundenti con randello incantato .\ndruidi I vivono nelle foreste e in altri luoghi isolati delle terre selvagge, dove proteggono il mondo naturale dai mostri e dall'avanzata della civiltà.\nsciamani tribali Alcuni sono che curano i malati, pregano gli spiriti animali e forniscono guida spirituale.",
+      "attacco": {
+        "tipo": "mischia",
+        "tiro": 2,
+        "portata": "1",
+        "bersaglio": "5 m, un bersaglio",
+        "danni": [
+          {
+            "media": 3,
+            "dadi": "1d6",
+            "tipo": "contundenti"
+          }
+        ],
+        "tiro_nota": "+4 con randello incantato"
+      }
+    }
+  ]
+}
