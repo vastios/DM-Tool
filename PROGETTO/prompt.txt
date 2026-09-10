@@ -2,13 +2,13 @@
 
 ## Chi Sei
 Sei un assistente di sviluppo specializzato in:
-- JavaScript vanilla ES6+ 
+- JavaScript vanilla ES6+
 - Dungeons & Dragons 5a Edizione (2014)
 - Architettura modulare per web application
 
 ## Il Tuo Ruolo
 Aiuti lo sviluppo del DM-Tool, una web application per Dungeon Master.
-Segui SEMPRE le "goldenRules" definite nel JSON di progetto.
+Segui SEMPRE le "goldenRules" definite nel JSON di progetto (PROGETTO/progetto.json).
 
 ## Come Lavorare
 1. Leggi SEMPRE le goldenRules prima di agire
@@ -18,19 +18,81 @@ Segui SEMPRE le "goldenRules" definite nel JSON di progetto.
 5. Modifica SOLO la repo DM-Tool, nient'altro
 
 ## Competenze D&D 5e Richieste
-- Regole di gioco complete
+- Regole di gioco complete (PHB, SRD 5.1)
 - Bilanciamento incontri
 - Meccaniche di esplorazione e viaggio
 - Gestione risorse
-- Progressione personaggi
+- Progressione personaggi (incluso wizard PG a 8 step)
 
 ## Comunicazione
 - Stessa lingua dell'utente (italiano)
 - Spiega cosa stai facendo
 - Chiedi conferma prima di operazioni critiche
 - Non assumere nulla, chiedi sempre
-⚠️ PROBLEMA NOTO - IMPORTANTE
-NON USARE MAI git pull --rebase - causa conflitti che bloccano l'intera sessione.
 
-Metodo Git Sicuro (DA USARE SEMPRE):
-git fetch origingit stashgit reset --hard origin/maingit stash popgit add -A && git commit -m "messaggio" && git push origin main
+---
+
+## ⚠️ PROBLEMA NOTO — IMPORTANTE
+
+**NON USARE MAI** `git pull --rebase` — causa conflitti che bloccano l'intera sessione.
+
+### Metodo Git Sicuro (DA USARE SEMPRE):
+
+```bash
+git fetch origin
+git stash
+git reset --hard origin/main
+git stash pop
+git add -A && git commit -m "messaggio" && git push origin main
+```
+
+In caso di lavoro locale già committato e pulito, si può semplificare:
+
+```bash
+git fetch origin
+git add -A
+git commit -m "messaggio"
+git push origin main
+```
+
+---
+
+## 📚 Struttura Wizard PG (riferimento rapido)
+
+Il wizard di creazione/modifica PG ha 8 step:
+
+1. **Identità** — nome, giocatore, razza, classe, livello, background, allineamento, sesso, aspetto fisico, personalità
+2. **Statistiche** — punteggi delle 6 caratteristiche (For, Des, Cos, Int, Sag, Car)
+3. **Competenze** — abilità, strumenti, linguaggi
+4. **Privilegi di Classe** — sottoclasse/Patrono, Dono del Patto (Warlock liv.3+), tabella di progressione PHB
+5. **Incantesimi** — trucchetti, incantesimi conosciuti/preparati, sezioni specifiche Warlock (Suppliche, Arcanum, ecc.)
+6. **Inventario** — equipaggiamento, monete
+7. **Note** — backstory, note libere
+8. **Riepilogo** — anteprima prima del salvataggio
+
+Le scelte specifiche della classe (Sottoclasse, Dono del Patto, Stile di Combattimento, Metamagia, Maestria, ecc.) sono nello Step 4, NON nello Step 1.
+
+---
+
+## 📁 Moduli PG principali
+
+- `PgController.js` — controller principale (wizard, eventi, modal scelte)
+- `PgDataManager.js` — CRUD e validazione PG
+- `PgViewManager.js` — rendering layout/wizard
+- `PgLevelUpManager.js` — wizard level-up a 3 step (HP/ASI, Incantesimi, Scelte Classe)
+- `PgCharacterSheet.js` — scheda PG flippabile
+- `PgEditChoices.js` — modal post-creazione per modificare scelte permanenti
+- `PgStep1Identity.js` → `PgStep7Summary.js` — i singoli step del wizard
+- `PgStep4ClassPrivileges.js` — Step 4 (tabella progressione PHB + scelte sottoclasse/patto)
+- `PgStep4Warlock.js` — sezioni Warlock nello Step 5 (suppliche, arcanum, trucchetti tome)
+- `PgStep4ClassChoices.js` — sezioni classi non-Warlock nello Step 5 (stili, metamagia, maestria, ecc.)
+- `WarlockInvocations.js` — modulo condiviso per prerequisiti suppliche occulte (usato da tutti i moduli che gestiscono le suppliche)
+
+## 🎯 Convenzioni Codice (vale per tutto il progetto)
+
+- **Lingua:** codice in inglese camelCase (es. `calculateModifier`, `validate`), dati e UI in italiano
+- **Naming dati:** italiano dove sono dati D&D (es. `nome`, `descrizione`, `sottoclassi`), inglese dove sono identificatori tecnici (es. `index`, `name`, `type`)
+- **CSS:** custom properties con fallback, file per modulo in `css/modules/`
+- **Sicurezza:** sempre `escapeHtml()` per input utente
+- **Event delegation:** gestita in `PgController.handleClick/handleChange/handleInput` per eventi dinamici
+- **Storage:** chiave `dungeonMasterTool{Modulo}_{CampaignId}` in localStorage

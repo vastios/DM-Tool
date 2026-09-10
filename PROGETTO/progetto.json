@@ -59,7 +59,7 @@
     "principles": [
       {
         "name": "Self-Contained",
-        "description": "L'applicazione deve funzionare completamente offline. Nessuna dipendenza da server esterni, API, o servizi cloud. Tutti i dati sono salvati localmente nel browser."
+        "description": "L'applicazione deve funzionare completamente offline per le funzionalità principali. Tutti i dati sono salvati localmente nel browser. ECCEZIONE DOCUMENTATA: il modulo loreExtractor può opzionalmente caricare WebLLM da CDN (https://esm.run/@mlc-ai/web-llm) per estrazione AI, ma ha SEMPRE un fallback offline basato su regole che funziona senza connessione. La funzionalità AI è un'opzione non essenziale, non un requisito."
       },
       {
         "name": "Multi-Campagna",
@@ -67,11 +67,11 @@
       },
       {
         "name": "User Experience First",
-        "description": "L'interfaccia deve essere intuitiva senza tutorial, veloce e responsive, accessibile con tastiera, visivamente coerente."
+        "description": "L'interfaccia deve essere intuitiva senza tutorial, veloce e responsive, accessibile con tastiera, visualmente coerente."
       },
       {
         "name": "Dati Reali",
-        "description": "I moduli usano dati reali di D&D 5e: mostri con stat block completi, incantesimi con descrizioni, oggetti con proprietà. Niente dati fittizi o placeholder."
+        "description": "I moduli usano dati reali di D&D 5e: mostri con stat block completi, incantesimi con descrizioni, oggetti con proprietà. Niente dati fittizi o placeholder. Fonte primaria: SRD 5.1 italiano (file SRD_CC_v5.1_IT.pdf in /database/)."
       },
       {
         "name": "Integrazione",
@@ -79,7 +79,7 @@
       },
       {
         "name": "Italiano",
-        "description": "Tutto in italiano: interfaccia, codice, commenti, nomi variabili. L'utente è italiano, il progetto è italiano."
+        "description": "Interfaccia, commenti di alto livello, nomi dei dati D&D in italiano. Convenzione codice: funzioni e variabili in inglese camelCase (es. calculateModifier, validate, getStorageKey) per coerenza con la base codice esistente; campi dati D&D in italiano quando sono contenuti (es. nome, descrizione, sottoclassi) e in inglese quando sono identificatori tecnici (es. index, name, type)."
       }
     ]
   },
@@ -91,13 +91,13 @@
       { "name": "HTML5", "version": "-", "usage": "Struttura e semantica" },
       { "name": "CSS3", "version": "-", "usage": "Styling con Custom Properties" },
       { "name": "localStorage", "version": "-", "usage": "Persistenza dati" },
+      { "name": "WebLLM (opzionale)", "version": "0.2.78 via CDN", "usage": "Solo loreExtractor: estrazione AI con fallback offline. NON è una dipendenza critica." },
       { "name": "Git", "version": "-", "usage": "Version control" }
     ],
     "notUsed": [
       "React, Vue, Angular",
-      "Node.js / Backend", 
+      "Node.js / Backend",
       "Database server",
-      "API esterne",
       "Build tools (Webpack, Vite)",
       "CSS frameworks (Bootstrap, Tailwind)"
     ]
@@ -113,15 +113,15 @@
         },
         "js/": {
           "main.js": "Inizializzazione, navigazione, caricamento moduli",
-          "stateManager.js": "State management globale",
+          "stateManager.js": "State management globale (bridge verso js/services/)",
           "modules/": {
-            "campagna/": "Moduli della campagna attiva (locationManager, npcManager, mapManager, travelManager, combatTracker, ecc.)",
+            "campagna/": "Moduli della campagna attiva: locationManager, npcManager, mapManager, travelManager, combatTracker, encounterBuilder, sessionNotes, campaignWiki, factionManager, secretManager, chapterPlanner, uniqueItemManager, loreExtractor/",
+            "campagna/pg/": "Creazione/modifica PG (PgController, PgDataManager, PgViewManager, PgLevelUpManager, PgEditChoices, PgStep1Identity → PgStep7Summary, PgStep4ClassPrivileges, PgStep4Warlock, PgStep4ClassChoices, PgCharacterSheet, WarlockInvocations)",
             "compendio/": "Database di riferimento D&D (monsterList, spellList, itemList, classList, raceList, ecc.)",
-            "equipment/": "Gestione equipaggiamento",
-            "pg/": "Creazione personaggi (PgController, PgDataManager, ecc.)"
+            "equipment/": "Gestione equipaggiamento"
           },
-          "services/": "Servizi condivisi (campaignManager, storageHelper, DataService)",
-          "utils/": "Utility functions (dice, toast, htmlHelpers, validators)"
+          "services/": "Servizi condivisi (campaignManager, storageHelper, DataService, pcManager, combatStateManager, historyManager, searchIndex, advancedStorage)",
+          "utils/": "Utility functions (dice, toast, htmlHelpers, validators, autocomplete, lazyLoader, performanceMonitor, keyboardShortcuts)"
         },
         "database/": "Dati statici D&D 5e (monsterDatabase, spells, items, conditions, magicItems)",
         "assets/": "Risorse statiche (maps/, luoghi/)",
@@ -201,7 +201,7 @@
       "icon": "👤",
       "description": "Gestione personaggi della campagna",
       "modules": [
-        { "id": "pgManager", "name": "PG Manager", "description": "Creazione PG completa con wizard step-by-step: identità, statistiche, classi, incantesimi, inventario" },
+        { "id": "pgManager", "name": "PG Manager", "description": "Creazione/modifica PG completa con wizard step-by-step a 8 step: 1) Identità (nome, razza, classe, livello, background, aspetto), 2) Statistiche, 3) Competenze, 4) Privilegi di Classe (sottoclasse, Dono del Patto per Warlock, tabella di progressione PHB con scelte specifiche), 5) Incantesimi (con sezioni dedicate Warlock: Suppliche Occulte, Arcanum Mistico, Trucchetti Patto del Tomo), 6) Inventario, 7) Note, 8) Riepilogo. Include anche modal post-creazione (PgEditChoices) per modificare le scelte permanenti senza rifare il wizard, e wizard level-up dedicato a 3 step." },
         { "id": "npcManager", "name": "PNG Manager", "description": "Gestione NPC: descrizione, roleplay, statistiche, relazioni, note segrete" },
         { "id": "equipment", "name": "Equipaggiamento", "description": "Gestione inventario con slot corporei" }
       ]
@@ -258,19 +258,36 @@
       "file": "database/monsterDatabase.js",
       "count": 300,
       "structure": {
-        "index": "Identificatore univoco (es. 'goblin')",
+        "index": "Identificatore univoco (es. 'goblin') — usato come chiave primaria nel tool",
         "name": "Nome del mostro",
         "size": "Taglia (Tiny, Small, Medium, Large, Huge, Gargantuan)",
         "type": "Tipo (humanoid, beast, dragon, undead, ecc.)",
-        "armor_class": "Array con valore e tipo armatura",
-        "hit_points": "Punti ferita medi",
+        "alignment": "Allineamento",
+        "armor_class": "Array [{type, value}] — il tool accede a armor_class[0].value",
+        "hit_points": "Punti ferita medi (numero)",
         "hit_dice": "Dadi vita (es. '2d6')",
-        "speed": "Oggetto con velocità per tipo movimento",
-        "strength/dexterity/constitution/intelligence/wisdom/charisma": "Statistiche",
-        "challenge_rating": "Grado sfida (0.25, 1, 5, ecc.)",
-        "xp": "Punti esperienza",
-        "actions": "Array di azioni con nome e descrizione"
-      }
+        "hit_points_roll": "Formula completa con mod. COS (es. '2d6+2')",
+        "speed": "Oggetto con velocità per tipo movimento (es. {camminare: '9 m.', nuotare: '12 m.'})",
+        "strength/dexterity/constitution/intelligence/wisdom/charisma": "Punteggi statistiche (numeri)",
+        "proficiencies": "Array [{value, proficiency: {index, name, url}}] per TS e abilità",
+        "damage_vulnerabilities": "Array di stringhe",
+        "damage_resistances": "Array di stringhe",
+        "damage_immunities": "Array di stringhe",
+        "condition_immunities": "Array di stringhe",
+        "senses": "Oggetto con sensi (es. {darkvision: '18 m.', 'Percezione passiva': 12})",
+        "languages": "Stringa concatenata",
+        "challenge_rating": "Grado sfida (0.25, 1, 5, ecc.) — usato in encounterBuilder",
+        "proficiency_bonus": "Bonus competenza (numero)",
+        "xp": "Punti esperienza (numero) — usato in encounterBuilder",
+        "special_abilities": "Array [{name, desc, dc?, damage?}] — tratti passivi/attivi non-azione",
+        "actions": "Array [{name, desc, attack_bonus?, damage?, dc?, usage?, actions?}] — azioni in combattimento, incluse Multiattacco",
+        "legendary_actions": "Array opzionale [{name, desc, damage?}] — azioni leggendarie",
+        "reactions": "Array opzionale [{name, desc}] — reazioni",
+        "forms": "Array opzionale — forme alternative (es. druidi, licantropi)",
+        "image": "Path relativo immagine (opzionale)",
+        "url": "Cross-reference API esterna (non usata dal tool, solo informativa)"
+      },
+      "note": "Fonte: SRD 5.1 italiano. La struttura segue il formato del dnd5eapi per compatibilità con import futuri. Le meccaniche complesse (fasi di malattia, effetti cumulativi) sono testuali nel campo desc — non strutturate. Un eventuale refactor a meccaniche strutturate (come proposto nel JSON 'Aboleth v2') richiederebbe migrazione di ~50 accessi in 4 file (monsterList.js, encounterBuilder.js, combatTracker.js, combatTracker2.js)."
     },
     "spells": {
       "file": "database/spells.js",
@@ -286,9 +303,31 @@
         "classes": "Classi che possono lanciarlo"
       }
     },
+    "classes": {
+      "files": "database/classes/*.js (un file per classe, importati in database/classes/index.js)",
+      "count": 12,
+      "structure": {
+        "classe": "Nome classe italiano (es. 'Warlock')",
+        "name": "Nome classe inglese (es. 'Warlock')",
+        "index": "Identificatore (es. 'warlock')",
+        "descrizione_breve": "Descrizione",
+        "dado_vita": "Dado vita (es. 'd8')",
+        "hit_die": "Valore numerico dado vita (es. 8)",
+        "caratteristica_primaria": "Caratteristica principale",
+        "competenze": "Oggetto con armature, armi, strumenti, tiri_salvezza, abilità",
+        "punti_ferita": "Formula PF liv.1 e successivi",
+        "equipaggiamento": "Array di opzioni equipaggiamento iniziale",
+        "tabella_progressione": "Array di 20 righe {livello, bonus_competenza, privilegi[], ...campi specifici per classe}",
+        "descrizione_privilegi": "Oggetto {nome_privilegio: {riassunto, descrizione_completa}}",
+        "incantazione": "Info spellcasting (caratteristica, CD, attacco, focus, tipo_slot, recupero_slot)",
+        "sottoclassi": "Array di sottoclassi con privilegi per livello",
+        "campi_specifici": "Campi extra per classe: doni_del_patto + suppliche_occulte + patron_spells (Warlock), stili_combattimento (Fighter/Paladin/Ranger), tipi_nemico/terreno_prescelto + opzioni_cacciatore (Ranger), dragon_types + metamagia (Sorcerer), incantesimi_di_giuramento (Paladin), incantesimi_di_dominio (Cleric)"
+      }
+    },
     "conditions": {
       "file": "database/conditions.js",
-      "conditions": ["Blinded", "Charmed", "Deafened", "Exhaustion", "Frightened", "Grappled", "Incapacitated", "Invisible", "Paralyzed", "Petrified", "Poisoned", "Prone", "Restrained", "Stunned", "Unconscious"],
+      "count": 16,
+      "conditions": ["Affascinato", "Accecato", "Assordato", "Incapacitato", "Invisibile", "Spaventato", "Agganciato", "Paralizzato", "Inibito", "Avvelenato", "Prono", "Ingrappato", "Stordito", "Svenuto", "Pietrificato", "Sfinimento"],
       "structure": {
         "name": "Nome condizione",
         "summary": "Riassunto rapido",
@@ -299,6 +338,17 @@
 
   "gitWorkflow": {
     "branch": "main",
+    "safeMethod": {
+      "warning": "NON USARE MAI git pull --rebase — causa conflitti che bloccano l'intera sessione",
+      "commands": [
+        "git fetch origin",
+        "git stash",
+        "git reset --hard origin/main",
+        "git stash pop",
+        "git add -A && git commit -m 'messaggio' && git push origin main"
+      ],
+      "simplified": "Se il lavoro locale è già committato e pulito, basta: git add -A && git commit -m 'msg' && git push origin main"
+    },
     "commitMessageFormat": {
       "pattern": "<tipo>: <descrizione>",
       "types": {
@@ -383,6 +433,38 @@
     }
   },
 
-  "lastUpdated": "2024-04-24",
-  "documentVersion": "1.0.0"
+  "recentChanges": {
+    "2025-01": [
+      {
+        "change": "Wizard PG ristrutturato da 7 a 8 step",
+        "details": "Sottoclasse e Dono del Patto spostati dallo Step 1 al nuovo Step 4 'Privilegi di Classe' con tabella di progressione PHB-style e dettagli sottoclasse"
+      },
+      {
+        "change": "Supporto completo scelte permanenti per tutte le 12 classi",
+        "details": "Stile di Combattimento (Fighter/Paladin/Ranger), Metamagia + Ascendenza Draconica (Sorcerer), Maestria + Segreti Magici (Bard), Nemico/Terreno Prescelto + Opzioni Cacciatore (Ranger), Maestria Incantesimi (Wizard), Incantesimi di Dominio/Giuramento (Cleric/Paladin auto-aggiunti)"
+      },
+      {
+        "change": "Level-up wizard esteso a tutte le classi (step 3 dedicato)",
+        "details": "PgLevelUpManager ora rileva nuove scelte sbloccate a ciascun livello (nuove suppliche Warlock, Arcanum Mistico, Metamagia aggiuntiva, Maestria aggiuntiva, Segreti Magici, ecc.) e fa scegliere all'utente"
+      },
+      {
+        "change": "Creato modal PgEditChoices post-creazione",
+        "details": "Permette di modificare le scelte permanenti di un PG esistente (sottoclasse, dono patto, suppliche, arcanum, stili, metamagia, ecc.) senza rifare il wizard, con draft indipendente e validazione"
+      },
+      {
+        "change": "Centralizzata logica prerequisiti suppliche occulte",
+        "details": "Creato modulo condiviso WarlockInvocations.js con checkInvocationPrereq, getMaxWarlockInvocations, getAvailableInvocations, getLockedInvocations. Eliminate 5 duplicazioni locali"
+      },
+      {
+        "change": "Warlock: fix isKnownCaster espell bugs",
+        "details": "Warlock ora è un known caster (isKnownCaster ritorna true) e può selezionare 2 incantesimi al liv.1; aggiunto selectedClass al destructuring di renderStep1Identity; fix null-check su selectedClass in renderTraitsAndPrivileges; inizializzato pactBoon in createEmptyPg e editPg"
+      },
+      {
+        "change": "Fix WebLLM model IDs",
+        "details": "Aggiornati model ID con suffisso -MLC (richiesto da @mlc-ai/web-llm >= 0.2.78); aggiunto check isWebGPUUsable() per verificare GPU effettivamente accessibile con messaggio diagnostico chiaro"
+      }
+    ]
+  },
+  "lastUpdated": "2025-09-10",
+  "documentVersion": "1.1.0"
 }
